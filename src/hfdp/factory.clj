@@ -2,11 +2,11 @@
 
 (defmulti get-raw identity)
 
-(defmacro defraw
+(defn- defraw
   [pizza]
-  `(defmethod get-raw (select-keys ~pizza [:area :kind])
-     [_#]
-     ~pizza))
+  (defmethod get-raw (select-keys pizza [:area :kind])
+    [_]
+    pizza))
 
 (defraw {:area "NY"
          :kind "cheese"
