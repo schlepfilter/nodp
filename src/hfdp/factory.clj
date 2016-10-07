@@ -3,8 +3,8 @@
 (defmulti get-raw identity)
 
 (defmacro defraw
-  [{toppings :toppings :as params}]
-  `(defmethod get-raw (select-keys ~params [:area :kind])
+  [{toppings :toppings :as m}]
+  `(defmethod get-raw (select-keys ~m [:area :kind])
      [params#]
      (assoc params# :toppings ~toppings)))
 
