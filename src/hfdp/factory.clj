@@ -3,13 +3,14 @@
 (defmulti get-raw identity)
 
 (defmacro defraw
-  [{toppings :toppings :as m}]
-  `(defmethod get-raw (select-keys ~m [:area :kind])
-     [params#]
-     (assoc params# :toppings ~toppings)))
+  [pizza]
+  `(defmethod get-raw (select-keys ~pizza [:area :kind])
+     [_#]
+     ~pizza))
 
 (defraw {:area "NY"
          :kind "cheese"
+         :name "NY Style Sauce and Cheese Pizza"
          :toppings ["Grated Reggiano Cheese"]})
 
 (defn- make-log
