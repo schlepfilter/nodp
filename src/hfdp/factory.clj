@@ -1,4 +1,4 @@
-(ns gof.factory)
+(ns hfdp.factory)
 
 (defmulti get-raw identity)
 
