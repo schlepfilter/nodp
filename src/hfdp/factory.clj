@@ -1,17 +1,19 @@
 (ns hfdp.factory)
 
-(defmulti get-raw identity)
+(defmulti get-pizza identity)
 
-(defn- defraw
+(defn- defpizza
   [pizza]
-  (defmethod get-raw (select-keys pizza [:area :kind])
+  (defmethod get-pizza (select-keys pizza [:area :kind])
     [_]
     pizza))
 
-(defraw {:area "NY"
-         :kind "cheese"
-         :name "NY Style Sauce and Cheese Pizza"
-         :toppings ["Grated Reggiano Cheese"]})
+(defpizza {:area     "NY"
+           :dough    "Thin Crust Dough"
+           :kind     "cheese"
+           :name     "NY Style Sauce and Cheese Pizza"
+           :sauce    "Marinara Sauce"
+           :toppings ["Grated Reggiano Cheese"]})
 
 (defn- make-log
   [message]
@@ -37,7 +39,7 @@
   (comp box cut bake prepare))
 
 (def order
-  (comp transform get-raw))
+  (comp transform get-pizza))
 
 (order {:area "NY"
         :kind "cheese"})
