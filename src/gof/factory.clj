@@ -2,10 +2,15 @@
 
 (defmulti get-raw identity)
 
-(defmethod get-raw {:area "NY"
-                    :kind "cheese"}
-  [params]
-  (assoc params :toppings ["Grated Reggiano Cheese"]))
+(defmacro defraw
+  [{toppings :toppings :as params}]
+  `(defmethod get-raw (select-keys ~params [:area :kind])
+     [params#]
+     (assoc params# :toppings ~toppings)))
+
+(defraw {:area "NY"
+         :kind "cheese"
+         :toppings ["Grated Reggiano Cheese"]})
 
 (defn- make-log
   [message]
