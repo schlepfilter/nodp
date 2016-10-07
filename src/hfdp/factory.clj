@@ -1,19 +1,25 @@
 (ns hfdp.factory)
 
-(defmulti get-pizza identity)
+(defmulti get-regional-ingredient :region)
 
-(defn- defpizza
-  [pizza]
-  (defmethod get-pizza (select-keys pizza [:area :kind])
-    [_]
-    pizza))
+(defmethod get-regional-ingredient "NY"
+  [_]
+  {:cheese    "Reggiano Cheese"
+   :dough     "Thin Crust Dough"
+   :clams     "Fresh Clams from Long Island Sound"
+   :pepperoni "Sliced Pepperoni"                            ;
+   :sauce     "Marinara Sauce"
+   :vegies    #{"Garlic" "Onion" "Mashroom" "Red Pepper"}})
 
-(defpizza {:area     "NY"
-           :dough    "Thin Crust Dough"
-           :kind     "cheese"
-           :name     "NY Style Sauce and Cheese Pizza"
-           :sauce    "Marinara Sauce"
-           :toppings ["Grated Reggiano Cheese"]})
+(defmulti get-kind-ingredients :kind)
+
+(defmethod get-kind-ingredients "cheese"
+  [_]
+  #{:dough :sauce :cheese})
+
+(defn get-pizza
+  [m]
+  (select-keys (get-regional-ingredient m) (get-kind-ingredients m)))
 
 (defn- make-log
   [message]
@@ -41,5 +47,5 @@
 (def order
   (comp transform get-pizza))
 
-(order {:area "NY"
-        :kind "cheese"})
+(order {:region "NY"
+        :kind   "cheese"})
