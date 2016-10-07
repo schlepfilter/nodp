@@ -7,20 +7,19 @@
   [params]
   (assoc params :toppings ["Grated Reggiano Cheese"]))
 
-(defn- box
-  [pizza]
-  (println "box")
-  pizza)
+(defn- make-log
+  [message]
+  (fn [x]
+    (println message) x))
 
-(defn- cut
-  [pizza]
-  (println "cut")
-  pizza)
+(def box
+  (make-log "box"))
 
-(defn- bake
-  [pizza]
-  (println "bake")
-  pizza)
+(def cut
+  (make-log "cut"))
+
+(def bake
+  (make-log "bake"))
 
 (defn- prepare
   [{toppings :toppings :as pizza}]
@@ -34,10 +33,9 @@
         bake
         prepare))
 
-(defn- order
-  [params]
-  (-> (get-raw params)
-      transform))
+(def order
+  (comp transform
+        get-raw))
 
 (order {:area "NY"
         :kind "cheese"})
