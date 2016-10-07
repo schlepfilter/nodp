@@ -33,14 +33,10 @@
   pizza)
 
 (def transform
-  (comp box
-        cut
-        bake
-        prepare))
+  (comp box cut bake prepare))
 
 (def order
-  (comp transform
-        get-raw))
+  (comp transform get-raw))
 
 (order {:area "NY"
         :kind "cheese"})
