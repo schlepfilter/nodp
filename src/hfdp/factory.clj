@@ -48,11 +48,8 @@
 (def bake
   (make-log "bake"))
 
-(defn- prepare
-  [{toppings :toppings :as pizza}]
-  (println "prepare")
-  (println toppings)
-  pizza)
+(def prepare
+  (make-log "prepare"))
 
 (def transform
   (comp box cut bake prepare))
