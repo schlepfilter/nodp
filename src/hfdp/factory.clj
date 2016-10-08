@@ -17,9 +17,23 @@
   [_]
   #{:dough :sauce :cheese})
 
-(defn get-pizza
-  [m]
-  (select-keys (get-regional-ingredient m) (get-kind-ingredients m)))
+(defmacro functionize
+  [macro]
+  `(fn [& args#] (eval (cons '~macro args#))))
+
+(defmacro apply-macro
+  [macro & args]
+  `(apply (functionize ~macro) ~@args))
+
+(defmacro build
+  [operator & fs]
+  `(fn [x#]
+     (->> x#
+          ((juxt ~@fs))
+          (apply-macro ~operator))))
+
+(def get-pizza
+  (build select-keys get-regional-ingredient get-kind-ingredients))
 
 (defn- make-log
   [message]
