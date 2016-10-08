@@ -19,7 +19,8 @@
 
 (defmacro functionize
   [macro]
-  `(fn [& args#] (eval (cons '~macro args#))))
+  `(fn [& args#]
+     (eval (cons '~macro args#))))
 
 (defmacro apply-macro
   [macro & args]
@@ -28,7 +29,8 @@
 (defmacro build
   [operator & fs]
   `(comp
-     (fn [x#] (apply-macro ~operator x#))
+     (fn [x#]
+       (apply-macro ~operator x#))
      (juxt ~@fs)))
 
 (def get-pizza
