@@ -27,10 +27,9 @@
 
 (defmacro build
   [operator & fs]
-  `(fn [x#]
-     (->> x#
-          ((juxt ~@fs))
-          (apply-macro ~operator))))
+  `(comp
+     (fn [x#] (apply-macro ~operator x#))
+     (juxt ~@fs)))
 
 (def get-pizza
   (build select-keys get-regional-ingredient get-kind-ingredients))
