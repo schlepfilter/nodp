@@ -23,16 +23,11 @@
      (-> (cons '~macro args#)
          eval)))
 
-(defmacro apply-macro
-  [macro & args]
-  `(-> (functionize ~macro)
-       (apply ~@args)))
-
 (defmacro build
   [operator & fs]
   `(comp
      (fn [x#]
-       (apply-macro ~operator x#))
+       (apply (functionize ~operator) x#))
      (juxt ~@fs)))
 
 (def get-pizza
@@ -50,16 +45,11 @@
     `(def ~function-name
       (make-log ~s))))
 
-(defmacro map-macro
-  [macro & args]
-  `(-> (functionize ~macro)
-       (map ~@args)))
-
 (defmacro defall
   [expr]
   `(def _# (doall ~expr)))
 
-(defall (map-macro defoperation ["box" "cut" "bake" "prepare"]))
+(defall (map (functionize defoperation) ["box" "cut" "bake" "prepare"]))
 
 (def transform
   (comp box cut bake prepare))
