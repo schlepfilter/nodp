@@ -48,13 +48,15 @@
     `(def ~function-name
       (make-log ~s))))
 
-(defoperation "box")
+(defmacro map-macro
+  [macro & args]
+  `(map (functionize ~macro) ~@args))
 
-(defoperation "cut")
+(defmacro defall
+  [expr]
+  `(def _# (doall ~expr)))
 
-(defoperation "bake")
-
-(defoperation "prepare")
+(defall (map-macro defoperation ["box" "cut" "bake" "prepare"]))
 
 (def transform
   (comp box cut bake prepare))
