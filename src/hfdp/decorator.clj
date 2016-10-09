@@ -8,6 +8,8 @@
 (def condiment
   {:mocha {:name  "Mocha"
            :price 0.2}
+   :soy   {:name  "Soy"
+           :price 0.15}
    :whip  {:name  "Whip"
            :price 0.1}})
 
