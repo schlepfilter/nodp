@@ -39,7 +39,8 @@
 (defn- make-log
   [message]
   (fn [x]
-    (println message) x))
+    (println message)
+    x))
 
 (def box
   (make-log "box"))
