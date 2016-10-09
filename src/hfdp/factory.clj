@@ -20,11 +20,13 @@
 (defmacro functionize
   [macro]
   `(fn [& args#]
-     (eval (cons '~macro args#))))
+     (-> (cons '~macro args#)
+         eval)))
 
 (defmacro apply-macro
   [macro & args]
-  `(apply (functionize ~macro) ~@args))
+  `(-> (functionize ~macro)
+       (apply ~@args)))
 
 (defmacro build
   [operator & fs]
@@ -50,7 +52,8 @@
 
 (defmacro map-macro
   [macro & args]
-  `(map (functionize ~macro) ~@args))
+  `(-> (functionize ~macro)
+       (map ~@args)))
 
 (defmacro defall
   [expr]
