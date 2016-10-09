@@ -7,6 +7,6 @@
 
 (defn watch-movie
   [movie]
-  ((factory/build (fn [& _]) turn-on-amp) "Top-O-Line Amplifier"))
+  ((factory/build (constantly nil) turn-on-amp) "Top-O-Line Amplifier"))
 
 (watch-movie "Raiders of the Lost Ark")

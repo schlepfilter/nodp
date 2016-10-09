@@ -18,7 +18,7 @@
   [_]
   #{:dough :sauce :cheese})
 
-(defn- quote-seq
+(defn quote-seq
   [x]
   (if (seq? x)
     `(quote ~x)
@@ -49,7 +49,7 @@
   (doall (map println ["box" "cut" "bake" "prepare"])))
 
 (def order
-  (build (fn [& _]) transform get-pizza))
+  (build (constantly nil) transform get-pizza))
 
 (order {:region :ny
         :kind   :cheese})
