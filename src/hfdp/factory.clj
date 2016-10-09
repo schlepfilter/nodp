@@ -45,6 +45,7 @@
 
 (defn- transform
   [_]
+  ;TODO possibly implement and use flip
   (doall (map println ["box" "cut" "bake" "prepare"])))
 
 (def order
