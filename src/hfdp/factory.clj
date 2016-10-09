@@ -27,7 +27,8 @@
   [operator & fs]
   `(comp
      (fn [x#]
-       (apply (functionize ~operator) x#))
+       (-> (functionize ~operator)
+           (apply x#)))
      (juxt ~@fs)))
 
 (def get-pizza
@@ -49,7 +50,9 @@
   [expr]
   `(def _# (doall ~expr)))
 
-(defall (map (functionize defoperation) ["box" "cut" "bake" "prepare"]))
+(-> (functionize defoperation)
+    (map ["box" "cut" "bake" "prepare"])
+    defall)
 
 (def transform
   (comp box cut bake prepare))
