@@ -1,4 +1,4 @@
-(ns hfdp.adopter)
+(ns hfdp.adapter)
 
 (defmulti perform vector)
 
