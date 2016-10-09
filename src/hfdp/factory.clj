@@ -49,7 +49,8 @@
   (doall (map println ["box" "cut" "bake" "prepare"])))
 
 (def order
-  (build (constantly nil) transform get-pizza))
+  (-> (constantly nil)
+      (build transform get-pizza)))
 
 (order {:region :ny
         :kind   :cheese})
