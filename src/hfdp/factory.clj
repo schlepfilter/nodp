@@ -2,7 +2,7 @@
 
 (defmulti get-regional-ingredient :region)
 
-(defmethod get-regional-ingredient "NY"
+(defmethod get-regional-ingredient :ny
   [_]
   {:cheese    "Reggiano Cheese"
    :dough     "Thin Crust Dough"
@@ -13,7 +13,7 @@
 
 (defmulti get-kind-ingredients :kind)
 
-(defmethod get-kind-ingredients "cheese"
+(defmethod get-kind-ingredients :cheese
   [_]
   #{:dough :sauce :cheese})
 
@@ -39,7 +39,8 @@
 (defn- make-log
   [message]
   (fn [x]
-    (println message) x))
+    (println message)
+    x))
 
 (def box
   (make-log "box"))
@@ -59,5 +60,5 @@
 (def order
   (comp transform get-pizza))
 
-(order {:region "NY"
-        :kind   "cheese"})
+(order {:region :ny
+        :kind   :cheese})
