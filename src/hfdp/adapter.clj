@@ -1,21 +1,20 @@
 (ns hfdp.adapter)
 
-(defmulti perform vector)
-
-(defmacro defperform
-  [object action expr]
-  `(defmethod perform [~object ~action]
-     [& _#]
-     ~expr))
-
-(defperform :duck :quack (println "Gobble gobble"))
-
-(defn- fly
+(defn- turkey-quack
   []
-  (dotimes [_ 5] (println "I'm flying a short distance")))
+  (println "Gobble gobble"))
 
-(defperform :duck :fly (fly))
+(def duck-quack
+  turkey-quack)
 
-(perform :duck :quack)
+(defn- turkey-fly
+  []
+  (println "I'm flying a short distance"))
 
-(perform :duck :fly)
+(defn duck-fly
+  []
+  (dotimes [_ 5] (turkey-fly)))
+
+(duck-quack)
+
+(duck-fly)
