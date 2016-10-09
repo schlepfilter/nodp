@@ -26,9 +26,7 @@
 (defmacro build
   [operator & fs]
   `(comp
-     (fn [x#]
-       (-> (functionize ~operator)
-           (apply x#)))
+     (partial apply (functionize ~operator))
      (juxt ~@fs)))
 
 (def get-pizza
