@@ -37,20 +37,20 @@
      (partial apply (functionize ~operator))
      (juxt ~@fs)))
 
-(def get-pizza
+(def log-pizza
   (comp (partial println)
         (build select-keys
                get-regional-ingredient
                get-kind-ingredients)))
 
-(defn- transform
+(defn- log-operations
   [_]
   ;TODO possibly implement and use flip
   (doall (map println ["box" "cut" "bake" "prepare"])))
 
 (def order
   (-> (constantly nil)
-      (build transform get-pizza)))
+      (build log-operations log-pizza)))
 
 (order {:region :ny
         :kind   :cheese})
