@@ -1,11 +1,12 @@
-(ns hfdp.facade)
+(ns hfdp.facade
+  (:require [hfdp.factory :as factory]))
 
-(def get-amp
-  (comp (partial assoc {} :turn-on)
-        (fn [description] (str description " on"))))
+(defn turn-on-amp
+  [description]
+  (println (str description " on")))
 
 (defn watch-movie
   [movie]
-  (:turn-on (get-amp "Top-O-Line Amplifier")))
+  ((factory/build (fn [& _]) turn-on-amp) "Top-O-Line Amplifier"))
 
 (watch-movie "Raiders of the Lost Ark")
