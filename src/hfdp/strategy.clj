@@ -1,9 +1,9 @@
 (ns hfdp.strategy)
 
-(defmulti perform identity)
+(def quack
+  (partial println "quack"))
 
-(defmethod perform [:mullard :quack]
-  [& _]
-  (println "quack"))
+(def mullard-quack
+  quack)
 
-(perform [:mullard :quack])
+(mullard-quack)
