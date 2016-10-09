@@ -1,7 +1,7 @@
 (ns hfdp.decorator
   (:require [clojure.string :as str]))
 
-(def coffee
+(def base
   {:dark-roast {:name  "Dark Roast Coffee"
                 :price 0.99}})
 
@@ -22,7 +22,12 @@
   [& ns]
   (apply + ns))
 
-(merge-with add
-            (:dark-roast coffee)
-            (:mocha condiment))
+(defn- get-ingredients
+  [base-key condiment-keys]
+  (cons (base-key base) (map condiment condiment-keys)))
 
+(defn get-coffee
+  [base-key & condiment-keys]
+  (get-ingredients base-key condiment-keys))
+
+(get-coffee :dark-roast :mocha :mocha)
