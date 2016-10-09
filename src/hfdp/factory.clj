@@ -21,7 +21,7 @@
 (defn quote-seq
   [x]
   (if (seq? x)
-    `(quote ~x)
+    `'~x
     (walk/walk quote-seq identity x)))
 
 (defmacro functionize
