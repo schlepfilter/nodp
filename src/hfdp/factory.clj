@@ -42,17 +42,19 @@
     (println message)
     x))
 
-(def box
-  (make-log "box"))
+(defmacro defoperation
+  [s]
+  (let [function-name (symbol s)]
+    `(def ~function-name
+      (make-log ~s))))
 
-(def cut
-  (make-log "cut"))
+(defoperation "box")
 
-(def bake
-  (make-log "bake"))
+(defoperation "cut")
 
-(def prepare
-  (make-log "prepare"))
+(defoperation "bake")
+
+(defoperation "prepare")
 
 (def transform
   (comp box cut bake prepare))
