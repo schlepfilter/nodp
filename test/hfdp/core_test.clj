@@ -1,6 +1,6 @@
-(ns gof.core-test
+(ns hfdp.core-test
   (:require [clojure.test :refer :all]
-            [gof.core :refer :all]))
+            [hfdp.core :refer :all]))
 
 (deftest a-test
   (testing "FIXME, I fail."
