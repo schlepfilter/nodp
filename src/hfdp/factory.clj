@@ -38,6 +38,7 @@
      (juxt ~@fs)))
 
 (def log-pizza
+  ;TODO log the name of the pizza
   (comp (partial println)
         (build select-keys
                get-regional-ingredient
