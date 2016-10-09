@@ -1,6 +1,6 @@
 (ns hfdp.adopter)
 
-(defmulti perform identity)
+(defmulti perform vector)
 
 (defmacro defperform
   [object action expr]
@@ -16,6 +16,6 @@
 
 (defperform :duck :fly (fly))
 
-(perform [:duck :quack])
+(perform :duck :quack)
 
-(perform [:duck :fly])
+(perform :duck :fly)
