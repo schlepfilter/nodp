@@ -28,6 +28,7 @@
 
 (defn get-coffee
   [base-key & condiment-keys]
-  (get-ingredients base-key condiment-keys))
+  (->> (get-ingredients base-key condiment-keys)
+       (apply merge-with add)))
 
-(get-coffee :dark-roast :mocha :mocha)
+(get-coffee :dark-roast :mocha :mocha :whip)
