@@ -1,4 +1,5 @@
-(ns hfdp.factory)
+(ns hfdp.factory
+  (:require [clojure.walk :as walk]))
 
 (defmulti get-regional-ingredient :region)
 
@@ -17,11 +18,18 @@
   [_]
   #{:dough :sauce :cheese})
 
+(defn- quote-seq
+  [x]
+  (if (seq? x)
+    `(quote ~x)
+    (walk/walk quote-seq identity x)))
+
 (defmacro functionize
-  [macro]
+  [operator]
   `(fn [& args#]
-     (-> (cons '~macro args#)
-         eval)))
+     (->> (walk/walk quote-seq identity args#)
+          (cons '~operator)
+          eval)))
 
 (defmacro build
   [operator & fs]
@@ -30,33 +38,18 @@
      (juxt ~@fs)))
 
 (def get-pizza
-  (build select-keys get-regional-ingredient get-kind-ingredients))
+  (comp (partial println)
+        (build select-keys
+               get-regional-ingredient
+               get-kind-ingredients)))
 
-(defn- make-log
-  [message]
-  (fn [x]
-    (println message)
-    x))
-
-(defmacro defoperation
-  [s]
-  (let [function-name (symbol s)]
-    `(def ~function-name
-      (make-log ~s))))
-
-(defmacro defall
-  [expr]
-  `(def _# (doall ~expr)))
-
-(-> (functionize defoperation)
-    (map ["box" "cut" "bake" "prepare"])
-    defall)
-
-(def transform
-  (comp box cut bake prepare))
+(defn- transform
+  [_]
+  (doall (map println ["box" "cut" "bake" "prepare"])))
 
 (def order
-  (comp transform get-pizza))
+  (build (fn [& _]) transform get-pizza))
 
 (order {:region :ny
         :kind   :cheese})
+
