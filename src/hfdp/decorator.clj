@@ -2,8 +2,12 @@
   (:require [clojure.string :as str]))
 
 (def base
-  {:dark-roast {:name  "Dark Roast Coffee"
-                :price 0.99}})
+  {:dark-roast  {:name  "Dark Roast Coffee"
+                 :price 0.99}
+   :espresso    {:name  "Espresso"
+                 :price 1.99}
+   :house-blend {:name  "House Blend Coffee"
+                 :price 0.89}})
 
 (def condiment
   {:mocha {:name  "Mocha"
