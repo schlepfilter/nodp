@@ -68,9 +68,7 @@
   (build select-keys get-regional-ingredient get-kind-ingredients))
 
 (def log-pizza
-  (juxt
-    (comp println get-ingredients)
-    (comp println get-pizza-name)))
+  (build println get-ingredients get-pizza-name))
 
 (def operations
   ["box" "cut" "bake" "prepare"])
