@@ -11,8 +11,10 @@
       println))
 
 (defn run-command
-  [device [f & more]]
-  (apply f device more))
+  [device command]
+    (if (fn? command)
+      (command device)
+      (apply (first command) device (rest command))))
 
 (defn run-commands
   [device & commands]
@@ -23,7 +25,7 @@
 (defn watch-movie
   [{:keys [amp dvd]}]
   (run-commands amp
-                [turn-on]
+                turn-on
                 [set-dvd "dvd"])
   (turn-on dvd))
 
