@@ -1,5 +1,5 @@
 (ns hfdp.factory
-  (:require [clojure.walk :as walk]))
+  (:require [riddley.walk :as riddley]))
 
 (defmulti get-regional-ingredient :region)
 
@@ -18,11 +18,12 @@
   [_]
   #{:dough :sauce :cheese})
 
-(defn quote-seq
+(defn quote-form
   [form]
-  (if (seq? form)
-    `'~form
-    (walk/walk quote-seq identity form)))
+  `'~form)
+
+(def quote-seq
+  (partial riddley/walk-exprs seq? quote-form))
 
 (defmacro functionize
   [operator]
