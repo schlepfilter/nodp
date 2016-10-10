@@ -14,14 +14,13 @@
       (map commands)
       dorun))
 
-(def turn-on
-  (comp println
-        (partial (helpers/flip str) " on")))
-
 (defn- print-sentence
   [& more]
   (-> (str/join " " more)
       println))
+
+(def turn-on
+  (partial (helpers/flip print-sentence) "on"))
 
 (defn- set-dvd
   [amp dvd]
