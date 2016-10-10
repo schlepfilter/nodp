@@ -1,7 +1,7 @@
 (ns hfdp.facade
   (:require [hfdp.helpers :as helpers]))
 
-(def turn-on-amp
+(def turn-on
   (comp println
         (partial (helpers/flip str) " on")))
 
@@ -12,8 +12,9 @@
 
 (defn watch-movie
   [{:keys [amp dvd]}]
-  (turn-on-amp amp)
-  (set-dvd amp dvd))
+  (turn-on amp)
+  (set-dvd amp dvd)
+  (turn-on dvd))
 
 (watch-movie {:amp   "Top-O-Line Amplifier"
               :dvd   "Top-O-Line DVD Player"
