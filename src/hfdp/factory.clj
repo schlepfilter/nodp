@@ -19,10 +19,10 @@
   #{:dough :sauce :cheese})
 
 (defn quote-seq
-  [x]
-  (if (seq? x)
-    `'~x
-    (walk/walk quote-seq identity x)))
+  [form]
+  (if (seq? form)
+    `'~form
+    (walk/walk quote-seq identity form)))
 
 (defmacro functionize
   [operator]
