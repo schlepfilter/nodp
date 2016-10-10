@@ -1,33 +1,6 @@
 (ns hfdp.factory
-  (:require [riddley.walk :as riddley]
-            [clojure.string :as str]))
-
-(defn flip
-  [f]
-  (fn
-    ([] (f))
-    ([x] (f x))
-    ([x y & more] (apply f y x more))))
-
-(defn quote-form
-  [form]
-  `'~form)
-
-(def quote-seq
-  (partial riddley/walk-exprs seq? quote-form))
-
-(defmacro functionize
-  [operator]
-  `(fn [& args#]
-     (->> (map quote-seq args#)
-          (cons '~operator)
-          eval)))
-
-(defmacro build
-  [operator & fs]
-  `(comp
-     (partial apply (functionize ~operator))
-     (juxt ~@fs)))
+  (:require [clojure.string :as str]
+            [hfdp.helpers :as helpers]))
 
 (defmulti get-regional-ingredient :region)
 
@@ -61,14 +34,14 @@
 (def get-pizza-name
   (comp
     (partial str/join " ")
-    (partial (flip conj) "Pizza")
-    (build vector get-regional-name get-kind-name)))
+    (partial (helpers/flip conj) "Pizza")
+    (helpers/build vector get-regional-name get-kind-name)))
 
 (def get-ingredients
-  (build select-keys get-regional-ingredient get-kind-ingredients))
+  (helpers/build select-keys get-regional-ingredient get-kind-ingredients))
 
 (def log-pizza
-  (build println get-ingredients get-pizza-name))
+  (helpers/build println get-ingredients get-pizza-name))
 
 (def operations
   ["box" "cut" "bake" "prepare"])

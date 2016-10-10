@@ -1,8 +1,9 @@
-(ns hfdp.facade)
+(ns hfdp.facade
+  (:require [hfdp.helpers :as helpers]))
 
-(defn turn-on-amp
-  [description]
-  (println (str description " on")))
+(def turn-on-amp
+  (comp println
+        (partial (helpers/flip str) " on")))
 
 (defn watch-movie
   [{:keys [amp]}]
