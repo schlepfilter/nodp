@@ -5,7 +5,9 @@
   (println (str description " on")))
 
 (defn watch-movie
-  [movie]
-  ((juxt turn-on-amp) "Top-O-Line Amplifier"))
+  [{:keys [amp]}]
+  ((juxt turn-on-amp) amp))
 
-(watch-movie "Raiders of the Lost Ark")
+(watch-movie {:amp   "Top-O-Line Amplifier"
+              :dvd   "Top-O-Line Amplifier"
+              :movie "Raiders of the Lost Ark"})
