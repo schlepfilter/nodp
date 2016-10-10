@@ -5,9 +5,15 @@
   (comp println
         (partial (helpers/flip str) " on")))
 
+(defn set-dvd
+  [amp dvd]
+  (-> (str amp " setting DVD player to " dvd)
+      println))
+
 (defn watch-movie
-  [{:keys [amp]}]
-  ((juxt turn-on-amp) amp))
+  [{:keys [amp dvd]}]
+  (turn-on-amp amp)
+  (set-dvd amp dvd))
 
 (watch-movie {:amp   "Top-O-Line Amplifier"
               :dvd   "Top-O-Line DVD Player"
