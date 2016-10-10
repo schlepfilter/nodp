@@ -22,13 +22,19 @@
   (-> (str amp " setting DVD player to " dvd)
       println))
 
+(defn- play
+  [dvd film]
+  (-> (str dvd " playing " film)
+      println))
+
 (defn watch-film
   [{:keys [amp dvd film]}]
   (run-commands amp
                 turn-on
                 [set-dvd "dvd"])
   (run-commands dvd
-                turn-on))
+                turn-on
+                [play film]))
 
 (watch-film {:amp  "Top-O-Line Amplifier"
              :dvd  "Top-O-Line DVD Player"
