@@ -16,6 +16,7 @@
 
 (defn- print-sentence
   [& more]
+  ;TODO decouble side effect
   (-> (str/join " " more)
       println))
 
@@ -32,6 +33,7 @@
 
 (defn watch-film
   [{:keys [amp dvd film]}]
+  ;TODO extract a function to run multiple run-commands
   (run-commands amp
                 turn-on
                 [set-dvd dvd])
