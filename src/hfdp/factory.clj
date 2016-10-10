@@ -49,11 +49,14 @@
   ["box" "cut" "bake" "prepare"])
 
 (defn- log-operations
-  [_]
-  (dorun (map println operations)))
+  []
+  (-> (map println operations)
+      dorun))
 
-(def order
-  (juxt log-operations log-pizza))
+(defn- order
+  [pizza]
+  (log-operations)
+  (log-pizza pizza))
 
 (order {:region :ny
         :kind   :cheese})
