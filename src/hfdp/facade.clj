@@ -10,5 +10,5 @@
   ((juxt turn-on-amp) amp))
 
 (watch-movie {:amp   "Top-O-Line Amplifier"
-              :dvd   "Top-O-Line Amplifier"
+              :dvd   "Top-O-Line DVD Player"
               :movie "Raiders of the Lost Ark"})
