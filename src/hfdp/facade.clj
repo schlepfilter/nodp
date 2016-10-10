@@ -12,9 +12,9 @@
 
 (defn run-command
   [device command]
-    (if (fn? command)
-      (command device)
-      (apply (first command) device (rest command))))
+  (if (fn? command)
+    (command device)
+    (apply (first command) device (rest command))))
 
 (defn run-commands
   [device & commands]
@@ -22,13 +22,14 @@
       (map commands)
       dorun))
 
-(defn watch-movie
-  [{:keys [amp dvd]}]
+(defn watch-film
+  [{:keys [amp dvd film]}]
   (run-commands amp
                 turn-on
                 [set-dvd "dvd"])
-  (turn-on dvd))
+  (run-commands dvd
+                turn-on))
 
-(watch-movie {:amp   "Top-O-Line Amplifier"
-              :dvd   "Top-O-Line DVD Player"
-              :movie "Raiders of the Lost Ark"})
+(watch-film {:amp  "Top-O-Line Amplifier"
+             :dvd  "Top-O-Line DVD Player"
+             :film "Raiders of the Lost Ark"})
