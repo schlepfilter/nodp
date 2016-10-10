@@ -1,5 +1,6 @@
 (ns hfdp.factory
-  (:require [riddley.walk :as riddley]))
+  (:require [riddley.walk :as riddley]
+            [clojure.string :as str]))
 
 (defn quote-form
   [form]
@@ -37,6 +38,30 @@
 (defmethod get-kind-ingredients :cheese
   [_]
   #{:dough :sauce :cheese})
+
+(defmulti get-regional-name :region)
+
+(defmethod get-regional-name :ny
+  [_]
+  "New York Style")
+
+(defmulti get-kind-name :kind)
+
+(defmethod get-kind-name :cheese
+  [_]
+  "Cheeze")
+
+(defn flip
+  [f]
+  (fn
+    ([x] (f x))
+    ([x y & more] (apply f y x more))))
+
+(def get-pizza-name
+  (comp
+    (partial (flip str) " Pizza")
+    (partial str/join " ")
+    (build vector get-regional-name get-kind-name)))
 
 (def get-ingredients
   (build select-keys get-regional-ingredient get-kind-ingredients))
