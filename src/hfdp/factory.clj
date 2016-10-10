@@ -39,9 +39,7 @@
   #{:dough :sauce :cheese})
 
 (def get-ingredients
-  (build select-keys
-         get-regional-ingredient
-         get-kind-ingredients))
+  (build select-keys get-regional-ingredient get-kind-ingredients))
 
 (def log-pizza
   ;TODO log the name of the pizza
