@@ -2,6 +2,13 @@
   (:require [riddley.walk :as riddley]
             [clojure.string :as str]))
 
+(defn flip
+  [f]
+  (fn
+    ([] (f))
+    ([x] (f x))
+    ([x y & more] (apply f y x more))))
+
 (defn quote-form
   [form]
   `'~form)
@@ -50,13 +57,6 @@
 (defmethod get-kind-name :cheese
   [_]
   "Cheeze")
-
-(defn flip
-  [f]
-  (fn
-    ([] (f))
-    ([x] (f x))
-    ([x y & more] (apply f y x more))))
 
 (def get-pizza-name
   (comp
