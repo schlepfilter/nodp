@@ -16,7 +16,9 @@
 
 (defn run-commands
   [device & commands]
-  (dorun (map (partial run-command device) commands)))
+  (-> (partial run-command device)
+      (map commands)
+      dorun))
 
 (defn watch-movie
   [{:keys [amp dvd]}]
