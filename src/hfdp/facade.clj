@@ -1,15 +1,6 @@
 (ns hfdp.facade
   (:require [hfdp.helpers :as helpers]))
 
-(def turn-on
-  (comp println
-        (partial (helpers/flip str) " on")))
-
-(defn set-dvd
-  [amp dvd]
-  (-> (str amp " setting DVD player to " dvd)
-      println))
-
 (defn run-command
   [device command]
   (if (fn? command)
@@ -21,6 +12,15 @@
   (-> (partial run-command device)
       (map commands)
       dorun))
+
+(def turn-on
+  (comp println
+        (partial (helpers/flip str) " on")))
+
+(defn set-dvd
+  [amp dvd]
+  (-> (str amp " setting DVD player to " dvd)
+      println))
 
 (defn watch-film
   [{:keys [amp dvd film]}]
