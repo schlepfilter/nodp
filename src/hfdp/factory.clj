@@ -50,9 +50,7 @@
   (doall (map println ["box" "cut" "bake" "prepare"])))
 
 (def order
-  (-> (constantly nil)
-      (build log-operations log-pizza)))
+  (juxt log-operations log-pizza))
 
 (order {:region :ny
         :kind   :cheese})
-

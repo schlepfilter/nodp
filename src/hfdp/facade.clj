@@ -1,5 +1,4 @@
-(ns hfdp.facade
-  (:require [hfdp.factory :as factory]))
+(ns hfdp.facade)
 
 (defn turn-on-amp
   [description]
@@ -7,6 +6,6 @@
 
 (defn watch-movie
   [movie]
-  ((factory/build (constantly nil) turn-on-amp) "Top-O-Line Amplifier"))
+  ((juxt turn-on-amp) "Top-O-Line Amplifier"))
 
 (watch-movie "Raiders of the Lost Ark")
