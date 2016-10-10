@@ -1,13 +1,13 @@
 (ns hfdp.facade
   (:require [hfdp.helpers :as helpers]))
 
-(defn run-command
+(defn- run-command
   [device command]
   (if (fn? command)
     (command device)
     (apply (first command) device (rest command))))
 
-(defn run-commands
+(defn- run-commands
   [device & commands]
   (-> (partial run-command device)
       (map commands)
@@ -17,7 +17,7 @@
   (comp println
         (partial (helpers/flip str) " on")))
 
-(defn set-dvd
+(defn- set-dvd
   [amp dvd]
   (-> (str amp " setting DVD player to " dvd)
       println))
