@@ -35,7 +35,7 @@
   [{:keys [amp dvd film]}]
   (run-commands amp
                 turn-on
-                [set-dvd "dvd"])
+                [set-dvd dvd])
   (run-commands dvd
                 turn-on
                 [play film]))
