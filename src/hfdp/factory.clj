@@ -54,6 +54,7 @@
 (defn flip
   [f]
   (fn
+    ([] (f))
     ([x] (f x))
     ([x y & more] (apply f y x more))))
 
@@ -67,8 +68,9 @@
   (build select-keys get-regional-ingredient get-kind-ingredients))
 
 (def log-pizza
-  ;TODO log the name of the pizza
-  (comp println get-ingredients))
+  (juxt
+    (comp println get-ingredients)
+    (comp println get-pizza-name)))
 
 (def operations
   ["box" "cut" "bake" "prepare"])
