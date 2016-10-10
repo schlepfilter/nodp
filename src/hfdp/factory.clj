@@ -60,8 +60,8 @@
 
 (def get-pizza-name
   (comp
-    (partial (flip str) " Pizza")
     (partial str/join " ")
+    (partial (flip conj) "Pizza")
     (build vector get-regional-name get-kind-name)))
 
 (def get-ingredients
