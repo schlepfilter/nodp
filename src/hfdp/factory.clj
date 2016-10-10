@@ -48,7 +48,7 @@
 (defn- log-operations
   [_]
   ;TODO possibly implement and use flip
-  (doall (map println ["box" "cut" "bake" "prepare"])))
+  (dorun (map println ["box" "cut" "bake" "prepare"])))
 
 (def order
   (juxt log-operations log-pizza))
