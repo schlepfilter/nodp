@@ -1,5 +1,6 @@
 (ns hfdp.facade
-  (:require [hfdp.helpers :as helpers]))
+  (:require [hfdp.helpers :as helpers]
+            [clojure.string :as str]))
 
 (defn- run-command
   [device command]
@@ -17,15 +18,18 @@
   (comp println
         (partial (helpers/flip str) " on")))
 
+(defn- print-sentence
+  [& more]
+  (-> (str/join " " more)
+      println))
+
 (defn- set-dvd
   [amp dvd]
-  (-> (str amp " setting DVD player to " dvd)
-      println))
+  (print-sentence amp "setting DVD player to" dvd))
 
 (defn- play
   [dvd film]
-  (-> (str dvd " playing " film)
-      println))
+  (print-sentence dvd "playing" film))
 
 (defn watch-film
   [{:keys [amp dvd film]}]
