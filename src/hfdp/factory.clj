@@ -45,10 +45,12 @@
                get-regional-ingredient
                get-kind-ingredients)))
 
+(def operations
+  ["box" "cut" "bake" "prepare"])
+
 (defn- log-operations
   [_]
-  ;TODO possibly implement and use flip
-  (dorun (map println ["box" "cut" "bake" "prepare"])))
+  (dorun (map println operations)))
 
 (def order
   (juxt log-operations log-pizza))
