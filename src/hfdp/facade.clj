@@ -10,10 +10,19 @@
   (-> (str amp " setting DVD player to " dvd)
       println))
 
+(defn run-command
+  [device [f & more]]
+  (apply f device more))
+
+(defn run-commands
+  [device & commands]
+  (dorun (map (partial run-command device) commands)))
+
 (defn watch-movie
   [{:keys [amp dvd]}]
-  (turn-on amp)
-  (set-dvd amp dvd)
+  (run-commands amp
+                [turn-on]
+                [set-dvd "dvd"])
   (turn-on dvd))
 
 (watch-movie {:amp   "Top-O-Line Amplifier"
