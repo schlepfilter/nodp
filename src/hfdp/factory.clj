@@ -27,7 +27,7 @@
 (defmacro functionize
   [operator]
   `(fn [& args#]
-     (->> (walk/walk quote-seq identity args#)
+     (->> (map quote-seq args#)
           (cons '~operator)
           eval)))
 
