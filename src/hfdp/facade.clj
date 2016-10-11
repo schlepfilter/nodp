@@ -35,13 +35,14 @@
 
 (defn watch-film
   [{:keys [amp dvd film]}]
-  (-> (get-actions [amp
-                    turn-on
-                    [set-dvd dvd]]
-                   [dvd
-                    turn-on
-                    [play film]])
-      helpers/printall))
+  (->> (get-actions [amp
+                     turn-on
+                     [set-dvd dvd]]
+                    [dvd
+                     turn-on
+                     [play film]])
+       (cons "Get ready to watch a movie...")
+       helpers/printall))
 
 (watch-film {:amp  "Top-O-Line Amplifier"
              :dvd  "Top-O-Line DVD Player"
