@@ -29,15 +29,24 @@
             [verb other]
             (->> (conj (rest other) verb (first other))
                  (str/join " ")))
+(defmacro defall
+  [expr]
+  `(def _# (doall ~expr)))
 
-(def turn-on
-  (make-get-sentence "on"))
+(defmacro defaction
+  [[action-name verb]]
+  `(def ~(symbol (name action-name))
+     (make-get-sentence ~verb)))
 
-(def set-dvd
-  (make-get-sentence "setting DVD player to"))
+(defmacro defactions
+  [m]
+  `(defall (dorun (map (helpers/functionize defaction) ~m))))
 
-(def play
-  (make-get-sentence "playing"))
+(defactions
+  {:play     "playing"
+   :set-dvd  "setting DVD player to"
+   :turn-off "off"
+   :turn-on  "on"})
 
 (defn- get-arguments
   [{:keys [commands description]}]
@@ -58,9 +67,6 @@
                       [play film]]]
        :description "Get ready to watch a movie..."}
       print-arguments))
-
-(def turn-off
-  (make-get-sentence "off"))
 
 (defn end-film
   [{:keys [amp dvd film]}]
