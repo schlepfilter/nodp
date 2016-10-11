@@ -49,23 +49,26 @@
     :turn-on
     [:play :film]]])
 
-(defn watch-film
+(defn watch
   [env]
   (with-redefs [env env]
     (-> {:description     "Get ready to watch a movie..."
          :device-commands watch-device-commands}
         print-arguments)))
 
-;(defn end-film
-;  [{:keys [amp dvd film]}]
-;  (-> {:device-commands [[dvd
-;                          :turn-off]]
-;       :description     "Shutting movie theater down..."}
-;      print-arguments))
+(def end-device-commands
+  [[:dvd
+    :turn-off]])
+
+(defn end
+  [env]
+  (with-redefs [env env]
+    (-> {:description     "Shutting movie theater down..."
+         :device-commands end-device-commands}
+        print-arguments)))
 
 (let [env {:amp  "Top-O-Line Amplifier"
            :dvd  "Top-O-Line DVD Player"
            :film "Raiders of the Lost Ark"}]
-  (watch-film env))
-
-;(end-film theater)
+  (watch env)
+  (end env))
