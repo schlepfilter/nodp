@@ -22,11 +22,11 @@
   [& more]
   (str/join " " more))
 
-(def make-get-subject-verb
+(def make-get-sv
   (m/curry 2 (helpers/flip get-sentence)))
 
 (def turn-on
-  (make-get-subject-verb "on"))
+  (make-get-sv "on"))
 
 (defn- set-dvd
   [amp dvd]
@@ -48,7 +48,7 @@
        helpers/printall))
 
 (def turn-off
-  (make-get-subject-verb "off"))
+  (make-get-sv "off"))
 
 (defn end-film
   [{:keys [amp dvd film]}]
