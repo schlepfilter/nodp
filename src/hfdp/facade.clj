@@ -8,10 +8,7 @@
    :turn-off "off"
    :turn-on  "on"})
 
-(def theater
-  {:amp  "Top-O-Line Amplifier"
-   :dvd  "Top-O-Line DVD Player"
-   :film "Raiders of the Lost Ark"})
+(def env)
 
 (defn- get-sentence
   [verb & more]
@@ -20,12 +17,12 @@
 
 (defn- get-action
   [device command]
-  (let [device-name (device theater)]
+  (let [device-name (device env)]
     (if (keyword? command)
-     (get-sentence command device-name)
-     (get-sentence (first command)
-                   device-name
-                   ((second command) theater)))))
+      (get-sentence command device-name)
+      (get-sentence (first command)
+                    device-name
+                    ((second command) env)))))
 
 (defn- get-device-actions
   [[device & commands]]
@@ -53,10 +50,11 @@
     [:play :film]]])
 
 (defn watch-film
-  [theater]
-  (-> {:description     "Get ready to watch a movie..."
-       :device-commands watch-device-commands}
-      print-arguments))
+  [env]
+  (with-redefs [env env]
+    (-> {:description     "Get ready to watch a movie..."
+         :device-commands watch-device-commands}
+        print-arguments)))
 
 ;(defn end-film
 ;  [{:keys [amp dvd film]}]
@@ -65,6 +63,9 @@
 ;       :description     "Shutting movie theater down..."}
 ;      print-arguments))
 
-(watch-film theater)
+(let [env {:amp  "Top-O-Line Amplifier"
+           :dvd  "Top-O-Line DVD Player"
+           :film "Raiders of the Lost Ark"}]
+  (watch-film env))
 
 ;(end-film theater)
