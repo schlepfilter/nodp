@@ -19,8 +19,8 @@
   (mapcat get-device-actions device-commands))
 
 (defmacro defcurried
-  [function-name bindings body]
-  `(def ~function-name
+  [f-name bindings body]
+  `(def ~f-name
      (->> (fn ~bindings
             ~body)
           (m/curry ~(count bindings)))))
