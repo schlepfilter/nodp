@@ -24,9 +24,8 @@
   (-> (partial get-action device)
       (map commands)))
 
-(defn- get-actions
-  [device-commands]
-  (mapcat get-device-actions device-commands))
+(def get-actions
+  (partial mapcat get-device-actions))
 
 (defn- get-arguments
   [{:keys [device-commands description]}]
