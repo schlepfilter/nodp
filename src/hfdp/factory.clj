@@ -47,9 +47,12 @@
   ["box" "cut" "bake" "prepare"])
 
 (def get-arguments
-  (comp helpers/printall
-        (partial (helpers/functionize lazy-cat) operations)
+  (comp (partial (helpers/functionize lazy-cat) operations)
         get-pizza))
 
-(get-arguments {:region :ny
-                :kind   :cheese})
+(def order
+  (comp helpers/printall
+        get-arguments))
+
+(order {:region :ny
+        :kind   :cheese})
