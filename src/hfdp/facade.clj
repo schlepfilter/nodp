@@ -15,7 +15,7 @@
       (map commands)))
 
 (defn- get-actions
-  [& device-commands]
+  [device-commands]
   (mapcat get-device-actions device-commands))
 
 (defmacro defcurried
@@ -34,15 +34,24 @@
 (def set-dvd
   (make-get-sentence "setting DVD player to"))
 
+(defn- get-arguments
+  [{:keys [commands description]}]
+  (->> (get-actions commands)
+       (cons description)))
+
+(def print-arguments
+  (comp helpers/printall
+        get-arguments))
+
 (defn watch-film
   [{:keys [amp dvd film]}]
-  (->> (get-actions [amp
-                     turn-on
-                     [set-dvd dvd]]
-                    [dvd
-                     turn-on])
-       (cons "Get ready to watch a movie...")
-       helpers/printall))
+  (-> {:commands    [[amp
+                      turn-on
+                      [set-dvd dvd]]
+                     [dvd
+                      turn-on]]
+       :description "Get ready to watch a movie..."}
+      print-arguments))
 
 (def turn-off
   (make-get-sentence "off"))
@@ -52,10 +61,11 @@
 
 (defn end-film
   [{:keys [amp dvd film]}]
-  (->> (get-actions [dvd
-                     turn-off
-                     [play film]])
-       helpers/printall))
+  (-> {:commands    [[dvd
+                      turn-off
+                      [play film]]]
+       :description "Shutting movie theater down..."}
+      print-arguments))
 
 (def theater {:amp  "Top-O-Line Amplifier"
               :dvd  "Top-O-Line DVD Player"
