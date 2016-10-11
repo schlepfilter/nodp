@@ -40,20 +40,16 @@
 (def get-ingredients
   (helpers/build select-keys get-regional-ingredient get-kind-ingredients))
 
-(def log-pizza
-  (helpers/build println get-ingredients get-pizza-name))
+(def get-pizza
+  (juxt get-ingredients get-pizza-name))
 
 (def operations
   ["box" "cut" "bake" "prepare"])
 
-(defn- log-operations
-  []
-  (helpers/printall operations))
+(def get-arguments
+  (comp helpers/printall
+        (partial (helpers/functionize lazy-cat) operations)
+        get-pizza))
 
-(defn- order
-  [pizza]
-  (log-operations)
-  (log-pizza pizza))
-
-(order {:region :ny
-        :kind   :cheese})
+(get-arguments {:region :ny
+                :kind   :cheese})
