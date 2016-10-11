@@ -29,8 +29,8 @@
   (mapcat get-device-actions device-commands))
 
 (defn- get-arguments
-  [{:keys [commands description]}]
-  (->> (get-actions commands)
+  [{:keys [device-commands description]}]
+  (->> (get-actions device-commands)
        (cons description)))
 
 (def print-arguments
@@ -39,20 +39,20 @@
 
 (defn watch-film
   [{:keys [amp dvd film]}]
-  (-> {:commands    [[amp
-                      :turn-on
-                      [:set-dvd dvd]]
-                     [dvd
-                      :turn-on
-                      [:play film]]]
-       :description "Get ready to watch a movie..."}
+  (-> {:device-commands [[amp
+                          :turn-on
+                          [:set-dvd dvd]]
+                         [dvd
+                          :turn-on
+                          [:play film]]]
+       :description     "Get ready to watch a movie..."}
       print-arguments))
 
 (defn end-film
   [{:keys [amp dvd film]}]
-  (-> {:commands    [[dvd
-                      :turn-off]]
-       :description "Shutting movie theater down..."}
+  (-> {:device-commands [[dvd
+                          :turn-off]]
+       :description     "Shutting movie theater down..."}
       print-arguments))
 
 (def theater {:amp  "Top-O-Line Amplifier"
