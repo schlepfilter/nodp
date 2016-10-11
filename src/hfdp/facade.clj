@@ -9,9 +9,13 @@
     (apply (first command) device (rest command))))
 
 (defn- get-arguments-sequence
-  [device & commands]
+  [[device & commands]]
   (-> (partial get-arguments device)
       (map commands)))
+
+(defn- get-arguments-sequence-sequence
+  [& device-commands]
+  (mapcat get-arguments-sequence device-commands))
 
 (defn- get-sentence
   [& more]
@@ -30,14 +34,15 @@
 
 (defn watch-film
   [{:keys [amp dvd film]}]
-  ;TODO extract a function to run multiple run-commands
-  (dorun (map println (get-arguments-sequence amp
-                                              turn-on
-                                              [set-dvd dvd])))
-  (dorun (map println (get-arguments-sequence dvd
-                                              turn-on
-                                              [play film]))))
+  (dorun (map println (get-arguments-sequence-sequence [amp
+                                                        turn-on
+                                                        [set-dvd dvd]]
+                                                       [dvd
+                                                        turn-on
+                                                        [play film]]
+                                                       ))))
 
 (watch-film {:amp  "Top-O-Line Amplifier"
              :dvd  "Top-O-Line DVD Player"
              :film "Raiders of the Lost Ark"})
+
