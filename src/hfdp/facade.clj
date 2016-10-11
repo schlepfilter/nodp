@@ -1,13 +1,23 @@
 (ns hfdp.facade
   (:require [clojure.string :as str]
-            [cats.core :as m]
             [hfdp.helpers :as helpers]))
+
+(def actions
+  {:play     "playing"
+   :set-dvd  "setting DVD player to"
+   :turn-off "off"
+   :turn-on  "on"})
+
+(defn- get-sentence
+  [verb other]
+  (->> (conj (rest other) (verb actions) (first other))
+       (str/join " ")))
 
 (defn- get-action
   [device command]
-  (if (fn? command)
-    (command [device])
-    ((first command) [device (second command)])))
+  (if (keyword? command)
+    (get-sentence command [device])
+    (get-sentence (first command) [device (second command)])))
 
 (defn- get-device-actions
   [[device & commands]]
@@ -17,38 +27,6 @@
 (defn- get-actions
   [device-commands]
   (mapcat get-device-actions device-commands))
-
-(defmacro defcurried
-  [f-name bindings body]
-  `(def ~f-name
-     (->> (fn ~bindings
-            ~body)
-          (m/curry ~(count bindings)))))
-
-(defcurried make-get-sentence
-            [verb other]
-            (->> (conj (rest other) verb (first other))
-                 (str/join " ")))
-(defmacro defall
-  [expr]
-  `(def _# (doall ~expr)))
-
-(defmacro defaction
-  [[action-name verb]]
-  `(def ~(symbol (name action-name))
-     (make-get-sentence ~verb)))
-
-(def defactions
-  (comp
-    (helpers/functionize defall)
-    dorun
-    (partial map (helpers/functionize defaction))))
-
-(defactions
-  {:play     "playing"
-   :set-dvd  "setting DVD player to"
-   :turn-off "off"
-   :turn-on  "on"})
 
 (defn- get-arguments
   [{:keys [commands description]}]
@@ -62,19 +40,18 @@
 (defn watch-film
   [{:keys [amp dvd film]}]
   (-> {:commands    [[amp
-                      turn-on
-                      [set-dvd dvd]]
+                      :turn-on
+                      [:set-dvd dvd]]
                      [dvd
-                      turn-on
-                      [play film]]]
+                      :turn-on
+                      [:play film]]]
        :description "Get ready to watch a movie..."}
       print-arguments))
 
 (defn end-film
   [{:keys [amp dvd film]}]
   (-> {:commands    [[dvd
-                      turn-off
-                      ]]
+                      :turn-off]]
        :description "Shutting movie theater down..."}
       print-arguments))
 
