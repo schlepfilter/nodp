@@ -2,20 +2,20 @@
   (:require [hfdp.helpers :as helpers]
             [clojure.string :as str]))
 
-(defn- get-arguments
+(defn- get-action
   [device command]
   (if (fn? command)
     (command device)
     (apply (first command) device (rest command))))
 
-(defn- get-arguments-sequence
+(defn- get-device-actions
   [[device & commands]]
-  (-> (partial get-arguments device)
+  (-> (partial get-action device)
       (map commands)))
 
-(defn- get-arguments-sequence-sequence
+(defn- get-actions
   [& device-commands]
-  (mapcat get-arguments-sequence device-commands))
+  (mapcat get-device-actions device-commands))
 
 (defn- get-sentence
   [& more]
@@ -35,12 +35,12 @@
 
 (defn watch-film
   [{:keys [amp dvd film]}]
-  (-> (get-arguments-sequence-sequence [amp
-                                        turn-on
-                                        [set-dvd dvd]]
-                                       [dvd
-                                        turn-on
-                                        [play film]])
+  (-> (get-actions [amp
+                    turn-on
+                    [set-dvd dvd]]
+                   [dvd
+                    turn-on
+                    [play film]])
       helpers/printall))
 
 (watch-film {:amp  "Top-O-Line Amplifier"
