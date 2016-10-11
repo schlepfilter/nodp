@@ -1,6 +1,7 @@
 (ns hfdp.facade
-  (:require [hfdp.helpers :as helpers]
-            [clojure.string :as str]))
+  (:require [clojure.string :as str]
+            [cats.core :as m]
+            [hfdp.helpers :as helpers]))
 
 (defn- get-action
   [device command]
@@ -21,9 +22,11 @@
   [& more]
   (str/join " " more))
 
+(def make-get-subject-verb
+  (m/curry 2 (helpers/flip get-sentence)))
+
 (def turn-on
-  (-> (helpers/flip get-sentence)
-      (partial "on")))
+  (make-get-subject-verb "on"))
 
 (defn- set-dvd
   [amp dvd]
@@ -45,8 +48,7 @@
        helpers/printall))
 
 (def turn-off
-  (-> (helpers/flip get-sentence)
-      (partial "off")))
+  (make-get-subject-verb "off"))
 
 (defn end-film
   [{:keys [amp dvd film]}]
