@@ -9,15 +9,15 @@
    :turn-on  "on"})
 
 (defn- get-sentence
-  [verb other]
-  (->> (conj (rest other) (verb actions) (first other))
+  [verb & more]
+  (->> (conj (rest more) (verb actions) (first more))
        (str/join " ")))
 
 (defn- get-action
   [device command]
   (if (keyword? command)
-    (get-sentence command [device])
-    (get-sentence (first command) [device (second command)])))
+    (get-sentence command device)
+    (get-sentence (first command) device (second command))))
 
 (defn- get-device-actions
   [[device & commands]]
