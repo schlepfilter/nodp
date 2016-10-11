@@ -44,6 +44,20 @@
        (cons "Get ready to watch a movie...")
        helpers/printall))
 
-(watch-film {:amp  "Top-O-Line Amplifier"
-             :dvd  "Top-O-Line DVD Player"
-             :film "Raiders of the Lost Ark"})
+(def turn-off
+  (-> (helpers/flip get-sentence)
+      (partial "off")))
+
+(defn end-film
+  [{:keys [amp dvd film]}]
+  (->> (get-actions [dvd
+                     turn-off])
+       helpers/printall))
+
+(def theater {:amp  "Top-O-Line Amplifier"
+              :dvd  "Top-O-Line DVD Player"
+              :film "Raiders of the Lost Ark"})
+
+(watch-film theater)
+
+(end-film theater)
