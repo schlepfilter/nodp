@@ -21,7 +21,9 @@
 (defmacro defcurried
   [function-name bindings body]
   `(def ~function-name
-     (m/curry ~(count bindings) (fn ~bindings ~body))))
+     (m/curry ~(count bindings)
+              (fn ~bindings
+                ~body))))
 
 (defcurried make-get-sentence
             [verb other]
