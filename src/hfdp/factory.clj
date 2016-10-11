@@ -48,8 +48,7 @@
 
 (defn- log-operations
   []
-  (-> (map println operations)
-      dorun))
+  (helpers/printall operations))
 
 (defn- order
   [pizza]

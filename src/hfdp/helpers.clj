@@ -28,3 +28,7 @@
      (partial apply (functionize ~operator))
      (juxt ~@fs)))
 
+(def printall
+  (comp dorun
+        (partial map println)))
+
