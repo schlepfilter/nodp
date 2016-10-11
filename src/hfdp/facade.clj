@@ -32,17 +32,19 @@
   [dvd film]
   (get-sentence dvd "playing" film))
 
+(def printall
+  (comp dorun
+        (partial map println)))
+
 (defn watch-film
   [{:keys [amp dvd film]}]
-  (dorun (map println (get-arguments-sequence-sequence [amp
-                                                        turn-on
-                                                        [set-dvd dvd]]
-                                                       [dvd
-                                                        turn-on
-                                                        [play film]]
-                                                       ))))
+  (printall (get-arguments-sequence-sequence [amp
+                                              turn-on
+                                              [set-dvd dvd]]
+                                             [dvd
+                                              turn-on
+                                              [play film]])))
 
 (watch-film {:amp  "Top-O-Line Amplifier"
              :dvd  "Top-O-Line DVD Player"
              :film "Raiders of the Lost Ark"})
-
