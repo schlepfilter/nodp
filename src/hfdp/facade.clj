@@ -7,7 +7,7 @@
   [device command]
   (if (fn? command)
     (command device)
-    (apply (first command) device (rest command))))
+    (((first command) device) (second command))))
 
 (defn- get-device-actions
   [[device & commands]]
@@ -29,13 +29,12 @@
 (def turn-on
   (make-get-sv "on"))
 
-(defn- set-dvd
-  [amp dvd]
-  (get-sentence amp "setting DVD player to" dvd))
+(def make-get-svo
+  (->> (helpers/flip get-sentence)
+       (m/curry 3)))
 
-(defn- play
-  [dvd film]
-  (get-sentence dvd "playing" film))
+(def set-dvd
+  (make-get-svo "setting DVD player to"))
 
 (defn watch-film
   [{:keys [amp dvd film]}]
@@ -43,8 +42,7 @@
                      turn-on
                      [set-dvd dvd]]
                     [dvd
-                     turn-on
-                     [play film]])
+                     turn-on])
        (cons "Get ready to watch a movie...")
        helpers/printall))
 
