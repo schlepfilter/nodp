@@ -23,7 +23,8 @@
   (str/join " " more))
 
 (def make-get-sv
-  (m/curry 2 (helpers/flip get-sentence)))
+  (->> (helpers/flip get-sentence)
+       (m/curry 2)))
 
 (def turn-on
   (make-get-sv "on"))
