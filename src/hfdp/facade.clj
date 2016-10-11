@@ -22,7 +22,8 @@
   (str/join " " more))
 
 (def turn-on
-  (partial (helpers/flip get-sentence) "on"))
+  (-> (helpers/flip get-sentence)
+      (partial "on")))
 
 (defn- set-dvd
   [amp dvd]
