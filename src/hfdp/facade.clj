@@ -34,6 +34,9 @@
 (def set-dvd
   (make-get-sentence "setting DVD player to"))
 
+(def play
+  (make-get-sentence "playing"))
+
 (defn- get-arguments
   [{:keys [commands description]}]
   (->> (get-actions commands)
@@ -49,21 +52,19 @@
                       turn-on
                       [set-dvd dvd]]
                      [dvd
-                      turn-on]]
+                      turn-on
+                      [play film]]]
        :description "Get ready to watch a movie..."}
       print-arguments))
 
 (def turn-off
   (make-get-sentence "off"))
 
-(def play
-  (make-get-sentence "playing"))
-
 (defn end-film
   [{:keys [amp dvd film]}]
   (-> {:commands    [[dvd
                       turn-off
-                      [play film]]]
+                      ]]
        :description "Shutting movie theater down..."}
       print-arguments))
 
