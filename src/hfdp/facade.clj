@@ -2,7 +2,7 @@
   (:require [clojure.string :as str]
             [hfdp.helpers :as helpers]))
 
-(def actions
+(def verbs
   {:play     "playing"
    :set-dvd  "setting DVD player to"
    :turn-off "off"
@@ -12,7 +12,7 @@
 
 (defn- get-sentence
   [verb & more]
-  (->> (conj (rest more) (verb actions) (first more))
+  (->> (conj (rest more) (verb verbs) (first more))
        (str/join " ")))
 
 (defn- get-action
