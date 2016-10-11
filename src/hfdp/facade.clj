@@ -24,8 +24,9 @@
      (m/curry ~(count bindings) (fn ~bindings ~body))))
 
 (defcurried make-get-sentence
-  [verb other]
-  (str/join " " (conj (rest other) verb (first other))))
+            [verb other]
+            (->> (conj (rest other) verb (first other))
+                 (str/join " ")))
 
 (def turn-on
   (make-get-sentence "on"))
