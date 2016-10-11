@@ -47,10 +47,14 @@
 (def turn-off
   (make-get-sentence "off"))
 
+(def play
+  (make-get-sentence "playing"))
+
 (defn end-film
   [{:keys [amp dvd film]}]
   (->> (get-actions [dvd
-                     turn-off])
+                     turn-off
+                     [play film]])
        helpers/printall))
 
 (def theater {:amp  "Top-O-Line Amplifier"
