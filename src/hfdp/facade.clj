@@ -20,7 +20,7 @@
 
 (defn- get-sentence
   [verb other]
-  (str/join " " (lazy-cat [(first other) verb] (rest other))))
+  (str/join " " (conj (rest other) verb (first other))))
 
 (def make-get-sentence
   (m/curry get-sentence))
