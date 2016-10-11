@@ -1,5 +1,6 @@
 (ns hfdp.facade
   (:require [clojure.string :as str]
+            [cats.core :as m]
             [hfdp.helpers :as helpers]))
 
 (def verbs
@@ -49,23 +50,29 @@
     :turn-on
     [:play :film]]])
 
-(defn watch
-  [env]
-  (with-redefs [env env]
-    (-> {:description     "Get ready to watch a movie..."
-         :device-commands watch-device-commands}
-        print-arguments)))
+(defmacro defcurried
+  [f-name bindings body]
+  `(def ~f-name
+     (->> (fn ~bindings
+            ~body)
+          (m/curry ~(count bindings)))))
+
+(defcurried make-request
+            [m env]
+            (with-redefs [env env]
+              (print-arguments m)))
+
+(def watch
+  (make-request {:description     "Get ready to watch a movie..."
+                 :device-commands watch-device-commands}))
 
 (def end-device-commands
   [[:dvd
     :turn-off]])
 
-(defn end
-  [env]
-  (with-redefs [env env]
-    (-> {:description     "Shutting movie theater down..."
-         :device-commands end-device-commands}
-        print-arguments)))
+(def end
+  (make-request {:description     "Shutting movie theater down..."
+                 :device-commands end-device-commands}))
 
 (let [env {:amp  "Top-O-Line Amplifier"
            :dvd  "Top-O-Line DVD Player"
