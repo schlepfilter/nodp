@@ -38,9 +38,11 @@
   `(def ~(symbol (name action-name))
      (make-get-sentence ~verb)))
 
-(defn- defactions
-  [m]
-  (defall (dorun (map (helpers/functionize defaction) m))))
+(def defactions
+  (comp
+    (helpers/functionize defall)
+    dorun
+    (partial map (helpers/functionize defaction))))
 
 (defactions
   {:play     "playing"
