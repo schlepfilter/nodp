@@ -18,12 +18,14 @@
   [& device-commands]
   (mapcat get-device-actions device-commands))
 
-(defn- get-sentence
+(defmacro defcurried
+  [function-name bindings body]
+  `(def ~function-name
+     (m/curry ~(count bindings) (fn ~bindings ~body))))
+
+(defcurried make-get-sentence
   [verb other]
   (str/join " " (conj (rest other) verb (first other))))
-
-(def make-get-sentence
-  (m/curry get-sentence))
 
 (def turn-on
   (make-get-sentence "on"))
