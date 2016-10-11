@@ -6,8 +6,8 @@
 (defn- get-action
   [device command]
   (if (fn? command)
-    (command device)
-    (((first command) device) (second command))))
+    (command [device])
+    ((first command) [device (second command)])))
 
 (defn- get-device-actions
   [[device & commands]]
@@ -19,22 +19,17 @@
   (mapcat get-device-actions device-commands))
 
 (defn- get-sentence
-  [& more]
-  (str/join " " more))
+  [verb other]
+  (str/join " " (lazy-cat [(first other) verb] (rest other))))
 
-(def make-get-sv
-  (->> (helpers/flip get-sentence)
-       (m/curry 2)))
+(def make-get-sentence
+  (m/curry get-sentence))
 
 (def turn-on
-  (make-get-sv "on"))
-
-(def make-get-svo
-  (->> (helpers/flip get-sentence)
-       (m/curry 3)))
+  (make-get-sentence "on"))
 
 (def set-dvd
-  (make-get-svo "setting DVD player to"))
+  (make-get-sentence "setting DVD player to"))
 
 (defn watch-film
   [{:keys [amp dvd film]}]
@@ -47,7 +42,7 @@
        helpers/printall))
 
 (def turn-off
-  (make-get-sv "off"))
+  (make-get-sentence "off"))
 
 (defn end-film
   [{:keys [amp dvd film]}]
