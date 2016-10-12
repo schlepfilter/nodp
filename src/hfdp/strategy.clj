@@ -1,7 +1,7 @@
 (ns hfdp.strategy)
 
 (def quack
-  (partial println "quack"))
+  (partial println "Quack"))
 
 (def fly-rocket-powered
   (partial println "I'm flying with a rocket"))
