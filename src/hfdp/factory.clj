@@ -1,4 +1,6 @@
-(ns hfdp.factory)
+(ns hfdp.factory
+  (:require [clojure.string :as str]
+            [hfdp.helpers :as helpers]))
 
 (defmulti get-regional-ingredient :region)
 
@@ -17,46 +19,40 @@
   [_]
   #{:dough :sauce :cheese})
 
-(defmacro functionize
-  [macro]
-  `(fn [& args#]
-     (-> (cons '~macro args#)
-         eval)))
+(defmulti get-regional-name :region)
 
-(defmacro build
-  [operator & fs]
-  `(comp
-     (partial apply (functionize ~operator))
-     (juxt ~@fs)))
+(defmethod get-regional-name :ny
+  [_]
+  "New York Style")
+
+(defmulti get-kind-name :kind)
+
+(defmethod get-kind-name :cheese
+  [_]
+  "Cheeze")
+
+(def get-pizza-name
+  (comp
+    (partial str/join " ")
+    (partial (helpers/flip conj) "Pizza")
+    (helpers/build vector get-regional-name get-kind-name)))
+
+(def get-ingredients
+  (helpers/build select-keys get-regional-ingredient get-kind-ingredients))
 
 (def get-pizza
-  (build select-keys get-regional-ingredient get-kind-ingredients))
+  (juxt get-ingredients get-pizza-name))
 
-(defn- make-log
-  [message]
-  (fn [x]
-    (println message)
-    x))
+(def operations
+  ["box" "cut" "bake" "prepare"])
 
-(defmacro defoperation
-  [s]
-  (let [function-name (symbol s)]
-    `(def ~function-name
-      (make-log ~s))))
-
-(defmacro defall
-  [expr]
-  `(def _# (doall ~expr)))
-
-(-> (functionize defoperation)
-    (map ["box" "cut" "bake" "prepare"])
-    defall)
-
-(def transform
-  (comp box cut bake prepare))
+(def get-arguments
+  (comp (partial (helpers/functionize lazy-cat) operations)
+        get-pizza))
 
 (def order
-  (comp transform get-pizza))
+  (comp helpers/printall
+        get-arguments))
 
 (order {:region :ny
         :kind   :cheese})
