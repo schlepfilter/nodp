@@ -5,18 +5,30 @@
 
 (defmulti brew identity)
 
-(defmethod brew :coffee
-  [_]
-  (println "Dripping Coffee through filter"))
-
 (def pour
   (partial println "Pouring into cup"))
 
 (defmulti add-condiments identity)
 
-(defmethod add-condiments :coffee
-  [_]
-  (println "Adding Sugar and Milk"))
+(defmacro defall
+  [expr]
+  `(def _# (doall ~expr)))
+
+(defmacro make-defmethod
+  [dispatch-val]
+  `(fn [[k# v#]]
+     (let [multifn# (symbol (name k#))]
+       (defmethod (eval multifn#) ~dispatch-val
+         [_#]
+         (println v#)))))
+
+(defmacro defmethods
+  [dispatch-val f-m]
+  `(defall (map (make-defmethod ~dispatch-val) ~f-m)))
+
+(defmethods :coffee
+            {:brew           "Dripping Coffee through filter"
+             :add-condiments "Adding Sugar and Milk"})
 
 (defn prepare
   [kind]
