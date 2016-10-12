@@ -14,13 +14,15 @@
   [expr]
   `(def _# (doall ~expr)))
 
+(def eval-keyword
+  (comp eval symbol name))
+
 (defmacro make-defmethod
   [dispatch-val]
   `(fn [[k# v#]]
-     (let [multifn# (symbol (name k#))]
-       (defmethod (eval multifn#) ~dispatch-val
-         [_#]
-         (println v#)))))
+     (defmethod (eval-keyword k#) ~dispatch-val
+       [_#]
+       (println v#))))
 
 (defmacro defmethods
   [dispatch-val f-m]
