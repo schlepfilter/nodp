@@ -1,4 +1,4 @@
-(ns hfdp.core
+(ns gof.core
   (:gen-class))
 
 (defn -main
