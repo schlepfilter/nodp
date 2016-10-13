@@ -10,28 +10,22 @@
 
 (defmulti add-condiments identity)
 
-(defmacro defall
-  [expr]
-  `(def _# (doall ~expr)))
-
-(def eval-keyword
-  (comp eval symbol name))
-
 (defn- make-defmethod
   [dispatch-val]
   (fn [[k v]]
-    (defmethod (eval-keyword k) dispatch-val
+    (defmethod k dispatch-val
       [_]
       (println v))))
 
-(defmacro defmethods
+(defn- defmethods
   [dispatch-val f-m]
-  `(defall (-> (make-defmethod ~dispatch-val)
-               (map ~f-m))))
+  (-> (make-defmethod dispatch-val)
+      (map f-m)
+      dorun))
 
 (defmethods :coffee
-            {:brew           "Dripping Coffee through filter"
-             :add-condiments "Adding Sugar and Milk"})
+            {brew           "Dripping Coffee through filter"
+             add-condiments "Adding Sugar and Milk"})
 
 (defn prepare
   [kind]
