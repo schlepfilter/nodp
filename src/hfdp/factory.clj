@@ -44,7 +44,7 @@
   (juxt get-ingredients get-pizza-name))
 
 (def operations
-  ["box" "cut" "bake" "prepare"])
+  ["prepare" "bake" "cut" "box"])
 
 (def get-arguments
   (comp (partial concat operations)
