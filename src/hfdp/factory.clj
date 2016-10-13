@@ -66,8 +66,9 @@
     [x]))
 
 (defn- mix-concat-two
-  [x y]
-  (apply concat (map wrap [x y])))
+  [& more]
+  (->> (map wrap more)
+       (apply concat)))
 
 (defn- mix-concat
   [& args]
