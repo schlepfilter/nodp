@@ -1,4 +1,4 @@
-(ns gof.factory
+(ns gof.hfdp.factory
   (:require [clojure.string :as str]
             [gof.helpers :as helpers]))
 

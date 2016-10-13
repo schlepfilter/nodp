@@ -1,4 +1,4 @@
-(ns gof.iterator
+(ns gof.hfdp.iterator
   (:require [flatland.ordered.set :refer [ordered-set]]
             [gof.helpers :as helpers]))
 
