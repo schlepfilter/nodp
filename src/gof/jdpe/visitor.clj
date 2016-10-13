@@ -1,13 +1,14 @@
 (ns gof.jdpe.visitor
   (:require [flatland.ordered.map :refer [ordered-map]]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [gof.helpers :as helpers]))
 
 (def engine
   (ordered-map :camshaft 1
                :piston 1
                :spark-plug 4))
 
-(defn- diagnose-kind
+(defn- get-diagnosis
   [[k v]]
   (let [part-name (name k)]
     (if (= v 1)
@@ -15,11 +16,15 @@
       (->> (str "Diagnosing a " part-name)
            (repeat v)))))
 
-(def diagnose-all
+(def get-diagnoses
   (comp flatten
-        (partial map diagnose-kind)))
+        (partial map get-diagnosis)))
 
-(diagnose-all engine)
+(def diagnose
+  (comp helpers/printall
+        get-diagnoses))
+
+(diagnose engine)
 
 (defn- count-kind
   [[k v]]
