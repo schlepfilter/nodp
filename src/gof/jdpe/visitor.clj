@@ -1,6 +1,6 @@
 (ns gof.jdpe.visitor
-  (:require [flatland.ordered.map :refer [ordered-map]]
-            [clojure.string :as str]
+  (:require [clojure.string :as str]
+            [flatland.ordered.map :refer [ordered-map]]
             [gof.helpers :as helpers]))
 
 (def engine
