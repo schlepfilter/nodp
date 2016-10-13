@@ -1,8 +1,5 @@
 (ns hfdp.template-method)
 
-(def boil
-  (partial println "Boiling water"))
-
 (defn- defmulti-identity
   [mm-name]
   (eval `(defmulti ~mm-name identity)))
@@ -12,9 +9,6 @@
         (partial map defmulti-identity)))
 
 (defmultis-identity ['brew 'add-condiments])
-
-(def pour
-  (partial println "Pouring into cup"))
 
 (defn- make-defmethod
   [dispatch-val]
@@ -35,9 +29,9 @@
 
 (defn prepare
   [kind]
-  (boil)
+  (println "Boiling water")
   (brew kind)
-  (pour)
+  (println "Pouring into cup")
   (add-condiments kind))
 
 (prepare :coffee)
