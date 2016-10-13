@@ -45,7 +45,10 @@
                  (constantly " ----")))
 
 (def get-ingredients
-  (helpers/build select-keys get-regional-ingredient get-kind-ingredients))
+  (comp vals
+        (helpers/build select-keys
+                       get-regional-ingredient
+                       get-kind-ingredients)))
 
 (def get-pizza
   (juxt get-customer-pizza get-ingredients))
