@@ -3,12 +3,22 @@
             [hfdp.helpers :as helpers]))
 
 (def pancake-menu
-  (ordered-set {:name        "K&B's Pancake Breakfast"
-                :description "Pancakes with scrambled eggs, and toast"
-                :price       2.99}
-               {:name        "Regular Pancake Breakfast"
-                :description "Pancakes with fried eggs, sausage"
-                :price       2.99}))
+  (ordered-set
+    {:name        "K&B's Pancake Breakfast"
+     :description "Pancakes with scrambled eggs, and toast"
+     :price       2.99}
+    {:name        "Regular Pancake Breakfast"
+     :description "Pancakes with fried eggs, sausage"
+     :price       2.99}))
+
+(def dinner-menu
+  (ordered-set
+    {:name        "Vegetarian BLT"
+     :description "(Fakin') Bacon with lettuce & tomato on whole wheat"
+     :price       2.99}
+    {:name        "BLT"
+     :description "Bacon with lettuce & tomato on whole wheat"
+     :price       2.99}))
 
 (def get-item
   (helpers/build str
@@ -26,4 +36,4 @@
         get-items
         concat))
 
-(print-menus pancake-menu)
+(print-menus pancake-menu dinner-menu)
