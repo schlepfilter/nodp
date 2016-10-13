@@ -7,10 +7,9 @@
   [mm-name]
   (eval `(defmulti ~mm-name identity)))
 
-(defn- defmultis-identity
-  [mm-names]
-  (-> (map defmulti-identity mm-names)
-      dorun))
+(def defmultis-identity
+  (comp dorun
+        (partial map defmulti-identity)))
 
 (defmultis-identity ['brew 'add-condiments])
 
