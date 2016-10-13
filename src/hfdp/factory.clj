@@ -37,22 +37,54 @@
     (partial (helpers/flip conj) "Pizza")
     (helpers/build vector get-regional-name get-kind-name)))
 
+(def get-customer-pizza
+  (helpers/build str
+                 :customer
+                 (constantly " ordered a ---- ")
+                 get-pizza-name
+                 (constantly " ----")))
+
 (def get-ingredients
-  (helpers/build select-keys get-regional-ingredient get-kind-ingredients))
+  (comp vals
+        (helpers/build select-keys
+                       get-regional-ingredient
+                       get-kind-ingredients)))
 
-(def get-pizza
-  (juxt get-ingredients get-pizza-name))
+(def prepare
+  (comp (partial str "Preparing ")
+        get-pizza-name))
 
-(def operations
-  ["box" "cut" "bake" "prepare"])
+(def constant-operations
+  ["Bake for 25 minutes at 350"
+   "Cutting the pizza into diagonal slices"
+   "Place pizza in official PizzaStore box"])
+
+(defn- wrap
+  [x]
+  (if (sequential? x)
+    x
+    [x]))
+
+(defn- mix-concat-two
+  [& more]
+  (->> (map wrap more)
+       (apply concat)))
+
+(defn- mix-concat
+  [& more]
+  (reduce mix-concat-two more))
 
 (def get-arguments
-  (comp (partial (helpers/functionize lazy-cat) operations)
-        get-pizza))
+  (helpers/build mix-concat
+                 prepare
+                 (constantly constant-operations)
+                 get-customer-pizza
+                 get-ingredients))
 
 (def order
   (comp helpers/printall
         get-arguments))
 
-(order {:region :ny
-        :kind   :cheese})
+(order {:kind     :cheese
+        :customer "Ethan"
+        :region   :ny})
