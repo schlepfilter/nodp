@@ -10,8 +10,16 @@
                 :description "Pancakes with fried eggs, sausage"
                 :price       2.99}))
 
+(def get-item
+  (helpers/build str
+                 :name
+                 (comp (partial str ", ")
+                       :price)
+                 (comp (partial str " -- ")
+                       :description)))
+
 (def get-items
-  (partial map identity))
+  (partial map get-item))
 
 (def print-menu
   (comp (partial helpers/printall)
