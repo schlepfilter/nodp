@@ -13,7 +13,7 @@
   (let [part-name (name k)]
     (if (= v 1)
       (str "Diagnosing the " part-name)
-      (->> (str "Diagnosing a " part-name)
+      (->> (str "Diagnosing a single" part-name)
            (repeat v)))))
 
 (def get-diagnoses
@@ -21,18 +21,20 @@
         (partial map get-diagnosis)))
 
 (def diagnose
-  (comp helpers/printall
-        get-diagnoses))
+  (comp helpers/printall get-diagnoses))
 
 (diagnose engine)
 
-(defn- count-kind
+(defn- get-count
   [[k v]]
   (str v " " (name k) "(s)"))
 
-(def count-all
+(def get-counts
   (comp (partial str/join ", ")
-        (partial map count-kind)))
+        (partial map get-count)))
 
-(count-all engine)
+(def count-parts
+  (comp println get-counts))
+
+(count-parts engine)
 
