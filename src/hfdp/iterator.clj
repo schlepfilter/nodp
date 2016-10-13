@@ -23,10 +23,10 @@
 (def get-item
   (helpers/build str
                  :name
-                 (comp (partial str ", ")
-                       :price)
-                 (comp (partial str " -- ")
-                       :description)))
+                 :price
+                 (constantly ", ")
+                 :description
+                 (constantly " -- ")))
 
 (def get-items
   (partial map get-item))
