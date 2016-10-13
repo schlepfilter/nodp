@@ -3,12 +3,19 @@
 (def boil
   (partial println "Boiling water"))
 
-(defmulti brew identity)
+(defn- defmulti-identity
+  [mm-name]
+  (eval `(defmulti ~mm-name identity)))
+
+(defn- defmultis-identity
+  [mm-names]
+  (-> (map defmulti-identity mm-names)
+      dorun))
+
+(defmultis-identity ['brew 'add-condiments])
 
 (def pour
   (partial println "Pouring into cup"))
-
-(defmulti add-condiments identity)
 
 (defn- make-defmethod
   [dispatch-val]
