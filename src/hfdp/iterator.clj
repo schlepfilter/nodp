@@ -1,5 +1,6 @@
 (ns hfdp.iterator
-  (:require [flatland.ordered.set :refer [ordered-set]]))
+  (:require [flatland.ordered.set :refer [ordered-set]]
+            [hfdp.helpers :as helpers]))
 
 (def pankake-menu
   (ordered-set {:name        "K&B's Pancake Breakfast"
@@ -9,7 +10,11 @@
                 :description "Pancakes with fried eggs, sausage"
                 :price       2.99}))
 
-(def print-menu
-  (partial dorun (map println pankake-menu)))
+(def get-items
+  (partial map identity))
 
-(print-menu)
+(def print-menu
+  (comp (partial helpers/printall)
+        get-items))
+
+(print-menu pankake-menu)
