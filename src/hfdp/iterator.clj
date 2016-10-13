@@ -2,7 +2,7 @@
   (:require [flatland.ordered.set :refer [ordered-set]]
             [hfdp.helpers :as helpers]))
 
-(def pankake-menu
+(def pancake-menu
   (ordered-set {:name        "K&B's Pancake Breakfast"
                 :description "Pancakes with scrambled eggs, and toast"
                 :price       2.99}
@@ -26,4 +26,4 @@
         get-items
         concat))
 
-(print-menus pankake-menu)
+(print-menus pancake-menu)
