@@ -55,7 +55,9 @@
         get-pizza-name))
 
 (def constant-operations
-  ["bake" "cut" "box"])
+  ["Bake for 25 minutes at 350"
+   "Cutting the pizza into diagonal slices"
+   "Place pizza in official PizzaStore box"])
 
 (defn- wrap
   [x]
