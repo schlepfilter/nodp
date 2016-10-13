@@ -8,8 +8,10 @@
 
 (defn- diagnose
   [[k v]]
-  (if (= v 1)
-    (str "Diagnosing the " (name k))
-    (repeat v (str "Diagnosing a " (name k)))))
+  (let [part-name (name k)]
+    (if (= v 1)
+      (str "Diagnosing the " part-name)
+      (->> (str "Diagnosing a " part-name)
+           (repeat v)))))
 
 (flatten (map diagnose engine))
