@@ -57,11 +57,25 @@
 (def constant-operations
   ["bake" "cut" "box"])
 
+(defn- wrap
+  [x]
+  (if (sequential? x)
+    x
+    [x]))
+
+(defn- mix-concat-two
+  [x y]
+  (apply concat (map wrap [x y])))
+
+(defn- mix-concat
+  [& args]
+  (reduce mix-concat-two args))
+
 (def get-arguments
-  (helpers/build concat
-                 (comp vector prepare)
+  (helpers/build mix-concat
+                 prepare
                  (constantly constant-operations)
-                 (comp vector get-customer-pizza)
+                 get-customer-pizza
                  get-ingredients))
 
 (def order
