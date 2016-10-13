@@ -37,11 +37,18 @@
     (partial (helpers/flip conj) "Pizza")
     (helpers/build vector get-regional-name get-kind-name)))
 
+(def get-customer-pizza
+  (helpers/build str
+                 :customer
+                 (constantly " ordered a ---- ")
+                 get-pizza-name
+                 (constantly " ----")))
+
 (def get-ingredients
   (helpers/build select-keys get-regional-ingredient get-kind-ingredients))
 
 (def get-pizza
-  (juxt get-ingredients get-pizza-name))
+  (juxt get-customer-pizza get-ingredients))
 
 (def operations
   ["prepare" "bake" "cut" "box"])
@@ -54,5 +61,6 @@
   (comp helpers/printall
         get-arguments))
 
-(order {:region :ny
-        :kind   :cheese})
+(order {:kind     :cheese
+        :customer "Ethan"
+        :region   :ny})
