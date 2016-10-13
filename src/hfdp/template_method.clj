@@ -26,7 +26,8 @@
 
 (defmacro defmethods
   [dispatch-val f-m]
-  `(defall (map (make-defmethod ~dispatch-val) ~f-m)))
+  `(defall (-> (make-defmethod ~dispatch-val)
+               (map ~f-m))))
 
 (defmethods :coffee
             {:brew           "Dripping Coffee through filter"
