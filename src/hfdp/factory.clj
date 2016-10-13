@@ -71,8 +71,8 @@
        (apply concat)))
 
 (defn- mix-concat
-  [& args]
-  (reduce mix-concat-two args))
+  [& more]
+  (reduce mix-concat-two more))
 
 (def get-arguments
   (helpers/build mix-concat
