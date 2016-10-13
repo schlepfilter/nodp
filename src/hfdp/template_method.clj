@@ -8,7 +8,7 @@
   (comp dorun
         (partial map defmulti-identity)))
 
-(defmultis-identity ['brew 'add-condiments])
+(defmultis-identity #{'brew 'add-condiments})
 
 (defn- make-defmethod
   [dispatch-val]
