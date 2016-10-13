@@ -58,6 +58,7 @@
 
 (def get-arguments
   (comp (partial concat operations)
+        flatten
         get-pizza))
 
 (def order
