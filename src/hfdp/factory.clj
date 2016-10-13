@@ -50,16 +50,19 @@
                        get-regional-ingredient
                        get-kind-ingredients)))
 
-(def get-pizza
-  (juxt get-customer-pizza get-ingredients))
+(def prepare
+  (comp (partial str "Preparing ")
+        get-pizza-name))
 
-(def operations
-  ["prepare" "bake" "cut" "box"])
+(def constant-operations
+  ["bake" "cut" "box"])
 
 (def get-arguments
-  (comp (partial concat operations)
-        flatten
-        get-pizza))
+  (helpers/build concat
+                 (comp vector prepare)
+                 (constantly constant-operations)
+                 (comp vector get-customer-pizza)
+                 get-ingredients))
 
 (def order
   (comp helpers/printall
