@@ -13,7 +13,8 @@
 
 (defn- make-get-sentence
   [verb part-name]
-  (fn [qualifier] (str/join " " [verb qualifier part-name])))
+  (fn [qualifier]
+    (str/join " " [verb qualifier part-name])))
 
 (defn- get-diagnosis
   [[k v]]
