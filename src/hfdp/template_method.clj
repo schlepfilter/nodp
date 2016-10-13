@@ -2,7 +2,8 @@
 
 (defn- defmulti-identity
   [mm-name]
-  (eval `(defmulti ~mm-name identity)))
+  (-> `(defmulti ~mm-name identity)
+      eval))
 
 (def defmultis-identity
   (comp dorun
