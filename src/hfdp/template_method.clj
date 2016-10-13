@@ -28,6 +28,10 @@
             {brew           "Dripping Coffee through filter"
              add-condiments "Adding Sugar and Milk"})
 
+(defmethods :tea
+            {brew           "Steeping the tea"
+             add-condiments "Adding Lemon"})
+
 (defn prepare
   [kind]
   (println "Boiling water")
@@ -36,3 +40,5 @@
   (add-condiments kind))
 
 (prepare :coffee)
+
+(prepare :tea)
