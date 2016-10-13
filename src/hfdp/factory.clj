@@ -47,7 +47,7 @@
   ["box" "cut" "bake" "prepare"])
 
 (def get-arguments
-  (comp (partial (helpers/functionize lazy-cat) operations)
+  (comp (partial concat operations)
         get-pizza))
 
 (def order

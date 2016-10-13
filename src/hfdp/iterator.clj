@@ -21,8 +21,9 @@
 (def get-items
   (partial map get-item))
 
-(def print-menu
+(def print-menus
   (comp (partial helpers/printall)
-        get-items))
+        get-items
+        concat))
 
-(print-menu pankake-menu)
+(print-menus pankake-menu)
