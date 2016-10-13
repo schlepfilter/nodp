@@ -6,7 +6,7 @@
                :piston 1
                :spark-plug 4))
 
-(defn- diagnose
+(defn- diagnose-kind
   [[k v]]
   (let [part-name (name k)]
     (if (= v 1)
@@ -14,4 +14,8 @@
       (->> (str "Diagnosing a " part-name)
            (repeat v)))))
 
-(flatten (map diagnose engine))
+(def diagnose
+  (comp flatten
+        (partial map diagnose-kind)))
+
+(diagnose engine)
