@@ -17,12 +17,12 @@
 (def eval-keyword
   (comp eval symbol name))
 
-(defmacro make-defmethod
+(defn- make-defmethod
   [dispatch-val]
-  `(fn [[k# v#]]
-     (defmethod (eval-keyword k#) ~dispatch-val
-       [_#]
-       (println v#))))
+  (fn [[k v]]
+    (defmethod (eval-keyword k) dispatch-val
+      [_]
+      (println v))))
 
 (defmacro defmethods
   [dispatch-val f-m]
