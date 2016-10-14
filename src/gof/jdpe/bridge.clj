@@ -12,17 +12,18 @@
        (str "Engine power increased to ")
        (update engine :action conj)))
 
-(defn- increase-power
-  [engine]
-  (-> engine
-      (update :power inc)
-      add-power-action))
+(defn- get-change-power
+  [change]
+  (fn [engine]
+    (-> engine
+        (update :power change)
+        add-power-action)))
 
-(defn- decrease-power
-  [engine]
-  (-> engine
-      (update :power dec)
-      add-power-action))
+(def increase-power
+  (get-change-power inc))
+
+(def decrease-power
+  (get-change-power dec))
 
 (def turn-on
   start)
