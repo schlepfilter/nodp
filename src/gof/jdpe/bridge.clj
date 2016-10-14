@@ -1,17 +1,16 @@
-(ns gof.jdpe.bridge
-  (:require [gof.helpers :as helpers]))
+(ns gof.jdpe.bridge)
 
 (defn- start
   [engine]
   (-> engine
       (update :running (constantly true))
-      (update :action (partial (helpers/flip conj) "Engine started"))))
+      (update :action conj "Engine started")))
 
 (defn- increase-power
   [engine]
   (-> engine
       (update :power inc)
-      (update :action (partial (helpers/flip conj) "Engine power increased to "))))
+      (update :action conj "Engine power increased to ")))
 
 (def turn-on
   start)
