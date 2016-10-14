@@ -21,7 +21,8 @@
 
 (defn- add-power-action
   [engine]
-  (->> (:power engine)
+  (->> engine
+       :power
        (str "Engine power increased to ")
        (update engine :actions conj)))
 
