@@ -30,13 +30,13 @@
   (comp (partial > 10) :power))
 
 (def increasable?
-  (helpers/build and :running max-speed?))
+  (every-pred :running max-speed?))
 
 (def min-speed?
   (comp (partial < 0) :power))
 
 (def decreasable?
-  (helpers/build and :running min-speed?))
+  (every-pred :running min-speed?))
 
 (def increase-power
   (make-change-power increasable? inc))
