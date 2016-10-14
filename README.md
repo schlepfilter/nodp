@@ -1,4 +1,4 @@
-# hfdp
+# gof
 
 FIXME: description
 
@@ -10,7 +10,7 @@ Download from http://example.com/FIXME.
 
 FIXME: explanation
 
-    $ java -jar hfdp-0.1.0-standalone.jar [args]
+    $ java -jar gof-0.1.0-standalone.jar [args]
 
 ## Options
 

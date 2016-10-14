@@ -1,6 +1,6 @@
-(ns hfdp.iterator
+(ns gof.hfdp.iterator
   (:require [flatland.ordered.set :refer [ordered-set]]
-            [hfdp.helpers :as helpers]))
+            [gof.helpers :as helpers]))
 
 (def pancake-menu
   (ordered-set
@@ -23,10 +23,10 @@
 (def get-item
   (helpers/build str
                  :name
-                 :price
                  (constantly ", ")
-                 :description
-                 (constantly " -- ")))
+                 :price
+                 (constantly " -- ")
+                 :description))
 
 (def get-items
   (partial map get-item))

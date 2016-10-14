@@ -1,4 +1,4 @@
-(ns hfdp.template-method)
+(ns gof.hfdp.template-method)
 
 (defn- defmulti-identity
   [mm-name]
