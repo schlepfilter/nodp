@@ -6,7 +6,7 @@
       (update :running (constantly true))
       (update :action conj "Engine started")))
 
-(defn- add-increase-power-action
+(defn- add-power-action
   [engine]
   (->> (:power engine)
        (str "Engine power increased to ")
@@ -16,7 +16,13 @@
   [engine]
   (-> engine
       (update :power inc)
-      add-increase-power-action))
+      add-power-action))
+
+(defn- decrease-power
+  [engine]
+  (-> engine
+      (update :power dec)
+      add-power-action))
 
 (def turn-on
   start)
@@ -24,9 +30,12 @@
 (def accelerate
   increase-power)
 
+(def break
+  decrease-power)
+
 (def get-engine
   (constantly {:action  []
                :power   0
                :running false}))
 
-((comp accelerate turn-on get-engine))
+((comp break accelerate turn-on get-engine))
