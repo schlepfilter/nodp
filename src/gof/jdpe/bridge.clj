@@ -13,11 +13,18 @@
        (str "Engine power increased to ")
        (update engine :action conj)))
 
-(defn- change-power
+(defn- unconditionally-change-power
   [engine change]
   (-> engine
       (update :power change)
       add-power-action))
+
+(defn- make-change-power
+  [conditional change]
+  (fn [engine]
+    (if (conditional engine)
+      (unconditionally-change-power engine change)
+      engine)))
 
 (def max-speed?
   (comp (partial > 10) :power))
@@ -25,15 +32,17 @@
 (def increasable?
   (helpers/build and :running max-speed?))
 
-(defn- increase-power
-  [engine]
-  (if (increasable? engine)
-    (change-power engine inc)
-    engine))
+(def min-speed?
+  (comp (partial < 0) :power))
 
-(defn- decrease-power
-  [engine]
-  (change-power engine dec))
+(def decreasable?
+  (helpers/build and :running min-speed?))
+
+(def increase-power
+  (make-change-power increasable? inc))
+
+(def decrease-power
+  (make-change-power decreasable? dec))
 
 (def turn-on
   start)
