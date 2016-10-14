@@ -44,6 +44,12 @@
 (def decrease-power
   (make-change-power decreasable? dec))
 
+(defn- stop
+  [engine]
+  (-> engine
+      (assoc :running false)
+      (update :action conj "Engine stopped")))
+
 (def turn-on
   start)
 
@@ -53,9 +59,12 @@
 (def break
   decrease-power)
 
+(def turn-off
+  stop)
+
 (def engine
   {:action  []
    :power   0
    :running false})
 
-((comp break accelerate turn-on) engine)
+((comp turn-off break accelerate turn-on) engine)
