@@ -37,9 +37,9 @@
 (def break
   decrease-power)
 
-(def get-engine
-  (constantly {:action  []
-               :power   0
-               :running false}))
+(def engine
+  {:action  []
+   :power   0
+   :running false})
 
-((comp break accelerate turn-on get-engine))
+((comp break accelerate turn-on) engine)
