@@ -4,7 +4,7 @@
 (defn- start
   [engine]
   (-> engine
-      (update :running (constantly true))
+      (assoc :running true)
       (update :action conj "Engine started")))
 
 (defn- add-power-action
