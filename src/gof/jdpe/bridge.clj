@@ -1,4 +1,5 @@
-(ns gof.jdpe.bridge)
+(ns gof.jdpe.bridge
+  (:require [gof.helpers :as helpers]))
 
 (defn- start
   [engine]
@@ -18,9 +19,15 @@
       (update :power change)
       add-power-action))
 
+(def max-speed?
+  (comp (partial > 10) :power))
+
+(def increasable?
+  (helpers/build and :running max-speed?))
+
 (defn- increase-power
   [engine]
-  (if (and (:running engine) (< (:power engine) 10))
+  (if (increasable? engine)
     (change-power engine inc)
     engine))
 
