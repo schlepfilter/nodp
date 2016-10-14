@@ -2,7 +2,7 @@
   (:require [gof.helpers :as helpers]))
 
 (def verb
-  {true "started"
+  {true  "started"
    false "stopped"})
 
 (def get-sentence
@@ -87,7 +87,8 @@
 
 (defn- run-actions
   [{:keys [engine actions]}]
-  (print-actions ((apply comp actions) engine)))
+  (-> ((apply comp actions) engine)
+      print-actions))
 
 (run-actions {:engine  engine
               :actions [turn-off break accelerate turn-on]})
