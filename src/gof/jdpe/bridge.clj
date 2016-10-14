@@ -56,6 +56,9 @@
 (def accelerate
   increase-power)
 
+(def accelerate-hard
+  (comp accelerate accelerate))
+
 (def break
   decrease-power)
 
@@ -76,3 +79,6 @@
 
 (run-actions {:engine engine
               :actions [turn-off break accelerate turn-on]})
+
+(run-actions {:engine engine
+              :actions [turn-off break accelerate accelerate-hard turn-on]})
