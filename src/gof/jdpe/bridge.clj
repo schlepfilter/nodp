@@ -29,14 +29,17 @@
 (def max-speed?
   (comp (partial > 10) :power))
 
+(def make-changeable?
+  (partial every-pred :running))
+
 (def increasable?
-  (every-pred :running max-speed?))
+  (make-changeable? max-speed?))
 
 (def min-speed?
   (comp (partial < 0) :power))
 
 (def decreasable?
-  (every-pred :running min-speed?))
+  (make-changeable? min-speed?))
 
 (def increase-power
   (make-change-power increasable? inc))
