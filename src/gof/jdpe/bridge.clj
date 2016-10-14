@@ -5,13 +5,13 @@
   [engine]
   (-> engine
       (assoc :running true)
-      (update :action conj "Engine started")))
+      (update :actions conj "Engine started")))
 
 (defn- add-power-action
   [engine]
   (->> (:power engine)
        (str "Engine power increased to ")
-       (update engine :action conj)))
+       (update engine :actions conj)))
 
 (defn- unconditionally-change-power
   [engine change]
@@ -48,7 +48,7 @@
   [engine]
   (-> engine
       (assoc :running false)
-      (update :action conj "Engine stopped")))
+      (update :actions conj "Engine stopped")))
 
 (def turn-on
   start)
@@ -63,8 +63,11 @@
   stop)
 
 (def engine
-  {:action  []
+  {:actions []
    :power   0
    :running false})
 
-((comp turn-off break accelerate turn-on) engine)
+(def print-actions
+  (comp helpers/printall :actions))
+
+(print-actions ((comp turn-off break accelerate turn-on) engine))
