@@ -1,11 +1,23 @@
 (ns gof.jdpe.bridge
   (:require [gof.helpers :as helpers]))
 
-(defn- start
-  [engine]
-  (-> engine
-      (assoc :running true)
-      (update :actions conj "Engine started")))
+(def verb
+  {true "started"
+   false "stopped"})
+
+(def get-sentence
+  (comp (partial str "Engine ")
+        verb))
+
+(defn- make-change-running
+  [running]
+  (fn [engine]
+    (-> engine
+        (assoc :running running)
+        (update :actions conj (get-sentence running)))))
+
+(def start
+  (make-change-running true))
 
 (defn- add-power-action
   [engine]
@@ -47,11 +59,8 @@
 (def decrease-power
   (make-change-power decreasable? dec))
 
-(defn- stop
-  [engine]
-  (-> engine
-      (assoc :running false)
-      (update :actions conj "Engine stopped")))
+(def stop
+  (make-change-running false))
 
 (def turn-on
   start)
@@ -80,8 +89,8 @@
   [{:keys [engine actions]}]
   (print-actions ((apply comp actions) engine)))
 
-(run-actions {:engine engine
+(run-actions {:engine  engine
               :actions [turn-off break accelerate turn-on]})
 
-(run-actions {:engine engine
+(run-actions {:engine  engine
               :actions [turn-off break accelerate accelerate-hard turn-on]})
