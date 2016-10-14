@@ -70,4 +70,9 @@
 (def print-actions
   (comp helpers/printall :actions))
 
-(print-actions ((comp turn-off break accelerate turn-on) engine))
+(defn- run-actions
+  [{:keys [engine actions]}]
+  (print-actions ((apply comp actions) engine)))
+
+(run-actions {:engine engine
+              :actions [turn-off break accelerate turn-on]})
