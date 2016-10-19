@@ -1,5 +1,4 @@
-(ns gof.jdpe.abstract-factory
-  (:require [clojure.string :as str]))
+(ns gof.jdpe.abstract-factory)
 
 (def description
   {:body    "Body shell parts"
@@ -9,7 +8,7 @@
 (defn make-get-parts
   [vehicle]
   (fn [part]
-    (str/join " " [(part description) "for a" (name vehicle)])))
+    (str (part description) " for a " (name vehicle))))
 
 (def get-car-parts
   (make-get-parts :car))
