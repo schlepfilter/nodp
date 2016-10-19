@@ -2,15 +2,14 @@
 
 (defn make-change-speed
   [gear]
-  (let [capitalized-gear (-> gear
-                             name
-                             .toUpperCase)]
-    (fn [speed]
-     (str "Working out correct gear at "
-          speed
-          "mph for a "
-          capitalized-gear
-          " gearbox"))))
+  (fn [speed]
+    (str "Working out correct gear at "
+         speed
+         "mph for a "
+         (-> gear
+             name
+             .toUpperCase)
+         " gearbox")))
 
 (def change-standard-speed
   (make-change-speed :standard))
