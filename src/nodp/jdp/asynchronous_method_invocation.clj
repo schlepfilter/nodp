@@ -25,9 +25,12 @@
   [{:keys [value delay callback-prefix]}]
   (future
     (Thread/sleep delay)
-    (println (get-prefixed-completion value))
+    (-> value
+        get-prefixed-completion
+        println)
     (if callback-prefix
-      (println (prefix-with-thread-name callback-prefix ": " value)))
+      (-> (prefix-with-thread-name callback-prefix ": " value)
+          println))
     value))
 
 (defn- get-result
@@ -38,7 +41,8 @@
   (comp prefix-with-thread-name get-result))
 
 (def get-results
-  (partial map get-prefixed-result (range)))
+  (->> (range)
+       (partial map get-prefixed-result)))
 
 (def printall
   (comp helpers/printall
