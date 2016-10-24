@@ -1,13 +1,19 @@
 (ns nodp.jdp.asynchronous-method-invocation
-  (:require [nodp.helpers :as helpers]))
+  (:require [nodp.helpers :as helpers]
+            [clojure.string :as str]))
 
 (defn- get-thread-name
   []
   (-> (Thread/currentThread)
       .getName))
 
-(def prefix-with-thread-name
-  (partial str "[" (get-thread-name) "] - "))
+(defn- get-thread-prefix
+  []
+  (str "[" (get-thread-name) "] - "))
+
+(defn- prefix-with-thread-name
+  [& more]
+  (apply str (get-thread-prefix) more))
 
 (def get-completion
   (partial str "Task completed with: "))
@@ -15,7 +21,7 @@
 (def get-prefixed-completion
   (comp prefix-with-thread-name get-completion))
 
-(defn get-future
+(defn- get-future
   [{:keys [value delay callback-prefix]}]
   (future
     (Thread/sleep delay)
@@ -50,4 +56,7 @@
             :delay 700}
            {:value           20
             :delay           400
-            :callback-prefix "Callback result 4"}])
+            :callback-prefix "Callback result 4"}
+           {:value           "callback"
+            :delay           600
+            :callback-prefix "Callback result 5"}])
