@@ -21,7 +21,7 @@
     (Thread/sleep delay)
     (println (get-prefixed-completion value))
     (if callback-prefix
-      (println (get-prefixed-completion callback-prefix ": " value)))
+      (println (prefix-with-thread-name callback-prefix ": " value)))
     value))
 
 (defn- get-result
@@ -34,9 +34,20 @@
 (def get-results
   (partial map get-prefixed-result (range)))
 
-(get-results (map deref (map get-future [{:value 10
-                                          :delay 500}
-                                         {:value "test"
-                                          :delay 300}
-                                         {:value 50
-                                          :delay 700}])))
+(def printall
+  (comp helpers/printall
+        get-results
+        doall
+        (partial map deref)
+        (partial take 3)
+        (partial map get-future)))
+
+(printall [{:value 10
+            :delay 500}
+           {:value "test"
+            :delay 300}
+           {:value 50
+            :delay 700}
+           {:value           20
+            :delay           400
+            :callback-prefix "Callback result 4"}])
