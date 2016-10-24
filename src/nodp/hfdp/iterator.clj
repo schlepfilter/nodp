@@ -1,6 +1,6 @@
-(ns gof.hfdp.iterator
+(ns nodp.hfdp.iterator
   (:require [flatland.ordered.set :refer [ordered-set]]
-            [gof.helpers :as helpers]))
+            [nodp.helpers :as helpers]))
 
 (def pancake-menu
   (ordered-set

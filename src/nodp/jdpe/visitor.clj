@@ -1,7 +1,7 @@
-(ns gof.jdpe.visitor
+(ns nodp.jdpe.visitor
   (:require [clojure.string :as str]
             [flatland.ordered.map :refer [ordered-map]]
-            [gof.helpers :as helpers]))
+            [nodp.helpers :as helpers]))
 
 (def engine
   (ordered-map :camshaft 1

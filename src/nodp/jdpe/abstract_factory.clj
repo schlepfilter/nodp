@@ -1,4 +1,4 @@
-(ns gof.jdpe.abstract-factory)
+(ns nodp.jdpe.abstract-factory)
 
 (def description
   {:body    "Body shell parts"

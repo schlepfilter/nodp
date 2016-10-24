@@ -1,4 +1,4 @@
-(ns gof.hfdp.strategy)
+(ns nodp.hfdp.strategy)
 
 (def quack
   (partial println "Quack"))

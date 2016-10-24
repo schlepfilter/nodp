@@ -1,7 +1,7 @@
-(ns gof.hfdp.facade
+(ns nodp.hfdp.facade
   (:require [clojure.string :as str]
             [cats.core :as m]
-            [gof.helpers :as helpers]))
+            [nodp.helpers :as helpers]))
 
 (def verbs
   {:play     "playing"

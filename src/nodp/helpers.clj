@@ -1,4 +1,4 @@
-(ns gof.helpers
+(ns nodp.helpers
   (:require [riddley.walk :as riddley]))
 
 (defn flip

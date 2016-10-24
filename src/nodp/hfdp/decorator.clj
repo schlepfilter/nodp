@@ -1,4 +1,4 @@
-(ns gof.hfdp.decorator
+(ns nodp.hfdp.decorator
   (:require [clojure.string :as str]))
 
 (def dark-roast
