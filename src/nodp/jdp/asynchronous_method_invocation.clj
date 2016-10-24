@@ -33,9 +33,10 @@
           println))
     value))
 
-(defn- get-result
-  [n value]
-  (str "Result " n ": " value))
+(def get-result
+  (comp str/join
+        (partial interleave ["Result " ": "])
+        vector))
 
 (def get-prefixed-result
   (comp prefix-with-thread-name get-result))
