@@ -1,8 +1,11 @@
 (ns nodp.eip.helpers
   (:require [clojure.string :as str]))
 
-(def handle-items
-  (comp (partial str "handling ")
-        str/join))
+(defn handle-items
+  [items]
+  (if (not-empty items)
+    (->> items
+         str/join
+         (str "handling "))))
 
 
