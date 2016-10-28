@@ -14,11 +14,9 @@
 (def change-standard-speed
   (make-change-speed :standard))
 
-(change-standard-speed 20)
-(change-standard-speed 40)
+(map change-standard-speed [20 40])
 
 (def change-sport-speed
   (make-change-speed :sport))
 
-(change-sport-speed 20)
-(change-sport-speed 40)
+(map change-sport-speed [20 40])
