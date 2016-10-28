@@ -4,6 +4,7 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.8.0"]
+                 [clojurewerkz/money "1.9.0"]
                  [funcool/cats "2.0.0"]
                  [riddley "0.1.12"]
                  [org.flatland/ordered "1.5.4"]]
