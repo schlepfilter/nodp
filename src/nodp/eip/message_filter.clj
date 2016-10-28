@@ -1,9 +1,9 @@
 (ns nodp.eip.message-filter
-  (:require [clojurewerkz.money.amounts :as ma]
+  (:require [clojure.string :as str]
+            [cats.core :as m]
+            [clojurewerkz.money.amounts :as ma]
             [clojurewerkz.money.currencies :as mc]
-            [clojure.string :as str]
-            [nodp.helpers :as helpers]
-            [cats.core :as m]))
+            [nodp.helpers :as helpers]))
 
 (def a-items
   [{:id    1
@@ -50,6 +50,16 @@
   (comp (partial comp handle-items)
         make-filter-items))
 
-((make-handle-kind-items "ABC") a-items)
+(def handle-a-items
+  (make-handle-kind-items "ABC"))
 
-((make-handle-kind-items "ABC") x-items)
+(handle-a-items a-items)
+
+(handle-a-items x-items)
+
+(def handle-x-items
+  (make-handle-kind-items "XYZ"))
+
+(handle-x-items a-items)
+
+(handle-x-items x-items)
