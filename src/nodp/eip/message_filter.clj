@@ -50,7 +50,7 @@
 
 (def handle-items-collection
   (comp
-    (partial filter (complement nil?))
+    (partial remove nil?)
     (partial m/<*> (map make-handle-kind-items ["ABC" "XYZ"]))))
 
 (defn- printall
