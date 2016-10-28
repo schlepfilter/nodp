@@ -3,7 +3,6 @@
             [clojurewerkz.money.currencies :as mc]
             [clojure.string :as str]
             [nodp.helpers :as helpers]
-            [nodp.eip.helpers :as eip-helpers]
             [cats.core :as m]))
 
 (def a-items
@@ -40,8 +39,15 @@
   (comp (m/curry 2 filter)
         make-is-kind?))
 
+(defn handle-items
+  [items]
+  (if (not-empty items)
+    (->> items
+         str/join
+         (str "handling "))))
+
 (def make-handle-kind-items
-  (comp (partial comp eip-helpers/handle-items)
+  (comp (partial comp handle-items)
         make-filter-items))
 
 ((make-handle-kind-items "ABC") a-items)

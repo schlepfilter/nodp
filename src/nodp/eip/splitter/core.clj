@@ -1,7 +1,6 @@
 (ns nodp.eip.splitter.core
   (:require [clojurewerkz.money.amounts :as ma]
-            [clojurewerkz.money.currencies :as mc]
-            [nodp.eip.helpers :as eip-helpers]))
+            [clojurewerkz.money.currencies :as mc]))
 
 (def items
   [{:id    1
@@ -14,4 +13,7 @@
     :kind  "C"
     :price (ma/amount-of mc/USD 14.95)}])
 
-(eip-helpers/handle-items items)
+(def handle-item
+  (partial str "handling "))
+
+(map handle-item items)
