@@ -1,4 +1,4 @@
-(ns gof.core
+(ns nodp.core
   (:gen-class))
 
 (defn -main

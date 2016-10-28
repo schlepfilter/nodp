@@ -1,4 +1,4 @@
-(ns gof.hfdp.adapter)
+(ns nodp.hfdp.adapter)
 
 (def turkey-quack
   (partial println "Gobble gobble"))

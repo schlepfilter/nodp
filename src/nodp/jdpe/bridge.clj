@@ -1,5 +1,5 @@
-(ns gof.jdpe.bridge
-  (:require [gof.helpers :as helpers]))
+(ns nodp.jdpe.bridge
+  (:require [nodp.helpers :as helpers]))
 
 (def verb
   {true  "started"

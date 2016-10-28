@@ -1,4 +1,4 @@
-(ns gof.jdpe.strategy)
+(ns nodp.jdpe.strategy)
 
 (defn make-change-speed
   [gear]

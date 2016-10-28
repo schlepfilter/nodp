@@ -1,6 +1,6 @@
-(ns gof.hfdp.factory
+(ns nodp.hfdp.factory
   (:require [clojure.string :as str]
-            [gof.helpers :as helpers]))
+            [nodp.helpers :as helpers]))
 
 (defmulti get-regional-ingredient :region)
 
