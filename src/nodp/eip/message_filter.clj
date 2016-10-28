@@ -43,9 +43,7 @@
 (defn- make-handle-kind-items
   [kind]
   (fn [items]
-    (if (->> items
-             (filter (make-is-kind? kind))
-             not-empty)
+    (if (some (make-is-kind? kind) items)
       (handle-items items))))
 
 (def handle-items-collection
