@@ -53,4 +53,10 @@
     (partial filter (complement nil?))
     (partial m/<*> (map make-handle-kind-items ["ABC" "XYZ"]))))
 
-(handle-items-collection [a-items x-items])
+(defn- printall
+  [& more]
+  (-> more
+      handle-items-collection
+      helpers/printall))
+
+(printall a-items x-items)
