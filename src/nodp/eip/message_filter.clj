@@ -36,6 +36,12 @@
   (comp (partial (helpers/flip str/starts-with?) kind)
         :kind))
 
+; This alternate definition is less readable.
+;(def make-is-kind?
+;  (comp
+;    ((m/curry 2 (helpers/flip comp)) :kind)
+;    (m/curry 2 (helpers/flip str/starts-with?))))
+
 (def handle-items
   (comp (partial str "handling ")
         str/join))
