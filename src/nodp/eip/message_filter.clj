@@ -1,5 +1,7 @@
 (ns nodp.eip.message-filter
   (:require [clojure.string :as str]
+            [cats.builtin]
+            [cats.core :as m]
             [clojurewerkz.money.amounts :as ma]
             [clojurewerkz.money.currencies :as mc]
             [nodp.helpers :as helpers]))
@@ -42,20 +44,13 @@
   [kind]
   (fn [items]
     (if (->> items
-            (filter (make-is-kind? kind))
-            not-empty)
+             (filter (make-is-kind? kind))
+             not-empty)
       (handle-items items))))
 
-(def handle-a-items
-  (make-handle-kind-items "ABC"))
+(def handle-items-collection
+  (comp
+    (partial filter (complement nil?))
+    (partial m/<*> (map make-handle-kind-items ["ABC" "XYZ"]))))
 
-(handle-a-items a-items)
-
-(handle-a-items x-items)
-
-(def handle-x-items
-  (make-handle-kind-items "XYZ"))
-
-(handle-x-items a-items)
-
-(handle-x-items x-items)
+(handle-items-collection [a-items x-items])
