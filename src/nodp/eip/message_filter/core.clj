@@ -3,7 +3,8 @@
             [clojurewerkz.money.currencies :as mc]
             [clojure.string :as str]
             [nodp.helpers :as helpers]
-            [nodp.eip.helpers :as eip-helpers]))
+            [nodp.eip.helpers :as eip-helpers]
+            [cats.core :as m]))
 
 (def a-items
   [{:id    1
@@ -31,18 +32,17 @@
     :price (ma/amount-of mc/USD 9.95)}])
 
 (defn- make-is-kind?
-  [s]
-  (comp (partial (helpers/flip str/starts-with?) s)
+  [kind]
+  (comp (partial (helpers/flip str/starts-with?) kind)
         :kind))
 
-(defn- make-filter-items
-  [kind]
-  (partial filter (make-is-kind? kind)))
+(def make-filter-items
+  (comp (m/curry 2 filter)
+        make-is-kind?))
 
-(defn- make-handle-kind-items
-  [kind]
-  (comp eip-helpers/handle-items
-        (make-filter-items kind)))
+(def make-handle-kind-items
+  (comp (partial comp eip-helpers/handle-items)
+        make-filter-items))
 
 ((make-handle-kind-items "ABC") a-items)
 
