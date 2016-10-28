@@ -1,4 +1,4 @@
-(ns nodp.eip.message-filter.core
+(ns nodp.eip.message-filter
   (:require [clojurewerkz.money.amounts :as ma]
             [clojurewerkz.money.currencies :as mc]
             [clojure.string :as str]
