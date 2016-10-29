@@ -13,8 +13,8 @@
    :service "99-1203"})
 
 (defn- make-operate
-  [s extractor]
-  (comp (partial str "handling register customer to " s ": ")
+  [verb extractor]
+  (comp (partial str "handling register customer to " verb ": ")
         extractor))
 
 (def create-customer
