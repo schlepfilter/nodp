@@ -12,17 +12,22 @@
              :phone     "303-555-1212"}
    :service "99-1203"})
 
+(defn- make-operate
+  [s extractor]
+  (comp (partial str s)
+        extractor))
+
 (def keep-customer
-  (comp (partial str "handling register customer to create a new custoner: ")
-        (partial (helpers/flip select-keys) #{:name :tax-id})))
+  (make-operate "handling register customer to create a new custoner: "
+                (partial (helpers/flip select-keys) #{:name :tax-id})))
 
 (def keep-contact
-  (comp (partial str "handling register customer to keep contact information: ")
-        :contact))
+  (make-operate "handling register customer to keep contact information: "
+                :contact))
 
 (def check-credit
-  (comp (partial str "handling register customer to perform credit check: ")
-        :tax-id))
+  (make-operate "handling register customer to perform credit check: "
+                :tax-id))
 
 (def handle-customer
   (helpers/build vector keep-customer keep-contact check-credit))
