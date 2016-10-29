@@ -12,6 +12,10 @@
              :phone     "303-555-1212"}
    :service "99-1203"})
 
+(def keep-customer
+  (comp (partial str "handling register customer to create a new custoner: ")
+        (partial (helpers/flip select-keys) #{:name :tax-id})))
+
 (def keep-contact
   (comp (partial str "handling register customer to keep contact information: ")
         :contact))
@@ -21,7 +25,7 @@
         :tax-id))
 
 (def handle-customer
-  (helpers/build vector keep-contact check-credit))
+  (helpers/build vector keep-customer keep-contact check-credit))
 
 (def printall
   (comp helpers/printall handle-customer))
