@@ -29,11 +29,6 @@
   (comp flatten
         (partial map get-diagnosis)))
 
-(def diagnose
-  (comp helpers/printall get-diagnoses))
-
-(diagnose engine)
-
 (defn- get-count
   [[k v]]
   (str v " " (name k) "(s)"))
@@ -42,7 +37,12 @@
   (comp (partial str/join ", ")
         (partial map get-count)))
 
-(def count-parts
-  (comp println get-counts))
+(def get-arguments
+  (helpers/build concat
+                 get-diagnoses
+                 (comp vector get-counts)))
 
-(count-parts engine)
+(def printall
+  (comp helpers/printall get-arguments))
+
+(printall engine)
