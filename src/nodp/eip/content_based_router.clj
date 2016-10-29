@@ -1,7 +1,7 @@
 (ns nodp.eip.splitter.content-based-router
-  (:require [nodp.eip.helpers :as eip-helpers]
-            [clojure.string :as str]
-            [nodp.helpers :as helpers]))
+  (:require [clojure.string :as str]
+            [nodp.helpers :as helpers]
+            [nodp.eip.helpers :as eip-helpers]))
 
 (def split-dot
   (partial (helpers/flip str/split) #"\."))
@@ -19,4 +19,13 @@
   [items]
   (eip-helpers/handle-items items))
 
-(map handle-items [eip-helpers/a-items eip-helpers/x-items])
+(def handle-items-collection
+  (partial map handle-items))
+
+(defn- printall
+  [& more]
+  (-> more
+      handle-items-collection
+      helpers/printall))
+
+(printall eip-helpers/a-items eip-helpers/x-items)
