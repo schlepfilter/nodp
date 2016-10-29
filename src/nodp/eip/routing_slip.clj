@@ -14,19 +14,19 @@
 
 (defn- make-operate
   [s extractor]
-  (comp (partial str "handling register customer to " s)
+  (comp (partial str "handling register customer to " s ": ")
         extractor))
 
 (def create-customer
-  (make-operate "create a new custoner: "
+  (make-operate "create a new custoner"
                 (partial (helpers/flip select-keys) #{:name :tax-id})))
 
 (def keep-contact
-  (make-operate "keep contact information: "
+  (make-operate "keep contact information"
                 :contact))
 
 (def check-credit
-  (make-operate "perform credit check: "
+  (make-operate "perform credit check"
                 :tax-id))
 
 (def handle-customer
