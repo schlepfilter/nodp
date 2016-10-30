@@ -2,14 +2,9 @@
   (:require [nodp.helpers :as helpers]
             [clojure.string :as str]))
 
-(defn- get-thread-name
-  []
-  (-> (Thread/currentThread)
-      .getName))
-
 (defn- get-thread-prefix
   []
-  (str "[" (get-thread-name) "] - "))
+  (str "[" (helpers/get-thread-name) "] - "))
 
 (defn- prefix-with-thread-name
   [& more]

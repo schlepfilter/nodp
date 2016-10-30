@@ -32,3 +32,7 @@
   (comp dorun
         (partial map println)))
 
+(defn get-thread-name
+  []
+  (-> (Thread/currentThread)
+      .getName))
