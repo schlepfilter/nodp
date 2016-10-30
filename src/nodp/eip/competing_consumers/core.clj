@@ -1,4 +1,4 @@
-(ns nodp.eip.competing-consumers
+(ns nodp.eip.competing-consumers.core
   (:require [nodp.helpers :as helpers]))
 
 (def get-work-item
