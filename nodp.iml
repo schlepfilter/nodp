@@ -13,15 +13,51 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Leiningen: cljs-log:0.2.1" level="project" />
     <orderEntry type="library" name="Leiningen: clojure-complete:0.2.4" level="project" />
     <orderEntry type="library" name="Leiningen: clojurewerkz/money:1.9.0" level="project" />
+    <orderEntry type="library" name="Leiningen: com.google.javascript/closure-compiler:v20151015" level="project" />
+    <orderEntry type="library" name="Leiningen: com.postspectacular/dependency:0.1.2" level="project" />
+    <orderEntry type="library" name="Leiningen: environ:1.0.0" level="project" />
     <orderEntry type="library" name="Leiningen: funcool/cats:2.0.0" level="project" />
+    <orderEntry type="library" name="Leiningen: hiccup:1.0.5" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/clojure:1.8.0" level="project" />
+    <orderEntry type="library" name="Leiningen: org.clojure/clojurescript:1.7.170" level="project" />
+    <orderEntry type="library" name="Leiningen: org.clojure/core.async:0.2.371" level="project" />
+    <orderEntry type="library" name="Leiningen: org.clojure/core.cache:0.6.3" level="project" />
+    <orderEntry type="library" name="Leiningen: org.clojure/core.memoize:0.5.6" level="project" />
+    <orderEntry type="library" name="Leiningen: org.clojure/data.json:0.2.6" level="project" />
+    <orderEntry type="library" name="Leiningen: org.clojure/data.priority-map:0.0.2" level="project" />
+    <orderEntry type="library" name="Leiningen: org.clojure/google-closure-library-third-party:0.0-20151016-61277aea" level="project" />
+    <orderEntry type="library" name="Leiningen: org.clojure/google-closure-library:0.0-20151016-61277aea" level="project" />
+    <orderEntry type="library" name="Leiningen: org.clojure/math.combinatorics:0.1.3" level="project" />
+    <orderEntry type="library" name="Leiningen: org.clojure/tools.analyzer.jvm:0.6.7" level="project" />
+    <orderEntry type="library" name="Leiningen: org.clojure/tools.analyzer:0.6.6" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/tools.macro:0.1.1" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/tools.nrepl:0.2.12" level="project" />
+    <orderEntry type="library" name="Leiningen: org.clojure/tools.reader:0.10.0-alpha3" level="project" />
     <orderEntry type="library" name="Leiningen: org.flatland/ordered:1.5.4" level="project" />
     <orderEntry type="library" name="Leiningen: org.flatland/useful:0.9.0" level="project" />
     <orderEntry type="library" name="Leiningen: org.joda/joda-money:0.10.0" level="project" />
+    <orderEntry type="library" name="Leiningen: org.mozilla/rhino:1.7R5" level="project" />
+    <orderEntry type="library" name="Leiningen: org.ow2.asm/asm-all:4.2" level="project" />
     <orderEntry type="library" name="Leiningen: riddley:0.1.12" level="project" />
+    <orderEntry type="library" name="Leiningen: thi.ng/color:1.0.0" level="project" />
+    <orderEntry type="library" name="Leiningen: thi.ng/dstruct:0.1.2" level="project" />
+    <orderEntry type="library" name="Leiningen: thi.ng/geom-core:0.0.908" level="project" />
+    <orderEntry type="library" name="Leiningen: thi.ng/geom-meshops:0.0.908" level="project" />
+    <orderEntry type="library" name="Leiningen: thi.ng/geom-physics:0.0.908" level="project" />
+    <orderEntry type="library" name="Leiningen: thi.ng/geom-svg:0.0.908" level="project" />
+    <orderEntry type="library" name="Leiningen: thi.ng/geom-types:0.0.908" level="project" />
+    <orderEntry type="library" name="Leiningen: thi.ng/geom-viz:0.0.908" level="project" />
+    <orderEntry type="library" name="Leiningen: thi.ng/geom-voxel:0.0.908" level="project" />
+    <orderEntry type="library" name="Leiningen: thi.ng/geom-webgl:0.0.908" level="project" />
+    <orderEntry type="library" name="Leiningen: thi.ng/geom:0.0.908" level="project" />
+    <orderEntry type="library" name="Leiningen: thi.ng/math:0.1.4" level="project" />
+    <orderEntry type="library" name="Leiningen: thi.ng/ndarray:0.3.0" level="project" />
+    <orderEntry type="library" name="Leiningen: thi.ng/shadergraph:0.1.1" level="project" />
+    <orderEntry type="library" name="Leiningen: thi.ng/strf:0.2.1" level="project" />
+    <orderEntry type="library" name="Leiningen: thi.ng/typedarrays:0.1.2" level="project" />
+    <orderEntry type="library" name="Leiningen: thi.ng/xerror:0.1.0" level="project" />
   </component>
 </module>
