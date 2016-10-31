@@ -17,4 +17,19 @@
       sum-arithmetic
       println))
 
-(pmap print-sum [1000 500 2000 1])
+(defmacro future-pmap
+  [f coll]
+  `(future (pmap ~f ~coll)))
+
+;This is more literal translation of the original Java code.
+;(defmacro do-future
+;  [f x]
+;  `(future (~f ~x)))
+;
+;(defn do-map-future
+;  [f coll]
+;  (when (not-empty coll)
+;    (do-future f (first coll))
+;    (do-map-future f (rest coll))))
+
+(future-pmap print-sum [1000 500 2000 1])
