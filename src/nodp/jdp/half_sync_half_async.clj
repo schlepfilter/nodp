@@ -1,4 +1,5 @@
-(ns nodp.jdp.half-sync-half-async)
+(ns nodp.jdp.half-sync-half-async
+  (:require [nodp.helpers :as helpers]))
 
 (defn- sum-arithmetic
   [i]
@@ -10,12 +11,9 @@
 ;    (partial (helpers/flip /) 2)
 ;    (helpers/build * identity inc)))
 
-(defn- print-sum
-  [i]
-  (Thread/sleep i)
-  (-> i
-      sum-arithmetic
-      println))
+(def print-sum
+  (juxt (helpers/functionize Thread/sleep)
+        (comp println sum-arithmetic)))
 
 (defn- future-pmap
   [f coll]
