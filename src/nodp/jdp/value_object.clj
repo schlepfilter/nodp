@@ -19,8 +19,7 @@
   `(str/join " " ["Is" '~x "and" '~y "equal :" (= ~x ~y)]))
 
 (defmacro compare-stats-collection
-  ([]
-   nil)
+  ([])
   ([xy & more]
    `(cons (compare-stats ~(first xy) ~(second xy))
           (compare-stats-collection ~@more))))

@@ -18,8 +18,9 @@
 
 (defn- get-diagnosis
   [[k v]]
-  (let [part-name (name k)
-        get-sentence (make-get-sentence verb part-name)]
+  (let [get-sentence (->> k
+                          name
+                          (make-get-sentence verb))]
     (if (= v 1)
       (get-sentence "the")
       (->> (get-sentence "a singular")
