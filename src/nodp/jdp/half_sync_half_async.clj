@@ -17,9 +17,9 @@
       sum-arithmetic
       println))
 
-(defmacro future-pmap
+(defn- future-pmap
   [f coll]
-  `(future (pmap ~f ~coll)))
+  (future (pmap f coll)))
 
 ;This is more literal translation of the original Java code.
 ;(defmacro do-future
