@@ -1,7 +1,7 @@
 (ns nodp.jdp.private-class-data
   (:require [clojure.string :as str]
-            [inflections.core :as inflections]
             [com.rpl.specter :as specter]
+            [inflections.core :as inflections]
             [nodp.helpers :as helpers]))
 
 (def stew {:potato 1
