@@ -1,0 +1,43 @@
+(ns nodp.jdp.private-class-data
+  (:require [clojure.string :as str]
+            [com.rpl.specter :as specter]
+            [inflections.core :as inflections]
+            [nodp.helpers :as helpers]))
+
+(def stew {:potato 1
+           :carrot 2
+           :meat   3
+           :pepepr 4})
+
+(def get-ingredient
+  (comp (partial str/join " ")
+        (juxt last
+              (comp inflections/plural
+                    name
+                    first))))
+
+(def get-comma
+  (comp (partial str/join ", ")
+        drop-last))
+
+(def get-and
+  (comp (partial str/join " and ")
+        (juxt get-comma last)))
+
+(def mix
+  (comp (partial str "Mixing the stew we find: ")
+        get-and
+        (partial map get-ingredient)))
+
+(mix stew)
+
+(def taste
+  (partial specter/transform* specter/MAP-VALS dec))
+
+(def taste-mix
+  (juxt (constantly "Tasting the stew")
+        (comp mix taste)))
+
+(-> stew
+    taste-mix
+    helpers/printall)

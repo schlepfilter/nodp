@@ -18,9 +18,13 @@
     <orderEntry type="library" name="Leiningen: clojurewerkz/money:1.9.0" level="project" />
     <orderEntry type="library" name="Leiningen: com.google.javascript/closure-compiler:v20151015" level="project" />
     <orderEntry type="library" name="Leiningen: com.postspectacular/dependency:0.1.2" level="project" />
+    <orderEntry type="library" name="Leiningen: com.rpl/specter:0.13.0" level="project" />
+    <orderEntry type="library" name="Leiningen: commons-codec:1.10" level="project" />
     <orderEntry type="library" name="Leiningen: environ:1.0.0" level="project" />
     <orderEntry type="library" name="Leiningen: funcool/cats:2.0.0" level="project" />
     <orderEntry type="library" name="Leiningen: hiccup:1.0.5" level="project" />
+    <orderEntry type="library" name="Leiningen: inflections:0.12.2" level="project" />
+    <orderEntry type="library" name="Leiningen: noencore:0.3.0" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/clojure:1.8.0" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/clojurescript:1.7.170" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/core.async:0.2.371" level="project" />
