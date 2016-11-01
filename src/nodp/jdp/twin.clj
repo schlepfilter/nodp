@@ -1,4 +1,5 @@
-(ns nodp.jdp.twin)
+(ns nodp.jdp.twin
+  (:require [nodp.helpers :as helpers]))
 
 (defn- get-ball
   [{:keys [draw move]}]
@@ -7,24 +8,19 @@
             (draw)
             (move))))
 
-(defn print-constantly
-  [s]
-  (comp println
-        (constantly s)))
-
 (defn- make-draw
   [do-draw]
-  (juxt (print-constantly "draw")
+  (juxt (helpers/print-constantly "draw")
         do-draw))
 
 (def do-draw
-  (print-constantly "doDraw"))
+  (helpers/print-constantly "doDraw"))
 
 (def move
-  (print-constantly "move"))
+  (helpers/print-constantly "move"))
 
 (def suspend
-  (juxt (print-constantly "Begin to suspend ball")
+  (juxt (helpers/print-constantly "Begin to suspend ball")
         future-cancel))
 
 (let [ball (get-ball {:draw (make-draw do-draw)

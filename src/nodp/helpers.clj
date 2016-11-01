@@ -36,3 +36,8 @@
   []
   (-> (Thread/currentThread)
       .getName))
+
+(defn print-constantly
+  [s]
+  (comp println
+        (constantly s)))
