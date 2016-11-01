@@ -11,7 +11,7 @@
 
 (def get-ingredient
   (comp (partial str/join " ")
-        (juxt second
+        (juxt last
               (comp inflections/plural
                     name
                     first))))
