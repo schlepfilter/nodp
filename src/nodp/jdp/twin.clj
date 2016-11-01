@@ -7,19 +7,24 @@
             (draw)
             (move))))
 
+(defn print-constantly
+  [s]
+  (comp println
+        (constantly s)))
+
 (defn- make-draw
   [do-draw]
-  (juxt (partial println "draw") do-draw))
+  (juxt (print-constantly "draw")
+        do-draw))
 
 (def do-draw
-  (partial println "doDraw"))
+  (print-constantly "doDraw"))
 
 (def move
-  (partial println "move"))
+  (print-constantly "move"))
 
 (def suspend
-  (juxt (comp println
-              (constantly "Begin to suspend ball"))
+  (juxt (print-constantly "Begin to suspend ball")
         future-cancel))
 
 (let [ball (get-ball {:draw (make-draw do-draw)
