@@ -29,10 +29,10 @@
         get-and
         (partial map get-ingredient)))
 
+(mix stew)
+
 (def taste
   (partial specter/transform* specter/MAP-VALS dec))
-
-(mix stew)
 
 (def taste-mix
   (juxt (constantly "Tasting the stew")
