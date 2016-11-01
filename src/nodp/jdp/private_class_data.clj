@@ -30,12 +30,8 @@
         get-and
         (partial map get-ingredient)))
 
-
-(specter/transform specter/MAP-VALS dec stew)
-
-(defn- taste
-  [food]
-  (specter/transform specter/MAP-VALS dec food))
+(def taste
+  (partial specter/transform* specter/MAP-VALS dec))
 
 (mix stew)
 
