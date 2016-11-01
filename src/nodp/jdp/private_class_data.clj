@@ -9,21 +9,20 @@
            :meat   3
            :pepepr 4})
 
-(defn- get-ingredient
-  [[k v]]
-  (->> k
-       name
-       inflections/plural
-       (str v " ")))
+(def get-ingredient
+  (comp (partial str/join " ")
+        (juxt second
+              (comp inflections/plural
+                    name
+                    first))))
 
 (def get-comma
   (comp (partial str/join ", ")
         drop-last))
 
 (def get-and
-  (comp
-    (partial str/join " and ")
-    (juxt get-comma last)))
+  (comp (partial str/join " and ")
+        (juxt get-comma last)))
 
 (def mix
   (comp (partial str "Mixing the stew we find: ")
