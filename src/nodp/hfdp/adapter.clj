@@ -1,13 +1,14 @@
-(ns nodp.hfdp.adapter)
+(ns nodp.hfdp.adapter
+  (:require [nodp.helpers :as helpers]))
 
 (def turkey-quack
-  (partial println "Gobble gobble"))
+  (helpers/print-constantly "Gobble gobble"))
 
 (def duck-quack
   turkey-quack)
 
 (def turkey-fly
-  (partial println "I'm flying a short distance"))
+  (helpers/print-constantly "I'm flying a short distance"))
 
 (defn duck-fly
   []

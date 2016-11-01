@@ -1,13 +1,14 @@
-(ns nodp.hfdp.strategy)
+(ns nodp.hfdp.strategy
+  (:require [nodp.helpers :as helpers]))
 
 (def quack
-  (partial println "Quack"))
+  (helpers/print-constantly "Quack"))
 
 (def fly-rocket-powered
-  (partial println "I'm flying with a rocket"))
+  (helpers/print-constantly "I'm flying with a rocket"))
 
 (def fly-no-way
-  (partial println "I can't fly"))
+  (helpers/print-constantly "I can't fly"))
 
 (defn funcall
   [f]
