@@ -37,7 +37,7 @@
   (-> (Thread/currentThread)
       .getName))
 
-(defn print-constantly
-  [s]
-  (comp println
-        (constantly s)))
+(def print-constantly
+  (comp
+    (partial comp println)
+    constantly))
