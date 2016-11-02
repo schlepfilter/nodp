@@ -1,9 +1,13 @@
 (ns nodp.jdp.twin
   (:require [nodp.helpers :as helpers]))
 
+(defmacro forever
+  [& body]
+  `(while true ~@body))
+
 (defn- get-ball
   [{:keys [draw move]}]
-  (future (while true
+  (future (forever
             (Thread/sleep 250)
             (draw)
             (move))))
