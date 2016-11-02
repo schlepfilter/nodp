@@ -17,7 +17,8 @@
 
 (defn- future-pmap
   [f coll]
-  (future (pmap f coll)))
+  (-> (pmap f coll)
+      future))
 
 ;This is more literal translation of the original Java code.
 ;(defmacro do-future
