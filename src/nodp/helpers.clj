@@ -3,10 +3,7 @@
 
 (defn flip
   [f]
-  (fn
-    ([] (f))
-    ([x] (f x))
-    ([x y & more] (apply f y x more))))
+  (fn [x y & more] (apply f y x more)))
 
 (defn quote-form
   [form]
