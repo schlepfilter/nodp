@@ -41,14 +41,13 @@
               (comp get-name :kind)
               (comp (make-postfix "ms") get-time))))
 
-(def process
+(def handle
   (juxt (comp (helpers/functionize Thread/sleep) get-time)
         (comp println describe)))
 
-(map process [{:kind     :potato
-               :quantity 3}
-              {:kind     :potato
-               :quantity 6}
-              {:kind     :coffee
-               :quantity 2}])
-
+(map handle [{:kind     :potato
+              :quantity 3}
+             {:kind     :potato
+              :quantity 6}
+             {:kind     :coffee
+              :quantity 2}])
