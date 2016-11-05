@@ -18,13 +18,13 @@
 
 (defn- get-value
   [{:keys [value delay callback-prefix]}]
-    (Thread/sleep delay)
-    (-> value
-        get-prefixed-completion
+  (Thread/sleep delay)
+  (-> value
+      get-prefixed-completion
+      println)
+  (if callback-prefix
+    (-> (prefix-with-thread-name callback-prefix ": " value)
         println)
-    (if callback-prefix
-      (-> (prefix-with-thread-name callback-prefix ": " value)
-          println)
     value))
 
 (def get-result

@@ -3,10 +3,8 @@
 
 (defn flip
   [f]
-  (fn
-    ([] (f))
-    ([x] (f x))
-    ([x y & more] (apply f y x more))))
+  (fn [x y & more]
+    (apply f y x more)))
 
 (defn quote-form
   [form]
@@ -24,9 +22,8 @@
 
 (defmacro build
   [operator & fs]
-  `(comp
-     (partial apply (functionize ~operator))
-     (juxt ~@fs)))
+  `(comp (partial apply (functionize ~operator))
+         (juxt ~@fs)))
 
 (def printall
   (comp dorun
@@ -38,6 +35,5 @@
       .getName))
 
 (def print-constantly
-  (comp
-    (partial comp println)
-    constantly))
+  (comp (partial comp println)
+        constantly))
