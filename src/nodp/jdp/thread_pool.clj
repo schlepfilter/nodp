@@ -6,29 +6,19 @@
 (def make-postfix
   (m/curry 2 (helpers/flip str)))
 
-(defmulti get-short-name identity)
+(helpers/defmultis-identity #{'get-short-name 'get-time-per})
 
-(defmethod get-short-name :potato
-  [_]
-  "PotatoPeeling")
+(helpers/defmethods :potato
+                    {get-short-name "PotatoPeeling"
+                     get-time-per 200})
 
-(defmethod get-short-name :coffee
-  [_]
-  "CoffeeMaking")
+(helpers/defmethods :coffee
+                    {get-short-name "CoffeeMaking"
+                     get-time-per 100})
 
 (def get-name
   (comp (make-postfix "Task")
         get-short-name))
-
-(defmulti get-time-per identity)
-
-(defmethod get-time-per :potato
-  [_]
-  200)
-
-(defmethod get-time-per :coffee
-  [_]
-  100)
 
 (def get-time
   (helpers/build *
