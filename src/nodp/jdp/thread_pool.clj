@@ -35,9 +35,13 @@
                  (comp get-time-per :kind)
                  :quantity))
 
+(defn- instantiate
+  [f]
+  (fn [& _] (f)))
+
 (def describe
   (comp (partial str/join " ")
-        (juxt (constantly "processing")
+        (juxt (instantiate helpers/get-thread-name)
               (comp get-name :kind)
               (comp (make-postfix "ms") get-time))))
 
@@ -45,9 +49,9 @@
   (juxt (comp (helpers/functionize Thread/sleep) get-time)
         (comp println describe)))
 
-(map handle [{:kind     :potato
-              :quantity 3}
-             {:kind     :potato
-              :quantity 6}
-             {:kind     :coffee
-              :quantity 2}])
+(pmap handle [{:kind     :potato
+               :quantity 3}
+              {:kind     :potato
+               :quantity 6}
+              {:kind     :coffee
+               :quantity 2}])
