@@ -7,18 +7,17 @@
                               'get-regional-ingredient
                               'get-regional-name})
 
-(defmethod get-regional-ingredient :ny
-  [_]
-  {:cheese    "Reggiano Cheese"
-   :dough     "Thin Crust Dough"
-   :clams     "Fresh Clams from Long Island Sound"
-   :pepperoni "Sliced Pepperoni"                            ;
-   :sauce     "Marinara Sauce"
-   :vegies    #{"Garlic" "Onion" "Mashroom" "Red Pepper"}})
-
-(defmethod get-regional-name :ny
-  [_]
-  "New York Style")
+(helpers/defmethods :ny
+                    {get-regional-ingredient {:cheese    "Reggiano Cheese"
+                                              :dough     "Thin Crust Dough"
+                                              :clams     "Fresh Clams from Long Island Sound"
+                                              :pepperoni "Sliced Pepperoni" ;
+                                              :sauce     "Marinara Sauce"
+                                              :vegies    #{"Garlic"
+                                                           "Onion"
+                                                           "Mashroom"
+                                                           "Red Pepper"}}
+                     get-regional-name       "New York Style"})
 
 (helpers/defmethods :cheese
                     {get-kind-ingredients #{:dough :sauce :cheese}
