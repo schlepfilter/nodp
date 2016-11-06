@@ -24,14 +24,12 @@
                      get-kind-name        "Cheeze"})
 
 (def get-pizza-name
-  (comp
-    (partial str/join " ")
-    (partial (helpers/flip conj) "Pizza")
-    (helpers/build vector
-                   (comp get-regional-name
-                         :region)
-                   (comp get-kind-name
-                         :kind))))
+  (comp (partial str/join " ")
+        (juxt (comp get-regional-name
+                    :region)
+              (comp get-kind-name
+                    :kind)
+              (constantly "Pizza"))))
 
 (def get-customer-pizza
   (helpers/build str
