@@ -7,10 +7,9 @@
 
 (defn make-get-parts
   [vehicle]
-  (fn [part]
-    (-> part
-        description
-        (str " for a " (name vehicle)))))
+  (comp
+    description
+    (partial str " for a " (name vehicle))))
 
 (def get-car-parts
   (make-get-parts :car))
