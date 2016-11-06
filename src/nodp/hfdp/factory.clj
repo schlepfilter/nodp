@@ -2,7 +2,10 @@
   (:require [clojure.string :as str]
             [nodp.helpers :as helpers]))
 
-(defmulti get-regional-ingredient :region)
+(helpers/defmultis-identity #{'get-kind-ingredients
+                              'get-kind-name
+                              'get-regional-ingredient
+                              'get-regional-name})
 
 (defmethod get-regional-ingredient :ny
   [_]
@@ -13,15 +16,9 @@
    :sauce     "Marinara Sauce"
    :vegies    #{"Garlic" "Onion" "Mashroom" "Red Pepper"}})
 
-(defmulti get-kind-ingredients :kind)
-
-(defmulti get-regional-name :region)
-
 (defmethod get-regional-name :ny
   [_]
   "New York Style")
-
-(defmulti get-kind-name :kind)
 
 (helpers/defmethods :cheese
                     {get-kind-ingredients #{:dough :sauce :cheese}
@@ -31,7 +28,11 @@
   (comp
     (partial str/join " ")
     (partial (helpers/flip conj) "Pizza")
-    (helpers/build vector get-regional-name get-kind-name)))
+    (helpers/build vector
+                   (comp get-regional-name
+                         :region)
+                   (comp get-kind-name
+                         :kind))))
 
 (def get-customer-pizza
   (helpers/build str
@@ -43,8 +44,10 @@
 (def get-ingredients
   (comp vals
         (helpers/build select-keys
-                       get-regional-ingredient
-                       get-kind-ingredients)))
+                       (comp get-regional-ingredient
+                             :region)
+                       (comp get-kind-ingredients
+                             :kind))))
 
 (def prepare
   (comp (partial str "Preparing ")
