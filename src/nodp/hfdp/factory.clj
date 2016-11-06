@@ -15,10 +15,6 @@
 
 (defmulti get-kind-ingredients :kind)
 
-(defmethod get-kind-ingredients :cheese
-  [_]
-  #{:dough :sauce :cheese})
-
 (defmulti get-regional-name :region)
 
 (defmethod get-regional-name :ny
@@ -27,9 +23,9 @@
 
 (defmulti get-kind-name :kind)
 
-(defmethod get-kind-name :cheese
-  [_]
-  "Cheeze")
+(helpers/defmethods :cheese
+                    {get-kind-ingredients #{:dough :sauce :cheese}
+                     get-kind-name        "Cheeze"})
 
 (def get-pizza-name
   (comp
