@@ -22,7 +22,8 @@
 
 (def get-time
   (helpers/build *
-                 (comp get-time-per :kind)
+                 (comp get-time-per
+                       :kind)
                  :quantity))
 
 (defn- instantiate
@@ -32,12 +33,16 @@
 (def describe
   (comp (partial str/join " ")
         (juxt (instantiate helpers/get-thread-name)
-              (comp get-name :kind)
-              (comp (make-postfix "ms") get-time))))
+              (comp get-name
+                    :kind)
+              (comp (make-postfix "ms")
+                    get-time))))
 
 (def handle
-  (juxt (comp (helpers/functionize Thread/sleep) get-time)
-        (comp println describe)))
+  (juxt (comp (helpers/functionize Thread/sleep)
+              get-time)
+        (comp println
+              describe)))
 
 (pmap handle [{:kind     :potato
                :quantity 3}
