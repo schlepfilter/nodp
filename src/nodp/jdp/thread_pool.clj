@@ -1,7 +1,7 @@
 (ns nodp.jdp.thread-pool
-  (:require [nodp.helpers :as helpers]
+  (:require [clojure.string :as str]
             [cats.core :as m]
-            [clojure.string :as str]))
+            [nodp.helpers :as helpers]))
 
 (def make-postfix
   (m/curry 2 (helpers/flip str)))
@@ -10,11 +10,11 @@
 
 (helpers/defmethods :potato
                     {get-short-name "PotatoPeeling"
-                     get-time-per 200})
+                     get-time-per   200})
 
 (helpers/defmethods :coffee
                     {get-short-name "CoffeeMaking"
-                     get-time-per 100})
+                     get-time-per   100})
 
 (def get-name
   (comp (make-postfix "Task")
