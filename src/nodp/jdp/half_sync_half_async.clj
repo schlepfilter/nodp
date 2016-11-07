@@ -21,9 +21,9 @@
       future))
 
 ;This is more literal translation of the original Java code.
-;(defmacro do-future
+;(defn- do-future
 ;  [f x]
-;  `(future (~f ~x)))
+;  (future (f x)))
 ;
 ;(defn do-map-future
 ;  [f coll]
