@@ -6,7 +6,7 @@
 (def make-postfix
   (m/curry 2 (helpers/flip str)))
 
-(helpers/defmultis-identity #{'get-short-name 'get-time-per})
+(helpers/defmultis-identity get-short-name get-time-per)
 
 (helpers/defmethods :potato
                     {get-short-name "PotatoPeeling"

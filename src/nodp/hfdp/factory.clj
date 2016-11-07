@@ -2,10 +2,10 @@
   (:require [clojure.string :as str]
             [nodp.helpers :as helpers]))
 
-(helpers/defmultis-identity #{'get-kind-ingredients
-                              'get-kind-name
-                              'get-regional-ingredient
-                              'get-regional-name})
+(helpers/defmultis-identity get-kind-ingredients
+                            get-kind-name
+                            get-regional-ingredient
+                            get-regional-name)
 
 (helpers/defmethods :ny
                     {get-regional-ingredient {:cheese    "Reggiano Cheese"

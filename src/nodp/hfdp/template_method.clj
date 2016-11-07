@@ -1,7 +1,7 @@
 (ns nodp.hfdp.template-method
   (:require [nodp.helpers :as helpers]))
 
-(helpers/defmultis-identity #{'brew 'add-condiments})
+(helpers/defmultis-identity brew add-condiments)
 
 (helpers/defmethods :coffee
                     {brew           "Dripping Coffee through filter"
