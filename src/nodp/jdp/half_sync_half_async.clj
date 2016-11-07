@@ -16,8 +16,8 @@
         (comp println sum-arithmetic)))
 
 (defn- future-pmap
-  [f coll]
-  (-> (pmap f coll)
+  [& more]
+  (-> (apply pmap more)
       future))
 
 ;This is more literal translation of the original Java code.
