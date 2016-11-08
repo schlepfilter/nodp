@@ -35,7 +35,8 @@
 
 (defn- get-arguments
   [{:keys [device-commands description]}]
-  (->> (get-actions device-commands)
+  (->> device-commands
+       get-actions
        (cons description)))
 
 (def print-arguments
