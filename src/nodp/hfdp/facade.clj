@@ -19,11 +19,11 @@
 (defn- get-action
   [device command]
   (let [device-name (device env)]
-    (if (keyword? command)
-      (get-sentence command device-name)
-      (get-sentence (first command)
-                    device-name
-                    ((second command) env)))))
+    (apply get-sentence (if (keyword? command)
+                          [command device-name]
+                          [(first command)
+                           device-name
+                           ((second command) env)]))))
 
 (defn- get-device-actions
   [[device & commands]]
