@@ -23,9 +23,8 @@
       (eip-helpers/handle-items items))))
 
 (def handle-items-collection
-  (comp
-    (partial remove nil?)
-    (partial m/<*> (map make-handle-kind-items ["ABC" "XYZ"]))))
+  (comp (partial remove nil?)
+        (partial m/<*> (map make-handle-kind-items ["ABC" "XYZ"]))))
 
 (defn- printall
   [& more]
