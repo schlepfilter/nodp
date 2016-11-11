@@ -11,5 +11,6 @@
   (Thread/sleep 500)
   (println "Engine diagnosis complete"))
 
-(map (comp diagnose get-engine)
+(map (comp diagnose
+           get-engine)
      (concat (repeat 3 1300) (repeat 2 1600)))

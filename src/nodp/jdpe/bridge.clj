@@ -40,7 +40,8 @@
       engine)))
 
 (def max-speed?
-  (comp (partial > 10) :power))
+  (comp (partial > 10)
+        :power))
 
 (def make-changeable?
   (partial every-pred :running))
@@ -49,7 +50,8 @@
   (make-changeable? max-speed?))
 
 (def min-speed?
-  (comp (partial < 0) :power))
+  (comp (partial < 0)
+        :power))
 
 (def decreasable?
   (make-changeable? min-speed?))
@@ -70,7 +72,8 @@
   increase-power)
 
 (def accelerate-hard
-  (comp accelerate accelerate))
+  (comp accelerate
+        accelerate))
 
 (def break
   decrease-power)
@@ -84,7 +87,8 @@
    :running false})
 
 (def print-actions
-  (comp helpers/printall :actions))
+  (comp helpers/printall
+        :actions))
 
 (defn- run-actions
   [{:keys [engine actions]}]

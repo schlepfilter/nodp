@@ -27,9 +27,8 @@
   #{asteroid mir meteroid iss})
 
 (def intersect?
-  (comp
-    (partial apply intersect/intersect-rect-rect?)
-    (partial map :position)))
+  (comp (partial apply intersect/intersect-rect-rect?)
+        (partial map :position)))
 
 ;TODO implement collide with predicate dispatch when core.match supports predicate dispatch
 

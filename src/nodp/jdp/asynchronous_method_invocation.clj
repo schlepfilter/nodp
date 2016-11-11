@@ -33,7 +33,8 @@
         vector))
 
 (def get-prefixed-result
-  (comp prefix-with-thread-name get-result))
+  (comp prefix-with-thread-name
+        get-result))
 
 (def get-results
   (->> (range)

@@ -5,9 +5,8 @@
   (partial str "WorkItem"))
 
 (def get-work-items
-  (comp
-    (partial map get-work-item)
-    (partial range 1)))
+  (comp (partial map get-work-item)
+        (partial range 1)))
 
 (def work-items
   (get-work-items 101))

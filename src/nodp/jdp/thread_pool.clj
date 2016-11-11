@@ -22,8 +22,7 @@
 
 (def get-time
   (helpers/build *
-                 (comp get-time-per
-                       :kind)
+                 (comp get-time-per :kind)
                  :quantity))
 
 (defn- instantiate

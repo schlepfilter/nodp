@@ -7,7 +7,10 @@
   (partial (helpers/flip str/split) #"\."))
 
 (def get-super-kind
-  (comp first split-dot :kind first))
+  (comp first
+        split-dot
+        :kind
+        first))
 
 (defmulti handle-items get-super-kind)
 

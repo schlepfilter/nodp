@@ -13,7 +13,8 @@
 
 (def print-sum
   (juxt (helpers/functionize Thread/sleep)
-        (comp println sum-arithmetic)))
+        (comp println
+              sum-arithmetic)))
 
 (defn- future-pmap
   [& more]

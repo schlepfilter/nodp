@@ -13,7 +13,8 @@
    :kind   "smart"
    :power  20})
 
-(defmulti decorate (comp first vector))
+(defmulti decorate (comp first
+                         vector))
 
 ;TODO implement decorate with predicate dispatch when core.match supports predicate dispatch
 

@@ -36,7 +36,8 @@
 
 (def taste-mix
   (juxt (constantly "Tasting the stew")
-        (comp mix taste)))
+        (comp mix
+              taste)))
 
 (-> stew
     taste-mix
