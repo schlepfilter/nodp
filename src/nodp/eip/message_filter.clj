@@ -17,21 +17,11 @@
 ;    ((m/curry 2 (helpers/flip comp)) :kind)
 ;    (m/curry 2 (helpers/flip str/starts-with?))))
 
-(defn- wrap-maybe
-  [expr]
-  (if (nil? expr)
-    (maybe/nothing)
-    (maybe/just expr)))
-
-(defmacro mif
-  [& more]
-  `(wrap-maybe (if ~@more)))
-
 (defn- make-handle-kind-items
   [kind]
   (fn [items]
-    (mif (some (make-is-kind? kind) items)
-         (eip-helpers/handle-items items))))
+    (helpers/mif (some (make-is-kind? kind) items)
+                 (eip-helpers/handle-items items))))
 
 (def handle-items-collection
   (comp (partial map m/join)
