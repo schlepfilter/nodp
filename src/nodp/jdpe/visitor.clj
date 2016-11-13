@@ -39,10 +39,9 @@
         (partial map get-count)))
 
 (def get-arguments
-  (helpers/build concat
-                 get-diagnoses
-                 (comp vector
-                       get-counts)))
+  (comp flatten
+        (juxt get-diagnoses
+              get-counts)))
 
 (def printall
   (comp helpers/printall
