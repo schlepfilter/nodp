@@ -24,8 +24,7 @@
                  (eip-helpers/handle-items items))))
 
 (def handle-items-collection
-  (comp (partial map m/join)
-        (partial remove maybe/nothing?)
+  (comp maybe/cat-maybes
         (partial m/<*> (map make-handle-kind-items ["ABC" "XYZ"]))))
 
 (defn- printall
