@@ -2,40 +2,34 @@
   (:require [clojure.string :as str]
             [nodp.helpers :as helpers]))
 
-(defmulti get-regional-ingredient :region)
+(helpers/defmultis-identity get-kind-ingredients
+                            get-kind-name
+                            get-regional-ingredient
+                            get-regional-name)
 
-(defmethod get-regional-ingredient :ny
-  [_]
-  {:cheese    "Reggiano Cheese"
-   :dough     "Thin Crust Dough"
-   :clams     "Fresh Clams from Long Island Sound"
-   :pepperoni "Sliced Pepperoni"                            ;
-   :sauce     "Marinara Sauce"
-   :vegies    #{"Garlic" "Onion" "Mashroom" "Red Pepper"}})
+(helpers/defmethods :ny
+                    {get-regional-ingredient {:cheese    "Reggiano Cheese"
+                                              :dough     "Thin Crust Dough"
+                                              :clams     "Fresh Clams from Long Island Sound"
+                                              :pepperoni "Sliced Pepperoni" ;
+                                              :sauce     "Marinara Sauce"
+                                              :vegies    #{"Garlic"
+                                                           "Onion"
+                                                           "Mashroom"
+                                                           "Red Pepper"}}
+                     get-regional-name       "New York Style"})
 
-(defmulti get-kind-ingredients :kind)
-
-(defmethod get-kind-ingredients :cheese
-  [_]
-  #{:dough :sauce :cheese})
-
-(defmulti get-regional-name :region)
-
-(defmethod get-regional-name :ny
-  [_]
-  "New York Style")
-
-(defmulti get-kind-name :kind)
-
-(defmethod get-kind-name :cheese
-  [_]
-  "Cheeze")
+(helpers/defmethods :cheese
+                    {get-kind-ingredients #{:dough :sauce :cheese}
+                     get-kind-name        "Cheeze"})
 
 (def get-pizza-name
-  (comp
-    (partial str/join " ")
-    (partial (helpers/flip conj) "Pizza")
-    (helpers/build vector get-regional-name get-kind-name)))
+  (comp (partial str/join " ")
+        (juxt (comp get-regional-name
+                    :region)
+              (comp get-kind-name
+                    :kind)
+              (constantly "Pizza"))))
 
 (def get-customer-pizza
   (helpers/build str
@@ -47,8 +41,10 @@
 (def get-ingredients
   (comp vals
         (helpers/build select-keys
-                       get-regional-ingredient
-                       get-kind-ingredients)))
+                       (comp get-regional-ingredient
+                             :region)
+                       (comp get-kind-ingredients
+                             :kind))))
 
 (def prepare
   (comp (partial str "Preparing ")

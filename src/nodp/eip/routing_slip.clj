@@ -31,9 +31,14 @@
   (make-operate "perform credit check" :tax-id))
 
 (def handle-customer
-  (helpers/build vector create-customer keep-contact plan-service check-credit))
+  (helpers/build vector
+                 create-customer
+                 keep-contact
+                 plan-service
+                 check-credit))
 
 (def printall
-  (comp helpers/printall handle-customer))
+  (comp helpers/printall
+        handle-customer))
 
 (printall customer)

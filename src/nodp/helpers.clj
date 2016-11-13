@@ -25,6 +25,29 @@
   `(comp (partial apply (functionize ~operator))
          (juxt ~@fs)))
 
+(defmacro defmulti-identity
+  [mm-name]
+  `(defmulti ~mm-name identity))
+
+(defmacro defmultis-identity
+  ([])
+  ([x & more]
+   `(do (defmulti-identity ~x)
+        (defmultis-identity ~@more))))
+
+(defn- make-defmethod
+  [dispatch-val]
+  (fn [[k v]]
+    (defmethod k dispatch-val
+      [_]
+      v)))
+
+(defn defmethods
+  [dispatch-val f-m]
+  (-> (make-defmethod dispatch-val)
+      (map f-m)
+      dorun))
+
 (def printall
   (comp dorun
         (partial map println)))

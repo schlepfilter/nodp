@@ -13,17 +13,18 @@
 
 (def print-sum
   (juxt (helpers/functionize Thread/sleep)
-        (comp println sum-arithmetic)))
+        (comp println
+              sum-arithmetic)))
 
 (defn- future-pmap
-  [f coll]
-  (-> (pmap f coll)
+  [& more]
+  (-> (apply pmap more)
       future))
 
 ;This is more literal translation of the original Java code.
-;(defmacro do-future
+;(defn- do-future
 ;  [f x]
-;  `(future (~f ~x)))
+;  (future (f x)))
 ;
 ;(defn do-map-future
 ;  [f coll]

@@ -41,9 +41,11 @@
 (def get-arguments
   (helpers/build concat
                  get-diagnoses
-                 (comp vector get-counts)))
+                 (comp vector
+                       get-counts)))
 
 (def printall
-  (comp helpers/printall get-arguments))
+  (comp helpers/printall
+        get-arguments))
 
 (printall engine)

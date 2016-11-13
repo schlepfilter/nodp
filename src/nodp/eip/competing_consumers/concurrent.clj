@@ -9,7 +9,7 @@
 ;This is less readable
 ;(defn- instantiate
 ;  [f]
-;  (fn [] (f)))
+;  (fn [& _] (f)))
 ;
 ;(def consume
 ;  (comp str/join

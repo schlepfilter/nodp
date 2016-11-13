@@ -2,6 +2,7 @@
   (:require [clojure.string :as str]
             [cats.builtin]
             [cats.core :as m]
+            [cats.monad.maybe :as maybe]
             [nodp.helpers :as helpers]
             [nodp.eip.helpers :as eip-helpers]))
 
@@ -16,16 +17,26 @@
 ;    ((m/curry 2 (helpers/flip comp)) :kind)
 ;    (m/curry 2 (helpers/flip str/starts-with?))))
 
+(defn- wrap-maybe
+  [expr]
+  (if (nil? expr)
+    (maybe/nothing)
+    (maybe/just expr)))
+
+(defmacro mif
+  [& more]
+  `(wrap-maybe (if ~@more)))
+
 (defn- make-handle-kind-items
   [kind]
   (fn [items]
-    (if (some (make-is-kind? kind) items)
-      (eip-helpers/handle-items items))))
+    (mif (some (make-is-kind? kind) items)
+         (eip-helpers/handle-items items))))
 
 (def handle-items-collection
-  (comp
-    (partial remove nil?)
-    (partial m/<*> (map make-handle-kind-items ["ABC" "XYZ"]))))
+  (comp (partial map m/join)
+        (partial remove maybe/nothing?)
+        (partial m/<*> (map make-handle-kind-items ["ABC" "XYZ"]))))
 
 (defn- printall
   [& more]

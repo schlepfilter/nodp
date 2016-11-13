@@ -20,8 +20,9 @@
 
 (defmacro compare-stats-collection
   ([])
-  ([xy & more]
-   `(cons (compare-stats ~(first xy) ~(second xy))
+  ([x y & more]
+   `(cons (compare-stats ~x ~y)
           (compare-stats-collection ~@more))))
 
-(compare-stats-collection [stat-a stat-b] [stat-a stat-c])
+(compare-stats-collection stat-a stat-b
+                          stat-a stat-c)
