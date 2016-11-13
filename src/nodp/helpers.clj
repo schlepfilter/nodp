@@ -69,9 +69,11 @@
     (maybe/just expr)))
 
 (defmacro maybe
-  [& more]
-  `(wrap-maybe (if ~@more)))
+  [test then]
+  `(wrap-maybe (if ~test
+                 ~then)))
 
 (defmacro maybe-not
-  [& more]
-  `(wrap-maybe (if-not ~@more)))
+  [test then]
+  `(wrap-maybe (if-not ~test
+                 ~then)))
