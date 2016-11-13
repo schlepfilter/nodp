@@ -1,10 +1,8 @@
 (ns nodp.sdp.partial-function
-  (:require [cats.monad.maybe :as maybe]
+  (:require [cats.core :as m]
+            [cats.monad.maybe :as maybe]
             [clojure.math.numeric-tower :as math]
             [nodp.helpers :as helpers]))
-
-(def square
-  (partial (helpers/flip math/expt) 2))
 
 (defn- sqrt
   [x]
@@ -25,6 +23,8 @@
 ;                 (constantly ": ")
 ;                 (comp maybe/just? sqrt)))
 
+(get-sqrt-defined -10)
+
 (def get-sqrts
   (comp (partial str "Square roots: ")
         vec
@@ -33,6 +33,22 @@
 (def items
   [-1 10 11 -36 36 -49 49 81])
 
-(get-sqrt-defined -10)
-
 (get-sqrts items)
+
+(defmacro join-or-else
+  [then else]
+  `(fn [x#]
+     (let [then-result# (~then x#)]
+       (if (maybe/just? then-result#)
+         (m/join then-result#)
+         (~else x#)))))
+
+(def square
+  (partial (helpers/flip math/expt) 2))
+
+(def get-sqrt-squares
+  (comp (partial str "Square roots or squares: ")
+        vec
+        (partial map (join-or-else sqrt square))))
+
+(get-sqrt-squares items)
