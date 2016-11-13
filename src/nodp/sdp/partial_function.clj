@@ -25,4 +25,14 @@
 ;                 (constantly ": ")
 ;                 (comp maybe/just? sqrt)))
 
+(def get-sqrts
+  (comp (partial str "Square roots: ")
+        vec
+        (partial maybe/map-maybe sqrt)))
+
+(def items
+  [-1 10 11 -36 36 -49 49 81])
+
 (get-sqrt-defined -10)
+
+(get-sqrts items)
