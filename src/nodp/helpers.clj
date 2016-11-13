@@ -68,10 +68,10 @@
     (maybe/nothing)
     (maybe/just expr)))
 
-(defmacro mif
+(defmacro maybe
   [& more]
   `(wrap-maybe (if ~@more)))
 
-(defmacro mif-not
+(defmacro maybe-not
   [& more]
   `(wrap-maybe (if-not ~@more)))

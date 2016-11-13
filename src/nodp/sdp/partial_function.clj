@@ -8,8 +8,8 @@
 
 (defn- sqrt
   [x]
-  (helpers/mif-not (neg? x)
-                   (math/sqrt x)))
+  (helpers/maybe-not (neg? x)
+                     (math/sqrt x)))
 
 (defn- get-sqrt-defined
   [x]
