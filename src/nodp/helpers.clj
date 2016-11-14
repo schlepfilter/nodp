@@ -9,12 +9,12 @@
   (fn [x y & more]
     (apply f y x more)))
 
-(defn quote-form
-  [form]
-  `'~form)
+(defn quote-expr
+  [expr]
+  `'~expr)
 
 (def quote-seq
-  (partial riddley/walk-exprs seq? quote-form))
+  (partial riddley/walk-exprs seq? quote-expr))
 
 (defmacro functionize
   [operator]
