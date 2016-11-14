@@ -1,5 +1,6 @@
 (ns nodp.helpers
-  (:require [riddley.walk :as riddley]))
+  (:require [cats.monad.maybe :as maybe]
+            [riddley.walk :as riddley]))
 
 (defn flip
   [f]
@@ -60,3 +61,19 @@
 (def print-constantly
   (comp (partial comp println)
         constantly))
+
+(defn wrap-maybe
+  [expr]
+  (if (nil? expr)
+    (maybe/nothing)
+    (maybe/just expr)))
+
+(defmacro maybe
+  [test then]
+  `(wrap-maybe (if ~test
+                 ~then)))
+
+(defmacro maybe-not
+  [test then]
+  `(wrap-maybe (if-not ~test
+                 ~then)))

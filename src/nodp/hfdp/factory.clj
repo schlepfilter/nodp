@@ -1,6 +1,7 @@
 (ns nodp.hfdp.factory
   (:require [clojure.string :as str]
-            [nodp.helpers :as helpers]))
+            [nodp.helpers :as helpers]
+            [cats.core :as m]))
 
 (helpers/defmultis-identity get-kind-ingredients
                             get-kind-name
@@ -55,27 +56,12 @@
    "Cutting the pizza into diagonal slices"
    "Place pizza in official PizzaStore box"])
 
-(defn- wrap
-  [x]
-  (if (sequential? x)
-    x
-    [x]))
-
-(defn- mix-concat-two
-  [& more]
-  (->> (map wrap more)
-       (apply concat)))
-
-(defn- mix-concat
-  [& more]
-  (reduce mix-concat-two more))
-
 (def get-arguments
-  (helpers/build mix-concat
-                 prepare
-                 (constantly constant-operations)
-                 get-customer-pizza
-                 get-ingredients))
+  (comp flatten
+        (juxt prepare
+              (constantly constant-operations)
+              get-customer-pizza
+              get-ingredients)))
 
 (def order
   (comp helpers/printall
