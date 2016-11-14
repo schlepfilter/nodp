@@ -18,8 +18,8 @@
 
 (defmacro functionize
   [operator]
-  `(fn [& args#]
-     (->> (map quote-seq args#)
+  `(fn [& more#]
+     (->> (map quote-seq more#)
           (cons '~operator)
           eval)))
 
