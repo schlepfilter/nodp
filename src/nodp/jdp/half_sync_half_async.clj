@@ -2,8 +2,8 @@
   (:require [nodp.helpers :as helpers]))
 
 (defn- sum-arithmetic
-  [i]
-  (* i (inc i)))
+  [n]
+  (* n (inc n)))
 
 ;This definition is less readable.
 ;(def arithmatic-sum
