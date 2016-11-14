@@ -1,19 +1,17 @@
-(ns nodp.hfdp.adapter
-  (:require [nodp.helpers :as helpers]))
+(ns nodp.hfdp.adapter)
 
 (def turkey-quack
-  (helpers/print-constantly "Gobble gobble"))
+  "Gobble gobble")
 
 (def duck-quack
   turkey-quack)
 
 (def turkey-fly
-  (helpers/print-constantly "I'm flying a short distance"))
+  "I'm flying a short distance")
 
-(defn duck-fly
-  []
-  (dotimes [_ 5] (turkey-fly)))
+(def duck-fly
+  (repeat 5 turkey-fly))
 
-(duck-quack)
+duck-quack
 
-(duck-fly)
+duck-fly

@@ -110,8 +110,3 @@
   []
   (-> (Thread/currentThread)
       .getName))
-
-(def print-constantly
-  (comp (partial comp println)
-        constantly))
-

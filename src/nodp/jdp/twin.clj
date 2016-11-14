@@ -1,5 +1,4 @@
-(ns nodp.jdp.twin
-  (:require [nodp.helpers :as helpers]))
+(ns nodp.jdp.twin)
 
 (defmacro forever
   [& body]
@@ -12,19 +11,23 @@
             (draw)
             (move))))
 
+(def print-constantly
+  (comp (partial comp println)
+        constantly))
+
 (defn- make-draw
   [do-draw]
-  (juxt (helpers/print-constantly "draw")
+  (juxt (print-constantly "draw")
         do-draw))
 
 (def do-draw
-  (helpers/print-constantly "doDraw"))
+  (print-constantly "doDraw"))
 
 (def move
-  (helpers/print-constantly "move"))
+  (print-constantly "move"))
 
 (def suspend
-  (juxt (helpers/print-constantly "Begin to suspend ball")
+  (juxt (print-constantly "Begin to suspend ball")
         future-cancel))
 
 (let [ball (get-ball {:draw (make-draw do-draw)
