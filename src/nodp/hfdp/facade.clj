@@ -1,6 +1,5 @@
 (ns nodp.hfdp.facade
   (:require [clojure.string :as str]
-            [cats.core :as m]
             [nodp.helpers :as helpers]))
 
 (def verbs
@@ -56,7 +55,7 @@
   `(def ~f-name
      (->> (fn ~bindings
             ~body)
-          (m/curry ~(count bindings)))))
+          (helpers/curry ~(count bindings)))))
 
 (defcurried make-request
             [m env]
