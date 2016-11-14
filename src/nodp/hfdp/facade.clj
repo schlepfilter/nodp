@@ -50,14 +50,7 @@
     :turn-on
     [:play :film]]])
 
-(defmacro defcurried
-  [f-name bindings body]
-  `(def ~f-name
-     (->> (fn ~bindings
-            ~body)
-          (helpers/curry ~(count bindings)))))
-
-(defcurried make-request
+(helpers/defcurried make-request
             [m env]
             (with-redefs [env env]
               (print-arguments m)))
