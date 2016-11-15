@@ -1,6 +1,5 @@
 (ns nodp.hfdp.facade
   (:require [clojure.string :as str]
-            [cats.core :as m]
             [nodp.helpers :as helpers]))
 
 (def verbs
@@ -51,14 +50,7 @@
     :turn-on
     [:play :film]]])
 
-(defmacro defcurried
-  [f-name bindings body]
-  `(def ~f-name
-     (->> (fn ~bindings
-            ~body)
-          (m/curry ~(count bindings)))))
-
-(defcurried make-request
+(helpers/defcurried make-request
             [m env]
             (with-redefs [env env]
               (print-arguments m)))

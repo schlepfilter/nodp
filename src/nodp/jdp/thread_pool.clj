@@ -1,10 +1,9 @@
 (ns nodp.jdp.thread-pool
   (:require [clojure.string :as str]
-            [cats.core :as m]
             [nodp.helpers :as helpers]))
 
 (def make-postfix
-  (m/curry 2 (helpers/flip str)))
+  (helpers/curry 2 (helpers/flip str)))
 
 (helpers/defmultis-identity get-short-name get-time-per)
 
