@@ -5,7 +5,7 @@
             :url  "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [clojurewerkz/money "1.9.0"]
-                 [com.rpl/specter "0.13.0"]
+                 [com.rpl/specter "0.13.1"]
                  [funcool/cats "2.0.0"]
                  [inflections "0.12.2"]
                  [org.clojure/math.combinatorics "0.1.3"]
@@ -14,6 +14,7 @@
                  [prismatic/plumbing "0.5.3"]
                  [riddley "0.1.12"]
                  [thi.ng/geom "0.0.908"]]
+  :plugins [[lein-ancient "0.6.10"]]
   :main ^:skip-aot nodp.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
