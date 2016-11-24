@@ -13,16 +13,15 @@
 ;TODO possibly use defun
 (defn- get-action
   [device command]
-  (let [device-name (env device)]
-    (str/join " " (if (keyword? command)
-                    [device-name (command verbs)]
-                    [device-name
-                     (-> command
-                         first
-                         verbs)
-                     (-> command
-                         second
-                         env)]))))
+  (str/join " " (concat [(env device)]
+                        (if (keyword? command)
+                          [(command verbs)]
+                          [(-> command
+                               first
+                               verbs)
+                           (-> command
+                               second
+                               env)]))))
 
 (defn- get-device-actions
   [[device & commands]]
