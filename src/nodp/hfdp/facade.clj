@@ -10,6 +10,7 @@
 
 (def env)
 
+;TODO possibly use defun
 (defn- get-action
   [device command]
   (let [device-name (env device)]
