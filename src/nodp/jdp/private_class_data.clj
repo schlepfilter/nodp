@@ -1,6 +1,6 @@
 (ns nodp.jdp.private-class-data
   (:require [clojure.string :as str]
-            [com.rpl.specter :as specter]
+            [cats.core :as m]
             [inflections.core :as inflections]
             [nodp.helpers :as helpers]))
 
@@ -32,7 +32,7 @@
 (mix stew)
 
 (def taste
-  (partial specter/transform* specter/MAP-VALS dec))
+  (partial m/<$> dec))
 
 (def taste-mix
   (juxt (constantly "Tasting the stew")
