@@ -1,4 +1,5 @@
-(ns nodp.jdpe.strategy)
+(ns nodp.jdpe.strategy
+  (:require [clojure.string :as str]))
 
 (defn make-change-speed
   [gear]
@@ -8,7 +9,7 @@
          "mph for a "
          (-> gear
              name
-             .toUpperCase)
+             str/upper-case)
          " gearbox")))
 
 (def change-standard-speed
