@@ -1,5 +1,6 @@
 (ns nodp.jdpe.bridge
-  (:require [nodp.helpers :as helpers]))
+  (:require [nodp.helpers :as helpers]
+            [com.rpl.specter :as s]))
 
 (def verb
   {true  "started"
@@ -11,10 +12,10 @@
 
 (defn- make-change-running
   [running]
-  (fn [engine]
-    (-> engine
-        (assoc :running running)
-        (update :actions conj (get-sentence running)))))
+  (comp (partial s/setval* :running running)
+        (partial s/setval* [:actions s/END] (-> running
+                                                get-sentence
+                                                vector))))
 
 (def start
   (make-change-running true))
