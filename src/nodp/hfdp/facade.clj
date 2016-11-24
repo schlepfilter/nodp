@@ -10,19 +10,18 @@
 
 (def env)
 
-(defn- get-sentence
-  [subject verb & objects]
-  (->> (conj objects (verb verbs) subject)
-       (str/join " ")))
-
 (defn- get-action
   [device command]
-  (let [device-name (device env)]
-    (apply get-sentence (if (keyword? command)
-                          [device-name command]
-                          [device-name
-                           (first command)
-                           ((second command) env)]))))
+  (let [device-name (env device)]
+    (str/join " " (if (keyword? command)
+                    [device-name (command verbs)]
+                    [device-name
+                     (-> command
+                         first
+                         verbs)
+                     (-> command
+                         second
+                         env)]))))
 
 (defn- get-device-actions
   [[device & commands]]
@@ -51,9 +50,9 @@
     [:play :film]]])
 
 (helpers/defcurried make-request
-            [m env]
-            (with-redefs [env env]
-              (print-arguments m)))
+                    [m env]
+                    (with-redefs [env env]
+                      (print-arguments m)))
 
 (def watch
   (make-request {:description     "Get ready to watch a movie..."
