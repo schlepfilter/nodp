@@ -28,14 +28,13 @@
 (def start
   (make-change-running true))
 
-(defn- add-power-action
-  [engine]
-  (s/setval [:actions s/END]
-            (->> :power
-                 engine
-                 (str "Engine power increased to ")
-                 vector)
-            engine))
+(def add-power-action
+  (comp (partial apply s/setval*)
+        (juxt (constantly [:actions s/END])
+              (comp vector
+                    (partial str "Engine power increased to ")
+                    :power)
+              identity)))
 
 ;This definition may be more readable.
 ;(defn- add-power-action
@@ -48,8 +47,8 @@
 (defn- unconditionally-change-power
   [engine change]
   (->> engine
-      (s/transform :power change)
-      add-power-action))
+       (s/transform :power change)
+       add-power-action))
 
 (defn- make-change-power
   [conditional change]
