@@ -17,6 +17,14 @@
                                                 get-sentence
                                                 vector))))
 
+;This definition is less readable.
+;(def make-change-running
+;  (comp (partial apply comp)
+;        (juxt ((helpers/curry s/setval*) :running)
+;              (comp ((helpers/curry s/setval*) [:actions s/END])
+;                    vector
+;                    get-sentence))))
+
 (def start
   (make-change-running true))
 
