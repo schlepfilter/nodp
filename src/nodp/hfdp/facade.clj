@@ -11,7 +11,7 @@
 (def env)
 
 (defn- get-sentence
-  [verb subject & objects]
+  [subject verb & objects]
   (->> (conj objects (verb verbs) subject)
        (str/join " ")))
 
@@ -19,9 +19,9 @@
   [device command]
   (let [device-name (device env)]
     (apply get-sentence (if (keyword? command)
-                          [command device-name]
-                          [(first command)
-                           device-name
+                          [device-name command]
+                          [device-name
+                           (first command)
                            ((second command) env)]))))
 
 (defn- get-device-actions
