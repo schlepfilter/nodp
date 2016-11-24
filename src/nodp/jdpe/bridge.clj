@@ -47,8 +47,8 @@
 
 (defn- unconditionally-change-power
   [engine change]
-  (-> engine
-      (update :power change)
+  (->> engine
+      (s/transform :power change)
       add-power-action))
 
 (defn- make-change-power
