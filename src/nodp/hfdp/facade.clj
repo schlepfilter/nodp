@@ -11,8 +11,8 @@
 (def env)
 
 (defn- get-sentence
-  [verb & more]
-  (->> (conj (rest more) (verb verbs) (first more))
+  [verb subject & objects]
+  (->> (conj objects (verb verbs) subject)
        (str/join " ")))
 
 (defn- get-action
