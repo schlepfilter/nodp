@@ -17,4 +17,5 @@
   :plugins [[lein-ancient "0.6.10"]]
   :main ^:skip-aot nodp.core
   :target-path "target/%s"
-  :profiles {:uberjar {:aot :all}})
+  :profiles {:dev     {:dependencies [[spyscope "0.1.6"]]}
+             :uberjar {:aot :all}})

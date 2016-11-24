@@ -13,6 +13,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Leiningen: clj-time:0.7.0" level="project" />
     <orderEntry type="library" name="Leiningen: cljs-log:0.2.1" level="project" />
     <orderEntry type="library" name="Leiningen: clojure-complete:0.2.4" level="project" />
     <orderEntry type="library" name="Leiningen: clojurewerkz/money:1.9.0" level="project" />
@@ -22,15 +23,20 @@
     <orderEntry type="library" name="Leiningen: commons-codec:1.10" level="project" />
     <orderEntry type="library" name="Leiningen: de.kotka/lazymap:3.1.0" level="project" />
     <orderEntry type="library" name="Leiningen: environ:1.0.0" level="project" />
+    <orderEntry type="library" name="Leiningen: fipp:0.6.3" level="project" />
     <orderEntry type="library" name="Leiningen: funcool/cats:2.0.0" level="project" />
     <orderEntry type="library" name="Leiningen: hiccup:1.0.5" level="project" />
     <orderEntry type="library" name="Leiningen: inflections:0.12.2" level="project" />
+    <orderEntry type="library" name="Leiningen: joda-time:2.3" level="project" />
+    <orderEntry type="library" name="Leiningen: mvxcvi/arrangement:1.0.0" level="project" />
+    <orderEntry type="library" name="Leiningen: mvxcvi/puget:1.0.0" level="project" />
     <orderEntry type="library" name="Leiningen: noencore:0.3.0" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/clojure:1.8.0" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/clojurescript:1.7.170" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/core.async:0.2.371" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/core.cache:0.6.3" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/core.memoize:0.5.6" level="project" />
+    <orderEntry type="library" name="Leiningen: org.clojure/core.rrb-vector:0.0.11" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/data.json:0.2.6" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/data.priority-map:0.0.2" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/google-closure-library-third-party:0.0-20151016-61277aea" level="project" />
@@ -50,6 +56,7 @@
     <orderEntry type="library" name="Leiningen: prismatic/plumbing:0.5.3" level="project" />
     <orderEntry type="library" name="Leiningen: prismatic/schema:1.0.1" level="project" />
     <orderEntry type="library" name="Leiningen: riddley:0.1.12" level="project" />
+    <orderEntry type="library" name="Leiningen: spyscope:0.1.6" level="project" />
     <orderEntry type="library" name="Leiningen: thi.ng/color:1.0.0" level="project" />
     <orderEntry type="library" name="Leiningen: thi.ng/dstruct:0.1.2" level="project" />
     <orderEntry type="library" name="Leiningen: thi.ng/geom-core:0.0.908" level="project" />
