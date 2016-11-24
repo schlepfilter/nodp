@@ -1,8 +1,9 @@
 (ns nodp.helpers
-  (:require [cats.monad.maybe :as maybe]
-            [riddley.walk :as riddley]
+  (:require [clojure.test :as test]
             [cats.builtin]
-            [cats.core :as m]))
+            [cats.core :as m]
+            [cats.monad.maybe :as maybe]
+            [riddley.walk :as riddley]))
 
 (defn flip
   [f]
@@ -18,10 +19,12 @@
 
 (defmacro functionize
   [operator]
-  `(fn [& more#]
-     (->> (map quote-seq more#)
-          (cons '~operator)
-          eval)))
+  (if (test/function? operator)
+    operator
+    `(fn [& more#]
+       (->> (map quote-seq more#)
+            (cons '~operator)
+            eval))))
 
 (defmacro build
   [operator & fs]

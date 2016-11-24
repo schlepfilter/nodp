@@ -29,12 +29,12 @@
   (make-change-running true))
 
 (def add-power-action
-  (comp (partial apply s/setval*)
-        (juxt (constantly [:actions s/END])
-              (comp vector
-                    (partial str "Engine power increased to ")
-                    :power)
-              identity)))
+  (helpers/build s/setval*
+                 (constantly [:actions s/END])
+                 (comp vector
+                       (partial str "Engine power increased to ")
+                       :power)
+                 identity))
 
 ;This definition may be more readable.
 ;(defn- add-power-action
