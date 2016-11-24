@@ -30,10 +30,20 @@
 
 (defn- add-power-action
   [engine]
-  (->> engine
-       :power
-       (str "Engine power increased to ")
-       (update engine :actions conj)))
+  (s/setval [:actions s/END]
+            (->> :power
+                 engine
+                 (str "Engine power increased to ")
+                 vector)
+            engine))
+
+;This definition may be more readable.
+;(defn- add-power-action
+;  [engine]
+;  (->> engine
+;       :power
+;       (str "Engine power increased to ")
+;       (update engine :actions conj)))
 
 (defn- unconditionally-change-power
   [engine change]
