@@ -6,7 +6,7 @@
   [work-item]
   (str (helpers/get-thread-name) " for " work-item))
 
-;This is less readable
+;This is less readable.
 ;(defn- instantiate
 ;  [f]
 ;  (fn [& _] (f)))
