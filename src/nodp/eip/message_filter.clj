@@ -20,8 +20,10 @@
 (defn- make-handle-kind-items
   [kind]
   (fn [items]
-    (helpers/maybe (some (make-is-kind? kind) items)
-                   (eip-helpers/handle-items items))))
+    (-> kind
+        make-is-kind?
+        (some items)
+        (helpers/maybe (eip-helpers/handle-items items)))))
 
 (def handle-items-collection
   (comp maybe/cat-maybes
