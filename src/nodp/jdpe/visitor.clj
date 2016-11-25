@@ -21,7 +21,9 @@
   (->> (if (= v 1)
          "the"
          "a singular")
-       ((make-get-sentence verb (name k)))
+       ((->> k
+             name
+             (make-get-sentence verb)))
        (repeat v)))
 
 (def get-diagnoses
