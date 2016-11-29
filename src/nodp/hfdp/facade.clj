@@ -13,10 +13,11 @@
 
 (defn- get-action
   [device command]
-  (str/join " " (concat [(env device)]
-                        (match [command]
-                               [[verb object]] [(verbs verb) (env object)]
-                               :else [(verbs command)]))))
+  (->> (match [command]
+              [[verb object]] [(verbs verb) (env object)]
+              :else [(verbs command)])
+       (concat [(env device)])
+       (str/join " ")))
 
 ;This definition is less readable.
 ;(defn- get-action
