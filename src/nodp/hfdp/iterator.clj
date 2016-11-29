@@ -27,7 +27,8 @@
   (helpers/build str
                  :name
                  (constantly ", ")
-                 (comp format/format :price)
+                 (comp format/format
+                       :price)
                  (constantly " -- ")
                  :description))
 
