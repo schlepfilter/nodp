@@ -1,4 +1,5 @@
-(ns nodp.jdpe.multiton)
+(ns nodp.jdpe.multiton
+  (:require [nodp.helpers :as helpers]))
 
 (defn- get-generator
   []
@@ -19,9 +20,14 @@
 ;  (comp (partial (helpers/flip swap!) inc)
 ;        generator))
 
+(defn- get-description
+  [k]
+  (str "next " (name k) ":"))
+
 (def print-next-serial
-  (comp println
-        get-next-serial))
+  (helpers/build println
+                 get-description
+                 get-next-serial))
 
 (dotimes [_ 3]
   (print-next-serial :engine))
