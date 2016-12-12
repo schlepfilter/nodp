@@ -10,7 +10,9 @@
 
 (defn- get-next-serial
   [k]
-  (swap! (generator k) inc))
+  (-> k
+      generator
+      (swap! inc)))
 
 ;This definition is less readable.
 ;(def get-next-serial
