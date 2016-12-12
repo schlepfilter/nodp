@@ -15,7 +15,7 @@
                                                  sqrt
                                                  maybe/just?)))
 
-;This definition is less readable
+;This definition is less readable.
 ;(def get-sqrt-defined
 ;  (helpers/build str
 ;                 (constantly "Can we calculate a root for ")

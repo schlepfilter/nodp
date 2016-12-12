@@ -18,13 +18,13 @@
 
 (defn- get-diagnosis
   [[k v]]
-  (let [get-sentence (->> k
-                          name
-                          (make-get-sentence verb))]
-    (if (= v 1)
-      (get-sentence "the")
-      (->> (get-sentence "a singular")
-           (repeat v)))))
+  (->> (if (= v 1)
+         "the"
+         "a singular")
+       ((->> k
+             name
+             (make-get-sentence verb)))
+       (repeat v)))
 
 (def get-diagnoses
   (comp flatten

@@ -1,5 +1,6 @@
 (ns nodp.jdpe.bridge
-  (:require [nodp.helpers :as helpers]))
+  (:require [nodp.helpers :as helpers]
+            [com.rpl.specter :as s]))
 
 (def verb
   {true  "started"
@@ -11,26 +12,43 @@
 
 (defn- make-change-running
   [running]
-  (fn [engine]
-    (-> engine
-        (assoc :running running)
-        (update :actions conj (get-sentence running)))))
+  (comp (partial s/setval* :running running)
+        (partial s/setval* [:actions s/END] (-> running
+                                                get-sentence
+                                                vector))))
+
+;This definition is less readable.
+;(def make-change-running
+;  (comp (partial apply comp)
+;        (juxt ((helpers/curry s/setval*) :running)
+;              (comp ((helpers/curry s/setval*) [:actions s/END])
+;                    vector
+;                    get-sentence))))
 
 (def start
   (make-change-running true))
 
-(defn- add-power-action
-  [engine]
-  (->> engine
-       :power
-       (str "Engine power increased to ")
-       (update engine :actions conj)))
+(def add-power-action
+  (helpers/build s/setval*
+                 (constantly [:actions s/END])
+                 (comp vector
+                       (partial str "Engine power increased to ")
+                       :power)
+                 identity))
+
+;This definition may be more readable.
+;(defn- add-power-action
+;  [engine]
+;  (->> engine
+;       :power
+;       (str "Engine power increased to ")
+;       (update engine :actions conj)))
 
 (defn- unconditionally-change-power
   [engine change]
-  (-> engine
-      (update :power change)
-      add-power-action))
+  (->> engine
+       (s/transform :power change)
+       add-power-action))
 
 (defn- make-change-power
   [conditional change]

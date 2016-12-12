@@ -14,7 +14,8 @@
   (partial str "Task completed with: "))
 
 (def get-prefixed-completion
-  (comp prefix-with-thread-name get-completion))
+  (comp prefix-with-thread-name
+        get-completion))
 
 (defn- get-value
   [{:keys [value delay callback-prefix]}]

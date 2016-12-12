@@ -1,5 +1,6 @@
 (ns nodp.hfdp.facade
   (:require [clojure.string :as str]
+            [clojure.core.match :refer [match]]
             [nodp.helpers :as helpers]))
 
 (def verbs
@@ -10,19 +11,26 @@
 
 (def env)
 
-(defn- get-sentence
-  [verb & more]
-  (->> (conj (rest more) (verb verbs) (first more))
-       (str/join " ")))
-
 (defn- get-action
   [device command]
-  (let [device-name (device env)]
-    (apply get-sentence (if (keyword? command)
-                          [command device-name]
-                          [(first command)
-                           device-name
-                           ((second command) env)]))))
+  (->> (match [command]
+              [[verb object]] [(verbs verb) (env object)]
+              :else [(verbs command)])
+       (concat [(env device)])
+       (str/join " ")))
+
+;This definition is less readable.
+;(defn- get-action
+;  [device command]
+;  (str/join " " (concat [(env device)]
+;                        (if (keyword? command)
+;                          [(command verbs)]
+;                          [(-> command
+;                               first
+;                               verbs)
+;                           (-> command
+;                               second
+;                               env)]))))
 
 (defn- get-device-actions
   [[device & commands]]
@@ -51,9 +59,9 @@
     [:play :film]]])
 
 (helpers/defcurried make-request
-            [m env]
-            (with-redefs [env env]
-              (print-arguments m)))
+                    [m env]
+                    (with-redefs [env env]
+                      (print-arguments m)))
 
 (def watch
   (make-request {:description     "Get ready to watch a movie..."
