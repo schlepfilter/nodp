@@ -7,7 +7,7 @@
   (partial swap! generator inc))
 
 (def print-next-serial
-  (comp println
+  (comp (partial println "next serial:")
         get-next-serial))
 
 (dotimes [_ 3]
