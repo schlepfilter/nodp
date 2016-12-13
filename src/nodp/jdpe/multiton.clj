@@ -6,11 +6,7 @@
   `(def ~generator-name
      (atom 0)))
 
-(defmacro defgenerators
-  ([])
-  ([generator-name & more]
-   `(do (defgenerator ~generator-name)
-        (defgenerators ~@more))))
+(helpers/make-defmacro defgenerators defgenerator)
 
 (defgenerators engine vehicle)
 
