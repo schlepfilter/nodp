@@ -1,4 +1,4 @@
-(ns nodp.jdpe.multiton
+(ns nodp.jdpe.stateful
   (:require [nodp.helpers :as helpers]))
 
 (defmacro defgenerator
