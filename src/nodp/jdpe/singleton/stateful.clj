@@ -1,4 +1,4 @@
-(ns nodp.jdpe.singleton)
+(ns nodp.jdpe.singleton.stateful)
 
 (def generator
   (atom 0))
