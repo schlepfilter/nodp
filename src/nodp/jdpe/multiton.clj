@@ -14,13 +14,13 @@
   [generator]
   (swap! generator inc))
 
-(defn- get-description
+(defn- label
   [generator-name]
   (str "next " generator-name ":"))
 
 (def print-next-serial
   (helpers/build println
-                 (comp get-description
+                 (comp label
                        :generator-name)
                  (comp get-next-serial
                        :generator)))
