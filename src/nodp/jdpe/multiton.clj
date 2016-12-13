@@ -1,11 +1,18 @@
 (ns nodp.jdpe.multiton
   (:require [nodp.helpers :as helpers]))
 
-(def engine
-  (atom 0))
+(defmacro defgenerator
+  [generator-name]
+  `(def ~generator-name
+     (atom 0)))
 
-(def vehicle
-  (atom 0))
+(defmacro defgenerators
+  ([])
+  ([generator-name & more]
+   `(do (defgenerator ~generator-name)
+        (defgenerators ~@more))))
+
+(defgenerators engine vehicle)
 
 (defn- get-next-serial
   [generator]
