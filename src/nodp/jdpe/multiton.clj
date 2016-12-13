@@ -1,36 +1,31 @@
 (ns nodp.jdpe.multiton
   (:require [nodp.helpers :as helpers]))
 
-(defn- get-generator
-  []
+(def engine
   (atom 0))
 
-(def generator
-  {:engine  (get-generator)
-   :vehicle (get-generator)})
+(def vehicle
+  (atom 0))
 
 (defn- get-next-serial
-  [k]
-  (-> k
-      generator
-      (swap! inc)))
-
-;This definition is less readable.
-;(def get-next-serial
-;  (comp (partial (helpers/flip swap!) inc)
-;        generator))
+  [generator]
+  (swap! generator inc))
 
 (defn- get-description
-  [k]
-  (str "next " (name k) ":"))
+  [generator-name]
+  (str "next " generator-name ":"))
 
 (def print-next-serial
   (helpers/build println
-                 get-description
-                 get-next-serial))
+                 (comp get-description
+                       :generator-name)
+                 (comp get-next-serial
+                       :generator)))
 
 (dotimes [_ 3]
-  (print-next-serial :engine))
+  (print-next-serial {:generator      engine
+                      :generator-name "engine"}))
 
 (dotimes [_ 3]
-  (print-next-serial :vehicle))
+  (print-next-serial {:generator      vehicle
+                      :generator-name "vehicle"}))
