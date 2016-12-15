@@ -75,14 +75,17 @@
 
 (printstream current-stream)
 
-(rx/push! subject {:temperature 80
-                   :humidity    65
-                   :pressure    (rationalize 30.4)})
+(def push-measurement!
+  (partial rx/push! subject))
 
-(rx/push! subject {:temperature 82
-                   :humidity    70
-                   :pressure    (rationalize 29.2)})
+(push-measurement! {:temperature 80
+                    :humidity    65
+                    :pressure    (rationalize 30.4)})
 
-(rx/push! subject {:temperature 78
-                   :humidity    90
-                   :pressure    (rationalize 29.2)})
+(push-measurement! {:temperature 82
+                    :humidity    70
+                    :pressure    (rationalize 29.2)})
+
+(push-measurement! {:temperature 78
+                    :humidity    90
+                    :pressure    (rationalize 29.2)})
