@@ -22,13 +22,13 @@
   (scan-temprature (comp distributions/mean
                          vector)))
 
-(def statistics-stream
+(def statistic-stream
   (->> (rx/zip mean-stream max-stream min-stream)
        (rx/map (comp str/join
                      (partial interleave
                               ["Avg/Max/Min temperature = " "/" "/"])))))
 
-(rx/subscribe statistics-stream println)
+(rx/subscribe statistic-stream println)
 
 (rx/push! subject {:temprature 80
                    :humidity   65
