@@ -10,7 +10,7 @@
 
 (defgenerators engine vehicle)
 
-(defn- get-next-serial
+(defn- set-get-next-serial!
   [generator]
   (swap! generator inc))
 
@@ -22,7 +22,7 @@
   (helpers/build println
                  (comp label
                        :generator-name)
-                 (comp get-next-serial
+                 (comp set-get-next-serial!
                        :generator)))
 
 (dotimes [_ 3]
