@@ -1,34 +1,30 @@
-(ns nodp.jdpe.stateful
+(ns nodp.jdpe.multiton
   (:require [nodp.helpers :as helpers]))
 
-(defmacro defgenerator
-  [generator-name]
-  `(def ~generator-name
-     (atom 0)))
+(defn- get-generator
+  []
+  (atom 0))
 
-(helpers/make-defmacro defgenerators defgenerator)
+(def generator
+  {:engine  (get-generator)
+   :vehicle (get-generator)})
 
-(defgenerators engine vehicle)
-
-(defn- set-get-next-serial!
-  [generator]
-  (swap! generator inc))
+(def get-set-next-serial!
+  (comp (partial (helpers/flip swap!) inc)
+        generator))
 
 (defn- label
-  [generator-name]
-  (str "next " generator-name ":"))
+  [k]
+  (str "next " (name k) ":"))
 
 (def print-next-serial
   (helpers/build println
-                 (comp label
-                       :generator-name)
-                 (comp set-get-next-serial!
-                       :generator)))
+                 label
+                 get-set-next-serial!))
 
 (dotimes [_ 3]
-  (print-next-serial {:generator      engine
-                      :generator-name "engine"}))
+  (print-next-serial :engine))
 
 (dotimes [_ 3]
-  (print-next-serial {:generator      vehicle
-                      :generator-name "vehicle"}))
+  (print-next-serial :vehicle))
+
