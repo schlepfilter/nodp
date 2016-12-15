@@ -33,7 +33,10 @@
 (def forecast-stream
   (rx/map forecast delta-stream))
 
-(rx/subscribe forecast-stream println)
+(def printstream
+  (partial (helpers/flip rx/subscribe) println))
+
+(printstream forecast-stream)
 
 (def temperature-stream
   (rx/map :temperature subject))
@@ -57,7 +60,7 @@
                      (partial interleave
                               ["Avg/Max/Min temperature = " "/" "/"])))))
 
-(rx/subscribe statistic-stream println)
+(printstream statistic-stream)
 
 (defn- get-current
   [{:keys [temperature humidity]}]
@@ -70,7 +73,7 @@
 (def current-stream
   (->> (rx/map get-current subject)))
 
-(rx/subscribe current-stream println)
+(printstream current-stream)
 
 (rx/push! subject {:temperature 80
                    :humidity    65
