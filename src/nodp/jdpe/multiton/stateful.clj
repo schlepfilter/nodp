@@ -1,17 +1,15 @@
 (ns nodp.jdpe.multiton
-  (:require [nodp.helpers :as helpers]))
-
-(defn- get-generator
-  []
-  (atom 0))
+  (:require [com.rpl.specter :as specter]
+            [nodp.helpers :as helpers]))
 
 (def generator
-  {:engine  (get-generator)
-   :vehicle (get-generator)})
+  (atom {:engine  0
+         :vehicle 0}))
 
-(def get-set-next-serial!
-  (comp (partial (helpers/flip swap!) inc)
-        generator))
+(defn- get-set-next-serial!
+  [k]
+  (->> (partial specter/transform* k inc)
+       (swap! generator)))
 
 (defn- label
   [k]
