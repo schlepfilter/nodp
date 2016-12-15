@@ -8,7 +8,9 @@
 
 (defn make-get-parts
   [vehicle]
-  (comp (partial (helpers/flip str) (str " for a " (name vehicle)))
+  (comp (partial (helpers/flip str) (->> vehicle
+                                         name
+                                         (str " for a ")))
         description))
 
 (def get-car-parts
