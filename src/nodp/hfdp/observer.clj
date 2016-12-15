@@ -6,6 +6,35 @@
 
 (def subject (rx/subject))
 
+(def pressure-stream
+  (rx/map :pressure subject))
+
+(def delta-stream
+  (->> pressure-stream
+       (rx/buffer 2 1)
+       (rx/map (partial apply -))))
+
+(defmacro casep
+  ([x pred expr]
+   `(if (or (= ~pred :else) (~pred ~x))
+      ~expr))
+  ([x pred expr & clauses]
+   `(if (~pred ~x)
+      ~expr
+      (casep ~x ~@clauses))))
+
+(defn- forecast
+  [delta]
+  (casep delta
+         pos? "Improving weather on the way!"
+         zero? "More of the same"
+         :else "Watch out for cooler, rainy weather"))
+
+(def forecast-stream
+  (rx/map forecast delta-stream))
+
+(rx/subscribe forecast-stream println)
+
 (def temprature-stream
   (rx/map :temprature subject))
 
@@ -32,12 +61,12 @@
 
 (rx/push! subject {:temprature 80
                    :humidity   65
-                   :pressure   30.4})
+                   :pressure   (rationalize 30.4)})
 
 (rx/push! subject {:temprature 82
                    :humidity   70
-                   :pressure   29.2})
+                   :pressure   (rationalize 29.2)})
 
 (rx/push! subject {:temprature 78
                    :humidity   90
-                   :pressure   29.2})
+                   :pressure   (rationalize 29.2)})
