@@ -59,6 +59,19 @@
 
 (rx/subscribe statistic-stream println)
 
+(defn- get-current
+  [{:keys [temperature humidity]}]
+  (str "Current conditions: "
+       temperature
+       "F degrees and "
+       humidity
+       "% humidity"))
+
+(def current-stream
+  (->> (rx/map get-current subject)))
+
+(rx/subscribe current-stream println)
+
 (rx/push! subject {:temperature 80
                    :humidity    65
                    :pressure    (rationalize 30.4)})
