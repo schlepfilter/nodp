@@ -35,21 +35,21 @@
 
 (rx/subscribe forecast-stream println)
 
-(def temprature-stream
-  (rx/map :temprature subject))
+(def temperature-stream
+  (rx/map :temperature subject))
 
-(def scan-temprature
-  (partial (helpers/flip rx/scan) temprature-stream))
+(def scan-temperature
+  (partial (helpers/flip rx/scan) temperature-stream))
 
 (def max-stream
-  (scan-temprature max))
+  (scan-temperature max))
 
 (def min-stream
-  (scan-temprature min))
+  (scan-temperature min))
 
 (def mean-stream
-  (scan-temprature (comp distributions/mean
-                         vector)))
+  (scan-temperature (comp distributions/mean
+                          vector)))
 
 (def statistic-stream
   (->> (rx/zip mean-stream max-stream min-stream)
@@ -59,14 +59,14 @@
 
 (rx/subscribe statistic-stream println)
 
-(rx/push! subject {:temprature 80
-                   :humidity   65
-                   :pressure   (rationalize 30.4)})
+(rx/push! subject {:temperature 80
+                   :humidity    65
+                   :pressure    (rationalize 30.4)})
 
-(rx/push! subject {:temprature 82
-                   :humidity   70
-                   :pressure   (rationalize 29.2)})
+(rx/push! subject {:temperature 82
+                   :humidity    70
+                   :pressure    (rationalize 29.2)})
 
-(rx/push! subject {:temprature 78
-                   :humidity   90
-                   :pressure   (rationalize 29.2)})
+(rx/push! subject {:temperature 78
+                   :humidity    90
+                   :pressure    (rationalize 29.2)})
