@@ -1,7 +1,6 @@
 (ns nodp.hfdp.factory
   (:require [clojure.string :as str]
-            [nodp.helpers :as helpers]
-            [cats.core :as m]))
+            [nodp.helpers :as helpers]))
 
 (helpers/defmultis-identity get-kind-ingredients
                             get-kind-name

@@ -86,15 +86,11 @@
   [mm-name]
   `(defmulti ~mm-name identity))
 
-(defmacro make-defmacro
-  [macro-name macro]
-  `(defmacro ~macro-name
-     ([])
-     ([x# & more#]
-       `(do (~'~macro ~x#)
-            (~'~macro-name ~@more#)))))
-
-(make-defmacro defmultis-identity defmulti-identity)
+(defmacro defmultis-identity
+  ([])
+  ([x & more]
+   `(do (defmulti-identity ~x)
+        (defmultis-identity ~@more))))
 
 (defn- make-defmethod
   [dispatch-val]
