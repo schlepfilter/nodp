@@ -18,7 +18,7 @@
   (->> (match [command]
               [[verb object]] [verb (environment object)]
               :else [command])
-       (concat [(environment device)])
+       (cons (environment device))
        (str/join " ")))
 
 ;This definition is less readable.
