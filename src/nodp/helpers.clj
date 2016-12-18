@@ -63,13 +63,6 @@
   ([arity f]
    `(ecurry ~arity ~f)))
 
-(defmacro defcurried
-  [f-name bindings body]
-  `(def ~f-name
-     (->> (fn ~bindings
-            ~body)
-          (curry ~(count bindings)))))
-
 (defn ap
   ([f x]
    (m/<$> f x))

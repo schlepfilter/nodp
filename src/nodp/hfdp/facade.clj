@@ -3,6 +3,12 @@
             [clojure.core.match :refer [match]]
             [nodp.helpers :as helpers]))
 
+(def amp)
+
+(def dvd)
+
+(def film)
+
 (def play "playing")
 
 (def set-dvd "setting DVD player to")
@@ -11,14 +17,12 @@
 
 (def turn-off "off")
 
-(def environment)
-
 (defn- get-action
   [device command]
   (->> (match [command]
-              [[verb object]] [verb (environment object)]
+              [[verb object]] [verb object]
               :else [command])
-       (cons (environment device))
+       (cons device)
        (str/join " ")))
 
 ;This definition is less readable.
@@ -52,33 +56,33 @@
   (comp helpers/printall
         get-arguments))
 
-(def watch-device-commands
-  [[:amp
+(defn- get-watch-device-commands
+  []
+  [[amp
     turn-on
-    [set-dvd :dvd]]
-   [:dvd
+    [set-dvd dvd]]
+   [dvd
     turn-on
-    [play :film]]])
+    [play film]]])
 
-(helpers/defcurried make-request
-                    [m environment]
-                    (with-redefs [environment environment]
-                      (print-arguments m)))
+(defn- watch
+  []
+  (print-arguments {:description     "Get ready to watch a movie..."
+                    :device-commands (get-watch-device-commands)}))
 
-(def watch
-  (make-request {:description     "Get ready to watch a movie..."
-                 :device-commands watch-device-commands}))
-
-(def end-device-commands
-  [[:dvd
+(defn- get-end-device-commands
+  []
+  [[dvd
     turn-off]])
 
-(def end
-  (make-request {:description     "Shutting movie theater down..."
-                 :device-commands end-device-commands}))
+(defn- end
+  []
+  (print-arguments {:description     "Shutting movie theater down..."
+                    :device-commands (get-end-device-commands)}))
 
-(let [environment {:amp  "Top-O-Line Amplifier"
-                   :dvd  "Top-O-Line DVD Player"
-                   :film "Raiders of the Lost Ark"}]
-  (watch environment)
-  (end environment))
+(with-redefs [amp "Top-O-Line Amplifier"
+              dvd "Top-O-Line DVD Player"
+              film "Raiders of the Lost Ark"]
+  (watch)
+  (end))
+
