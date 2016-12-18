@@ -3,20 +3,22 @@
             [clojure.core.match :refer [match]]
             [nodp.helpers :as helpers]))
 
-(def verbs
-  {:play     "playing"
-   :set-dvd  "setting DVD player to"
-   :turn-off "off"
-   :turn-on  "on"})
+(def play "playing")
 
-(def env)
+(def set-dvd "setting DVD player to")
+
+(def turn-on "on")
+
+(def turn-off "off")
+
+(def environment)
 
 (defn- get-action
   [device command]
   (->> (match [command]
-              [[verb object]] [(verbs verb) (env object)]
-              :else [(verbs command)])
-       (concat [(env device)])
+              [[verb object]] [verb (environment object)]
+              :else [command])
+       (concat [(environment device)])
        (str/join " ")))
 
 ;This definition is less readable.
@@ -52,15 +54,15 @@
 
 (def watch-device-commands
   [[:amp
-    :turn-on
-    [:set-dvd :dvd]]
+    turn-on
+    [set-dvd :dvd]]
    [:dvd
-    :turn-on
-    [:play :film]]])
+    turn-on
+    [play :film]]])
 
 (helpers/defcurried make-request
-                    [m env]
-                    (with-redefs [env env]
+                    [m environment]
+                    (with-redefs [environment environment]
                       (print-arguments m)))
 
 (def watch
@@ -69,14 +71,14 @@
 
 (def end-device-commands
   [[:dvd
-    :turn-off]])
+    turn-off]])
 
 (def end
   (make-request {:description     "Shutting movie theater down..."
                  :device-commands end-device-commands}))
 
-(let [env {:amp  "Top-O-Line Amplifier"
-           :dvd  "Top-O-Line DVD Player"
-           :film "Raiders of the Lost Ark"}]
-  (watch env)
-  (end env))
+(let [environment {:amp  "Top-O-Line Amplifier"
+                   :dvd  "Top-O-Line DVD Player"
+                   :film "Raiders of the Lost Ark"}]
+  (watch environment)
+  (end environment))
