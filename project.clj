@@ -10,7 +10,6 @@
                  [funcool/cats "2.0.0"]
                  [incanter "1.5.7"]
                  [inflections "0.12.2"]
-                 [org.clojure/core.match "0.2.2"]
                  [org.clojure/math.combinatorics "0.1.3"]
                  [org.clojure/math.numeric-tower "0.0.4"]
                  [org.flatland/ordered "1.5.4"]

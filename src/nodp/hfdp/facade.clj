@@ -1,6 +1,5 @@
 (ns nodp.hfdp.facade
   (:require [clojure.string :as str]
-            [clojure.core.match :refer [match]]
             [nodp.helpers :as helpers]))
 
 (def amp)
@@ -11,24 +10,9 @@
 
 (defn- get-action
   [device command]
-  (->> (match [command]
-              [[verb object]] [verb object]
-              :else [command])
+  (->> (flatten [command])
        (cons device)
        (str/join " ")))
-
-;This definition is less readable.
-;(defn- get-action
-;  [device command]
-;  (str/join " " (concat [(env device)]
-;                        (if (keyword? command)
-;                          [(command verbs)]
-;                          [(-> command
-;                               first
-;                               verbs)
-;                           (-> command
-;                               second
-;                               env)]))))
 
 (defn- get-device-actions
   [[device & commands]]
