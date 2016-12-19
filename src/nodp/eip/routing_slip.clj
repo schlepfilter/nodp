@@ -36,8 +36,4 @@
         plan-service
         check-credit))
 
-(def printall
-  (comp helpers/printall
-        handle-customer))
-
-(printall customer)
+(handle-customer customer)

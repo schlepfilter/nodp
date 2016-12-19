@@ -25,10 +25,8 @@
 (def handle-items-collection
   (partial map handle-items))
 
-(defn- printall
+(defn- handle
   [& more]
-  (-> more
-      handle-items-collection
-      helpers/printall))
+  (handle-items-collection more))
 
-(printall eip-helpers/a-items eip-helpers/x-items)
+(handle eip-helpers/a-items eip-helpers/x-items)

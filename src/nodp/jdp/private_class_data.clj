@@ -1,8 +1,7 @@
 (ns nodp.jdp.private-class-data
   (:require [clojure.string :as str]
             [cats.core :as m]
-            [inflections.core :as inflections]
-            [nodp.helpers :as helpers]))
+            [inflections.core :as inflections]))
 
 (def stew {:potato 1
            :carrot 2
@@ -39,6 +38,4 @@
         (comp mix
               taste)))
 
-(-> stew
-    taste-mix
-    helpers/printall)
+(taste-mix stew)

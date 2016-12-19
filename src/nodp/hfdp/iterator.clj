@@ -35,9 +35,8 @@
 (def get-items
   (partial map get-item))
 
-(def print-menus
-  (comp (partial helpers/printall)
-        get-items
+(def get-menus
+  (comp get-items
         concat))
 
-(print-menus pancake-menu dinner-menu)
+(get-menus pancake-menu dinner-menu)

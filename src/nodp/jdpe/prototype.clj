@@ -1,5 +1,4 @@
-(ns nodp.jdpe.prototype
-  (:require [nodp.helpers :as helpers]))
+(ns nodp.jdpe.prototype)
 
 (def saloon1
   {:engine {:turbo false
@@ -12,4 +11,4 @@
 (def pickup
   saloon1)
 
-(helpers/printall [saloon1 saloon2 pickup])
+[saloon1 saloon2 pickup]

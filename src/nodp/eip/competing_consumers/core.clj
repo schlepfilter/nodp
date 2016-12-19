@@ -11,11 +11,10 @@
 (def work-items
   (get-work-items 101))
 
-(def consume
+(def consume-item
   (partial str (helpers/get-thread-name) " for "))
 
-(def printall
-  (comp helpers/printall
-        (partial map consume)))
+(def consume-items
+  (partial map consume-item))
 
-(printall work-items)
+(consume-items work-items)

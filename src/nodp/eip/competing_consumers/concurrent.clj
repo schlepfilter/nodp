@@ -16,8 +16,7 @@
 ;        (juxt (instantiate helpers/get-thread-name)
 ;              (constantly " for "))))
 
-(def printall
-  (comp helpers/printall
-        (partial pmap consume)))
+(def consume-items
+  (partial pmap consume))
 
-(printall core/work-items)
+(consume-items core/work-items)
