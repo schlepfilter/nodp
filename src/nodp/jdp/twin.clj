@@ -15,10 +15,8 @@
   (comp (partial comp println)
         constantly))
 
-(defn- make-draw
-  [do-draw]
-  (juxt (print-constantly "draw")
-        do-draw))
+(def make-draw
+  (partial juxt (print-constantly "draw")))
 
 (def do-draw
   (print-constantly "doDraw"))

@@ -63,13 +63,6 @@
   ([arity f]
    `(ecurry ~arity ~f)))
 
-(defmacro defcurried
-  [f-name bindings body]
-  `(def ~f-name
-     (->> (fn ~bindings
-            ~body)
-          (curry ~(count bindings)))))
-
 (defn ap
   ([f x]
    (m/<$> f x))
@@ -86,15 +79,11 @@
   [mm-name]
   `(defmulti ~mm-name identity))
 
-(defmacro make-defmacro
-  [macro-name macro]
-  `(defmacro ~macro-name
-     ([])
-     ([x# & more#]
-       `(do (~'~macro ~x#)
-            (~'~macro-name ~@more#)))))
-
-(make-defmacro defmultis-identity defmulti-identity)
+(defmacro defmultis-identity
+  ([])
+  ([x & more]
+   `(do (defmulti-identity ~x)
+        (defmultis-identity ~@more))))
 
 (defn- make-defmethod
   [dispatch-val]

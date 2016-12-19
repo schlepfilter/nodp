@@ -45,7 +45,7 @@
 ;       (update engine :actions conj)))
 
 (defn- unconditionally-change-power
-  [engine change]
+  [{:keys [change engine]}]
   (->> engine
        (s/transform :power change)
        add-power-action))
@@ -54,7 +54,8 @@
   [conditional change]
   (fn [engine]
     (if (conditional engine)
-      (unconditionally-change-power engine change)
+      (unconditionally-change-power {:change change
+                                     :engine engine})
       engine)))
 
 (def max-speed?

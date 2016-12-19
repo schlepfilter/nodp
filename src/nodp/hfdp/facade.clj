@@ -1,36 +1,18 @@
 (ns nodp.hfdp.facade
   (:require [clojure.string :as str]
-            [clojure.core.match :refer [match]]
             [nodp.helpers :as helpers]))
 
-(def verbs
-  {:play     "playing"
-   :set-dvd  "setting DVD player to"
-   :turn-off "off"
-   :turn-on  "on"})
+(def amp)
 
-(def env)
+(def dvd)
+
+(def film)
 
 (defn- get-action
   [device command]
-  (->> (match [command]
-              [[verb object]] [(verbs verb) (env object)]
-              :else [(verbs command)])
-       (concat [(env device)])
+  (->> (flatten [command])
+       (cons device)
        (str/join " ")))
-
-;This definition is less readable.
-;(defn- get-action
-;  [device command]
-;  (str/join " " (concat [(env device)]
-;                        (if (keyword? command)
-;                          [(command verbs)]
-;                          [(-> command
-;                               first
-;                               verbs)
-;                           (-> command
-;                               second
-;                               env)]))))
 
 (defn- get-device-actions
   [[device & commands]]
@@ -50,33 +32,41 @@
   (comp helpers/printall
         get-arguments))
 
-(def watch-device-commands
-  [[:amp
-    :turn-on
-    [:set-dvd :dvd]]
-   [:dvd
-    :turn-on
-    [:play :film]]])
+(def play "playing")
 
-(helpers/defcurried make-request
-                    [m env]
-                    (with-redefs [env env]
-                      (print-arguments m)))
+(def set-dvd "setting DVD player to")
 
-(def watch
-  (make-request {:description     "Get ready to watch a movie..."
-                 :device-commands watch-device-commands}))
+(def turn-on "on")
 
-(def end-device-commands
-  [[:dvd
-    :turn-off]])
+(def turn-off "off")
 
-(def end
-  (make-request {:description     "Shutting movie theater down..."
-                 :device-commands end-device-commands}))
+(defn- get-watch-device-commands
+  []
+  [[amp
+    turn-on
+    [set-dvd dvd]]
+   [dvd
+    turn-on
+    [play film]]])
 
-(let [env {:amp  "Top-O-Line Amplifier"
-           :dvd  "Top-O-Line DVD Player"
-           :film "Raiders of the Lost Ark"}]
-  (watch env)
-  (end env))
+(defn- watch
+  []
+  (print-arguments {:description     "Get ready to watch a movie..."
+                    :device-commands (get-watch-device-commands)}))
+
+(defn- get-end-device-commands
+  []
+  [[dvd
+    turn-off]])
+
+(defn- end
+  []
+  (print-arguments {:description     "Shutting movie theater down..."
+                    :device-commands (get-end-device-commands)}))
+
+(with-redefs [amp "Top-O-Line Amplifier"
+              dvd "Top-O-Line DVD Player"
+              film "Raiders of the Lost Ark"]
+  (watch)
+  (end))
+

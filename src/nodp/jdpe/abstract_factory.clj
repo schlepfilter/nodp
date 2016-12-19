@@ -1,4 +1,5 @@
-(ns nodp.jdpe.abstract-factory)
+(ns nodp.jdpe.abstract-factory
+  (:require [nodp.helpers :as helpers]))
 
 (def description
   {:body    "Body shell parts"
@@ -7,8 +8,10 @@
 
 (defn make-get-parts
   [vehicle]
-  (comp description
-        (partial str " for a " (name vehicle))))
+  (comp (partial (helpers/flip str) (->> vehicle
+                                         name
+                                         (str " for a ")))
+        description))
 
 (def get-car-parts
   (make-get-parts :car))
