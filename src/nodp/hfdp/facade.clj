@@ -9,14 +9,6 @@
 
 (def film)
 
-(def play "playing")
-
-(def set-dvd "setting DVD player to")
-
-(def turn-on "on")
-
-(def turn-off "off")
-
 (defn- get-action
   [device command]
   (->> (match [command]
@@ -55,6 +47,14 @@
 (def print-arguments
   (comp helpers/printall
         get-arguments))
+
+(def play "playing")
+
+(def set-dvd "setting DVD player to")
+
+(def turn-on "on")
+
+(def turn-off "off")
 
 (defn- get-watch-device-commands
   []
