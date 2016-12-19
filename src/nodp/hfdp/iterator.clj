@@ -33,10 +33,7 @@
                  :description))
 
 (def get-items
-  (partial map get-item))
-
-(def get-menus
-  (comp get-items
+  (comp (partial map get-item)
         concat))
 
-(get-menus pancake-menu dinner-menu)
+(get-items pancake-menu dinner-menu)
