@@ -106,12 +106,10 @@
    :running false})
 
 (defn- get-descriptions
-  [{:keys [engine actions]}]
+  [& actions]
   (-> ((apply comp actions) engine)
       :actions))
 
-(get-descriptions {:engine  engine
-                   :actions [turn-off break accelerate turn-on]})
+(get-descriptions turn-off break accelerate turn-on)
 
-(get-descriptions {:engine  engine
-                   :actions [turn-off break accelerate accelerate-hard turn-on]})
+(get-descriptions turn-off break accelerate accelerate-hard turn-on)
