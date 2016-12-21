@@ -29,10 +29,8 @@
   (comp maybe/cat-maybes
         (partial m/<*> (map make-handle-kind-items ["ABC" "XYZ"]))))
 
-(defn- printall
+(defn- handle
   [& more]
-  (-> more
-      handle-items-collection
-      helpers/printall))
+  (handle-items-collection more))
 
-(printall eip-helpers/a-items eip-helpers/x-items)
+(handle eip-helpers/a-items eip-helpers/x-items)

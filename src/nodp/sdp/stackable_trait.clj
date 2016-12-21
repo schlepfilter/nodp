@@ -1,11 +1,10 @@
 (ns nodp.sdp.stackable-trait
-  (:require [clojure.string :as str]
-            [nodp.helpers :as helpers]))
+  (:require [clojure.string :as str]))
 
 (def prefix
   (partial str "Writing the following data: "))
 
-(def get-arguments
+(def get-variations
   (comp (partial map prefix)
         (juxt (comp str/upper-case
                     str/capitalize)
@@ -18,8 +17,4 @@
                     str/lower-case
                     str/upper-case))))
 
-(def printall
-  (comp helpers/printall
-        get-arguments))
-
-(printall "we like learning scala!")
+(get-variations "we like learning scala!")

@@ -105,17 +105,13 @@
    :power   0
    :running false})
 
-(def print-actions
-  (comp helpers/printall
-        :actions))
-
-(defn- run-actions
+(defn- get-descriptions
   [{:keys [engine actions]}]
   (-> ((apply comp actions) engine)
-      print-actions))
+      :actions))
 
-(run-actions {:engine  engine
-              :actions [turn-off break accelerate turn-on]})
+(get-descriptions {:engine  engine
+                   :actions [turn-off break accelerate turn-on]})
 
-(run-actions {:engine  engine
-              :actions [turn-off break accelerate accelerate-hard turn-on]})
+(get-descriptions {:engine  engine
+                   :actions [turn-off break accelerate accelerate-hard turn-on]})

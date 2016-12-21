@@ -18,6 +18,6 @@
    "Pouring into cup"
    (add-condiments kind)])
 
-(helpers/printall (prepare :coffee))
+(prepare :coffee)
 
-(helpers/printall (prepare :tea))
+(prepare :tea)

@@ -55,16 +55,13 @@
    "Cutting the pizza into diagonal slices"
    "Place pizza in official PizzaStore box"])
 
-(def get-arguments
+(def order
   (comp flatten
         (juxt prepare
               (constantly constant-operations)
               get-customer-pizza
               get-ingredients)))
 
-(def order
-  (comp helpers/printall
-        get-arguments))
 
 (order {:kind     :cheese
         :customer "Ethan"
