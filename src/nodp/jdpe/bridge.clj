@@ -105,11 +105,11 @@
    :power   0
    :running false})
 
-(defn- get-descriptions
+(defn- get-actions
   [& actions]
   (-> ((apply comp actions) engine)
       :actions))
 
-(get-descriptions turn-off break accelerate turn-on)
+(get-actions turn-off break accelerate turn-on)
 
-(get-descriptions turn-off break accelerate accelerate-hard turn-on)
+(get-actions turn-off break accelerate accelerate-hard turn-on)
