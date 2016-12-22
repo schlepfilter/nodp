@@ -1,10 +1,10 @@
 (ns nodp.hfdp.command
   (:require [clojure.data :as data]
+            [clojure.string :as str]
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
             [com.rpl.specter :as specter]
-            [nodp.helpers :as helpers]
-            [clojure.string :as str]))
+            [nodp.helpers :as helpers]))
 
 (def constantly-nothing
   (-> (maybe/nothing)
