@@ -106,8 +106,8 @@
    :running false})
 
 (defn- get-actions
-  [& actions]
-  (-> ((apply comp actions) engine)
+  [& commands]
+  (-> ((apply comp commands) engine)
       :actions))
 
 (get-actions turn-off break accelerate turn-on)
