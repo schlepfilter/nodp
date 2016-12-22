@@ -18,4 +18,4 @@
 
 ;TODO implement decorate with predicate dispatch when core.match supports predicate dispatch
 
-(map/merge-with-key decorate troll smart)
+;(map/merge-with-key decorate troll smart)

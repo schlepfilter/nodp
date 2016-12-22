@@ -99,6 +99,7 @@
     <orderEntry type="library" name="Leiningen: org.clojure/tools.analyzer.jvm:0.6.7" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/tools.analyzer:0.6.6" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/tools.macro:0.1.1" level="project" />
+    <orderEntry type="library" name="Leiningen: org.clojure/tools.namespace:0.2.11" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/tools.nrepl:0.2.12" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/tools.reader:0.10.0-alpha3" level="project" />
     <orderEntry type="library" name="Leiningen: org.danlarkin/clojure-json:1.1" level="project" />

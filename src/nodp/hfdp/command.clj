@@ -5,7 +5,6 @@
             [com.rpl.specter :as specter]
             [nodp.helpers :as helpers]))
 
-
 (def constantly-nothing
   (constantly (maybe/nothing)))
 
@@ -26,15 +25,6 @@
    :now     {:control control
              :fan     :off}
    :redo    []})
-
-(def make-change-light
-  ((helpers/curry specter/setval*) [:now :light]))
-
-(def turn-on-light
-  (make-change-light 100))
-
-(def turn-off-light
-  (make-change-light 0))
 
 (defn- add-undo
   [state]
@@ -88,6 +78,15 @@
                                                               :on
                                                               :off)]))
         add-undo))
+
+(def make-change-light
+  ((helpers/curry specter/setval*) [:now :light]))
+
+(def turn-on-light
+  (make-change-light 100))
+
+(def turn-off-light
+  (make-change-light 0))
 
 (get-actions
   undo

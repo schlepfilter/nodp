@@ -1,4 +1,4 @@
-(ns nodp.jdpe.multiton
+(ns nodp.jdpe.multiton.stateful
   (:require [com.rpl.specter :as specter]
             [nodp.helpers :as helpers]))
 
