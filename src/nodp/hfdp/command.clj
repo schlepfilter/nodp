@@ -3,7 +3,8 @@
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
             [com.rpl.specter :as specter]
-            [nodp.helpers :as helpers]))
+            [nodp.helpers :as helpers]
+            [clojure.string :as str]))
 
 (def constantly-nothing
   (-> (maybe/nothing)
@@ -34,6 +35,21 @@
 (defmethod get-action :light
   [{light :light}]
   (-> (str "Light is dimmed to " light "%")
+      (maybe/just)))
+
+(def location
+  "Living Room")
+
+(defmulti get-description identity)
+
+;TODO implement get-description with predicate dispatch when core.match supports predicate dispatch
+(defmethod get-description :medium
+  [_]
+  "on medium")
+
+(defmethod get-action :fan
+  [{fan :fan}]
+  (-> (str/join " " [location "ceiling fan is" (get-description fan)])
       (maybe/just)))
 
 ;TODO implement get-action with predicate dispatch when core.match supports predicate dispatch
@@ -78,9 +94,12 @@
                                                               :off)]))
         add-undo))
 
+(def make-make-change
+  (comp (helpers/curry specter/setval*)
+        (partial conj [:now])))
+
 (def make-change-light
-  (-> [:now :light]
-      ((helpers/curry specter/setval*))))
+  (make-make-change :light))
 
 (def turn-on-light
   (make-change-light 100))
@@ -88,17 +107,37 @@
 (def turn-off-light
   (make-change-light 0))
 
+(def make-set-fan
+  (make-make-change :fan))
+
+(def set-fan-high
+  (make-set-fan :high))
+
+(def set-fan-medium
+  (make-set-fan :medium))
+
+(def set-fan-off
+  (make-set-fan :off))
+
 (get-actions
+  (make-push-button {:slot 0
+                     :on   true})
+  (make-set-button {:slot 1
+                    :on   set-fan-high
+                    :off  set-fan-off})
+  (make-set-button {:slot 0
+                    :on   set-fan-medium
+                    :off  set-fan-off})
   undo
   (make-push-button {:slot 0
-                    :on    true})
+                     :on   true})
   (make-push-button {:slot 0
-                    :on    false})
+                     :on   false})
   undo
   (make-push-button {:slot 0
-                    :on    false})
+                     :on   false})
   (make-push-button {:slot 0
-                    :on    true})
+                     :on   true})
   (make-set-button {:slot 0
                     :on   turn-on-light
                     :off  turn-off-light}))
