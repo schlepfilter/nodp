@@ -6,7 +6,8 @@
             [nodp.helpers :as helpers]))
 
 (def constantly-nothing
-  (constantly (maybe/nothing)))
+  (-> (maybe/nothing)
+      constantly))
 
 (def do-path
   [(->> (range 7)
@@ -15,9 +16,7 @@
    (specter/multi-path :on :off)])
 
 (def control
-  (specter/setval do-path
-                  constantly-nothing
-                  []))
+  (specter/setval do-path constantly-nothing []))
 
 (def environment
   {:actions []
@@ -34,7 +33,8 @@
 
 (defmethod get-action :light
   [{light :light}]
-  (maybe/just (str "Light is dimmed to " light "%")))
+  (-> (str "Light is dimmed to " light "%")
+      (maybe/just)))
 
 ;TODO implement get-action with predicate dispatch when core.match supports predicate dispatch
 (defmethod get-action :control
@@ -67,11 +67,10 @@
 
 (defn- make-set-button
   [{:keys [slot on off]}]
-  (partial specter/setval* [:now :control (specter/keypath slot)]
-           {:on  on
-            :off off}))
+  (partial specter/setval* [:now :control (specter/keypath slot)] {:on  on
+                                                                   :off off}))
 
-(defn- make-get-button
+(defn- make-push-button
   [{:keys [slot on]}]
   (comp (m/join (partial specter/select-one*
                          [:now :control (specter/must slot) (if on
@@ -80,7 +79,8 @@
         add-undo))
 
 (def make-change-light
-  ((helpers/curry specter/setval*) [:now :light]))
+  (-> [:now :light]
+      ((helpers/curry specter/setval*))))
 
 (def turn-on-light
   (make-change-light 100))
@@ -90,15 +90,15 @@
 
 (get-actions
   undo
-  (make-get-button {:slot 0
-                    :on   true})
-  (make-get-button {:slot 0
-                    :on   false})
+  (make-push-button {:slot 0
+                    :on    true})
+  (make-push-button {:slot 0
+                    :on    false})
   undo
-  (make-get-button {:slot 0
-                    :on   false})
-  (make-get-button {:slot 0
-                    :on   true})
+  (make-push-button {:slot 0
+                    :on    false})
+  (make-push-button {:slot 0
+                    :on    true})
   (make-set-button {:slot 0
                     :on   turn-on-light
                     :off  turn-off-light}))
