@@ -21,14 +21,14 @@
 
 (def environment
   {:actions []
-   :undo    []
+   :undos   []
    :now     {:control control
              :fan     :off}
    :redo    []})
 
 (defn- add-undo
   [state]
-  (specter/transform :undo (partial (helpers/flip conj) state) state))
+  (specter/transform :undos (partial (helpers/flip conj) state) state))
 
 (defmulti get-action (comp first keys))
 
@@ -77,7 +77,7 @@
 (defn- undo
   [state]
   (->> state
-       :undo
+       :undos
        last
        (specter/setval :actions (:actions state))))
 
