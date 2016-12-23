@@ -40,19 +40,18 @@
 (def location
   "Living Room")
 
-(defmulti get-description identity)
-
-;TODO implement get-description with predicate dispatch when core.match supports predicate dispatch
-(defmethod get-description :medium
-  [_]
-  "on medium")
+(defn- get-description
+  [light]
+  (str (if (= light :off)
+         ""
+         "on ")
+       (name light)))
 
 (defmethod get-action :fan
   [{fan :fan}]
   (-> (str/join " " [location "ceiling fan is" (get-description fan)])
       (maybe/just)))
 
-;TODO implement get-action with predicate dispatch when core.match supports predicate dispatch
 (defmethod get-action :control
   [_]
   (maybe/nothing))
@@ -120,6 +119,12 @@
   (make-set-fan :off))
 
 (get-actions
+  undo
+  (make-push-button {:slot 1
+                     :on   true})
+  undo
+  (make-push-button {:slot 0
+                     :on   false})
   (make-push-button {:slot 0
                      :on   true})
   (make-set-button {:slot 1
