@@ -117,11 +117,8 @@
               symbol)
      (make-set-fan ~fan)))
 
-(defmacro defsets-fan
-  ([])
-  ([fan & fans]
-   `(do (defset-fan ~fan)
-        (defsets-fan ~@fans))))
+(helpers/defdefs defsets-fan
+                 defset-fan)
 
 (defsets-fan :high :medium :off)
 

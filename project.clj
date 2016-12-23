@@ -13,6 +13,7 @@
                  [org.clojure/math.combinatorics "0.1.3"]
                  [org.clojure/math.numeric-tower "0.0.4"]
                  [org.flatland/ordered "1.5.4"]
+                 [potemkin "0.4.3"]
                  [prismatic/plumbing "0.5.3"]
                  [riddley "0.1.12"]
                  [thi.ng/geom "0.0.908"]]
