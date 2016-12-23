@@ -111,7 +111,10 @@
 
 (defmacro defset-fan
   [fan]
-  `(def ~(symbol (str "set-fan-" (name fan)))
+  `(def ~(->> fan
+              name
+              (str "set-fan-")
+              symbol)
      (make-set-fan ~fan)))
 
 (defmacro defsets-fan
