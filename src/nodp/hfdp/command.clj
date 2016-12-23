@@ -109,14 +109,18 @@
 (def make-set-fan
   (make-make-change :fan))
 
-(def set-fan-high
-  (make-set-fan :high))
+(defmacro defset-fan
+  [fan]
+  `(def ~(symbol (str "set-fan-" (name fan)))
+     (make-set-fan ~fan)))
 
-(def set-fan-medium
-  (make-set-fan :medium))
+(defmacro defsets-fan
+  ([])
+  ([fan & fans]
+   `(do (defset-fan ~fan)
+        (defsets-fan ~@fans))))
 
-(def set-fan-off
-  (make-set-fan :off))
+(defsets-fan :high :medium :off)
 
 (get-actions
   undo
