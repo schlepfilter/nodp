@@ -83,13 +83,13 @@
 (defmacro defdefs
   [macro-name macro]
   (potemkin/unify-gensyms
-    `(let [ns-macro-name## (resolve '~macro-name)
-           ns-macro## (resolve '~macro)]
+    `(let [qualified-macro-name## (resolve '~macro-name)
+           qualified-macro## (resolve '~macro)]
        (defmacro ~macro-name
          ([])
          ([x## & more##]
-           `(do (~ns-macro## ~x##)
-                (~ns-macro-name## ~@more##)))))))
+           `(do (~qualified-macro## ~x##)
+                (~qualified-macro-name## ~@more##)))))))
 
 (defdefs defmultis-identity
          defmulti-identity)
