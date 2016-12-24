@@ -3,6 +3,7 @@
             [clojure.string :as str]
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
+            [clojure.math.combinatorics :as combinatorics]
             [com.rpl.specter :as specter]
             [nodp.helpers :as helpers]))
 
@@ -10,8 +11,10 @@
   (-> (maybe/nothing)
       constantly))
 
+(def slot-n 2)
+
 (def do-path
-  [(->> (range 7)
+  [(->> (range slot-n)
         (map specter/keypath)
         (apply specter/multi-path))
    (specter/multi-path :on :off)])
@@ -122,15 +125,37 @@
 
 (defsets-fan :high :medium :off)
 
+(defmacro defpush-button
+  [{:keys [slot on] :as m}]
+  `(def ~(->> (if on
+                "on"
+                "off")
+              (str "push-button-" slot "-")
+              (symbol))
+     (make-push-button ~m)))
+
+(defn- get-buttons
+  [n]
+  (map (partial apply merge)
+       (combinatorics/cartesian-product
+         (map (partial array-map :slot) (range n))
+         (map (partial array-map :on) [true false]))))
+
+(helpers/defdefs defpush-buttons*
+                 defpush-button)
+
+(def defpush-buttons
+  (comp (partial apply (helpers/functionize defpush-buttons*))
+        get-buttons))
+
+(defpush-buttons slot-n)
+
 (get-actions
   undo
-  (make-push-button {:slot 1
-                     :on   true})
+  push-button-1-on
   undo
-  (make-push-button {:slot 0
-                     :on   false})
-  (make-push-button {:slot 0
-                     :on   true})
+  push-button-0-off
+  push-button-0-on
   (make-set-button {:slot 1
                     :on   set-fan-high
                     :off  set-fan-off})
@@ -138,15 +163,11 @@
                     :on   set-fan-medium
                     :off  set-fan-off})
   undo
-  (make-push-button {:slot 0
-                     :on   true})
-  (make-push-button {:slot 0
-                     :on   false})
+  push-button-0-on
+  push-button-0-off
   undo
-  (make-push-button {:slot 0
-                     :on   false})
-  (make-push-button {:slot 0
-                     :on   true})
+  push-button-0-off
+  push-button-0-on
   (make-set-button {:slot 0
                     :on   turn-on-light
                     :off  turn-off-light}))
