@@ -13,7 +13,6 @@
   {:name  "Whip"
    :price 0.1})
 
-;TODO handle the case where the types of first and second elements differ
 (defmulti add (comp type
                     first
                     vector))
