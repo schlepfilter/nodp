@@ -38,22 +38,24 @@
 (defmethod get-action :light
   [{light :light}]
   (-> (str "Light is dimmed to " light "%")
-      (maybe/just)))
+      maybe/just))
 
 (def location
   "Living Room")
 
 (defn- get-description
   [light]
-  (str (if (= light :off)
-         ""
-         "on ")
-       (name light)))
+  (->> light
+       name
+       (str (if (= light :off)
+              ""
+              "on "))))
 
 (defmethod get-action :fan
   [{fan :fan}]
-  (-> (str/join " " [location "ceiling fan is" (get-description fan)])
-      (maybe/just)))
+  (->> [location "ceiling fan is" (get-description fan)]
+       (str/join " ")
+       maybe/just))
 
 (defmethod get-action :control
   [_]
