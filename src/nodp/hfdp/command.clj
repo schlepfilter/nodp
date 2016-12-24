@@ -138,12 +138,12 @@
   (comp (helpers/curry 2 map)
         (helpers/curry 2 array-map)))
 
-(defn- get-buttons
-  [n]
-  (map (partial apply merge)
-       (combinatorics/cartesian-product
-         ((map-key :on) [true false])
-         ((map-key :slot) (range n)))))
+(def get-buttons
+  (comp (partial map (partial apply merge))
+        (partial combinatorics/cartesian-product
+                 ((map-key :on) [true false]))
+        (map-key :slot)
+        range))
 
 (helpers/defdefs defpush-buttons*
                  defpush-button)
