@@ -3,7 +3,7 @@
             [clojure.string :as str]
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
-            [clojure.math.combinatorics :as combinatorics]
+            [clojure.math.combinatorics :as combo]
             [com.rpl.specter :as specter]
             [nodp.helpers :as helpers]))
 
@@ -142,7 +142,7 @@
 
 (def get-buttons
   (comp (partial map (partial apply merge))
-        (partial combinatorics/cartesian-product
+        (partial combo/cartesian-product
                  ((map-key :on) [true false]))
         (map-key :slot)
         range))
