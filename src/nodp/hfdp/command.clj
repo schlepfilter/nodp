@@ -134,12 +134,16 @@
               (symbol))
      (make-push-button ~m)))
 
+(def map-key
+  (comp (helpers/curry 2 map)
+        (helpers/curry 2 array-map)))
+
 (defn- get-buttons
   [n]
   (map (partial apply merge)
        (combinatorics/cartesian-product
-         (map (partial array-map :slot) (range n))
-         (map (partial array-map :on) [true false]))))
+         ((map-key :on) [true false])
+         ((map-key :slot) (range n)))))
 
 (helpers/defdefs defpush-buttons*
                  defpush-button)
