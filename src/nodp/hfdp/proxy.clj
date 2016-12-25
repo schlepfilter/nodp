@@ -12,13 +12,18 @@
 ;  (comp (partial (helpers/flip vector) :ratings) specter/must))
 
 (defn- make-set-rating
+  [{:keys [object rating]}]
+  (fn [person]
+    (specter/transform (get-ratings-path object)
+                       (partial (helpers/flip conj) rating)
+                       person)))
+
+(defn- proxy-make-set-rating
   [{:keys [subject object rating]}]
   (if (= subject object)
     identity
-    (fn [person]
-      (specter/transform (get-ratings-path object)
-                         (partial (helpers/flip conj) rating)
-                         person))))
+    (make-set-rating {:object object
+                      :rating rating})))
 
 (defn- get-rating
   [{:keys [object person]}]
@@ -33,9 +38,9 @@
 (get-rating
   {:object "Joe Javabean"
    :person (run-commands
-             {:commands [(make-set-rating {:object "Joe Javabean"
-                                           :rating 3})
-                         (make-set-rating {:object  "Joe Javabean"
-                                           :subject "Joe Javabean"
-                                           :rating  10})]
+             {:commands [(proxy-make-set-rating {:object "Joe Javabean"
+                                                 :rating 3})
+                         (proxy-make-set-rating {:object  "Joe Javabean"
+                                                 :subject "Joe Javabean"
+                                                 :rating  10})]
               :person   {"Joe Javabean" {:ratings [7]}}})})
