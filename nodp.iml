@@ -17,6 +17,7 @@
     <orderEntry type="library" name="Leiningen: bouncycastle/bcprov-jdk14:138" level="project" />
     <orderEntry type="library" name="Leiningen: clatrix:0.3.0" level="project" />
     <orderEntry type="library" name="Leiningen: clj-time:0.7.0" level="project" />
+    <orderEntry type="library" name="Leiningen: clj-tuple:0.2.2" level="project" />
     <orderEntry type="library" name="Leiningen: cljs-log:0.2.1" level="project" />
     <orderEntry type="library" name="Leiningen: clojure-complete:0.2.4" level="project" />
     <orderEntry type="library" name="Leiningen: clojureql:1.0.4" level="project" />
@@ -99,6 +100,7 @@
     <orderEntry type="library" name="Leiningen: org.clojure/tools.analyzer.jvm:0.6.7" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/tools.analyzer:0.6.6" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/tools.macro:0.1.1" level="project" />
+    <orderEntry type="library" name="Leiningen: org.clojure/tools.namespace:0.2.11" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/tools.nrepl:0.2.12" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/tools.reader:0.10.0-alpha3" level="project" />
     <orderEntry type="library" name="Leiningen: org.danlarkin/clojure-json:1.1" level="project" />
@@ -110,6 +112,7 @@
     <orderEntry type="library" name="Leiningen: org.mozilla/rhino:1.7R5" level="project" />
     <orderEntry type="library" name="Leiningen: org.ow2.asm/asm-all:4.2" level="project" />
     <orderEntry type="library" name="Leiningen: org.scilab.forge/jlatexmath:0.9.6" level="project" />
+    <orderEntry type="library" name="Leiningen: potemkin:0.4.3" level="project" />
     <orderEntry type="library" name="Leiningen: prismatic/plumbing:0.5.3" level="project" />
     <orderEntry type="library" name="Leiningen: prismatic/schema:1.0.1" level="project" />
     <orderEntry type="library" name="Leiningen: riddley:0.1.12" level="project" />

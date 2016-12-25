@@ -1,4 +1,4 @@
-(ns nodp.hfdp.core-test
+(ns nodp.core-test
   (:require [clojure.test :refer :all]
             [nodp.core :refer :all]))
 

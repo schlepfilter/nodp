@@ -3,6 +3,7 @@
             [cats.builtin]
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
+            [potemkin :as potemkin]
             [riddley.walk :as riddley]))
 
 (defn flip
@@ -79,11 +80,19 @@
   [mm-name]
   `(defmulti ~mm-name identity))
 
-(defmacro defmultis-identity
-  ([])
-  ([x & more]
-   `(do (defmulti-identity ~x)
-        (defmultis-identity ~@more))))
+(defmacro defdefs
+  [macro-name macro]
+  (potemkin/unify-gensyms
+    `(let [qualified-macro-name## (resolve '~macro-name)
+           qualified-macro## (resolve '~macro)]
+       (defmacro ~macro-name
+         ([])
+         ([x## & more##]
+           `(do (~qualified-macro## ~x##)
+                (~qualified-macro-name## ~@more##)))))))
+
+(defdefs defmultis-identity
+         defmulti-identity)
 
 (defn- make-defmethod
   [dispatch-val]

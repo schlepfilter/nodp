@@ -1,4 +1,4 @@
-(ns nodp.eip.splitter.content-based-router
+(ns nodp.eip.content-based-router
   (:require [clojure.string :as str]
             [nodp.helpers :as helpers]
             [nodp.eip.helpers :as eip-helpers]))

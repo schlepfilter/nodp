@@ -62,7 +62,6 @@
               get-customer-pizza
               get-ingredients)))
 
-
 (order {:kind     :cheese
         :customer "Ethan"
         :region   :ny})
