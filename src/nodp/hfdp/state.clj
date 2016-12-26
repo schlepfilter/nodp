@@ -8,7 +8,8 @@
     `(do (defmulti ~mm-name ~dispatch-fn)
          (defmultis ~mm-names ~dispatch-fn))))
 
-(defmultis [insert turn* dispense refill] (comp :state :machine))
+(defmultis [insert turn* dispense refill] (comp :state
+                                                :machine))
 
 (def make-add-action
   (comp ((helpers/curry specter/transform*) :actions)
