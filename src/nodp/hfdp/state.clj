@@ -28,6 +28,9 @@
   (->> environment
        ((make-add-action "You can't insert a quarter, the machine is sold out"))))
 
+(def sold-out?
+  (comp (partial > 1) :gumball-n :machine))
+
 (defmethod dispense :sold
   [environment]
   (->> environment
@@ -35,14 +38,12 @@
        ((make-add-action "A gumball comes rolling out the slot..."))
        (specter/transform specter/STAY
                           (fn [environment*]
-                            (if (< 0 (-> environment*
-                                         :machine
-                                         :gumball-n))
-                              (-> environment*
-                                  ((make-set-state :quarterless)))
+                            (if (sold-out? environment*)
                               (-> environment*
                                   ((make-set-state :sold-out))
-                                  ((make-add-action "Oops, out of gumballs!"))))))))
+                                  ((make-add-action "Oops, out of gumballs!")))
+                              (-> environment*
+                                  ((make-set-state :quarterless))))))))
 
 (defmethod turn :has-quarter
   [environment]
