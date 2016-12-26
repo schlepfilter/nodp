@@ -12,7 +12,7 @@
 
 (def make-add-action
   (comp ((helpers/curry specter/transform*) :actions)
-        (helpers/curry 2 (helpers/flip conj))))
+        (helpers/flip (helpers/curry 2 conj))))
 
 (defmethod insert :quarterless
   [environment]

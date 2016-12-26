@@ -8,8 +8,12 @@
 
 (defn flip
   [f]
-  (fn [x y & more]
-    (apply f y x more)))
+  (fn
+    ([x]
+     (fn [y & more]
+       (apply f y x more)))
+    ([x y & more]
+     (apply f y x more))))
 
 (defn quote-expr
   [expr]
