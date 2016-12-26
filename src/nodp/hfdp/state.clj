@@ -23,18 +23,26 @@
        ((make-set-state :has-quarter))
        ((make-add-action "You inserted a quarter"))))
 
+(defmethod insert :sold-out
+  [environment]
+  (->> environment
+       ((make-add-action "You can't insert a quarter, the machine is sold out"))))
+
 (defmethod dispense :sold
   [environment]
   (->> environment
        (specter/transform [:machine :gumball-n] dec)
        ((make-add-action "A gumball comes rolling out the slot..."))
-       (specter/transform :machine
-                          (fn [{gumball-n :gumball-n :as machine}]
-                            (specter/setval :state
-                                            (if (< 0 gumball-n)
-                                              :quarterless
-                                              :sold-out)
-                                            machine)))))
+       (specter/transform specter/STAY
+                          (fn [environment*]
+                            (if (< 0 (-> environment*
+                                         :machine
+                                         :gumball-n))
+                              (-> environment*
+                                  ((make-set-state :quarterless)))
+                              (-> environment*
+                                  ((make-set-state :sold-out))
+                                  ((make-add-action "Oops, out of gumballs!"))))))))
 
 (defmethod turn :has-quarter
   [environment]
@@ -42,6 +50,11 @@
        ((make-set-state :sold))
        ((make-add-action "You turned..."))
        dispense))
+
+(defmethod turn :sold-out
+  [environment]
+  (->> environment
+       ((make-add-action "You turned, but there are no gumballs"))))
 
 ;This definition is less readable
 ;(defmethod insert :quarterless
@@ -64,4 +77,4 @@
       :actions))
 
 (get-actions {:gumball-n 2
-              :commands  [turn insert]})
+              :commands  [turn insert turn insert turn insert]})
