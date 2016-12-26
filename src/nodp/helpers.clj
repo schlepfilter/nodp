@@ -8,8 +8,12 @@
 
 (defn flip
   [f]
-  (fn [x y & more]
-    (apply f y x more)))
+  (fn
+    ([x]
+     (fn [y & more]
+       (apply f y x more)))
+    ([x y & more]
+     (apply f y x more))))
 
 (defn quote-expr
   [expr]
@@ -75,6 +79,12 @@
                         f)
                  x)
           more)))
+
+(defmacro defpfmethod
+  [multifn dispatch-val f]
+  `(defmethod ~multifn ~dispatch-val
+     [& x#]
+     (apply ~f x#)))
 
 (defmacro defmulti-identity
   [mm-name]

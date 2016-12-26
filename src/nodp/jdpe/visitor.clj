@@ -29,6 +29,8 @@
   (comp flatten
         (partial map get-diagnosis)))
 
+(get-diagnoses engine)
+
 (defn- get-count
   [[k v]]
   (str v " " (name k) "(s)"))
@@ -37,9 +39,4 @@
   (comp (partial str/join ", ")
         (partial map get-count)))
 
-(def inspect
-  (comp flatten
-        (juxt get-diagnoses
-              get-counts)))
-
-(inspect engine)
+(get-counts engine)
