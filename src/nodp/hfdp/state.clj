@@ -38,12 +38,11 @@
        ((make-add-action "A gumball comes rolling out the slot..."))
        (specter/transform specter/STAY
                           (fn [environment*]
-                            (if (sold-out? environment*)
-                              (-> environment*
-                                  ((make-set-state :sold-out))
-                                  ((make-add-action "Oops, out of gumballs!")))
-                              (-> environment*
-                                  ((make-set-state :quarterless))))))))
+                            ((if (sold-out? environment*)
+                               (comp (make-add-action "Oops, out of gumballs!")
+                                     (make-set-state :sold-out))
+                               (comp (make-set-state :quarterless)))
+                              environment*)))))
 
 (defmethod turn :has-quarter
   [environment]
