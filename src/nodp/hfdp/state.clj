@@ -55,14 +55,6 @@
   (comp dispense
         turn*))
 
-;This definition is less readable
-;(defmethod insert :quarterless
-;  [{actions                :actions
-;    {gumball-n :gumball-n} :machine}]
-;  {:actions (conj actions "You inserted a quarter")
-;   :machine {:gumball-n gumball-n
-;             :state     :has-quarter}})
-
 (defn- get-environment
   [gumball-n]
   {:machine {:gumball-n gumball-n
