@@ -17,48 +17,39 @@
 (def make-set-state
   ((helpers/curry specter/setval*) [:machine :state]))
 
-(defmethod insert :quarterless
-  [environment]
-  (->> environment
-       ((make-set-state :has-quarter))
-       ((make-add-action "You inserted a quarter"))))
+(helpers/defpfmethod insert :quarterless
+                     (comp (make-add-action "You inserted a quarter")
+                           (make-set-state :has-quarter)))
 
-(defmethod insert :sold-out
-  [environment]
-  (->> environment
-       ((make-add-action "You can't insert a quarter, the machine is sold out"))))
+(helpers/defpfmethod insert :sold-out
+                     (make-add-action "You can't insert a quarter, the machine is sold out"))
 
 (def sold-out?
-  (comp (partial > 1) :gumball-n :machine))
+  (comp (partial > 1)
+        :gumball-n
+        :machine))
 
-(defmethod dispense :sold
-  [environment]
-  (->> environment
-       (specter/transform [:machine :gumball-n] dec)
-       ((make-add-action "A gumball comes rolling out the slot..."))
-       (specter/transform specter/STAY
-                          (fn [environment*]
-                            ((if (sold-out? environment*)
-                               (comp (make-add-action "Oops, out of gumballs!")
-                                     (make-set-state :sold-out))
-                               (comp (make-set-state :quarterless)))
-                              environment*)))))
+(helpers/defpfmethod dispense :sold
+                     (comp (partial specter/transform*
+                                    specter/STAY
+                                    (fn [environment]
+                                      ((if (sold-out? environment)
+                                         (comp (make-add-action "Oops, out of gumballs!")
+                                               (make-set-state :sold-out))
+                                         (comp (make-set-state :quarterless)))
+                                        environment)))
+                           (make-add-action "A gumball comes rolling out the slot...")
+                           (partial specter/transform* [:machine :gumball-n] dec)))
 
-(defmethod dispense :sold-out
-  [environment]
-  (->> environment
-       ((make-add-action "No gumball dispensed"))))
+(helpers/defpfmethod dispense :sold-out
+                     (make-add-action "No gumball dispensed"))
 
-(defmethod turn* :has-quarter
-  [environment]
-  (->> environment
-       ((make-set-state :sold))
-       ((make-add-action "You turned..."))))
+(helpers/defpfmethod turn* :has-quarter
+                     (comp (make-add-action "You turned...")
+                           (make-set-state :sold)))
 
-(defmethod turn* :sold-out
-  [environment]
-  (->> environment
-       ((make-add-action "You turned, but there are no gumballs"))))
+(helpers/defpfmethod turn* :sold-out
+                     (make-add-action "You turned, but there are no gumballs"))
 
 (def turn
   (comp dispense
