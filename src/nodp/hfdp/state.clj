@@ -8,8 +8,8 @@
     `(do (defmulti ~mm-name ~dispatch-fn)
          (defmultis ~mm-names ~dispatch-fn))))
 
-(defmultis [insert turn* dispense refill] (comp :state
-                                                :machine))
+(defmultis [insert turn* dispense refill*] (comp :state
+                                                 :machine))
 
 (def make-add-action
   (comp ((helpers/curry specter/transform*) :actions)
@@ -56,6 +56,25 @@
   (comp dispense
         turn*))
 
+(helpers/defpfmethod refill* :sold-out
+                     (make-set-state :quarterless))
+
+(defn make-refill
+  [gumball-n]
+  (comp refill*
+        (partial specter/transform*
+                 specter/STAY
+                 (fn [environment]
+                   (specter/transform
+                     :actions
+                     (partial (helpers/flip conj)
+                              (str "The gumball machine was just refilled; it's new count is: "
+                                   (-> environment
+                                       :machine
+                                       :gumball-n)))
+                     environment)))
+        (partial specter/transform* [:machine :gumball-n] (partial + gumball-n))))
+
 (defn- get-environment
   [gumball-n]
   {:machine {:gumball-n gumball-n
@@ -69,4 +88,4 @@
       :actions))
 
 (get-actions {:gumball-n 2
-              :commands  [turn insert turn insert turn insert]})
+              :commands  [(make-refill 5) turn insert turn insert turn insert]})
