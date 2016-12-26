@@ -100,14 +100,14 @@
 (def turn-off
   stop)
 
-(def engine
+(def default-engine
   {:actions []
    :power   0
    :running false})
 
 (defn- get-actions
   [& commands]
-  (-> ((apply comp commands) engine)
+  (-> ((apply comp commands) default-engine)
       :actions))
 
 (get-actions turn-off break accelerate turn-on)
