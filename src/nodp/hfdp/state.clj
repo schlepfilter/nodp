@@ -14,10 +14,13 @@
   (comp ((helpers/curry specter/transform*) :actions)
         (helpers/flip (helpers/curry 2 conj))))
 
+(def make-set-state
+  ((helpers/curry specter/setval*) [:machine :state]))
+
 (defmethod insert :quarterless
   [environment]
   (->> environment
-       (specter/setval [:machine :state] :has-quarter)
+       ((make-set-state :has-quarter))
        ((make-add-action "You inserted a quarter"))))
 
 (defmethod dispense :sold
@@ -36,7 +39,7 @@
 (defmethod turn :has-quarter
   [environment]
   (->> environment
-       (specter/setval [:machine :state] :sold)
+       ((make-set-state :sold))
        ((make-add-action "You turned..."))
        dispense))
 
