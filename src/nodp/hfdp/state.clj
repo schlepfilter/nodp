@@ -2,7 +2,13 @@
   (:require [com.rpl.specter :as specter]
             [nodp.helpers :as helpers]))
 
-(defmulti insert (comp :state :machine))
+(defmacro defmultis
+  [[mm-name & mm-names] dispatch-fn]
+  (if-not (nil? mm-name)
+    `(do (defmulti ~mm-name ~dispatch-fn)
+         (defmultis ~mm-names ~dispatch-fn))))
+
+(defmultis [insert turn dispense refill] (comp :state :machine))
 
 (defmethod insert :quarterless
   [environment]
@@ -11,6 +17,30 @@
        (specter/transform :actions
                           (partial (helpers/flip conj)
                                    "You inserted a quarter"))))
+
+(defmethod dispense :sold
+  [environment]
+  (->> environment
+       (specter/transform [:machine :gumball-n] dec)
+       (specter/transform :actions
+                          (partial (helpers/flip conj)
+                                   "A gumball comes rolling out the slot..."))
+       (specter/transform :machine
+                          (fn [{gumball-n :gumball-n :as machine}]
+                            (specter/setval :state
+                                            (if (< 0 gumball-n)
+                                              :quarterless
+                                              :sold-out)
+                                            machine)))))
+
+(defmethod turn :has-quarter
+  [environment]
+  (->> environment
+       (specter/setval [:machine :state] :sold)
+       (specter/transform :actions
+                          (partial (helpers/flip conj)
+                                   "You turned..."))
+       dispense))
 
 ;This definition is less readable
 ;(defmethod insert :quarterless
@@ -33,4 +63,4 @@
       :actions))
 
 (get-actions {:gumball-n 2
-              :commands  [insert]})
+              :commands  [turn insert]})
