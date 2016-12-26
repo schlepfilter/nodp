@@ -88,4 +88,12 @@
       :actions))
 
 (get-actions {:gumball-n 2
-              :commands  [(make-refill 5) turn insert turn insert turn insert]})
+              :commands  [turn
+                          insert
+                          (make-refill 5)
+                          turn
+                          insert
+                          turn
+                          insert
+                          turn
+                          insert]})
