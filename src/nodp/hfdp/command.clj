@@ -51,15 +51,20 @@
               ""
               "on "))))
 
-(defmethod get-action :fan
-  [{fan :fan}]
-  (->> [location "ceiling fan is" (get-description fan)]
-       (str/join " ")
-       maybe/just))
+(helpers/defpfmethod get-action :fan
+                     (comp maybe/just
+                           (partial str/join " ")
+                           (partial conj [location "ceiling fan is"])
+                           get-description
+                           :fan))
 
 (defmethod get-action :control
   [_]
   (maybe/nothing))
+
+;This definition is harder to read.
+;(helpers/defpfmethod get-action :control
+;                     (constantly (maybe/nothing)))
 
 (defn- add-action
   [before after]

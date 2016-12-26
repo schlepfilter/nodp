@@ -14,13 +14,11 @@
 
 (defmulti handle-items get-super-kind)
 
-(defmethod handle-items "ABC"
-  [items]
-  (eip-helpers/handle-items items))
+(helpers/defpfmethod handle-items "ABC"
+                     eip-helpers/handle-items)
 
-(defmethod handle-items "XYZ"
-  [items]
-  (eip-helpers/handle-items items))
+(helpers/defpfmethod handle-items "XYZ"
+                     eip-helpers/handle-items)
 
 (def handle-items-collection
   (partial map handle-items))

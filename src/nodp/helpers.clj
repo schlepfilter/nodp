@@ -80,6 +80,12 @@
                  x)
           more)))
 
+(defmacro defpfmethod
+  [multifn dispatch-val f]
+  `(defmethod ~multifn ~dispatch-val
+     [& x#]
+     (apply ~f x#)))
+
 (defmacro defmulti-identity
   [mm-name]
   `(defmulti ~mm-name identity))
