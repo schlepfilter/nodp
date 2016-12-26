@@ -10,21 +10,21 @@
 
 (defmultis [insert turn dispense refill] (comp :state :machine))
 
+(def make-add-action
+  (comp ((helpers/curry specter/transform*) :actions)
+        (helpers/curry 2 (helpers/flip conj))))
+
 (defmethod insert :quarterless
   [environment]
   (->> environment
        (specter/setval [:machine :state] :has-quarter)
-       (specter/transform :actions
-                          (partial (helpers/flip conj)
-                                   "You inserted a quarter"))))
+       ((make-add-action "You inserted a quarter"))))
 
 (defmethod dispense :sold
   [environment]
   (->> environment
        (specter/transform [:machine :gumball-n] dec)
-       (specter/transform :actions
-                          (partial (helpers/flip conj)
-                                   "A gumball comes rolling out the slot..."))
+       ((make-add-action "A gumball comes rolling out the slot..."))
        (specter/transform :machine
                           (fn [{gumball-n :gumball-n :as machine}]
                             (specter/setval :state
@@ -37,9 +37,7 @@
   [environment]
   (->> environment
        (specter/setval [:machine :state] :sold)
-       (specter/transform :actions
-                          (partial (helpers/flip conj)
-                                   "You turned..."))
+       ((make-add-action "You turned..."))
        dispense))
 
 ;This definition is less readable
