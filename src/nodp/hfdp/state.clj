@@ -8,7 +8,7 @@
     `(do (defmulti ~mm-name ~dispatch-fn)
          (defmultis ~mm-names ~dispatch-fn))))
 
-(defmultis [insert turn dispense refill] (comp :state :machine))
+(defmultis [insert turn* dispense refill] (comp :state :machine))
 
 (def make-add-action
   (comp ((helpers/curry specter/transform*) :actions)
@@ -44,17 +44,25 @@
                                (comp (make-set-state :quarterless)))
                               environment*)))))
 
-(defmethod turn :has-quarter
+(defmethod dispense :sold-out
+  [environment]
+  (->> environment
+       ((make-add-action "No gumball dispensed"))))
+
+(defmethod turn* :has-quarter
   [environment]
   (->> environment
        ((make-set-state :sold))
-       ((make-add-action "You turned..."))
-       dispense))
+       ((make-add-action "You turned..."))))
 
-(defmethod turn :sold-out
+(defmethod turn* :sold-out
   [environment]
   (->> environment
        ((make-add-action "You turned, but there are no gumballs"))))
+
+(def turn
+  (comp dispense
+        turn*))
 
 ;This definition is less readable
 ;(defmethod insert :quarterless
