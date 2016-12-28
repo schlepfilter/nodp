@@ -79,7 +79,7 @@
 
 (defmacro functionize
   [operator]
-  (if (or (test/function? operator))
+  (if (test/function? operator)
     operator
     (let [resolved-operator (walk/prewalk resolve-symbol operator)]
       `(fn [& more#]
