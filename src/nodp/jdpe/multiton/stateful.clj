@@ -25,4 +25,3 @@
 
 (dotimes [_ 3]
   (print-next-serial :vehicle))
-

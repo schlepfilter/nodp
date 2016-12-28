@@ -3,8 +3,8 @@
             [cats.builtin]
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
-            [potemkin :as potemkin]
-            [riddley.walk :as riddley]))
+            [com.rpl.specter :as specter]
+            [potemkin :as potemkin]))
 
 (defn flip
   [f]
@@ -19,15 +19,56 @@
   [expr]
   `'~expr)
 
+(def Seqs
+  (specter/recursive-path [] p
+                          (specter/cond-path seq? specter/STAY
+                                             coll? [specter/ALL p]
+                                             :else specter/STOP)))
+
 (def quote-seq
-  (partial riddley/walk-exprs seq? quote-expr))
+  (partial specter/transform* Seqs quote-expr))
+
+;This definition results in an error.
+;(def quote-seq
+;  (partial riddley/walk-exprs seq? quote-expr))
+;
+;((build (partial specter/transform* :a) (constantly inc) identity) {:a 0})
+;java.lang.ExceptionInInitilizerError
+;
+;This may be because
+;(quote-seq +)
+;=>
+;#object[clojure.lang.AFunction$1 0xc6687f0 "clojure.lang.AFunction$1@c6687f0"]
+;whereas it is expected that
+;(quote-seq +)
+;=>
+;#object[clojure.core$_PLUS_ 0x3bc719a3 "clojure.core$_PLUS_@3bc719a3"]
+
+(defmacro symbol-function*
+  [x]
+  (let [y (gensym)]
+    `(if (test/function? ~x)
+       (def ~y
+         ~x)
+       ~x)))
+
+(defn symbol-function
+  ;This function works around java.lang.ExceptionInInitializerError
+  ;(eval (list map (partial + 1) [0]))
+  ;CompilerException java.lang.ExceptionInInitializerError
+  ;(eval (list map inc [0]))
+  ;=> (1)
+  ;(eval (list map (fn [x] (+ 1 x)) [0]))
+  ;=> (1)
+  [x]
+  (symbol-function* x))
 
 (defmacro functionize
   [operator]
   (if (test/function? operator)
     operator
     `(fn [& more#]
-       (->> (map quote-seq more#)
+       (->> (map (comp symbol-function quote-seq) more#)
             (cons '~operator)
             eval))))
 
@@ -35,6 +76,16 @@
   [operator & fs]
   `(comp (partial apply (functionize ~operator))
          (juxt ~@fs)))
+
+;This definition is harder to read.
+;This definition doesn't use functionize.
+;(defmacro build
+;  [operator & fs]
+;  (potemkin/unify-gensyms
+;    `(fn [& more##]
+;       (~operator ~@(map (fn [f##]
+;                           `(apply ~f## more##))
+;                         fs)))))
 
 (defn wrap-maybe
   [expr]

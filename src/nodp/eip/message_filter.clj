@@ -6,7 +6,7 @@
             [nodp.helpers :as helpers]
             [nodp.eip.helpers :as eip-helpers]))
 
-(defn- make-is-kind?
+(defn- make-kind?
   [kind]
   (comp (partial (helpers/flip str/starts-with?) kind)
         :kind))
@@ -21,7 +21,7 @@
   [kind]
   (fn [items]
     (-> kind
-        make-is-kind?
+        make-kind?
         (some items)
         (helpers/maybe (eip-helpers/handle-items items)))))
 
