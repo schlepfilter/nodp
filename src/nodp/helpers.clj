@@ -1,5 +1,6 @@
 (ns nodp.helpers
   (:require [clojure.test :as test]
+            [clojure.walk :as walk]
             [cats.builtin]
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
@@ -63,14 +64,23 @@
   [x]
   (symbol-function* x))
 
+(defn resolve-symbol
+  [x]
+  (if (symbol? x)
+    (if-let [resolved-x (resolve x)]
+      resolved-x
+      x)
+    x))
+
 (defmacro functionize
   [operator]
-  (if (or (test/function? operator) (list? operator))
+  (if (or (test/function? operator))
     operator
-    `(fn [& more#]
-       (->> (map (comp symbol-function quote-seq) more#)
-            (cons '~operator)
-            eval))))
+    (let [resolved-operator (walk/prewalk resolve-symbol operator)]
+      `(fn [& more#]
+         (->> (map (comp symbol-function quote-seq) more#)
+              (cons '~resolved-operator)
+              eval)))))
 
 (defmacro build
   [operator & fs]
