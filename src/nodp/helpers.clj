@@ -3,8 +3,8 @@
             [cats.builtin]
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
-            [potemkin :as potemkin]
-            [riddley.walk :as riddley]))
+            [com.rpl.specter :as specter]
+            [potemkin :as potemkin]))
 
 (defn flip
   [f]
@@ -19,8 +19,30 @@
   [expr]
   `'~expr)
 
+(def Seqs
+  (specter/recursive-path [] p
+                          (specter/cond-path seq? specter/STAY
+                                             coll? [specter/ALL p]
+                                             :else specter/STOP)))
+
 (def quote-seq
-  (partial riddley/walk-exprs seq? quote-expr))
+  (partial specter/transform* Seqs quote-expr))
+
+;This definition results in an error.
+;(def quote-seq
+;  (partial riddley/walk-exprs seq? quote-expr))
+;
+;((build (partial specter/transform* :a) (constantly inc) identity) {:a 0})
+;java.lang.ExceptionInInitilizerError
+;
+;This may be because
+;(quote-seq +)
+;=>
+;#object[clojure.lang.AFunction$1 0xc6687f0 "clojure.lang.AFunction$1@c6687f0"]
+;whereas it is expected that
+;(quote-seq +)
+;=>
+;#object[clojure.core$_PLUS_ 0x3bc719a3 "clojure.core$_PLUS_@3bc719a3"]
 
 (defmacro functionize
   [operator]
