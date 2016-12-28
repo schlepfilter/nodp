@@ -44,12 +44,31 @@
 ;=>
 ;#object[clojure.core$_PLUS_ 0x3bc719a3 "clojure.core$_PLUS_@3bc719a3"]
 
+(defmacro symbol-function*
+  [x]
+  (let [y (gensym)]
+    `(if (test/function? ~x)
+       (def ~y
+         ~x)
+       ~x)))
+
+(defn symbol-function
+  ;This function works around java.lang.ExceptionInInitializerError
+  ;(eval (list map (partial + 1) [0]))
+  ;CompilerException java.lang.ExceptionInInitializerError
+  ;(eval (list map inc [0]))
+  ;=> (1)
+  ;(eval (list map (fn [x] (+ 1 x)) [0]))
+  ;=> (1)
+  [x]
+  (symbol-function* x))
+
 (defmacro functionize
   [operator]
   (if (test/function? operator)
     operator
     `(fn [& more#]
-       (->> (map quote-seq more#)
+       (->> (map (comp symbol-function quote-seq) more#)
             (cons '~operator)
             eval))))
 
@@ -57,6 +76,16 @@
   [operator & fs]
   `(comp (partial apply (functionize ~operator))
          (juxt ~@fs)))
+
+;This definition is harder to read.
+;This definition doesn't use functionize.
+;(defmacro build
+;  [operator & fs]
+;  (potemkin/unify-gensyms
+;    `(fn [& more##]
+;       (~operator ~@(map (fn [f##]
+;                           `(apply ~f## more##))
+;                         fs)))))
 
 (defn wrap-maybe
   [expr]
