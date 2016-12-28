@@ -48,6 +48,6 @@
    :kind    kind
    :on      false})
 
-(map (comp inspect get-environment) [:oil-level
-                                     :brake-fluid
-                                     :null])
+(mapcat (comp inspect get-environment) [:oil-level
+                                        :brake-fluid
+                                        :null])
