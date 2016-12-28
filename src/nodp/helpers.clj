@@ -67,6 +67,9 @@
   (symbol-function* x))
 
 (defn resolve-symbol
+  ;A symbol may resolve to nil.
+  ;(resolve 'Math/abs)
+  ;=> nil
   [x]
   (if (symbol? x)
     (if-let [resolved-x (resolve x)]
