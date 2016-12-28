@@ -65,7 +65,7 @@
 
 (defmacro functionize
   [operator]
-  (if (test/function? operator)
+  (if (or (test/function? operator) (list? operator))
     operator
     `(fn [& more#]
        (->> (map (comp symbol-function quote-seq) more#)

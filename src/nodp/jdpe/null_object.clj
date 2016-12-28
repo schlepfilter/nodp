@@ -30,7 +30,6 @@
            ((make-add-action (comp (make-get-turn-action on)
                                    :kind)))))))
 
-
 (def check
   (make-add-action :on))
 
