@@ -57,6 +57,8 @@
   ;This function works around java.lang.ExceptionInInitializerError
   ;(eval (list map (partial + 1) [0]))
   ;CompilerException java.lang.ExceptionInInitializerError
+  ;(eval (list map (def x (partial + 1)) [0]))
+  ;=> (1)
   ;(eval (list map inc [0]))
   ;=> (1)
   ;(eval (list map (fn [x] (+ 1 x)) [0]))
