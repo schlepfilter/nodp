@@ -40,7 +40,10 @@
   (make-turn false))
 
 (def inspect
-  (comp :actions check turn-off turn-on))
+  (comp :actions
+        check
+        turn-off
+        turn-on))
 
 (defn- get-environment
   [kind]
@@ -48,6 +51,6 @@
    :kind    kind
    :on      false})
 
-(mapcat (comp inspect get-environment) [:oil-level
-                                        :brake-fluid
-                                        :null])
+(mapcat (comp inspect
+              get-environment)
+        [:oil-level :brake-fluid :null])
