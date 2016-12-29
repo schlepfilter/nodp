@@ -68,13 +68,13 @@
 
 (defn- add-action
   [before after]
-  (s/transform :actions
-               (partial (helpers/flip conj)
-                              (-> (data/diff after before)
-                                  first
-                                  :now
-                                  get-action))
-               after))
+  (s/setval [:actions s/END]
+            (-> (data/diff after before)
+                first
+                :now
+                get-action
+                vector)
+            after))
 
 (defn- get-actions
   [& commands]
@@ -92,15 +92,15 @@
 
 (defn- make-set-button
   [{:keys [slot on off]}]
-  (partial s/setval* [:now :control (s/keypath slot)] {:on              on
-                                                                   :off off}))
+  (partial s/setval* [:now :control (s/keypath slot)] {:on  on
+                                                       :off off}))
 
 (defn- make-push-button
   [{:keys [slot on]}]
   (comp (m/join (partial s/select-one*
                          [:now :control (s/must slot) (if on
-                                                              :on
-                                                              :off)]))
+                                                        :on
+                                                        :off)]))
         add-undo))
 
 (def make-make-change
