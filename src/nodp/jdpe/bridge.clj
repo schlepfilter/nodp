@@ -1,6 +1,6 @@
 (ns nodp.jdpe.bridge
-  (:require [nodp.helpers :as helpers]
-            [com.rpl.specter :as s]))
+  (:require [com.rpl.specter :as s]
+            [nodp.helpers :as helpers]))
 
 (def verb
   {true  "started"
