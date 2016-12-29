@@ -21,7 +21,7 @@
       (->> environment
            (s/setval :on on)
            ((helpers/make-add-action (comp (make-get-turn-action on)
-                                   :kind)))))))
+                                           :kind)))))))
 
 (def check
   (helpers/make-add-action :on))

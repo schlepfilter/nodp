@@ -198,8 +198,14 @@
 
 (defn make-add-action
   [f]
-  (build (partial s/transform* :actions)
-         (comp (flip (curry 2 conj))
-               f)
+  (build (partial s/setval* [:actions s/END])
+         (comp vector f)
          identity))
 
+;This definition is less readable.
+;(defn make-add-action
+;  [f]
+;  (build (partial s/transform* :actions)
+;         (comp (flip (curry 2 conj))
+;               f)
+;         identity))
