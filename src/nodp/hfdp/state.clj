@@ -68,10 +68,10 @@
                    (specter/transform
                      :actions
                      (partial (helpers/flip conj)
-                              (str "The gumball machine was just refilled; it's new count is: "
-                                   (-> environment
-                                       :machine
-                                       :gumball-n)))
+                              (->> environment
+                                   :machine
+                                   :gumball-n
+                                   (str "The gumball machine was just refilled; it's new count is: ")))
                      environment)))
         (partial specter/transform* [:machine :gumball-n] (partial + gumball-n))))
 
