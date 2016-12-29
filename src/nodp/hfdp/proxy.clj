@@ -13,10 +13,9 @@
 
 (defn- make-set-rating
   [{:keys [object rating]}]
-  (fn [person]
-    (specter/transform (get-ratings-path object)
-                       (partial (helpers/flip conj) rating)
-                       person)))
+  (partial specter/transform*
+           (get-ratings-path object)
+           (partial (helpers/flip conj) rating)))
 
 (defn- proxy-make-set-rating
   [{:keys [subject object rating]}]
