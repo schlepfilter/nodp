@@ -31,9 +31,9 @@
 
 (defmacro defmethods
   [multifn dispatch-vals & fn-tail]
-  `(dorun (map (fn [dispatch-val#]
+  `(run! (fn [dispatch-val#]
            (defmethod ~multifn dispatch-val# ~@fn-tail))
-         ~dispatch-vals)))
+         ~dispatch-vals))
 
 (defmethods decorate* [:attack :flee]
             [_ & more]
