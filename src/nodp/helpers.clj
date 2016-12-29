@@ -70,10 +70,16 @@
   ;A symbol may resolve to nil.
   ;(resolve 'Math/abs)
   ;=> nil
+  ;resolve returns a var.
+  ;(type (resolve '+))
+  ;=> clojure.lang.Var
   [x]
   (if (symbol? x)
     (if-let [resolved-x (resolve x)]
-      resolved-x
+      (-> resolved-x
+          str
+          (subs 2)
+          symbol)
       x)
     x))
 

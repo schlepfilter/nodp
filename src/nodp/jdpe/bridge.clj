@@ -29,8 +29,7 @@
   (make-change-running true))
 
 (def add-power-action
-  (helpers/build s/setval*
-                 (constantly [:actions s/END])
+  (helpers/build (partial s/setval* [:actions s/END])
                  (comp vector
                        (partial str "Engine power increased to ")
                        :power)
