@@ -27,7 +27,8 @@
 
 (defn- get-rating
   [{:keys [object person]}]
-  (->> (specter/select-one (get-ratings-path object) person)
+  (->> person
+       (specter/select-one (get-ratings-path object))
        distributions/mean
        (str "Rating is ")))
 
