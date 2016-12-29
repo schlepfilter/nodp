@@ -184,8 +184,7 @@
       dorun))
 
 (def printall
-  (comp dorun
-        (partial map println)))
+  (partial run! println))
 
 (defn get-thread-name
   []
