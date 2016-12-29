@@ -39,6 +39,7 @@
     <orderEntry type="library" name="Leiningen: fipp:0.6.3" level="project" />
     <orderEntry type="library" name="Leiningen: funcool/beicon:2.7.0" level="project" />
     <orderEntry type="library" name="Leiningen: funcool/cats:2.0.0" level="project" />
+    <orderEntry type="library" name="Leiningen: funcool/cuerdas:2.0.2" level="project" />
     <orderEntry type="library" name="Leiningen: hiccup:1.0.5" level="project" />
     <orderEntry type="library" name="Leiningen: incanter/incanter-charts:1.5.7" level="project" />
     <orderEntry type="library" name="Leiningen: incanter/incanter-core:1.5.7" level="project" />

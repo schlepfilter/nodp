@@ -8,6 +8,7 @@
                  [com.rpl/specter "0.13.1"]
                  [funcool/beicon "2.7.0"]
                  [funcool/cats "2.0.0"]
+                 [funcool/cuerdas "2.0.2"]
                  [incanter "1.5.7"]
                  [inflections "0.12.2"]
                  [org.clojure/math.combinatorics "0.1.3"]

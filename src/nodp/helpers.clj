@@ -1,5 +1,6 @@
 (ns nodp.helpers
   (:require [clojure.test :as test]
+            [clojure.walk :as walk]
             [cats.builtin]
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
@@ -56,6 +57,8 @@
   ;This function works around java.lang.ExceptionInInitializerError
   ;(eval (list map (partial + 1) [0]))
   ;CompilerException java.lang.ExceptionInInitializerError
+  ;(eval (list map (def x (partial + 1)) [0]))
+  ;=> (1)
   ;(eval (list map inc [0]))
   ;=> (1)
   ;(eval (list map (fn [x] (+ 1 x)) [0]))
@@ -63,14 +66,26 @@
   [x]
   (symbol-function* x))
 
+(defn resolve-symbol
+  ;A symbol may resolve to nil.
+  ;(resolve 'Math/abs)
+  ;=> nil
+  [x]
+  (if (symbol? x)
+    (if-let [resolved-x (resolve x)]
+      resolved-x
+      x)
+    x))
+
 (defmacro functionize
   [operator]
   (if (test/function? operator)
     operator
-    `(fn [& more#]
-       (->> (map (comp symbol-function quote-seq) more#)
-            (cons '~operator)
-            eval))))
+    (let [resolved-operator (walk/prewalk resolve-symbol operator)]
+      `(fn [& more#]
+         (->> (map (comp symbol-function quote-seq) more#)
+              (cons '~resolved-operator)
+              eval)))))
 
 (defmacro build
   [operator & fs]
