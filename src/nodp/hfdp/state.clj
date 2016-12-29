@@ -1,5 +1,5 @@
 (ns nodp.hfdp.state
-  (:require [com.rpl.specter :as specter]
+  (:require [com.rpl.specter :as s]
             [nodp.helpers :as helpers]))
 
 (defmacro defmultis
@@ -14,7 +14,7 @@
   (comp helpers/make-add-action constantly))
 
 (def make-set-state
-  ((helpers/curry specter/setval*) [:machine :state]))
+  ((helpers/curry s/setval*) [:machine :state]))
 
 (helpers/defpfmethod insert :quarterless
                      (comp (constantly-add-action "You inserted a quarter")
@@ -29,8 +29,8 @@
         :machine))
 
 (helpers/defpfmethod dispense :sold
-                     (comp (partial specter/transform*
-                                    specter/STAY
+                     (comp (partial s/transform*
+                                    s/STAY
                                     (fn [environment]
                                       ((if (sold-out? environment)
                                          (comp (constantly-add-action "Oops, out of gumballs!")
@@ -38,7 +38,7 @@
                                          (comp (make-set-state :quarterless)))
                                         environment)))
                            (constantly-add-action "A gumball comes rolling out the slot...")
-                           (partial specter/transform* [:machine :gumball-n] dec)))
+                           (partial s/transform* [:machine :gumball-n] dec)))
 
 (helpers/defpfmethod dispense :sold-out
                      (constantly-add-action "No gumball dispensed"))
@@ -63,7 +63,7 @@
         (helpers/make-add-action (comp (partial str "The gumball machine was just refilled; it's new count is: ")
                                :gumball-n
                                :machine))
-        (partial specter/transform* [:machine :gumball-n] (partial + gumball-n))))
+        (partial s/transform* [:machine :gumball-n] (partial + gumball-n))))
 
 (defn- get-environment
   [gumball-n]

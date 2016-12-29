@@ -4,7 +4,7 @@
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
             [clojure.math.combinatorics :as combo]
-            [com.rpl.specter :as specter]
+            [com.rpl.specter :as s]
             [nodp.helpers :as helpers]))
 
 (def constantly-nothing
@@ -15,12 +15,12 @@
 
 (def do-path
   [(->> (range slot-n)
-        (map specter/keypath)
-        (apply specter/multi-path))
-   (specter/multi-path :on :off)])
+        (map s/keypath)
+        (apply s/multi-path))
+   (s/multi-path :on :off)])
 
 (def control
-  (specter/setval do-path constantly-nothing []))
+  (s/setval do-path constantly-nothing []))
 
 (def environment
   {:actions []
@@ -31,7 +31,7 @@
 
 (defn- add-undo
   [state]
-  (specter/transform :undos (partial (helpers/flip conj) state) state))
+  (s/transform :undos (partial (helpers/flip conj) state) state))
 
 (defmulti get-action (comp first keys))
 
@@ -68,13 +68,13 @@
 
 (defn- add-action
   [before after]
-  (specter/transform :actions
-                     (partial (helpers/flip conj)
+  (s/transform :actions
+               (partial (helpers/flip conj)
                               (-> (data/diff after before)
                                   first
                                   :now
                                   get-action))
-                     after))
+               after))
 
 (defn- get-actions
   [& commands]
@@ -88,23 +88,23 @@
   (->> state
        :undos
        last
-       (specter/setval :actions (:actions state))))
+       (s/setval :actions (:actions state))))
 
 (defn- make-set-button
   [{:keys [slot on off]}]
-  (partial specter/setval* [:now :control (specter/keypath slot)] {:on  on
+  (partial s/setval* [:now :control (s/keypath slot)] {:on              on
                                                                    :off off}))
 
 (defn- make-push-button
   [{:keys [slot on]}]
-  (comp (m/join (partial specter/select-one*
-                         [:now :control (specter/must slot) (if on
+  (comp (m/join (partial s/select-one*
+                         [:now :control (s/must slot) (if on
                                                               :on
                                                               :off)]))
         add-undo))
 
 (def make-make-change
-  (comp (helpers/curry specter/setval*)
+  (comp (helpers/curry s/setval*)
         (partial conj [:now])))
 
 (def make-change-light

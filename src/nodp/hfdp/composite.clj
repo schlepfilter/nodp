@@ -3,7 +3,7 @@
             [clojurewerkz.money.currencies :as mc]
             [clojurewerkz.money.format :as format]
             [flatland.ordered.set :refer [ordered-set]]
-            [com.rpl.specter :as specter]
+            [com.rpl.specter :as s]
             [nodp.helpers :as helpers]
             [nodp.hfdp.helpers :as hfdp-helpers]))
 
@@ -37,9 +37,9 @@
                 :items       (ordered-set)} pancake-menu dinner-menu))
 
 (def Menus
-  (specter/recursive-path [] p
-                          (specter/cond-path set? [specter/ALL p]
-                                             map? specter/STAY)))
+  (s/recursive-path [] p
+                    (s/cond-path set? [s/ALL p]
+                                 map? s/STAY)))
 
 (def get-item
   (helpers/build str
@@ -64,6 +64,6 @@
 
 (def get-menus
   (comp (partial map get-menu)
-        (partial specter/select* Menus)))
+        (partial s/select* Menus)))
 
 (get-menus all-menu)

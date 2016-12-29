@@ -1,6 +1,6 @@
 (ns nodp.jdpe.null-object
   (:require [clojure.string :as str]
-            [com.rpl.specter :as specter]
+            [com.rpl.specter :as s]
             [cuerdas.core :as cuerdas]
             [nodp.helpers :as helpers]))
 
@@ -19,7 +19,7 @@
     (if (= kind :null)
       environment
       (->> environment
-           (specter/setval :on on)
+           (s/setval :on on)
            ((helpers/make-add-action (comp (make-get-turn-action on)
                                    :kind)))))))
 

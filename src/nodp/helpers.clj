@@ -4,7 +4,7 @@
             [cats.builtin]
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
-            [com.rpl.specter :as specter]
+            [com.rpl.specter :as s]
             [potemkin :as potemkin]))
 
 (defn flip
@@ -21,19 +21,19 @@
   `'~expr)
 
 (def Seqs
-  (specter/recursive-path [] p
-                          (specter/cond-path seq? specter/STAY
-                                             coll? [specter/ALL p]
-                                             :else specter/STOP)))
+  (s/recursive-path [] p
+                    (s/cond-path seq? s/STAY
+                                 coll? [s/ALL p]
+                                 :else s/STOP)))
 
 (def quote-seq
-  (partial specter/transform* Seqs quote-expr))
+  (partial s/transform* Seqs quote-expr))
 
 ;This definition results in an error.
 ;(def quote-seq
 ;  (partial riddley/walk-exprs seq? quote-expr))
 ;
-;((build (partial specter/transform* :a) (constantly inc) identity) {:a 0})
+;((build (partial s/transform* :a) (constantly inc) identity) {:a 0})
 ;java.lang.ExceptionInInitilizerError
 ;
 ;This may be because
@@ -192,7 +192,7 @@
 
 (defn make-add-action
   [f]
-  (build (partial specter/transform* :actions)
+  (build (partial s/transform* :actions)
          (comp (flip (curry 2 conj))
                f)
          identity))

@@ -1,5 +1,5 @@
 (ns nodp.jdpe.multiton.stateful
-  (:require [com.rpl.specter :as specter]
+  (:require [com.rpl.specter :as s]
             [nodp.helpers :as helpers]))
 
 (def generator
@@ -8,7 +8,7 @@
 
 (defn- get-set-next-serial!
   [k]
-  (->> (partial specter/transform* k inc)
+  (->> (partial s/transform* k inc)
        (swap! generator)))
 
 (defn- label
