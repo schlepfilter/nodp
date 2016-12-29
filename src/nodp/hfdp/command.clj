@@ -31,7 +31,7 @@
 
 (defn- add-undo
   [state]
-  (s/transform :undos (partial (helpers/flip conj) state) state))
+  (s/setval [:undos s/END] [state] state))
 
 (defmulti get-action (comp first keys))
 
