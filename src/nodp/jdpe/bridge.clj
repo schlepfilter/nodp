@@ -10,20 +10,20 @@
   (comp (partial str "Engine ")
         verb))
 
-(defn- make-change-running
-  [running]
-  (comp (partial s/setval* :running running)
-        (partial s/setval* [:actions s/END] (-> running
-                                                get-sentence
-                                                vector))))
+(def make-change-running
+  (helpers/build comp
+                 ((helpers/curry s/setval*) :running)
+                 (comp ((helpers/curry s/setval*) [:actions s/END])
+                       vector
+                       get-sentence)))
 
 ;This definition is less readable.
-;(def make-change-running
-;  (comp (partial apply comp)
-;        (juxt ((helpers/curry s/setval*) :running)
-;              (comp ((helpers/curry s/setval*) [:actions s/END])
-;                    vector
-;                    get-sentence))))
+;(defn- make-change-running
+;  [running]
+;  (comp (partial s/setval* :running running)
+;        (partial s/setval* [:actions s/END] (-> running
+;                                                get-sentence
+;                                                vector))))
 
 (def start
   (make-change-running true))
