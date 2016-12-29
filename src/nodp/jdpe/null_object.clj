@@ -13,13 +13,6 @@
         str/capitalize
         cuerdas/human))
 
-(defn make-add-action
-  [f]
-  (helpers/build (partial specter/transform* :actions)
-                 (comp (helpers/flip (helpers/curry 2 conj))
-                       f)
-                 identity))
-
 (defn- make-turn
   [on]
   (fn [{kind :kind :as environment}]
@@ -27,11 +20,11 @@
       environment
       (->> environment
            (specter/setval :on on)
-           ((make-add-action (comp (make-get-turn-action on)
+           ((helpers/make-add-action (comp (make-get-turn-action on)
                                    :kind)))))))
 
 (def check
-  (make-add-action :on))
+  (helpers/make-add-action :on))
 
 (def turn-on
   (make-turn true))

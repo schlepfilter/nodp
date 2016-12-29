@@ -189,3 +189,11 @@
   []
   (-> (Thread/currentThread)
       .getName))
+
+(defn make-add-action
+  [f]
+  (build (partial specter/transform* :actions)
+         (comp (flip (curry 2 conj))
+               f)
+         identity))
+
