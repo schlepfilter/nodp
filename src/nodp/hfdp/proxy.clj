@@ -18,11 +18,12 @@
            (partial (helpers/flip conj) rating)))
 
 (defn- proxy-make-set-rating
-  [{:keys [subject object rating]}]
+  [{:keys [subject object] :as m}]
   (if (= subject object)
     identity
-    (make-set-rating {:object object
-                      :rating rating})))
+    (-> m
+        (dissoc :subject)
+        make-set-rating)))
 
 (defn- get-rating
   [{:keys [object person]}]
