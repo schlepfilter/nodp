@@ -83,7 +83,8 @@
 
 (defn- get-actions
   [{:keys [gumball-n commands]}]
-  (-> (get-environment gumball-n)
+  (-> gumball-n
+      get-environment
       ((apply comp commands))
       :actions))
 
