@@ -180,8 +180,7 @@
 (defn defmethods
   [dispatch-val f-m]
   (-> (make-defmethod dispatch-val)
-      (map f-m)
-      dorun))
+      (run! f-m)))
 
 (def printall
   (partial run! println))
