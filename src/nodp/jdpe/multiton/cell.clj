@@ -1,4 +1,4 @@
-(ns nodp.jdpe.multiton.stateful
+(ns nodp.jdpe.multiton.cell
   (:require [com.rpl.specter :as s]
             [nodp.helpers :as helpers]))
 

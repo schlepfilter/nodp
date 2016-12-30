@@ -1,4 +1,4 @@
-(ns nodp.eip.competing-consumers.concurrent
+(ns nodp.eip.competing-consumers.thread
   (:require [nodp.helpers :as helpers]
             [nodp.eip.competing-consumers.core :as core]))
 
