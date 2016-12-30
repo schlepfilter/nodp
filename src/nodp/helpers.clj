@@ -1,6 +1,5 @@
 (ns nodp.helpers
   (:require [clojure.test :as test]
-            [clojure.walk :as walk]
             [cats.builtin]
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
@@ -45,53 +44,64 @@
 ;=>
 ;#object[clojure.core$_PLUS_ 0x3bc719a3 "clojure.core$_PLUS_@3bc719a3"]
 
-(defmacro symbol-function*
-  [x]
-  (let [y (gensym)]
-    `(if (test/function? ~x)
-       (def ~y
-         ~x)
-       ~x)))
-
-(defn symbol-function
-  ;This function works around java.lang.ExceptionInInitializerError
-  ;(eval (list map (partial + 1) [0]))
-  ;CompilerException java.lang.ExceptionInInitializerError
-  ;(eval (list map (def x (partial + 1)) [0]))
-  ;=> (1)
-  ;(eval (list map inc [0]))
-  ;=> (1)
-  ;(eval (list map (fn [x] (+ 1 x)) [0]))
-  ;=> (1)
-  [x]
-  (symbol-function* x))
-
-(defn resolve-symbol
-  ;A symbol may resolve to nil.
-  ;(resolve 'Math/abs)
-  ;=> nil
-  ;resolve returns a var.
-  ;(type (resolve '+))
-  ;=> clojure.lang.Var
-  [x]
-  (if (symbol? x)
-    (if-let [resolved-x (resolve x)]
-      (-> resolved-x
-          str
-          (subs 2)
-          symbol)
-      x)
-    x))
-
 (defmacro functionize
+  ;If operator is a list, then it returns a value, which can be passed arround.
   [operator]
-  (if (test/function? operator)
+  (if (or (test/function? operator) (list? operator))
     operator
-    (let [resolved-operator (walk/prewalk resolve-symbol operator)]
-      `(fn [& more#]
-         (->> (map (comp symbol-function quote-seq) more#)
-              (cons '~resolved-operator)
-              eval)))))
+    `(fn [& more#]
+       (->> (map quote-seq more#)
+            (cons '~operator)
+            eval))))
+
+;This definition of functionize is harder to read.
+;(defmacro symbol-function*
+;  [x]
+;  (let [y (gensym)]
+;    `(if (test/function? ~x)
+;       (def ~y
+;         ~x)
+;       ~x)))
+;
+;(defn symbol-function
+;  ;This function works around java.lang.ExceptionInInitializerError
+;  ;(eval (list map (partial + 1) [0]))
+;  ;CompilerException java.lang.ExceptionInInitializerError
+;  ;(eval (list map (def x (partial + 1)) [0]))
+;  ;=> (1)
+;  ;(eval (list map inc [0]))
+;  ;=> (1)
+;  ;(eval (list map (fn [x] (+ 1 x)) [0]))
+;  ;=> (1)
+;  [x]
+;  (symbol-function* x))
+;
+;(defn resolve-symbol
+;  ;A symbol may resolve to nil.
+;  ;(resolve 'Math/abs)
+;  ;=> nil
+;  ;resolve returns a var.
+;  ;(type (resolve '+))
+;  ;=> clojure.lang.Var
+;  [x]
+;  (if (symbol? x)
+;    (if-let [resolved-x (resolve x)]
+;      (-> resolved-x
+;          str
+;          (subs 2)
+;          symbol)
+;      x)
+;    x))
+;
+;(defmacro functionize
+;  [operator]
+;  (if (test/function? operator)
+;    operator
+;    (let [resolved-operator (walk/prewalk resolve-symbol operator)]
+;      `(fn [& more#]
+;         (->> (map (comp symbol-function quote-seq) more#)
+;              (cons '~resolved-operator)
+;              eval)))))
 
 (defmacro build
   [operator & fs]
