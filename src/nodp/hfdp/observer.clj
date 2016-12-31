@@ -4,7 +4,7 @@
             [incanter.distributions :as distributions]
             [nodp.helpers :as helpers]))
 
-(def subject (rx/subject))
+(def subject (.toSerialized (rx/subject)))
 
 (def pressure-stream
   (rx/map :pressure subject))
