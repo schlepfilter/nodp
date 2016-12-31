@@ -12,7 +12,8 @@
 (def delta-stream
   (->> pressure-stream
        (rx/buffer 2 1)
-       (rx/map (partial apply -))))
+       (rx/map (comp (partial apply -)
+                     reverse))))
 
 (defmacro casep
   ([x pred expr]
