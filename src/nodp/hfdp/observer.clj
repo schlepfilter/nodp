@@ -15,15 +15,15 @@
        (rx/map (comp (partial apply -)
                      reverse))))
 
-(defn get-expr
-  ([expr]
-   expr)
+(defn call-pred
+  ([_]
+   true)
   ([pred expr]
    (pred expr)))
 
 (defmacro casep
   [x & clauses]
-  `(condp get-expr ~x
+  `(condp call-pred ~x
      ~@clauses))
 
 (defn- forecast
