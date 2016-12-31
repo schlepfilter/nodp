@@ -18,8 +18,8 @@
 (defn get-expr
   ([expr]
    expr)
-  ([f expr]
-   (f expr)))
+  ([pred expr]
+   (pred expr)))
 
 (defmacro casep
   [x & clauses]
