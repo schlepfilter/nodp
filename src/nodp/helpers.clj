@@ -150,18 +150,6 @@
   ([arity f]
    `(ecurry ~arity ~f)))
 
-(defn ap
-  ([f x]
-   (m/<$> f x))
-  ([f x & more]
-   (apply m/<*>
-          (m/<$> (curry (-> more
-                            count
-                            inc)
-                        f)
-                 x)
-          more)))
-
 (defmacro defpfmethod
   [multifn dispatch-val f]
   `(defmethod ~multifn ~dispatch-val
