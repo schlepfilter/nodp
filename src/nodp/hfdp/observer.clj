@@ -15,21 +15,23 @@
        (rx/map (comp (partial apply -)
                      reverse))))
 
+(defn get-expr
+  ([expr]
+   expr)
+  ([f expr]
+   (f expr)))
+
 (defmacro casep
-  ([x pred expr]
-   `(if (or (= ~pred :else) (~pred ~x))
-      ~expr))
-  ([x pred expr & clauses]
-   `(if (~pred ~x)
-      ~expr
-      (casep ~x ~@clauses))))
+  [x & clauses]
+  `(condp get-expr ~x
+     ~@clauses))
 
 (defn- forecast
   [delta]
   (casep delta
          pos? "Improving weather on the way!"
          zero? "More of the same"
-         :else "Watch out for cooler, rainy weather"))
+         "Watch out for cooler, rainy weather"))
 
 (def forecast-stream
   (rx/map forecast delta-stream))
