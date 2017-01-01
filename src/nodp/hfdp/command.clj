@@ -138,7 +138,7 @@
                 "on"
                 "off")
               (str "push-button-" slot "-")
-              (symbol))
+              symbol)
      (make-push-button ~m)))
 
 (def map-key
