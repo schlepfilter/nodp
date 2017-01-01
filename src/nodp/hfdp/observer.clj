@@ -45,18 +45,24 @@
 (def temperature-stream
   (rx/map :temperature subject))
 
-(def scan-temperature
-  (partial (helpers/flip rx/scan) temperature-stream))
+(def rx-max
+  (partial rx/scan max))
+
+(def rx-min
+  (partial rx/scan min))
+
+(def rx-average
+  (partial rx/scan (comp distributions/mean
+                         vector)))
 
 (def max-stream
-  (scan-temperature max))
+  (rx-max temperature-stream))
 
 (def min-stream
-  (scan-temperature min))
+  (rx-min temperature-stream))
 
-(def mean-stream
-  (scan-temperature (comp distributions/mean
-                          vector)))
+(def average-stream
+  (rx-average temperature-stream))
 
 (defn- rxfnn
   ^FuncN [f]
@@ -85,7 +91,7 @@
                           vector)
                     max-stream
                     min-stream
-                    mean-stream))
+                    average-stream))
 
 (printstream statistic-stream)
 
