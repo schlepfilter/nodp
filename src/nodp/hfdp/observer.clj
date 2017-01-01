@@ -2,7 +2,8 @@
   (:require [clojure.string :as str]
             [beicon.core :as rx]
             [incanter.distributions :as distributions]
-            [nodp.helpers :as helpers]))
+            [nodp.helpers :as helpers])
+  (:import (rx.functions FuncN)))
 
 (def subject (.toSerialized (rx/subject)))
 
@@ -57,11 +58,24 @@
   (scan-temperature (comp distributions/mean
                           vector)))
 
+(defn- rxfnn
+  ^FuncN [f]
+  (reify FuncN
+    (call [_ objs]
+      (apply f objs))))
+
+(defn- with-latest-from
+  [x & more]
+  (.withLatestFrom (last more) (drop-last more) (rxfnn x)))
+
 (def statistic-stream
-  (->> (rx/zip mean-stream max-stream min-stream)
-       (rx/map (comp str/join
-                     (partial interleave
-                              ["Avg/Max/Min temperature = " "/" "/"])))))
+  (with-latest-from (comp str/join
+                          (partial interleave
+                                   ["Avg/Max/Min temperature = " "/" "/"])
+                          vector)
+                    max-stream
+                    min-stream
+                    mean-stream))
 
 (printstream statistic-stream)
 
