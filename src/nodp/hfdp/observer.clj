@@ -66,7 +66,9 @@
 
 (defn- with-latest-from
   [x & more]
-  (.withLatestFrom (last more) (drop-last more) (rxfnn x)))
+  (if (rx/observable? x)
+    (.withLatestFrom (last more) more (rxfnn vector))
+    (.withLatestFrom (last more) (drop-last more) (rxfnn x))))
 
 (def statistic-stream
   (with-latest-from (comp str/join
