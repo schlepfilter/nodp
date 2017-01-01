@@ -95,7 +95,7 @@
   (partial s/setval* [:now :control (s/keypath slot)] {:on  on
                                                        :off off}))
 
-(defn- make-push-button
+(defn make-push-button
   [{:keys [slot on]}]
   (comp (m/join (partial s/select-one*
                          [:now :control (s/must slot) (if on
@@ -132,14 +132,14 @@
 
 (defsets-fan :high :medium :off)
 
-(defmacro defpush-button
+(defn- defpush-button
   [{:keys [slot on] :as m}]
-  `(def ~(->> (if on
-                "on"
-                "off")
-              (str "push-button-" slot "-")
-              symbol)
-     (make-push-button ~m)))
+  (eval `(def ~(->> (if on
+                      "on"
+                      "off")
+                    (str "push-button-" slot "-")
+                    symbol)
+           (make-push-button ~m))))
 
 (def map-key
   (comp (helpers/curry 2 map)
@@ -152,11 +152,8 @@
         (map-key :slot)
         range))
 
-(helpers/defdefs defpush-buttons*
-                 defpush-button)
-
 (def defpush-buttons
-  (comp (partial apply (helpers/functionize defpush-buttons*))
+  (comp (partial run! defpush-button)
         get-buttons))
 
 (defpush-buttons slot-n)
