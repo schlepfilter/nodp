@@ -66,9 +66,17 @@
 
 (defn- with-latest-from
   [x & more]
-  (if (rx/observable? x)
-    (.withLatestFrom (last more) more (rxfnn vector))
-    (.withLatestFrom (last more) (drop-last more) (rxfnn x))))
+  (apply (partial (helpers/functionize .withLatestFrom) (last more))
+         (if (rx/observable? x)
+           [more (rxfnn vector)]
+           [(drop-last more) (rxfnn x)])))
+
+;This definition doesn't use functionize.
+;(defn- with-latest-from
+;  [x & more]
+;  (if (rx/observable? x)
+;    (.withLatestFrom (last more) more (rxfnn vector))
+;    (.withLatestFrom (last more) (drop-last more) (rxfnn x))))
 
 (def statistic-stream
   (with-latest-from (comp str/join
