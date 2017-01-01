@@ -119,16 +119,17 @@
 (def make-set-fan
   (make-make-change :fan))
 
-(defmacro defset-fan
+(defn- defset-fan
   [fan]
-  `(def ~(->> fan
-              name
-              (str "set-fan-")
-              symbol)
-     (make-set-fan ~fan)))
+  (eval `(def ~(->> fan
+                    name
+                    (str "set-fan-")
+                    symbol)
+           (make-set-fan ~fan))))
 
-(helpers/defdefs defsets-fan
-                 defset-fan)
+(def defsets-fan
+  (comp (partial run! defset-fan)
+        vector))
 
 (defsets-fan :high :medium :off)
 
