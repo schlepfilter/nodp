@@ -61,15 +61,21 @@
     (call [_ objs]
       (apply f objs))))
 
+(defmacro if-observable?
+  [x then else]
+  `(if (rx/observable? ~x)
+     ~then
+     ~else))
+
 (defn- with-latest-from
   [x & more]
   (.withLatestFrom (last more)
-                   (if (rx/observable? x)
-                     more
-                     (drop-last more))
-                   (-> (if (rx/observable? x)
-                         vector
-                         x)
+                   (if-observable? x
+                                   more
+                                   (drop-last more))
+                   (-> (if-observable? x
+                                       vector
+                                       x)
                        rxfnn)))
 
 ;This is harder to read.
