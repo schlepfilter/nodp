@@ -136,6 +136,9 @@
            `(do (~qualified-macro## ~x##)
                 (~qualified-macro-name## ~@more##)))))))
 
+(def space-join
+  (partial str/join " "))
+
 (def comma-join
   (partial str/join ", "))
 

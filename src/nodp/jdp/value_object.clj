@@ -1,5 +1,5 @@
 (ns nodp.jdp.value-object
-  (:require [clojure.string :as str]))
+  (:require [nodp.helpers :as helpers]))
 
 (def stat-a
   {:strength     10
@@ -16,7 +16,7 @@
 
 (defmacro compare-stats
   [x y]
-  `(str/join " " ["Is" '~x "and" '~y "equal :" (= ~x ~y)]))
+  `(helpers/space-join ["Is" '~x "and" '~y "equal :" (= ~x ~y)]))
 
 (defmacro compare-stats-collection
   ([]

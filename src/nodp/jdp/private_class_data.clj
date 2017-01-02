@@ -10,7 +10,7 @@
            :pepepr 4})
 
 (def get-ingredient
-  (comp (partial str/join " ")
+  (comp helpers/space-join
         (juxt last
               (comp inflections/plural
                     name

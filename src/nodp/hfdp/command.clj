@@ -1,6 +1,5 @@
 (ns nodp.hfdp.command
   (:require [clojure.data :as data]
-            [clojure.string :as str]
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
             [clojure.math.combinatorics :as combo]
@@ -53,7 +52,7 @@
 
 (helpers/defpfmethod get-action :fan
                      (comp maybe/just
-                           (partial str/join " ")
+                           helpers/space-join
                            (partial conj [location "ceiling fan is"])
                            get-description
                            :fan))
