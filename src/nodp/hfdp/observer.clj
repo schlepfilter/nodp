@@ -2,7 +2,8 @@
   (:require [clojure.string :as str]
             [beicon.core :as rx]
             [incanter.distributions :as distributions]
-            [nodp.helpers :as helpers])
+            [nodp.helpers :as helpers]
+            [com.rpl.specter :as s])
   (:import (rx.functions FuncN)))
 
 (def subject
@@ -62,17 +63,23 @@
 
 (defn- with-latest-from
   [x & more]
-  (apply (partial (helpers/functionize .withLatestFrom) (last more))
-         (if (rx/observable? x)
-           [more (rxfnn vector)]
-           [(drop-last more) (rxfnn x)])))
+  (.withLatestFrom (last more)
+                   (if (rx/observable? x)
+                     more
+                     (drop-last more))
+                   (-> (if (rx/observable? x)
+                         vector
+                         x)
+                       rxfnn)))
 
-;This definition doesn't use functionize.
+;This is harder to read.
 ;(defn- with-latest-from
 ;  [x & more]
-;  (if (rx/observable? x)
-;    (.withLatestFrom (last more) more (rxfnn vector))
-;    (.withLatestFrom (last more) (drop-last more) (rxfnn x))))
+;  (apply (partial (helpers/functionize .withLatestFrom) (last more))
+;         (s/transform s/LAST rxfnn
+;           (if (rx/observable? x)
+;            [more vector]
+;            [(drop-last more) x]))))
 
 (def statistic-stream
   (with-latest-from (comp str/join
