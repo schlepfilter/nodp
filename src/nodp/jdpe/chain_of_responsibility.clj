@@ -17,9 +17,9 @@
 (defn- make-handle
   [{:keys [words action]}]
   (fn [email]
-    (if ((make-have-word? words) email)
-      (either/left action)
-      (either/right email))))
+    (helpers/casep email
+                   (make-have-word? words) (either/left action)
+                   (either/right email))))
 
 (defmacro defhandle
   [f-name m]
