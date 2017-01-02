@@ -121,9 +121,9 @@
 
 (defn maybe
   [expr]
-  (if (nil? expr)
-    (maybe/nothing)
-    (maybe/just expr)))
+  (casep expr
+         nil? (maybe/nothing)
+         (maybe/just expr)))
 
 (defmacro maybe-if
   [test then]
