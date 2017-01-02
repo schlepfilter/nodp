@@ -124,10 +124,6 @@
      [& x#]
      (apply ~f x#)))
 
-(defmacro defmulti-identity
-  [mm-name]
-  `(defmulti ~mm-name identity))
-
 (defmacro defdefs
   [macro-name macro]
   (potemkin/unify-gensyms
@@ -138,6 +134,10 @@
          ([x## & more##]
            `(do (~qualified-macro## ~x##)
                 (~qualified-macro-name## ~@more##)))))))
+
+(defmacro defmulti-identity
+  [mm-name]
+  `(defmulti ~mm-name identity))
 
 (defdefs defmultis-identity
          defmulti-identity)
