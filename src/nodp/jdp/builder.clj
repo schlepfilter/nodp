@@ -23,7 +23,7 @@
 (def comp-just
   (partial comp maybe/just))
 
-(defn- make-get-sentence
+(defn- make-get-fragment
   [& fs]
   (comp helpers/space-join
         maybe/cat-maybes
@@ -37,7 +37,7 @@
 ;        juxt))
 
 (def describe-hair
-  (make-get-sentence (constantly (maybe/just "with"))
+  (make-get-fragment (constantly (maybe/just "with"))
                      (comp (m/lift-m name)
                            :hair-color)
                      (comp-just describe-hair-type
@@ -67,7 +67,7 @@
   (make-describe-keyword "wearing"))
 
 (def get-hero
-  (make-get-sentence (comp-just describe-profession
+  (make-get-fragment (comp-just describe-profession
                                 :profession)
                      (comp-just describe-first-name
                                 :first-name)
