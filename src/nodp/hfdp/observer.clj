@@ -5,7 +5,8 @@
             [nodp.helpers :as helpers])
   (:import (rx.functions FuncN)))
 
-(def subject (.toSerialized (rx/subject)))
+(def subject
+  (.toSerialized (rx/subject)))
 
 (def pressure-stream
   (rx/map :pressure subject))
