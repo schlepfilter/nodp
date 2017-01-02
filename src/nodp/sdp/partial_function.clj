@@ -39,9 +39,9 @@
   [then else]
   `(fn [x#]
      (let [then-result# (~then x#)]
-       (if (maybe/just? then-result#)
-         (m/join then-result#)
-         (~else x#)))))
+       (helpers/casep then-result#
+                      maybe/just? (m/join then-result#)
+                      (~else x#)))))
 
 (def square
   (partial (helpers/flip math/expt) 2))
