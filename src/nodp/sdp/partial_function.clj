@@ -6,8 +6,8 @@
 
 (defn- sqrt
   [x]
-  (helpers/maybe-not (neg? x)
-                     (math/sqrt x)))
+  (helpers/maybe-if-not (neg? x)
+                        (math/sqrt x)))
 
 (defn- get-sqrt-defined
   [x]

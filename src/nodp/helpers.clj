@@ -87,21 +87,21 @@
 ;                           `(apply ~f## more##))
 ;                         fs)))))
 
-(defn wrap-maybe
+(defn maybe
   [expr]
   (if (nil? expr)
     (maybe/nothing)
     (maybe/just expr)))
 
-(defmacro maybe
+(defmacro maybe-if
   [test then]
-  `(wrap-maybe (if ~test
-                 ~then)))
+  `(maybe (if ~test
+            ~then)))
 
-(defmacro maybe-not
+(defmacro maybe-if-not
   [test then]
-  `(wrap-maybe (if-not ~test
-                 ~then)))
+  `(maybe (if-not ~test
+            ~then)))
 
 (defn ecurry
   [arity f]

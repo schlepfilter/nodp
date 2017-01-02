@@ -41,7 +41,7 @@
                      (comp (m/lift-m name)
                            :hair-color)
                      (comp-just describe-hair-type
-                                helpers/wrap-maybe
+                                helpers/maybe
                                 :hair-type)))
 
 (defn- make-describe-keyword
@@ -77,7 +77,7 @@
                      (comp-just describe-weapon
                                 :weapon)
                      (comp (m/lift-m 1 describe-armor)
-                           helpers/wrap-maybe
+                           helpers/maybe
                            :armor)))
 
 (get-hero {:first-name "Riobard"
