@@ -22,20 +22,22 @@
                     {get-kind-ingredients #{:dough :sauce :cheese}
                      get-kind-name        "Cheeze"})
 
+(def space-join-juxt
+  (comp (partial comp helpers/space-join)
+        juxt))
+
 (def get-pizza-name
-  (comp helpers/space-join
-        (juxt (comp get-regional-name
-                    :region)
-              (comp get-kind-name
-                    :kind)
-              (constantly "Pizza"))))
+  (space-join-juxt (comp get-regional-name
+                         :region)
+                   (comp get-kind-name
+                         :kind)
+                   (constantly "Pizza")))
 
 (def get-customer-pizza
-  (comp helpers/space-join
-        (juxt :customer
-              (constantly "ordered a ----")
-              get-pizza-name
-              (constantly "----"))))
+  (space-join-juxt :customer
+                   (constantly "ordered a ----")
+                   get-pizza-name
+                   (constantly "----")))
 
 (def get-ingredients
   (comp vals
