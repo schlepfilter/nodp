@@ -13,8 +13,11 @@
   [{:keys [kind power]}]
   (str kind " troll power " power))
 
+(def line-break-join
+  (partial str/join "\n"))
+
 (def describe
-  (comp (partial str/join "\n")
+  (comp line-break-join
         (juxt :attack
               :flee
               get-troll)))
@@ -30,18 +33,20 @@
 (defmulti decorate* (comp first
                           vector))
 
-(defmacro defmethods
-  [multifn dispatch-vals & fn-tail]
+(defmacro defpfmethods
+  [multifn dispatch-vals f]
   `(run! (fn [dispatch-val#]
-           (defmethod ~multifn dispatch-val# ~@fn-tail))
+           (helpers/defpfmethod ~multifn dispatch-val# ~f))
          ~dispatch-vals))
 
-(defmethods decorate* [:attack :flee]
-            [_ & more]
-            (str/join "\n" more))
+(defpfmethods decorate* [:attack :flee]
+              (comp line-break-join
+                    (partial drop 1)
+                    vector))
 
 (helpers/defpfmethod decorate* :kind
-                     (comp last vector))
+                     (comp last
+                           vector))
 
 (defmethod decorate* :power
   [_ & more]
