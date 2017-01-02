@@ -1,11 +1,13 @@
 (ns nodp.helpers
-  (:require [clojure.test :as test]
+  (:require [clojure.string :as str]
+            [clojure.test :as test]
             [cats.builtin]
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
+            [clojurewerkz.money.amounts :as ma]
+            [clojurewerkz.money.currencies :as mc]
             [com.rpl.specter :as s]
-            [potemkin :as potemkin]
-            [clojure.string :as str]))
+            [potemkin :as potemkin]))
 
 (defn call-pred
   ([_]
@@ -199,3 +201,6 @@
 ;         (comp (flip (curry 2 conj))
 ;               f)
 ;         identity))
+
+(def get-usd
+  (partial ma/amount-of mc/USD))
