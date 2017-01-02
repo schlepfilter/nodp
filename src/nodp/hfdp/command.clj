@@ -46,8 +46,8 @@
   [light]
   (->> light
        name
-       (str (if (= light :off)
-              ""
+       (str (case light
+              :off ""
               "on "))))
 
 (helpers/defpfmethod get-action :fan
