@@ -32,11 +32,11 @@
               (constantly "Pizza"))))
 
 (def get-customer-pizza
-  (helpers/build str
-                 :customer
-                 (constantly " ordered a ---- ")
-                 get-pizza-name
-                 (constantly " ----")))
+  (comp (partial str/join " ")
+        (juxt :customer
+              (constantly "ordered a ----")
+              get-pizza-name
+              (constantly "----"))))
 
 (def get-ingredients
   (comp vals
