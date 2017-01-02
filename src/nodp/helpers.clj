@@ -7,6 +7,22 @@
             [potemkin :as potemkin]
             [clojure.string :as str]))
 
+(defn call-pred
+  ([_]
+   true)
+  ([pred expr]
+   (pred expr)))
+
+(defmacro casep
+  [x & clauses]
+  `(condp call-pred ~x
+     ~@clauses))
+
+(defmacro case-eval
+  [x & clauses]
+  `(condp = ~x
+     ~@clauses))
+
 (defn flip
   [f]
   (fn
@@ -65,12 +81,13 @@
 (defmacro functionize
   ;If operator is a list, then it returns a value, which can be passed arround.
   [operator]
-  (if (or (test/function? operator) (list? operator))
-    operator
-    `(fn [& more#]
-       (->> (map (comp gensymize quote-seq) more#)
-            (cons '~operator)
-            eval))))
+  (casep operator
+         test/function? operator
+         list? operator
+         `(fn [& more#]
+            (->> (map (comp gensymize quote-seq) more#)
+                 (cons '~operator)
+                 eval))))
 
 (defmacro build
   [operator & fs]
@@ -86,22 +103,6 @@
 ;       (~operator ~@(map (fn [f##]
 ;                           `(apply ~f## more##))
 ;                         fs)))))
-
-(defn call-pred
-  ([_]
-   true)
-  ([pred expr]
-   (pred expr)))
-
-(defmacro casep
-  [x & clauses]
-  `(condp call-pred ~x
-     ~@clauses))
-
-(defmacro case-eval
-  [x & clauses]
-  `(condp = ~x
-     ~@clauses))
 
 (defn ecurry
   [arity f]
