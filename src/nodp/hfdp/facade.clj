@@ -1,6 +1,5 @@
 (ns nodp.hfdp.facade
-  (:require [clojure.string :as str]
-            [nodp.helpers :as helpers]))
+  (:require [nodp.helpers :as helpers]))
 
 (def amp)
 
@@ -12,7 +11,7 @@
   [device command]
   (->> (flatten [command])
        (cons device)
-       (str/join " ")))
+       helpers/space-join))
 
 (defn- get-device-actions
   [[device & commands]]

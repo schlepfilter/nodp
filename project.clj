@@ -16,7 +16,6 @@
                  [org.flatland/ordered "1.5.4"]
                  [potemkin "0.4.3"]
                  [prismatic/plumbing "0.5.3"]
-                 [riddley "0.1.12"]
                  [thi.ng/geom "0.0.908"]]
   :plugins [[lein-ancient "0.6.10"]]
   :main ^:skip-aot nodp.core

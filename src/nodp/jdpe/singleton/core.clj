@@ -1,4 +1,4 @@
-(ns nodp.jdpe.singleton.stateless)
+(ns nodp.jdpe.singleton.core)
 
 (def describe
   (partial str "next serial: "))

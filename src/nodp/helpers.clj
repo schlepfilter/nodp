@@ -1,11 +1,11 @@
 (ns nodp.helpers
   (:require [clojure.test :as test]
-            [clojure.walk :as walk]
             [cats.builtin]
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
-            [com.rpl.specter :as specter]
-            [potemkin :as potemkin]))
+            [com.rpl.specter :as s]
+            [potemkin :as potemkin]
+            [clojure.string :as str]))
 
 (defn flip
   [f]
@@ -21,19 +21,19 @@
   `'~expr)
 
 (def Seqs
-  (specter/recursive-path [] p
-                          (specter/cond-path seq? specter/STAY
-                                             coll? [specter/ALL p]
-                                             :else specter/STOP)))
+  (s/recursive-path [] p
+                    (s/cond-path seq? s/STAY
+                                 coll? [s/ALL p]
+                                 :else s/STOP)))
 
 (def quote-seq
-  (partial specter/transform* Seqs quote-expr))
+  (partial s/transform* Seqs quote-expr))
 
 ;This definition results in an error.
 ;(def quote-seq
 ;  (partial riddley/walk-exprs seq? quote-expr))
 ;
-;((build (partial specter/transform* :a) (constantly inc) identity) {:a 0})
+;((build (partial s/transform* :a) (constantly inc) identity) {:a 0})
 ;java.lang.ExceptionInInitilizerError
 ;
 ;This may be because
@@ -45,15 +45,7 @@
 ;=>
 ;#object[clojure.core$_PLUS_ 0x3bc719a3 "clojure.core$_PLUS_@3bc719a3"]
 
-(defmacro symbol-function*
-  [x]
-  (let [y (gensym)]
-    `(if (test/function? ~x)
-       (def ~y
-         ~x)
-       ~x)))
-
-(defn symbol-function
+(defn gensymize
   ;This function works around java.lang.ExceptionInInitializerError
   ;(eval (list map (partial + 1) [0]))
   ;CompilerException java.lang.ExceptionInInitializerError
@@ -64,28 +56,21 @@
   ;(eval (list map (fn [x] (+ 1 x)) [0]))
   ;=> (1)
   [x]
-  (symbol-function* x))
-
-(defn resolve-symbol
-  ;A symbol may resolve to nil.
-  ;(resolve 'Math/abs)
-  ;=> nil
-  [x]
-  (if (symbol? x)
-    (if-let [resolved-x (resolve x)]
-      resolved-x
-      x)
-    x))
+  (-> `(def ~(gensym) ~x)
+      eval
+      str
+      (subs 2)
+      symbol))
 
 (defmacro functionize
+  ;If operator is a list, then it returns a value, which can be passed arround.
   [operator]
-  (if (test/function? operator)
+  (if (or (test/function? operator) (list? operator))
     operator
-    (let [resolved-operator (walk/prewalk resolve-symbol operator)]
-      `(fn [& more#]
-         (->> (map (comp symbol-function quote-seq) more#)
-              (cons '~resolved-operator)
-              eval)))))
+    `(fn [& more#]
+       (->> (map (comp gensymize quote-seq) more#)
+            (cons '~operator)
+            eval))))
 
 (defmacro build
   [operator & fs]
@@ -134,27 +119,11 @@
   ([arity f]
    `(ecurry ~arity ~f)))
 
-(defn ap
-  ([f x]
-   (m/<$> f x))
-  ([f x & more]
-   (apply m/<*>
-          (m/<$> (curry (-> more
-                            count
-                            inc)
-                        f)
-                 x)
-          more)))
-
 (defmacro defpfmethod
   [multifn dispatch-val f]
   `(defmethod ~multifn ~dispatch-val
      [& x#]
      (apply ~f x#)))
-
-(defmacro defmulti-identity
-  [mm-name]
-  `(defmulti ~mm-name identity))
 
 (defmacro defdefs
   [macro-name macro]
@@ -166,6 +135,16 @@
          ([x## & more##]
            `(do (~qualified-macro## ~x##)
                 (~qualified-macro-name## ~@more##)))))))
+
+(def space-join
+  (partial str/join " "))
+
+(def comma-join
+  (partial str/join ", "))
+
+(defmacro defmulti-identity
+  [mm-name]
+  `(defmulti ~mm-name identity))
 
 (defdefs defmultis-identity
          defmulti-identity)
@@ -180,14 +159,26 @@
 (defn defmethods
   [dispatch-val f-m]
   (-> (make-defmethod dispatch-val)
-      (map f-m)
-      dorun))
+      (run! f-m)))
 
 (def printall
-  (comp dorun
-        (partial map println)))
+  (partial run! println))
 
 (defn get-thread-name
   []
   (-> (Thread/currentThread)
       .getName))
+
+(defn make-add-action
+  [f]
+  (build (partial s/setval* [:actions s/END])
+         (comp vector f)
+         identity))
+
+;This definition is less readable.
+;(defn make-add-action
+;  [f]
+;  (build (partial s/transform* :actions)
+;         (comp (flip (curry 2 conj))
+;               f)
+;         identity))

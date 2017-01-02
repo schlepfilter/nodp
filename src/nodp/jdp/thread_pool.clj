@@ -1,6 +1,5 @@
 (ns nodp.jdp.thread-pool
-  (:require [clojure.string :as str]
-            [nodp.helpers :as helpers]))
+  (:require [nodp.helpers :as helpers]))
 
 (def make-postfix
   (helpers/curry 2 (helpers/flip str)))
@@ -29,7 +28,7 @@
   (fn [& _] (f)))
 
 (def describe
-  (comp (partial str/join " ")
+  (comp helpers/space-join
         (juxt (instantiate helpers/get-thread-name)
               (comp get-name
                     :kind)

@@ -1,6 +1,5 @@
 (ns nodp.hfdp.abstract-factory
-  (:require [clojure.string :as str]
-            [nodp.helpers :as helpers]))
+  (:require [nodp.helpers :as helpers]))
 
 (helpers/defmultis-identity get-kind-ingredients
                             get-kind-name
@@ -23,20 +22,22 @@
                     {get-kind-ingredients #{:dough :sauce :cheese}
                      get-kind-name        "Cheeze"})
 
+(def space-join-juxt
+  (comp (partial comp helpers/space-join)
+        juxt))
+
 (def get-pizza-name
-  (comp (partial str/join " ")
-        (juxt (comp get-regional-name
-                    :region)
-              (comp get-kind-name
-                    :kind)
-              (constantly "Pizza"))))
+  (space-join-juxt (comp get-regional-name
+                         :region)
+                   (comp get-kind-name
+                         :kind)
+                   (constantly "Pizza")))
 
 (def get-customer-pizza
-  (helpers/build str
-                 :customer
-                 (constantly " ordered a ---- ")
-                 get-pizza-name
-                 (constantly " ----")))
+  (space-join-juxt :customer
+                   (constantly "ordered a ----")
+                   get-pizza-name
+                   (constantly "----")))
 
 (def get-ingredients
   (comp vals

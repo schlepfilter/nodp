@@ -1,6 +1,6 @@
 (ns nodp.jdpe.visitor
-  (:require [clojure.string :as str]
-            [flatland.ordered.map :refer [ordered-map]]))
+  (:require [flatland.ordered.map :refer [ordered-map]]
+            [nodp.helpers :as helpers]))
 
 (def engine
   (ordered-map :camshaft 1
@@ -13,7 +13,7 @@
 (defn- make-get-sentence
   [verb part-name]
   (fn [qualifier]
-    (str/join " " [verb qualifier part-name])))
+    (helpers/space-join [verb qualifier part-name])))
 
 (defn- get-diagnosis
   [[k v]]
@@ -36,7 +36,7 @@
   (str v " " (name k) "(s)"))
 
 (def get-counts
-  (comp (partial str/join ", ")
+  (comp helpers/comma-join
         (partial map get-count)))
 
 (get-counts engine)

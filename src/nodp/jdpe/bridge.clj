@@ -1,6 +1,6 @@
 (ns nodp.jdpe.bridge
-  (:require [nodp.helpers :as helpers]
-            [com.rpl.specter :as s]))
+  (:require [com.rpl.specter :as s]
+            [nodp.helpers :as helpers]))
 
 (def verb
   {true  "started"
@@ -10,31 +10,27 @@
   (comp (partial str "Engine ")
         verb))
 
-(defn- make-change-running
-  [running]
-  (comp (partial s/setval* :running running)
-        (partial s/setval* [:actions s/END] (-> running
-                                                get-sentence
-                                                vector))))
+(def make-change-running
+  (helpers/build comp
+                 ((helpers/curry s/setval*) :running)
+                 (comp ((helpers/curry s/setval*) [:actions s/END])
+                       vector
+                       get-sentence)))
 
 ;This definition is less readable.
-;(def make-change-running
-;  (comp (partial apply comp)
-;        (juxt ((helpers/curry s/setval*) :running)
-;              (comp ((helpers/curry s/setval*) [:actions s/END])
-;                    vector
-;                    get-sentence))))
+;(defn- make-change-running
+;  [running]
+;  (comp (partial s/setval* :running running)
+;        (partial s/setval* [:actions s/END] (-> running
+;                                                get-sentence
+;                                                vector))))
 
 (def start
   (make-change-running true))
 
 (def add-power-action
-  (helpers/build s/setval*
-                 (constantly [:actions s/END])
-                 (comp vector
-                       (partial str "Engine power increased to ")
-                       :power)
-                 identity))
+  (helpers/make-add-action (comp (partial str "Engine power increased to ")
+                                 :power)))
 
 ;This definition may be more readable.
 ;(defn- add-power-action

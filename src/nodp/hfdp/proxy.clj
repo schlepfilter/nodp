@@ -1,33 +1,34 @@
 (ns nodp.hfdp.proxy
-  (:require [com.rpl.specter :as specter]
+  (:require [com.rpl.specter :as s]
             [incanter.distributions :as distributions]
             [nodp.helpers :as helpers]))
 
 (defn- get-ratings-path
   [object]
-  [(specter/must object) :ratings])
+  [(s/must object) :ratings])
 
 ;This definition is harder to read.
 ;(def get-ratings-path
-;  (comp (partial (helpers/flip vector) :ratings) specter/must))
+;  (comp (partial (helpers/flip vector) :ratings) s/must))
 
 (defn- make-set-rating
   [{:keys [object rating]}]
-  (fn [person]
-    (specter/transform (get-ratings-path object)
-                       (partial (helpers/flip conj) rating)
-                       person)))
+  (partial s/transform*
+           (get-ratings-path object)
+           (partial (helpers/flip conj) rating)))
 
 (defn- proxy-make-set-rating
-  [{:keys [subject object rating]}]
+  [{:keys [subject object] :as m}]
   (if (= subject object)
     identity
-    (make-set-rating {:object object
-                      :rating rating})))
+    (-> m
+        (dissoc :subject)
+        make-set-rating)))
 
 (defn- get-rating
   [{:keys [object person]}]
-  (->> (specter/select-one (get-ratings-path object) person)
+  (->> person
+       (s/select-one (get-ratings-path object))
        distributions/mean
        (str "Rating is ")))
 

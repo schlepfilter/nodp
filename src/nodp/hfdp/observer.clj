@@ -2,9 +2,10 @@
   (:require [clojure.string :as str]
             [beicon.core :as rx]
             [incanter.distributions :as distributions]
-            [nodp.helpers :as helpers]))
+            [nodp.helpers :as helpers])
+  (:import (rx.functions FuncN)))
 
-(def subject (rx/subject))
+(def subject (.toSerialized (rx/subject)))
 
 (def pressure-stream
   (rx/map :pressure subject))
@@ -12,23 +13,26 @@
 (def delta-stream
   (->> pressure-stream
        (rx/buffer 2 1)
-       (rx/map (partial apply -))))
+       (rx/map (comp (partial apply -)
+                     reverse))))
+
+(defn call-pred
+  ([_]
+   true)
+  ([pred expr]
+   (pred expr)))
 
 (defmacro casep
-  ([x pred expr]
-   `(if (or (= ~pred :else) (~pred ~x))
-      ~expr))
-  ([x pred expr & clauses]
-   `(if (~pred ~x)
-      ~expr
-      (casep ~x ~@clauses))))
+  [x & clauses]
+  `(condp call-pred ~x
+     ~@clauses))
 
 (defn- forecast
   [delta]
   (casep delta
          pos? "Improving weather on the way!"
          zero? "More of the same"
-         :else "Watch out for cooler, rainy weather"))
+         "Watch out for cooler, rainy weather"))
 
 (def forecast-stream
   (rx/map forecast delta-stream))
@@ -41,24 +45,53 @@
 (def temperature-stream
   (rx/map :temperature subject))
 
-(def scan-temperature
-  (partial (helpers/flip rx/scan) temperature-stream))
+(def rx-max
+  (partial rx/scan max))
+
+(def rx-min
+  (partial rx/scan min))
+
+(def rx-average
+  (partial rx/scan (comp distributions/mean
+                         vector)))
 
 (def max-stream
-  (scan-temperature max))
+  (rx-max temperature-stream))
 
 (def min-stream
-  (scan-temperature min))
+  (rx-min temperature-stream))
 
-(def mean-stream
-  (scan-temperature (comp distributions/mean
-                          vector)))
+(def average-stream
+  (rx-average temperature-stream))
+
+(defn- rxfnn
+  ^FuncN [f]
+  (reify FuncN
+    (call [_ objs]
+      (apply f objs))))
+
+(defn- with-latest-from
+  [x & more]
+  (apply (partial (helpers/functionize .withLatestFrom) (last more))
+         (if (rx/observable? x)
+           [more (rxfnn vector)]
+           [(drop-last more) (rxfnn x)])))
+
+;This definition doesn't use functionize.
+;(defn- with-latest-from
+;  [x & more]
+;  (if (rx/observable? x)
+;    (.withLatestFrom (last more) more (rxfnn vector))
+;    (.withLatestFrom (last more) (drop-last more) (rxfnn x))))
 
 (def statistic-stream
-  (->> (rx/zip mean-stream max-stream min-stream)
-       (rx/map (comp str/join
-                     (partial interleave
-                              ["Avg/Max/Min temperature = " "/" "/"])))))
+  (with-latest-from (comp str/join
+                          (partial interleave
+                                   ["Avg/Max/Min temperature = " "/" "/"])
+                          vector)
+                    max-stream
+                    min-stream
+                    average-stream))
 
 (printstream statistic-stream)
 

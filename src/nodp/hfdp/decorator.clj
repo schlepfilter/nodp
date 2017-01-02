@@ -1,5 +1,5 @@
 (ns nodp.hfdp.decorator
-  (:require [clojure.string :as str]))
+  (:require [nodp.helpers :as helpers]))
 
 (def dark-roast
   {:name  "Dark Roast Coffee"
@@ -19,7 +19,7 @@
 
 (defmethod add String
   [& ss]
-  (str/join ", " ss))
+  (helpers/comma-join ss))
 
 (defmethod add Number
   [& ns]

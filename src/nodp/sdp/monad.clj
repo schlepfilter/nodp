@@ -1,9 +1,22 @@
 (ns nodp.sdp.monad
-  (:require [nodp.helpers :as helpers]))
+  (:require [nodp.helpers :as helpers]
+            [cats.core :as m]))
+
+(defn ap
+  ([f x]
+   (m/<$> f x))
+  ([f x & more]
+   (apply m/<*>
+          (m/<$> (helpers/curry (-> more
+                                    count
+                                    inc)
+                                f)
+                 x)
+          more)))
 
 (defn- multiply
   [& vs]
-  (apply helpers/ap * vs))
+  (apply ap * vs))
 
 (def prefix
   (partial str "The result is: "))

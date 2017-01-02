@@ -1,4 +1,4 @@
-(ns nodp.jdpe.multiton.stateless)
+(ns nodp.jdpe.multiton.core)
 
 (defn- make-describe
   [generator]

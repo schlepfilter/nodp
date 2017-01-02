@@ -1,6 +1,5 @@
 (ns nodp.jdpe.mediator
-  (:require [nodp.helpers :as helpers]
-            [clojure.string :as str]))
+  (:require [nodp.helpers :as helpers]))
 
 (defn- notify-gearbox-enabled
   []
@@ -51,7 +50,7 @@
 
 (defn- set-gear
   [gear]
-  (flatten [(notify-gear-changed) (str/join " " ["Now in" gear "gear"])]))
+  (flatten [(notify-gear-changed) (helpers/space-join ["Now in" gear "gear"])]))
 
 (set-gear "FOURTH")
 
