@@ -17,8 +17,8 @@
 
 (defn- get-diagnosis
   [[k v]]
-  (->> (if (= v 1)
-         "the"
+  (->> (case v
+         1 "the"
          "a singular")
        ((->> k
              name
