@@ -1,8 +1,8 @@
 (ns nodp.jdp.builder
-  (:require [nodp.helpers :as helpers]
-            [cats.core :as m]
+  (:require [cats.core :as m]
             [cats.monad.maybe :as maybe]
-            [cuerdas.core :as cuerdas]))
+            [cuerdas.core :as cuerdas]
+            [nodp.helpers :as helpers]))
 
 (defn get-head-or-hair
   [hair-type]
