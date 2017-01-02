@@ -98,6 +98,27 @@
   `(condp call-pred ~x
      ~@clauses))
 
+(defmacro case-eval
+  [x & clauses]
+  `(condp = ~x
+     ~@clauses))
+
+(defn ecurry
+  [arity f]
+  (fn [& outer-more]
+    (let [n (count outer-more)]
+      (case-eval arity
+                 n (apply f outer-more)
+                 (ecurry (- arity n)
+                         (fn [& inner-more]
+                           (apply f (concat outer-more inner-more))))))))
+
+(defmacro curry
+  ([f]
+   `(m/curry ~f))
+  ([arity f]
+   `(ecurry ~arity ~f)))
+
 (defn maybe
   [expr]
   (if (nil? expr)
@@ -113,22 +134,6 @@
   [test then]
   `(maybe (if-not ~test
             ~then)))
-
-(defn ecurry
-  [arity f]
-  (fn [& outer-more]
-    (let [n (count outer-more)]
-      (if (== arity n)
-        (apply f outer-more)
-        (ecurry (- arity n)
-                (fn [& inner-more]
-                  (apply f (concat outer-more inner-more))))))))
-
-(defmacro curry
-  ([f]
-   `(m/curry ~f))
-  ([arity f]
-   `(ecurry ~arity ~f)))
 
 (defmacro defpfmethod
   [multifn dispatch-val f]
