@@ -4,7 +4,8 @@
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
             [com.rpl.specter :as s]
-            [potemkin :as potemkin]))
+            [potemkin :as potemkin]
+            [clojure.string :as str]))
 
 (defn flip
   [f]
@@ -134,6 +135,9 @@
          ([x## & more##]
            `(do (~qualified-macro## ~x##)
                 (~qualified-macro-name## ~@more##)))))))
+
+(def comma-join
+  (partial str/join ", "))
 
 (defmacro defmulti-identity
   [mm-name]

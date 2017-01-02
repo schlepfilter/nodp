@@ -1,7 +1,8 @@
 (ns nodp.jdp.private-class-data
   (:require [clojure.string :as str]
             [cats.core :as m]
-            [inflections.core :as inflections]))
+            [inflections.core :as inflections]
+            [nodp.helpers :as helpers]))
 
 (def stew {:potato 1
            :carrot 2
@@ -16,7 +17,7 @@
                     first))))
 
 (def get-comma
-  (comp (partial str/join ", ")
+  (comp helpers/comma-join
         drop-last))
 
 (def get-and

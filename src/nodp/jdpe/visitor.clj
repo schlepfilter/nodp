@@ -1,6 +1,7 @@
 (ns nodp.jdpe.visitor
   (:require [clojure.string :as str]
-            [flatland.ordered.map :refer [ordered-map]]))
+            [flatland.ordered.map :refer [ordered-map]]
+            [nodp.helpers :as helpers]))
 
 (def engine
   (ordered-map :camshaft 1
@@ -36,7 +37,7 @@
   (str v " " (name k) "(s)"))
 
 (def get-counts
-  (comp (partial str/join ", ")
+  (comp helpers/comma-join
         (partial map get-count)))
 
 (get-counts engine)
