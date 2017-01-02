@@ -49,10 +49,10 @@
 (defn- make-change-power
   [conditional change]
   (fn [engine]
-    (if (conditional engine)
-      (unconditionally-change-power {:change change
-                                     :engine engine})
-      engine)))
+    (helpers/casep engine
+                   conditional (unconditionally-change-power {:change change
+                                                              :engine engine})
+                   engine)))
 
 (def max-speed?
   (comp (partial > 10)
