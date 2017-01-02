@@ -32,10 +32,10 @@
                      (comp (partial s/transform*
                                     s/STAY
                                     (fn [environment]
-                                      ((if (sold-out? environment)
-                                         (comp (constantly-add-action "Oops, out of gumballs!")
-                                               (make-set-state :sold-out))
-                                         (comp (make-set-state :quarterless)))
+                                      ((helpers/casep environment
+                                                      sold-out? (comp (constantly-add-action "Oops, out of gumballs!")
+                                                                      (make-set-state :sold-out))
+                                                      (comp (make-set-state :quarterless)))
                                         environment)))
                            (constantly-add-action "A gumball comes rolling out the slot...")
                            (partial s/transform* [:machine :gumball-n] dec)))
@@ -61,8 +61,8 @@
   [gumball-n]
   (comp refill*
         (helpers/make-add-action (comp (partial str "The gumball machine was just refilled; it's new count is: ")
-                               :gumball-n
-                               :machine))
+                                       :gumball-n
+                                       :machine))
         (partial s/transform* [:machine :gumball-n] (partial + gumball-n))))
 
 (defn- get-environment
