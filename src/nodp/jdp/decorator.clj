@@ -48,9 +48,10 @@
                      (comp last
                            vector))
 
-(defmethod decorate* :power
-  [_ & more]
-  (apply + more))
+(helpers/defpfmethod decorate* :power
+                     (comp (partial apply +)
+                           (partial drop 1)
+                           vector))
 
 (def decorate
   (partial map/merge-with-key decorate*))
