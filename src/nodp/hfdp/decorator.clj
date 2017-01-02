@@ -21,8 +21,7 @@
                      (comp helpers/comma-join
                            vector))
 
-(defmethod add Number
-  [& ns]
-  (apply + ns))
+(helpers/defpfmethod add Number
+                     +)
 
 (merge-with add dark-roast mocha mocha whip)
