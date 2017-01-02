@@ -63,9 +63,9 @@
 
 (defmacro if-observable?
   [x then else]
-  `(if (rx/observable? ~x)
-     ~then
-     ~else))
+  `(helpers/casep ~x
+                  rx/observable? ~then
+                  ~else))
 
 (defn- with-latest-from
   [x & more]
