@@ -12,13 +12,13 @@
 
 (defn- describe-hair-type
   [hair-type-maybe]
-  (if (maybe/nothing? hair-type-maybe)
-    "hair"
-    (-> hair-type-maybe
-        m/join
-        ((juxt cuerdas/human
-               get-head-or-hair))
-        helpers/space-join)))
+  (helpers/casep hair-type-maybe
+                 maybe/nothing? "hair"
+                 (-> hair-type-maybe
+                     m/join
+                     ((juxt cuerdas/human
+                            get-head-or-hair))
+                     helpers/space-join)))
 
 (def comp-just
   (partial comp maybe/just))

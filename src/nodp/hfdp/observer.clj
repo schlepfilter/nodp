@@ -16,23 +16,12 @@
        (rx/map (comp (partial apply -)
                      reverse))))
 
-(defn call-pred
-  ([_]
-   true)
-  ([pred expr]
-   (pred expr)))
-
-(defmacro casep
-  [x & clauses]
-  `(condp call-pred ~x
-     ~@clauses))
-
 (defn- forecast
   [delta]
-  (casep delta
-         pos? "Improving weather on the way!"
-         zero? "More of the same"
-         "Watch out for cooler, rainy weather"))
+  (helpers/casep delta
+                 pos? "Improving weather on the way!"
+                 zero? "More of the same"
+                 "Watch out for cooler, rainy weather"))
 
 (def forecast-stream
   (rx/map forecast delta-stream))

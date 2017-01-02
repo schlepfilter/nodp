@@ -87,6 +87,17 @@
 ;                           `(apply ~f## more##))
 ;                         fs)))))
 
+(defn call-pred
+  ([_]
+   true)
+  ([pred expr]
+   (pred expr)))
+
+(defmacro casep
+  [x & clauses]
+  `(condp call-pred ~x
+     ~@clauses))
+
 (defn maybe
   [expr]
   (if (nil? expr)
