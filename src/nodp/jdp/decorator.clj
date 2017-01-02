@@ -1,6 +1,7 @@
 (ns nodp.jdp.decorator
   (:require [clojure.string :as str]
-            [plumbing.map :as map]))
+            [plumbing.map :as map]
+            [nodp.helpers :as helpers]))
 
 (def troll
   {:attack "The troll swings at you with a club!"
@@ -39,9 +40,8 @@
             [_ & more]
             (str/join "\n" more))
 
-(defmethod decorate* :kind
-  [_ _ kind]
-  kind)
+(helpers/defpfmethod decorate* :kind
+                     (comp last vector))
 
 (defmethod decorate* :power
   [_ & more]
