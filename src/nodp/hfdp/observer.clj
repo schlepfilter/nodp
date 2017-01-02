@@ -2,8 +2,7 @@
   (:require [clojure.string :as str]
             [beicon.core :as rx]
             [incanter.distributions :as distributions]
-            [nodp.helpers :as helpers]
-            [com.rpl.specter :as s])
+            [nodp.helpers :as helpers])
   (:import (rx.functions FuncN)))
 
 (def subject
