@@ -1,6 +1,11 @@
 (ns nodp.hfdp.helpers
   (:require [flatland.ordered.set :refer [ordered-set]]
+            [cats.monad.maybe :as maybe]
             [nodp.helpers :as helpers]))
+
+(def nop
+  (-> (maybe/nothing)
+      constantly))
 
 (def pancake-menu-items
   (ordered-set
@@ -19,4 +24,3 @@
     {:title        "BLT"
      :description "Bacon with lettuce & tomato on whole wheat"
      :price       (helpers/get-usd 2.99)}))
-

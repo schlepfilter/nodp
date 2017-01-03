@@ -2,14 +2,23 @@
   (:require [clojure.string :as str]
             [beicon.core :as rx]
             [incanter.distributions :as distributions]
-            [nodp.helpers :as helpers])
+            [nodp.helpers :as helpers]
+            [nodp.hfdp.helpers :as hfdp-helpers])
   (:import (rx.functions FuncN)))
 
-(def subject
-  (.toSerialized (rx/subject)))
+(def measurement-stream
+  (rx/of {:temperature 80
+          :humidity    65
+          :pressure    (rationalize 30.4)}
+         {:temperature 82
+          :humidity    70
+          :pressure    (rationalize 29.2)}
+         {:temperature 78
+          :humidity    90
+          :pressure    (rationalize 29.2)}))
 
 (def pressure-stream
-  (rx/map :pressure subject))
+  (rx/map :pressure measurement-stream))
 
 (def delta-stream
   (->> pressure-stream
@@ -27,13 +36,14 @@
 (def forecast-stream
   (rx/map forecast delta-stream))
 
-(def printstream
-  (partial (helpers/flip rx/subscribe) println))
+(defn- printstream
+  [stream]
+  (rx/subscribe stream println hfdp-helpers/nop hfdp-helpers/nop))
 
 (printstream forecast-stream)
 
 (def temperature-stream
-  (rx/map :temperature subject))
+  (rx/map :temperature measurement-stream))
 
 (def rx-max
   (partial rx/scan max))
@@ -106,21 +116,6 @@
        "% humidity"))
 
 (def current-stream
-  (->> (rx/map get-current subject)))
+  (rx/map get-current measurement-stream))
 
 (printstream current-stream)
-
-(def push-measurement!
-  (partial rx/push! subject))
-
-(push-measurement! {:temperature 80
-                    :humidity    65
-                    :pressure    (rationalize 30.4)})
-
-(push-measurement! {:temperature 82
-                    :humidity    70
-                    :pressure    (rationalize 29.2)})
-
-(push-measurement! {:temperature 78
-                    :humidity    90
-                    :pressure    (rationalize 29.2)})

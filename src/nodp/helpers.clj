@@ -185,7 +185,8 @@
 
 (defn get-thread-name
   []
-  (.getName (Thread/currentThread)))
+  (-> (Thread/currentThread)
+      .getName))
 
 (defn make-add-action
   [f]
