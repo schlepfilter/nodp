@@ -38,7 +38,8 @@
 
 (def describe-hair
   (make-get-fragment (constantly (maybe/just "with"))
-                     (comp (m/lift-m name)
+                     (comp (partial m/<$> name)
+                           helpers/maybe
                            :hair-color)
                      (comp-just describe-hair-type
                                 helpers/maybe
