@@ -5,7 +5,7 @@
             [nodp.helpers :as helpers])
   (:import (rx.functions FuncN)))
 
-(def measurement-stream
+(def measurement
   (rx/of {:temperature 80
           :humidity    65
           :pressure    (rationalize 30.4)}
@@ -16,11 +16,11 @@
           :humidity    90
           :pressure    (rationalize 29.2)}))
 
-(def pressure-stream
-  (rx/map :pressure measurement-stream))
+(def pressure
+  (rx/map :pressure measurement))
 
-(def delta-stream
-  (->> pressure-stream
+(def delta
+  (->> pressure
        (rx/buffer 2 1)
        (rx/map (comp (partial apply -)
                      reverse))))
@@ -33,15 +33,15 @@
                  "Watch out for cooler, rainy weather"))
 
 (def forecast-stream
-  (rx/map forecast delta-stream))
+  (rx/map forecast delta))
 
 (def printstream
   (partial (helpers/flip rx/on-next) println))
 
 (printstream forecast-stream)
 
-(def temperature-stream
-  (rx/map :temperature measurement-stream))
+(def temperature
+  (rx/map :temperature measurement))
 
 (def rx-max
   (partial rx/scan max))
@@ -53,14 +53,14 @@
   (partial rx/scan (comp distributions/mean
                          vector)))
 
-(def max-stream
-  (rx-max temperature-stream))
+(def max-temperature
+  (rx-max temperature))
 
-(def min-stream
-  (rx-min temperature-stream))
+(def min-temperature
+  (rx-min temperature))
 
-(def average-stream
-  (rx-average temperature-stream))
+(def average-temperature
+  (rx-average temperature))
 
 (defn- rxfnn
   ^FuncN [f]
@@ -99,13 +99,13 @@
                           (partial interleave
                                    ["Avg/Max/Min temperature = " "/" "/"])
                           vector)
-                    max-stream
-                    min-stream
-                    average-stream))
+                    max-temperature
+                    min-temperature
+                    average-temperature))
 
 (printstream statistic-stream)
 
-(defn- get-current
+(defn- get-now
   [{:keys [temperature humidity]}]
   (str "Current conditions: "
        temperature
@@ -113,7 +113,7 @@
        humidity
        "% humidity"))
 
-(def current-stream
-  (rx/map get-current measurement-stream))
+(def now-stream
+  (rx/map get-now measurement))
 
-(printstream current-stream)
+(printstream now-stream)
