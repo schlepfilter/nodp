@@ -51,11 +51,10 @@
               "on "))))
 
 (helpers/defpfmethod get-action :fan
-                     (comp maybe/just
-                           helpers/space-join
-                           (partial conj [location "ceiling fan is"])
-                           get-description
-                           :fan))
+                     (helpers/comp-just helpers/space-join
+                                        (partial conj [location "ceiling fan is"])
+                                        get-description
+                                        :fan))
 
 (defmethod get-action :control
   [_]

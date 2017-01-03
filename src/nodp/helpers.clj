@@ -138,6 +138,9 @@
   `(maybe (if-not ~test
             ~then)))
 
+(def comp-just
+  (partial comp maybe/just))
+
 (defmacro defpfmethod
   [multifn dispatch-val f]
   `(defmethod ~multifn ~dispatch-val

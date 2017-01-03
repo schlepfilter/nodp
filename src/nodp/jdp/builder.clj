@@ -20,9 +20,6 @@
                             get-head-or-hair))
                      helpers/space-join)))
 
-(def comp-just
-  (partial comp maybe/just))
-
 (defn- make-get-fragment
   [& fs]
   (comp helpers/space-join
@@ -41,9 +38,9 @@
                      (comp (partial m/<$> name)
                            helpers/maybe
                            :hair-color)
-                     (comp-just describe-hair-type
-                                helpers/maybe
-                                :hair-type)))
+                     (helpers/comp-just describe-hair-type
+                                        helpers/maybe
+                                        :hair-type)))
 
 (defn- make-describe-keyword
   [s]
@@ -68,15 +65,15 @@
   (make-describe-keyword "wearing"))
 
 (def get-hero
-  (make-get-fragment (comp-just describe-profession
-                                :profession)
-                     (comp-just describe-first-name
-                                :first-name)
-                     (comp-just describe-hair
-                                (partial (helpers/flip select-keys)
-                                         [:hair-type :hair-color]))
-                     (comp-just describe-weapon
-                                :weapon)
+  (make-get-fragment (helpers/comp-just describe-profession
+                                        :profession)
+                     (helpers/comp-just describe-first-name
+                                        :first-name)
+                     (helpers/comp-just describe-hair
+                                        (partial (helpers/flip select-keys)
+                                                 [:hair-type :hair-color]))
+                     (helpers/comp-just describe-weapon
+                                        :weapon)
                      (comp (partial m/<$> describe-armor)
                            helpers/maybe
                            :armor)))
