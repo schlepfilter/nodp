@@ -23,7 +23,7 @@
     (-> kind
         make-kind?
         (some items)
-        (helpers/maybe (eip-helpers/handle-items items)))))
+        (helpers/maybe-if (eip-helpers/handle-items items)))))
 
 (def handle-items-collection
   (comp maybe/cat-maybes

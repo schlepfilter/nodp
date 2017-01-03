@@ -16,8 +16,8 @@
 (defn- make-turn
   [on]
   (fn [{kind :kind :as environment}]
-    (if (= kind :null)
-      environment
+    (case kind
+      :null environment
       (->> environment
            (s/setval :on on)
            ((helpers/make-add-action (comp (make-get-turn-action on)

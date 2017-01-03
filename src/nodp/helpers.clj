@@ -1,11 +1,29 @@
 (ns nodp.helpers
-  (:require [clojure.test :as test]
+  (:require [clojure.string :as str]
+            [clojure.test :as test]
             [cats.builtin]
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
+            [clojurewerkz.money.amounts :as ma]
+            [clojurewerkz.money.currencies :as mc]
             [com.rpl.specter :as s]
-            [potemkin :as potemkin]
-            [clojure.string :as str]))
+            [potemkin :as potemkin]))
+
+(defn call-pred
+  ([_]
+   true)
+  ([pred expr]
+   (pred expr)))
+
+(defmacro casep
+  [x & clauses]
+  `(condp call-pred ~x
+     ~@clauses))
+
+(defmacro case-eval
+  [x & clauses]
+  `(condp = ~x
+     ~@clauses))
 
 (defn flip
   [f]
@@ -65,12 +83,13 @@
 (defmacro functionize
   ;If operator is a list, then it returns a value, which can be passed arround.
   [operator]
-  (if (or (test/function? operator) (list? operator))
-    operator
-    `(fn [& more#]
-       (->> (map (comp gensymize quote-seq) more#)
-            (cons '~operator)
-            eval))))
+  (casep operator
+         test/function? operator
+         list? operator
+         `(fn [& more#]
+            (->> (map (comp gensymize quote-seq) more#)
+                 (cons '~operator)
+                 eval))))
 
 (defmacro build
   [operator & fs]
@@ -87,37 +106,37 @@
 ;                           `(apply ~f## more##))
 ;                         fs)))))
 
-(defn wrap-maybe
-  [expr]
-  (if (nil? expr)
-    (maybe/nothing)
-    (maybe/just expr)))
-
-(defmacro maybe
-  [test then]
-  `(wrap-maybe (if ~test
-                 ~then)))
-
-(defmacro maybe-not
-  [test then]
-  `(wrap-maybe (if-not ~test
-                 ~then)))
-
 (defn ecurry
   [arity f]
   (fn [& outer-more]
     (let [n (count outer-more)]
-      (if (== arity n)
-        (apply f outer-more)
-        (ecurry (- arity n)
-                (fn [& inner-more]
-                  (apply f (concat outer-more inner-more))))))))
+      (case-eval arity
+                 n (apply f outer-more)
+                 (ecurry (- arity n)
+                         (fn [& inner-more]
+                           (apply f (concat outer-more inner-more))))))))
 
 (defmacro curry
   ([f]
    `(m/curry ~f))
   ([arity f]
    `(ecurry ~arity ~f)))
+
+(defn maybe
+  [expr]
+  (casep expr
+         nil? (maybe/nothing)
+         (maybe/just expr)))
+
+(defmacro maybe-if
+  [test then]
+  `(maybe (if ~test
+            ~then)))
+
+(defmacro maybe-if-not
+  [test then]
+  `(maybe (if-not ~test
+            ~then)))
 
 (defmacro defpfmethod
   [multifn dispatch-val f]
@@ -166,8 +185,7 @@
 
 (defn get-thread-name
   []
-  (-> (Thread/currentThread)
-      .getName))
+  (.getName (Thread/currentThread)))
 
 (defn make-add-action
   [f]
@@ -182,3 +200,6 @@
 ;         (comp (flip (curry 2 conj))
 ;               f)
 ;         identity))
+
+(def get-usd
+  (partial ma/amount-of mc/USD))

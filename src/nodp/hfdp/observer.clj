@@ -5,7 +5,8 @@
             [nodp.helpers :as helpers])
   (:import (rx.functions FuncN)))
 
-(def subject (.toSerialized (rx/subject)))
+(def subject
+  (.toSerialized (rx/subject)))
 
 (def pressure-stream
   (rx/map :pressure subject))
@@ -16,23 +17,12 @@
        (rx/map (comp (partial apply -)
                      reverse))))
 
-(defn call-pred
-  ([_]
-   true)
-  ([pred expr]
-   (pred expr)))
-
-(defmacro casep
-  [x & clauses]
-  `(condp call-pred ~x
-     ~@clauses))
-
 (defn- forecast
   [delta]
-  (casep delta
-         pos? "Improving weather on the way!"
-         zero? "More of the same"
-         "Watch out for cooler, rainy weather"))
+  (helpers/casep delta
+                 pos? "Improving weather on the way!"
+                 zero? "More of the same"
+                 "Watch out for cooler, rainy weather"))
 
 (def forecast-stream
   (rx/map forecast delta-stream))
@@ -70,19 +60,31 @@
     (call [_ objs]
       (apply f objs))))
 
+(defmacro if-observable?
+  [x then else]
+  `(helpers/casep ~x
+                  rx/observable? ~then
+                  ~else))
+
 (defn- with-latest-from
   [x & more]
-  (apply (partial (helpers/functionize .withLatestFrom) (last more))
-         (if (rx/observable? x)
-           [more (rxfnn vector)]
-           [(drop-last more) (rxfnn x)])))
+  (.withLatestFrom (last more)
+                   (if-observable? x
+                                   more
+                                   (drop-last more))
+                   (-> (if-observable? x
+                                       vector
+                                       x)
+                       rxfnn)))
 
-;This definition doesn't use functionize.
+;This is harder to read.
 ;(defn- with-latest-from
 ;  [x & more]
-;  (if (rx/observable? x)
-;    (.withLatestFrom (last more) more (rxfnn vector))
-;    (.withLatestFrom (last more) (drop-last more) (rxfnn x))))
+;  (apply (partial (helpers/functionize .withLatestFrom) (last more))
+;         (s/transform s/LAST rxfnn
+;           (if (rx/observable? x)
+;            [more vector]
+;            [(drop-last more) x]))))
 
 (def statistic-stream
   (with-latest-from (comp str/join

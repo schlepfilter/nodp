@@ -1,7 +1,5 @@
 (ns nodp.hfdp.iterator
-  (:require [clojurewerkz.money.amounts :as ma]
-            [clojurewerkz.money.currencies :as mc]
-            [clojurewerkz.money.format :as format]
+  (:require [clojurewerkz.money.format :as format]
             [flatland.ordered.set :refer [ordered-set]]
             [nodp.helpers :as helpers]
             [nodp.hfdp.helpers :as hfdp-helpers]))

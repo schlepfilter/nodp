@@ -1,6 +1,7 @@
 (ns nodp.jdp.decorator
   (:require [clojure.string :as str]
-            [plumbing.map :as map]))
+            [plumbing.map :as map]
+            [nodp.helpers :as helpers]))
 
 (def troll
   {:attack "The troll swings at you with a club!"
@@ -12,8 +13,11 @@
   [{:keys [kind power]}]
   (str kind " troll power " power))
 
+(def line-break-join
+  (partial str/join "\n"))
+
 (def describe
-  (comp (partial str/join "\n")
+  (comp line-break-join
         (juxt :attack
               :flee
               get-troll)))
@@ -29,23 +33,25 @@
 (defmulti decorate* (comp first
                           vector))
 
-(defmacro defmethods
-  [multifn dispatch-vals & fn-tail]
+(defmacro defpfmethods
+  [multifn dispatch-vals f]
   `(run! (fn [dispatch-val#]
-           (defmethod ~multifn dispatch-val# ~@fn-tail))
+           (helpers/defpfmethod ~multifn dispatch-val# ~f))
          ~dispatch-vals))
 
-(defmethods decorate* [:attack :flee]
-            [_ & more]
-            (str/join "\n" more))
+(defpfmethods decorate* [:attack :flee]
+              (comp line-break-join
+                    (partial drop 1)
+                    vector))
 
-(defmethod decorate* :kind
-  [_ _ kind]
-  kind)
+(helpers/defpfmethod decorate* :kind
+                     (comp last
+                           vector))
 
-(defmethod decorate* :power
-  [_ & more]
-  (apply + more))
+(helpers/defpfmethod decorate* :power
+                     (comp (partial apply +)
+                           (partial drop 1)
+                           vector))
 
 (def decorate
   (partial map/merge-with-key decorate*))

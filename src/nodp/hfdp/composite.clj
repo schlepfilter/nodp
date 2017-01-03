@@ -1,9 +1,7 @@
 (ns nodp.hfdp.composite
-  (:require [clojurewerkz.money.amounts :as ma]
-            [clojurewerkz.money.currencies :as mc]
-            [clojurewerkz.money.format :as format]
-            [flatland.ordered.set :refer [ordered-set]]
+  (:require [clojurewerkz.money.format :as format]
             [com.rpl.specter :as s]
+            [flatland.ordered.set :refer [ordered-set]]
             [nodp.helpers :as helpers]
             [nodp.hfdp.helpers :as hfdp-helpers]))
 
@@ -15,10 +13,10 @@
 (def desert-menu-items
   (ordered-set {:title       "Apple Pie"
                 :description "Apple pie with a flakey crust, topped with vanilla icecream"
-                :price       (ma/amount-of mc/USD 1.59)}
+                :price       (helpers/get-usd 1.59)}
                {:title       "Cheesecake"
                 :description "Creamy New York cheesecake, with a chocolate graham crust"
-                :price       (ma/amount-of mc/USD 1.99)}))
+                :price       (helpers/get-usd 1.99)}))
 
 (def desert-menu
   (ordered-set {:title       "DESERT MENU"

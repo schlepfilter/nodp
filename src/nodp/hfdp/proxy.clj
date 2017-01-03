@@ -19,11 +19,11 @@
 
 (defn- proxy-make-set-rating
   [{:keys [subject object] :as m}]
-  (if (= subject object)
-    identity
-    (-> m
-        (dissoc :subject)
-        make-set-rating)))
+  (helpers/case-eval subject
+                     object identity
+                     (-> m
+                         (dissoc :subject)
+                         make-set-rating)))
 
 (defn- get-rating
   [{:keys [object person]}]
