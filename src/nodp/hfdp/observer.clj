@@ -2,8 +2,7 @@
   (:require [clojure.string :as str]
             [beicon.core :as rx]
             [incanter.distributions :as distributions]
-            [nodp.helpers :as helpers]
-            [nodp.hfdp.helpers :as hfdp-helpers])
+            [nodp.helpers :as helpers])
   (:import (rx.functions FuncN)))
 
 (def measurement-stream
@@ -38,7 +37,7 @@
 
 (defn- printstream
   [stream]
-  (rx/subscribe stream println hfdp-helpers/nop hfdp-helpers/nop))
+  (rx/on-next stream println))
 
 (printstream forecast-stream)
 

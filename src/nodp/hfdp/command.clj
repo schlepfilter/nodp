@@ -4,8 +4,7 @@
             [cats.monad.maybe :as maybe]
             [clojure.math.combinatorics :as combo]
             [com.rpl.specter :as s]
-            [nodp.helpers :as helpers]
-            [nodp.hfdp.helpers :as hfdp-helpers]))
+            [nodp.helpers :as helpers]))
 
 (def slot-n 2)
 
@@ -15,8 +14,12 @@
         (apply s/multi-path))
    (s/multi-path :on :off)])
 
+(def nop
+  (-> (maybe/nothing)
+      constantly))
+
 (def control
-  (s/setval do-path hfdp-helpers/nop []))
+  (s/setval do-path nop []))
 
 (def environment
   {:actions []
