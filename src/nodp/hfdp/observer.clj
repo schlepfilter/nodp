@@ -35,9 +35,8 @@
 (def forecast-stream
   (rx/map forecast delta-stream))
 
-(defn- printstream
-  [stream]
-  (rx/on-next stream println))
+(def printstream
+  (partial (helpers/flip rx/on-next) println))
 
 (printstream forecast-stream)
 
