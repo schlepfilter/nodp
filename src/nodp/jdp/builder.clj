@@ -76,7 +76,7 @@
                                          [:hair-type :hair-color]))
                      (comp-just describe-weapon
                                 :weapon)
-                     (comp (m/lift-m 1 describe-armor)
+                     (comp (partial m/<$> describe-armor)
                            helpers/maybe
                            :armor)))
 
