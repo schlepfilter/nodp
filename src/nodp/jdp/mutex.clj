@@ -10,26 +10,33 @@
         rx/from-coll
         (partial repeat bean-n)))
 
-(def john
-  (get-thief :john))
+(def get-thieves
+  (partial map get-thief))
 
-(def peter
-  (get-thief :peter))
+(def publish
+  (helpers/functionize .publish))
+
+(def get-successful-thief-from-thieves
+  (comp publish
+        (partial rx/take bean-n)
+        (partial apply rx/merge)))
+
+(def get-successful-thief
+  (comp get-successful-thief-from-thieves
+        get-thieves))
 
 (def successful-thief
-  (->> (rx/merge john peter)
-       (rx/take bean-n)
-       .publish))
+  (get-successful-thief #{:john :peter}))
 
 (def describe-theft
   (comp str/capitalize
         (partial (helpers/flip str) " took a bean.")
         name))
 
-(def theft
-  (rx/map describe-theft successful-thief))
+(def get-theft
+  (partial rx/map describe-theft))
 
-(helpers/printstream theft)
+(helpers/printstream (get-theft successful-thief))
 
 (defn- make-describe-total
   [thief-k]
@@ -38,21 +45,22 @@
         helpers/space-join
         str/capitalize)))
 
-(def get-total
+(defn- make-get-total
+  [successful-thief-stream]
   (helpers/build rx/map
                  make-describe-total
                  (comp (helpers/functionize .count)
-                       (partial (helpers/flip rx/filter) successful-thief)
+                       (partial (helpers/flip rx/filter) successful-thief-stream)
                        (helpers/curry 2 =))))
 
-(def john-total
-  (get-total :john))
+(def get-total
+  (make-get-total successful-thief))
 
-(helpers/printstream john-total)
+(def print-total
+  (comp helpers/printstream get-total))
 
-(def peter-total
-  (get-total :peter))
+(print-total :john)
 
-(helpers/printstream peter-total)
+(print-total :peter)
 
 (.connect successful-thief)
