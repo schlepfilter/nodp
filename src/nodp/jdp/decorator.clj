@@ -9,9 +9,12 @@
    :kind   "simple"
    :power  10})
 
-(defn- get-troll
-  [{:keys [kind power]}]
-  (str kind " troll power " power))
+(def get-troll
+  (comp str/capitalize
+        helpers/space-join
+        (juxt :kind
+              (constantly "troll power")
+              :power)))
 
 (def line-break-join
   (partial str/join "\n"))
