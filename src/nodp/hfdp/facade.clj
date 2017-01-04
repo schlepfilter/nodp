@@ -8,11 +8,10 @@
 
 (def film)
 
-(defn- get-action
-  [device command]
-  (->> (flatten [command])
-       (cons device)
-       helpers/space-join))
+(def get-action
+  (comp helpers/space-join
+        flatten
+        vector))
 
 (defn- get-device-actions
   [[device & commands]]
