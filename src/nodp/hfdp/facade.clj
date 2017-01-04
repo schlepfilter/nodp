@@ -12,10 +12,10 @@
         flatten
         vector))
 
-(defn- get-device-actions
-  [[device & commands]]
-  (-> (partial get-action device)
-      (map commands)))
+(def get-device-actions
+  (helpers/build map
+                 (comp (helpers/curry 2 get-action) first)
+                 rest))
 
 (def get-actions
   (partial mapcat get-device-actions))
