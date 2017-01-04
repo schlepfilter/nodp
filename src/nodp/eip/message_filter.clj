@@ -25,12 +25,9 @@
         (some items)
         (helpers/maybe-if (eip-helpers/handle-items items)))))
 
-(def handle-items-collection
+(def handle
   (comp maybe/cat-maybes
-        (partial m/<*> (map make-handle-kind-items ["ABC" "XYZ"]))))
-
-(defn- handle
-  [& more]
-  (handle-items-collection more))
+        (partial m/<*> (map make-handle-kind-items ["ABC" "XYZ"]))
+        vector))
 
 (handle eip-helpers/a-items eip-helpers/x-items)

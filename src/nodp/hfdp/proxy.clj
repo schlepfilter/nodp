@@ -1,7 +1,8 @@
 (ns nodp.hfdp.proxy
   (:require [com.rpl.specter :as s]
             [incanter.distributions :as distributions]
-            [nodp.helpers :as helpers]))
+            [nodp.helpers :as helpers]
+            [cats.core :as m]))
 
 (defn- get-ratings-path
   [object]
@@ -25,16 +26,22 @@
                          (dissoc :subject)
                          make-set-rating)))
 
-(defn- get-rating
-  [{:keys [object person]}]
-  (->> person
-       (s/select-one (get-ratings-path object))
-       distributions/mean
-       (str "Rating is ")))
+(def get-rating
+  (comp (partial str "Rating is ")
+        distributions/mean
+        (helpers/build s/select-one*
+                       (comp get-ratings-path
+                             :object)
+                       :person)))
 
 (defn- run-commands
   [{:keys [commands person]}]
   ((apply comp commands) person))
+
+;This definition is harder to read.
+;(def run-commands
+;  (m/<*> (comp (partial apply comp) :commands)
+;         :person))
 
 (get-rating
   {:object "Joe Javabean"

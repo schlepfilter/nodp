@@ -6,14 +6,13 @@
   (atom {:engine  0
          :vehicle 0}))
 
-(defn- get-set-next-serial!
-  [k]
-  (->> (partial s/transform* k inc)
-       (swap! generator)))
+(def get-set-next-serial!
+  (comp (partial swap! generator)
+        ((helpers/flip (helpers/curry s/transform*)) inc)))
 
-(defn- label
-  [k]
-  (str "next " (name k) ":"))
+(def label
+  (comp ((helpers/flip ((helpers/curry 3 str) "next ")) ":")
+        name))
 
 (def print-next-serial
   (helpers/build println

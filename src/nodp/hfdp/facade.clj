@@ -7,29 +7,27 @@
 
 (def film)
 
-(defn- get-action
-  [device command]
-  (->> (flatten [command])
-       (cons device)
-       helpers/space-join))
+(def get-action
+  (comp helpers/space-join
+        flatten
+        vector))
 
-(defn- get-device-actions
-  [[device & commands]]
-  (-> (partial get-action device)
-      (map commands)))
+(def get-device-actions
+  (helpers/build map
+                 (comp (helpers/curry 2 get-action) first)
+                 rest))
 
 (def get-actions
   (partial mapcat get-device-actions))
 
-(defn- get-arguments
-  [{:keys [device-commands description]}]
-  (->> device-commands
-       get-actions
-       (cons description)))
+(def get-outputs
+  (helpers/build cons
+                 :description
+                 (comp get-actions :device-commands)))
 
-(def print-arguments
+(def print-outputs
   (comp helpers/printall
-        get-arguments))
+        get-outputs))
 
 (def play "playing")
 
@@ -50,8 +48,8 @@
 
 (defn- watch
   []
-  (print-arguments {:description     "Get ready to watch a movie..."
-                    :device-commands (get-watch-device-commands)}))
+  (print-outputs {:description     "Get ready to watch a movie..."
+                  :device-commands (get-watch-device-commands)}))
 
 (defn- get-end-device-commands
   []
@@ -60,12 +58,11 @@
 
 (defn- end
   []
-  (print-arguments {:description     "Shutting movie theater down..."
-                    :device-commands (get-end-device-commands)}))
+  (print-outputs {:description     "Shutting movie theater down..."
+                  :device-commands (get-end-device-commands)}))
 
 (with-redefs [amp "Top-O-Line Amplifier"
               dvd "Top-O-Line DVD Player"
               film "Raiders of the Lost Ark"]
   (watch)
   (end))
-

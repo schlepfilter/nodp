@@ -44,7 +44,9 @@
 
 (defn- comp->>=
   [& fs]
-  (apply comp (map (helpers/flip (helpers/curry 2 m/>>=)) fs)))
+  (->> fs
+       (map (helpers/flip (helpers/curry 2 m/>>=)))
+       (apply comp)))
 
 (def handle
   (comp (comp->>= handle-general

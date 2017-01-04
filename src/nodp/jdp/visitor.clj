@@ -14,9 +14,13 @@
     :soldier]])
 
 (def target?
-  (helpers/build = :target :object))
+  (helpers/build =
+                 :target
+                 :object))
 
-(defmulti greet (helpers/build and target? :target))
+(defmulti greet (helpers/build and
+                               target?
+                               :target))
 
 (defmethod greet :commander
   [_]

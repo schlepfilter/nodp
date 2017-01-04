@@ -138,6 +138,9 @@
   `(maybe (if-not ~test
             ~then)))
 
+(def comp-just
+  (partial comp maybe/just))
+
 (defmacro defpfmethod
   [multifn dispatch-val f]
   `(defmethod ~multifn ~dispatch-val
@@ -185,7 +188,8 @@
 
 (defn get-thread-name
   []
-  (.getName (Thread/currentThread)))
+  (-> (Thread/currentThread)
+      .getName))
 
 (defn make-add-action
   [f]

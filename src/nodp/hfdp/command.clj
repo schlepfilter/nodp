@@ -6,10 +6,6 @@
             [com.rpl.specter :as s]
             [nodp.helpers :as helpers]))
 
-(def constantly-nothing
-  (-> (maybe/nothing)
-      constantly))
-
 (def slot-n 2)
 
 (def do-path
@@ -18,8 +14,12 @@
         (apply s/multi-path))
    (s/multi-path :on :off)])
 
+(def nop
+  (-> (maybe/nothing)
+      constantly))
+
 (def control
-  (s/setval do-path constantly-nothing []))
+  (s/setval do-path nop []))
 
 (def environment
   {:actions []
@@ -28,9 +28,10 @@
              :fan     :off}
    :redo    []})
 
-(defn- add-undo
-  [state]
-  (s/setval [:undos s/END] [state] state))
+(def add-undo
+  (helpers/build (partial s/setval* [:undos s/END])
+                 vector
+                 identity))
 
 (defmulti get-action (comp first keys))
 
@@ -42,20 +43,32 @@
 (def location
   "Living Room")
 
-(defn- get-description
+(defn- get-preposition
   [light]
-  (->> light
-       name
-       (str (case light
-              :off ""
-              "on "))))
+  (case light
+    :off (maybe/nothing)
+    (maybe/just "on")))
+
+(def get-description
+  (comp helpers/space-join
+        maybe/cat-maybes
+        (juxt get-preposition
+              (helpers/comp-just name))))
+
+;This definition can be decomposed.
+;(defn- get-description
+;  [light]
+;  (->> light
+;       name
+;       (str (case light
+;              :off ""
+;              "on "))))
 
 (helpers/defpfmethod get-action :fan
-                     (comp maybe/just
-                           helpers/space-join
-                           (partial conj [location "ceiling fan is"])
-                           get-description
-                           :fan))
+                     (helpers/comp-just helpers/space-join
+                                        (partial conj [location "ceiling fan is"])
+                                        get-description
+                                        :fan))
 
 (defmethod get-action :control
   [_]
@@ -75,6 +88,19 @@
                 vector)
             after))
 
+;This definition is harder to read.
+;(def add-action
+;  (helpers/build (partial s/setval* [:actions s/END])
+;                 (comp vector
+;                       get-action
+;                       :now
+;                       first
+;                       (partial apply data/diff)
+;                       reverse
+;                       vector)
+;                 (comp second
+;                       vector)))
+
 (defn- get-actions
   [& commands]
   (-> environment
@@ -82,17 +108,16 @@
       :actions
       maybe/cat-maybes))
 
-(defn- undo
-  [state]
-  (->> state
-       :undos
-       last
-       (s/setval :actions (:actions state))))
+(def undo
+  (helpers/build (partial s/setval* :actions)
+                 :actions
+                 (comp last
+                       :undos)))
 
-(defn- make-set-button
-  [{:keys [slot on off]}]
-  (partial s/setval* [:now :control (s/keypath slot)] {:on  on
-                                                       :off off}))
+(def make-set-button
+  (helpers/build (helpers/curry s/setval*)
+                 (comp (partial conj [:now :control]) s/keypath :slot)
+                 ((helpers/flip select-keys) [:on :off])))
 
 (defn make-push-button
   [{:keys [slot on]}]

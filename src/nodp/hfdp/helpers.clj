@@ -19,4 +19,3 @@
     {:title        "BLT"
      :description "Bacon with lettuce & tomato on whole wheat"
      :price       (helpers/get-usd 2.99)}))
-
