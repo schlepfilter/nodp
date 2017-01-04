@@ -7,7 +7,8 @@
             [clojurewerkz.money.amounts :as ma]
             [clojurewerkz.money.currencies :as mc]
             [com.rpl.specter :as s]
-            [potemkin :as potemkin]))
+            [potemkin :as potemkin]
+            [beicon.core :as rx]))
 
 (defn call-pred
   ([_]
@@ -185,6 +186,9 @@
 
 (def printall
   (partial run! println))
+
+(def printstream
+  (partial (flip rx/on-next) println))
 
 (defn get-thread-name
   []

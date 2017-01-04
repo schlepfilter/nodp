@@ -35,10 +35,7 @@
 (def forecast-stream
   (rx/map forecast delta))
 
-(def printstream
-  (partial (helpers/flip rx/on-next) println))
-
-(printstream forecast-stream)
+(helpers/printstream forecast-stream)
 
 (def temperature
   (rx/map :temperature measurement))
@@ -103,7 +100,7 @@
                     min-temperature
                     average-temperature))
 
-(printstream statistic-stream)
+(helpers/printstream statistic-stream)
 
 (defn- get-now
   [{:keys [temperature humidity]}]
@@ -116,4 +113,4 @@
 (def now-stream
   (rx/map get-now measurement))
 
-(printstream now-stream)
+(helpers/printstream now-stream)
