@@ -28,9 +28,10 @@
              :fan     :off}
    :redo    []})
 
-(defn- add-undo
-  [state]
-  (s/setval [:undos s/END] [state] state))
+(def add-undo
+  (helpers/build (partial s/setval* [:undos s/END])
+                 vector
+                 identity))
 
 (defmulti get-action (comp first keys))
 
