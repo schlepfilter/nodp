@@ -6,15 +6,16 @@
   (:import (rx.functions FuncN)))
 
 (def measurement
-  (rx/of {:temperature 80
-          :humidity    65
-          :pressure    (rationalize 30.4)}
-         {:temperature 82
-          :humidity    70
-          :pressure    (rationalize 29.2)}
-         {:temperature 78
-          :humidity    90
-          :pressure    (rationalize 29.2)}))
+  (-> (rx/of {:temperature 80
+              :humidity    65
+              :pressure    (rationalize 30.4)}
+             {:temperature 82
+              :humidity    70
+              :pressure    (rationalize 29.2)}
+             {:temperature 78
+              :humidity    90
+              :pressure    (rationalize 29.2)})
+      .publish))
 
 (def pressure
   (rx/map :pressure measurement))
@@ -114,3 +115,5 @@
   (rx/map get-now measurement))
 
 (helpers/printstream now-stream)
+
+(rx/connect! measurement)
