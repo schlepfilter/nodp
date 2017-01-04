@@ -35,11 +35,14 @@
 
 (defmulti get-action (comp first keys))
 
+(def get-percent
+  (partial (helpers/flip str) "%"))
+
 (helpers/defpfmethod get-action :light
                      (comp maybe/just
                            helpers/space-join
                            (partial conj ["Light is dimmed to"])
-                           (partial (helpers/flip str) "%")
+                           get-percent
                            :light))
 
 (def location
