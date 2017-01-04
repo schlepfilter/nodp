@@ -21,15 +21,15 @@
 (def get-actions
   (partial mapcat get-device-actions))
 
-(defn- get-arguments
+(defn- get-outputs
   [{:keys [device-commands description]}]
   (->> device-commands
        get-actions
        (cons description)))
 
-(def print-arguments
+(def print-outputs
   (comp helpers/printall
-        get-arguments))
+        get-outputs))
 
 (def play "playing")
 
@@ -50,8 +50,8 @@
 
 (defn- watch
   []
-  (print-arguments {:description     "Get ready to watch a movie..."
-                    :device-commands (get-watch-device-commands)}))
+  (print-outputs {:description     "Get ready to watch a movie..."
+                  :device-commands (get-watch-device-commands)}))
 
 (defn- get-end-device-commands
   []
@@ -60,8 +60,8 @@
 
 (defn- end
   []
-  (print-arguments {:description     "Shutting movie theater down..."
-                    :device-commands (get-end-device-commands)}))
+  (print-outputs {:description     "Shutting movie theater down..."
+                  :device-commands (get-end-device-commands)}))
 
 (with-redefs [amp "Top-O-Line Amplifier"
               dvd "Top-O-Line DVD Player"
