@@ -40,8 +40,7 @@
 
 (helpers/defpfmethod get-action :light
                      (comp maybe/just
-                           helpers/space-join
-                           (partial conj ["Light is dimmed to"])
+                           (partial str "Light is dimmed to ")
                            get-percent
                            :light))
 
