@@ -20,11 +20,8 @@
 (helpers/defpfmethod handle-items "XYZ"
                      eip-helpers/handle-items)
 
-(def handle-items-collection
-  (partial map handle-items))
-
-(defn- handle
-  [& more]
-  (handle-items-collection more))
+(def handle
+  (comp (partial map handle-items)
+        vector))
 
 (handle eip-helpers/a-items eip-helpers/x-items)
