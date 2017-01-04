@@ -95,12 +95,11 @@
       :actions
       maybe/cat-maybes))
 
-(defn- undo
-  [state]
-  (->> state
-       :undos
-       last
-       (s/setval :actions (:actions state))))
+(def undo
+  (helpers/build (partial s/setval* :actions)
+                 :actions
+                 (comp last
+                       :undos)))
 
 (defn- make-set-button
   [{:keys [slot on off]}]
