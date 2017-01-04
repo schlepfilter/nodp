@@ -38,12 +38,12 @@
         helpers/space-join
         str/capitalize)))
 
-(defn- get-total
-  [thief-k]
-  (->> successful-thief
-       (rx/filter (partial = thief-k))
-       .count
-       (rx/map (make-describe-total thief-k))))
+(def get-total
+  (helpers/build rx/map
+                 make-describe-total
+                 (comp (helpers/functionize .count)
+                       (partial (helpers/flip rx/filter) successful-thief)
+                       (helpers/curry 2 =))))
 
 (def john-total
   (get-total :john))
