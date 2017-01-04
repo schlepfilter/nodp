@@ -1,15 +1,9 @@
 (ns nodp.jdp.half-sync-half-async
-  (:require [nodp.helpers :as helpers]))
+  (:require [cats.core :as m]
+            [nodp.helpers :as helpers]))
 
-(defn- sum-arithmetic
-  [n]
-  (* n (inc n)))
-
-;This definition is less readable.
-;(def arithmatic-sum
-;  (comp
-;    (partial (helpers/flip /) 2)
-;    (helpers/build * identity inc)))
+(def sum-arithmetic
+  (m/<*> (helpers/curry 2 *) inc))
 
 (def print-sum
   (juxt (helpers/functionize Thread/sleep)
