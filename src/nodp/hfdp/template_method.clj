@@ -11,12 +11,12 @@
                     {brew           "Steeping the tea"
                      add-condiments "Adding Lemon"})
 
-(defn prepare
-  [kind]
-  ["Boiling water"
-   (brew kind)
-   "Pouring into cup"
-   (add-condiments kind)])
+(def prepare
+  (helpers/build vector
+                 (constantly "Boiling water")
+                 brew
+                 (constantly "Pouring into cup")
+                 add-condiments))
 
 (prepare :coffee)
 
