@@ -101,10 +101,10 @@
                  (comp last
                        :undos)))
 
-(defn- make-set-button
-  [{:keys [slot on off]}]
-  (partial s/setval* [:now :control (s/keypath slot)] {:on  on
-                                                       :off off}))
+(def make-set-button
+  (helpers/build (helpers/curry s/setval*)
+                 (comp (partial conj [:now :control]) s/keypath :slot)
+                 ((helpers/flip select-keys) [:on :off])))
 
 (defn make-push-button
   [{:keys [slot on]}]
