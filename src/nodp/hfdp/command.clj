@@ -42,13 +42,26 @@
 (def location
   "Living Room")
 
-(defn- get-description
+(defn- get-preposition
   [light]
-  (->> light
-       name
-       (str (case light
-              :off ""
-              "on "))))
+  (case light
+    :off (maybe/nothing)
+    (maybe/just "on")))
+
+(def get-description
+  (comp helpers/space-join
+        maybe/cat-maybes
+        (juxt get-preposition
+              (helpers/comp-just name))))
+
+;This definition can be decomposed.
+;(defn- get-description
+;  [light]
+;  (->> light
+;       name
+;       (str (case light
+;              :off ""
+;              "on "))))
 
 (helpers/defpfmethod get-action :fan
                      (helpers/comp-just helpers/space-join
