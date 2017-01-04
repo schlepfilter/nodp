@@ -26,12 +26,13 @@
                          (dissoc :subject)
                          make-set-rating)))
 
-(defn- get-rating
-  [{:keys [object person]}]
-  (->> person
-       (s/select-one (get-ratings-path object))
-       distributions/mean
-       (str "Rating is ")))
+(def get-rating
+  (comp (partial str "Rating is ")
+        distributions/mean
+        (helpers/build s/select-one*
+                       (comp get-ratings-path
+                             :object)
+                       :person)))
 
 (defn- run-commands
   [{:keys [commands person]}]
