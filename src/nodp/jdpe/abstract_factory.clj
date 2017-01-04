@@ -8,9 +8,9 @@
 
 (defn make-get-parts
   [vehicle]
-  (comp (partial (helpers/flip str) (->> vehicle
-                                         name
-                                         (str " for a ")))
+  (comp helpers/space-join
+        (partial (helpers/flip concat) ["for a" (name vehicle)])
+        vector
         description))
 
 (def get-car-parts
