@@ -1,5 +1,6 @@
 (ns nodp.hfdp.facade
-  (:require [nodp.helpers :as helpers]))
+  (:require [nodp.helpers :as helpers]
+            [cats.core :as m]))
 
 (def amp)
 
@@ -21,11 +22,10 @@
 (def get-actions
   (partial mapcat get-device-actions))
 
-(defn- get-outputs
-  [{:keys [device-commands description]}]
-  (->> device-commands
-       get-actions
-       (cons description)))
+(def get-outputs
+  (helpers/build cons
+                 :description
+                 (comp get-actions :device-commands)))
 
 (def print-outputs
   (comp helpers/printall
@@ -68,4 +68,3 @@
               film "Raiders of the Lost Ark"]
   (watch)
   (end))
-
