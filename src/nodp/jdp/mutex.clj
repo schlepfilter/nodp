@@ -5,15 +5,16 @@
 
 (def bean-n 1000)
 
-(defn get-thief
-  [x]
-  (->> (repeat bean-n x)
-       rx/from-coll
-       (rx/subscribe-on rx/computation)))
+(def get-thief
+  (comp (partial rx/subscribe-on rx/computation)
+        rx/from-coll
+        (partial repeat bean-n)))
 
-(def john (get-thief :john))
+(def john
+  (get-thief :john))
 
-(def peter (get-thief :peter))
+(def peter
+  (get-thief :peter))
 
 (def successful-thief
   (->> (rx/merge john peter)
