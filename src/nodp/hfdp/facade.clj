@@ -1,6 +1,5 @@
 (ns nodp.hfdp.facade
-  (:require [nodp.helpers :as helpers]
-            [cats.core :as m]))
+  (:require [nodp.helpers :as helpers]))
 
 (def amp)
 
