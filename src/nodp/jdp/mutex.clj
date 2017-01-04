@@ -34,7 +34,7 @@
 (defn- make-describe-total
   [thief-k]
   (fn [n]
-    (-> [(name thief-k) "took" n "beans"]
+    (-> [(name thief-k) "took" n "beans."]
         helpers/space-join
         str/capitalize)))
 
