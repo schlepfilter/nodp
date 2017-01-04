@@ -88,6 +88,19 @@
                 vector)
             after))
 
+;This definition is harder to read.
+;(def add-action
+;  (helpers/build (partial s/setval* [:actions s/END])
+;                 (comp vector
+;                       get-action
+;                       :now
+;                       first
+;                       (partial apply data/diff)
+;                       reverse
+;                       vector)
+;                 (comp second
+;                       vector)))
+
 (defn- get-actions
   [& commands]
   (-> environment
