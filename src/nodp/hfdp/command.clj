@@ -35,10 +35,12 @@
 
 (defmulti get-action (comp first keys))
 
-(defmethod get-action :light
-  [{light :light}]
-  (-> (str "Light is dimmed to " light "%")
-      maybe/just))
+(helpers/defpfmethod get-action :light
+                     (comp maybe/just
+                           helpers/space-join
+                           (partial conj ["Light is dimmed to"])
+                           (partial (helpers/flip str) "%")
+                           :light))
 
 (def location
   "Living Room")
