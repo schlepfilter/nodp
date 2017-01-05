@@ -23,6 +23,7 @@
 (def delta
   (->> pressure
        (rx/buffer 2 1)
+       (rx/skip 1)
        (rx/map (comp (partial apply -)
                      reverse))))
 
