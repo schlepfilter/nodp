@@ -124,13 +124,13 @@
   (comp get-minimum-arity*
         get-arities))
 
-(def get-minimum-currying-arity
+(def get-currying-arity
   (comp (partial max 2)
         get-minimum-arity))
 
 (defn curry
   ([f]
-   (curry f (get-minimum-currying-arity f)))
+   (curry f (get-currying-arity f)))
   ([f arity]
    (fn [& outer-more]
      (let [n (count outer-more)]
