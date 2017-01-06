@@ -128,21 +128,17 @@
   (comp (partial max 2)
         get-minimum-arity))
 
-(defn- curry*
-  [arity f]
-  (fn [& outer-more]
-    (let [n (count outer-more)]
-      (case-eval arity
-                 n (apply f outer-more)
-                 (curry* (- arity n)
-                         (fn [& inner-more]
-                           (apply f (concat outer-more inner-more))))))))
-
 (defn curry
   ([f]
    (curry (get-minimum-currying-arity f) f))
   ([arity f]
-   (curry* arity f)))
+   (fn [& outer-more]
+     (let [n (count outer-more)]
+       (case-eval arity
+                  n (apply f outer-more)
+                  (curry (- arity n)
+                         (fn [& inner-more]
+                           (apply f (concat outer-more inner-more)))))))))
 
 (defn maybe
   [expr]
