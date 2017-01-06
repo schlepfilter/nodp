@@ -171,8 +171,8 @@
            (make-push-button ~m))))
 
 (def map-key
-  (comp (helpers/curry 2 map)
-        (helpers/curry 2 array-map)))
+  (comp (helpers/curry map)
+        (helpers/curry array-map)))
 
 (def get-buttons
   (comp (partial map (partial apply merge))

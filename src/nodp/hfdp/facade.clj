@@ -14,7 +14,7 @@
 
 (def get-device-actions
   (helpers/build map
-                 (comp (helpers/curry 2 get-action) first)
+                 (comp (helpers/curry get-action) first)
                  rest))
 
 (def get-actions

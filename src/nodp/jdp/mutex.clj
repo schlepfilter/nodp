@@ -51,7 +51,7 @@
                  make-describe-total
                  (comp (helpers/functionize .count)
                        (partial (helpers/flip rx/filter) successful-thief-stream)
-                       (helpers/curry 2 =))))
+                       (helpers/curry =))))
 
 (def get-total
   (make-get-total successful-thief))
