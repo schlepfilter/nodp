@@ -119,6 +119,7 @@
 
 (defmacro curry
   ([f]
+    ;TODO curry anonymous functions without providing an arity
    `(m/curry ~f))
   ([arity f]
    `(ecurry ~arity ~f)))
