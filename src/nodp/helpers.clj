@@ -1,14 +1,14 @@
 (ns nodp.helpers
   (:require [clojure.string :as str]
             [clojure.test :as test]
+            [beicon.core :as rx]
             [cats.builtin]
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
             [clojurewerkz.money.amounts :as ma]
             [clojurewerkz.money.currencies :as mc]
             [com.rpl.specter :as s]
-            [potemkin :as potemkin]
-            [beicon.core :as rx]))
+            [potemkin :as potemkin]))
 
 (defn call-pred
   ([_]
