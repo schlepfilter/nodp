@@ -67,31 +67,11 @@
     (call [_ objs]
       (apply f objs))))
 
-(defmacro if-observable?
-  [x then else]
-  `(helpers/casep ~x
-                  rx/observable? ~then
-                  ~else))
-
 (defn- with-latest-from
   [x & more]
-  (.withLatestFrom (last more)
-                   (if-observable? x
-                                   more
-                                   (drop-last more))
-                   (-> (if-observable? x
-                                       vector
-                                       x)
-                       rxfnn)))
-
-;This is harder to read.
-;(defn- with-latest-from
-;  [x & more]
-;  (apply (partial (helpers/functionize .withLatestFrom) (last more))
-;         (s/transform s/LAST rxfnn
-;           (if (rx/observable? x)
-;            [more vector]
-;            [(drop-last more) x]))))
+  (helpers/casep x
+                 rx/observable? (apply with-latest-from vector x more)
+                 (.withLatestFrom (last more) (drop-last more) (rxfnn x))))
 
 (def statistic-stream
   (with-latest-from (comp str/join
