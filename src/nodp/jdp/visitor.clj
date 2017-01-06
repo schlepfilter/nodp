@@ -41,9 +41,9 @@
 (defmacro defcurried
   [f-name bindings body]
   `(def ~f-name
-     (->> (fn ~bindings
-            ~body)
-          (helpers/curry ~(count bindings)))))
+     (helpers/curry (fn ~bindings
+                      ~body)
+                    ~(count bindings))))
 
 (defcurried make-visit
             [hierarchy target]

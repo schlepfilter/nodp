@@ -2,7 +2,7 @@
   (:require [nodp.helpers :as helpers]))
 
 (def make-smoke
-  ((helpers/flip (helpers/curry 3 str)) " smoking "))
+  ((helpers/flip (helpers/curry str 3)) " smoking "))
 
 (def advanced-wizard-smoke
   (make-smoke "AdvancedWizard"))

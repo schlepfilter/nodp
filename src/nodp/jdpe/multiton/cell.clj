@@ -11,7 +11,7 @@
         ((helpers/flip (helpers/curry s/transform*)) inc)))
 
 (def label
-  (comp ((helpers/flip ((helpers/curry 3 str) "next ")) ":")
+  (comp ((helpers/flip ((helpers/curry str 3) "next ")) ":")
         name))
 
 (def print-next-serial

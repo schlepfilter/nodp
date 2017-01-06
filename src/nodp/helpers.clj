@@ -130,15 +130,15 @@
 
 (defn curry
   ([f]
-   (curry (get-minimum-currying-arity f) f))
-  ([arity f]
+   (curry f (get-minimum-currying-arity f)))
+  ([f arity]
    (fn [& outer-more]
      (let [n (count outer-more)]
        (case-eval arity
                   n (apply f outer-more)
-                  (curry (- arity n)
-                         (fn [& inner-more]
-                           (apply f (concat outer-more inner-more)))))))))
+                  (curry (fn [& inner-more]
+                           (apply f (concat outer-more inner-more)))
+                         (- arity n)))))))
 
 (defn maybe
   [expr]
