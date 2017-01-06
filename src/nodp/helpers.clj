@@ -232,7 +232,7 @@
 ;(defn make-add-action
 ;  [f]
 ;  (build (partial s/transform* :actions)
-;         (comp (flip (curry 2 conj))
+;         (comp (flip (curry conj 2))
 ;               f)
 ;         identity))
 
