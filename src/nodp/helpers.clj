@@ -107,24 +107,34 @@
 ;                           `(apply ~f## more##))
 ;                         fs)))))
 
-(def get-arities
-  ;This function returns a lazy sequence of non-variadic arities.
-  (comp (partial map (comp alength (functionize .getParameterTypes)))
+(defn- get-required-arity
+  [f]
+  (-> (exc/try-or-recover (-> f
+                              .getRequiredArity
+                              maybe/just)
+                          (fn [_] (-> (maybe/nothing)
+                                      (exc/success))))
+      m/join))
+
+(def get-non-variadic-arities
+  (comp (partial map (comp alength
+                           (functionize .getParameterTypes)))
         (partial filter (comp (partial = "invoke")
                               (functionize .getName)))
         (functionize .getDeclaredMethods)
         class))
 
-(defn- get-minimum-arity
-  ;This function returns a minimum of non-variadic arities.
-  [coll]
-  (casep coll
-         empty? 0
-         (apply min coll)))
+(def get-arities
+  (build (comp distinct
+               maybe/cat-maybes
+               cons)
+         get-required-arity
+         (comp (partial map maybe/just)
+               get-non-variadic-arities)))
 
 (def get-currying-arity
   (comp (partial max 2)
-        get-minimum-arity
+        (partial apply min)
         get-arities))
 
 (defn curry
