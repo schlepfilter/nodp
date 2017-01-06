@@ -108,25 +108,24 @@
 ;                         fs)))))
 
 (def get-arities
+  ;This function returns a lazy sequence of non-variadic arities.
   (comp (partial map (comp alength (functionize .getParameterTypes)))
         (partial filter (comp (partial = "invoke")
                               (functionize .getName)))
         (functionize .getDeclaredMethods)
         class))
 
-(defn- get-minimum-arity*
+(defn- get-minimum-arity
+  ;This function returns a minimum of non-variadic arities.
   [coll]
   (casep coll
          empty? 0
          (apply min coll)))
 
-(def get-minimum-arity
-  (comp get-minimum-arity*
-        get-arities))
-
 (def get-currying-arity
   (comp (partial max 2)
-        get-minimum-arity))
+        get-minimum-arity
+        get-arities))
 
 (defn curry
   ([f]
