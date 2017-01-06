@@ -2,7 +2,7 @@
   (:require [nodp.helpers :as helpers]))
 
 (def make-postfix
-  (helpers/curry 2 (helpers/flip str)))
+  (helpers/flip (helpers/curry 2 str)))
 
 (helpers/defmultis-identity get-short-name get-time-per)
 
