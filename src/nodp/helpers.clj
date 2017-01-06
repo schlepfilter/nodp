@@ -112,8 +112,9 @@
   (-> (exc/try-or-recover (-> f
                               .getRequiredArity
                               maybe/just)
-                          (fn [_] (-> (maybe/nothing)
-                                      (exc/success))))
+                          (fn [_]
+                            (-> (maybe/nothing)
+                                exc/success)))
       m/join))
 
 (def get-non-variadic-arities
