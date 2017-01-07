@@ -147,13 +147,12 @@
 (def make-set-fan
   (make-make-change :fan))
 
-(defn- defset-fan
-  [fan]
-  (eval `(def ~(->> fan
-                    name
-                    (str "set-fan-")
-                    symbol)
-           (make-set-fan ~fan))))
+(def defset-fan
+  (helpers/build (partial intern *ns*)
+                 (comp symbol
+                       (partial str "set-fan-")
+                       name)
+                 make-set-fan))
 
 (def defsets-fan
   (comp (partial run! defset-fan)
