@@ -36,35 +36,6 @@
     ([x y & more]
      (apply f y x more))))
 
-(defn quote-expr
-  [expr]
-  `'~expr)
-
-(def Seqs
-  (s/recursive-path [] p
-                    (s/cond-path seq? s/STAY
-                                 coll? [s/ALL p]
-                                 :else s/STOP)))
-
-(def quote-seq
-  (partial s/transform* Seqs quote-expr))
-
-;This definition results in an error.
-;(def quote-seq
-;  (partial riddley/walk-exprs seq? quote-expr))
-;
-;((build (partial s/transform* :a) (constantly inc) identity) {:a 0})
-;java.lang.ExceptionInInitilizerError
-;
-;This may be because
-;(quote-seq +)
-;=>
-;#object[clojure.lang.AFunction$1 0xc6687f0 "clojure.lang.AFunction$1@c6687f0"]
-;whereas it is expected that
-;(quote-seq +)
-;=>
-;#object[clojure.core$_PLUS_ 0x3bc719a3 "clojure.core$_PLUS_@3bc719a3"]
-
 (defn gensymize
   ;This function works around java.lang.ExceptionInInitializerError
   ;(eval (list map (partial + 1) [0]))
@@ -88,7 +59,7 @@
          test/function? operator
          list? operator
          `(fn [& more#]
-            (->> (map (comp gensymize quote-seq) more#)
+            (->> (map gensymize more#)
                  (cons '~operator)
                  eval))))
 
