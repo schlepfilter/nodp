@@ -4,6 +4,7 @@
             [beicon.core :as rx]
             [cats.builtin]
             [cats.core :as m]
+            [cats.monad.exception :as exc]
             [cats.monad.maybe :as maybe]
             [clojurewerkz.money.amounts :as ma]
             [clojurewerkz.money.currencies :as mc]
@@ -75,8 +76,7 @@
   ;(eval (list map (fn [x] (+ 1 x)) [0]))
   ;=> (1)
   [x]
-  (-> `(def ~(gensym) ~x)
-      eval
+  (-> (intern *ns* (gensym) x)
       str
       (subs 2)
       symbol))
