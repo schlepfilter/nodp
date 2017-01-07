@@ -162,12 +162,12 @@
 
 (defn- defpush-button
   [{:keys [slot on] :as m}]
-  (eval `(def ~(->> (if on
+  (intern *ns* (->> (if on
                       "on"
                       "off")
                     (str "push-button-" slot "-")
                     symbol)
-           (make-push-button ~m))))
+          (make-push-button m)))
 
 (def map-key
   (comp (helpers/curry map)
