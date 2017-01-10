@@ -29,9 +29,7 @@
    :redo    []})
 
 (def add-undo
-  (helpers/build (partial s/setval* [:undos s/END])
-                 vector
-                 identity))
+  (partial helpers/transfer* [:undos s/END] vector))
 
 (defmulti get-action (comp first keys))
 

@@ -193,11 +193,19 @@
   (-> (Thread/currentThread)
       .getName))
 
+(defn transfer*
+  [apath transfer-fn structure]
+  ((build (partial s/setval* apath)
+          transfer-fn
+          identity)
+    structure))
+
 (defn make-add-action
   [f]
-  (build (partial s/setval* [:actions s/END])
-         (comp vector f)
-         identity))
+  (partial transfer*
+           [:actions s/END]
+           (comp vector
+                 f)))
 
 ;This definition is less readable.
 ;(defn make-add-action
