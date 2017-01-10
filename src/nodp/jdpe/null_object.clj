@@ -38,11 +38,10 @@
         turn-off
         turn-on))
 
-(defn- get-environment
-  [kind]
-  {:actions []
-   :kind    kind
-   :on      false})
+(def get-environment
+  (partial assoc {:actions []
+                  :on      false}
+           :kind))
 
 (mapcat (comp inspect
               get-environment)

@@ -3,7 +3,7 @@
             [nodp.helpers :as helpers]))
 
 (def sum-arithmetic
-  (m/<*> (helpers/curry 2 *) inc))
+  (m/<*> (helpers/curry *) inc))
 
 (def print-sum
   (juxt (helpers/functionize Thread/sleep)

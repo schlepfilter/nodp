@@ -12,7 +12,7 @@
 ;(defn- make-have-word?
 ;  [words]
 ;  (comp ((helpers/flip (helpers/curry some)) (map re-pattern words))
-;        (helpers/flip (helpers/curry 2 re-find))))
+;        (helpers/flip (helpers/curry re-find 2))))
 
 (defn- make-handle
   [{:keys [words action]}]
@@ -45,7 +45,7 @@
 (defn- comp->>=
   [& fs]
   (->> fs
-       (map (helpers/flip (helpers/curry 2 m/>>=)))
+       (map (helpers/flip (helpers/curry m/>>=)))
        (apply comp)))
 
 (def handle

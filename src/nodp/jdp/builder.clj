@@ -50,7 +50,7 @@
 ;This definition is harder to read
 ;(def make-describe-keyword
 ;  (comp (partial (helpers/flip comp) name)
-;        (helpers/curry 2 str)))
+;        (helpers/curry str 2)))
 
 (def describe-profession
   (make-describe-keyword "This is a"))

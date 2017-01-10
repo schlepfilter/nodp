@@ -1,8 +1,10 @@
 (ns nodp.helpers
   (:require [clojure.string :as str]
             [clojure.test :as test]
+            [beicon.core :as rx]
             [cats.builtin]
             [cats.core :as m]
+            [cats.monad.exception :as exc]
             [cats.monad.maybe :as maybe]
             [clojurewerkz.money.amounts :as ma]
             [clojurewerkz.money.currencies :as mc]
@@ -34,35 +36,6 @@
     ([x y & more]
      (apply f y x more))))
 
-(defn quote-expr
-  [expr]
-  `'~expr)
-
-(def Seqs
-  (s/recursive-path [] p
-                    (s/cond-path seq? s/STAY
-                                 coll? [s/ALL p]
-                                 :else s/STOP)))
-
-(def quote-seq
-  (partial s/transform* Seqs quote-expr))
-
-;This definition results in an error.
-;(def quote-seq
-;  (partial riddley/walk-exprs seq? quote-expr))
-;
-;((build (partial s/transform* :a) (constantly inc) identity) {:a 0})
-;java.lang.ExceptionInInitilizerError
-;
-;This may be because
-;(quote-seq +)
-;=>
-;#object[clojure.lang.AFunction$1 0xc6687f0 "clojure.lang.AFunction$1@c6687f0"]
-;whereas it is expected that
-;(quote-seq +)
-;=>
-;#object[clojure.core$_PLUS_ 0x3bc719a3 "clojure.core$_PLUS_@3bc719a3"]
-
 (defn gensymize
   ;This function works around java.lang.ExceptionInInitializerError
   ;(eval (list map (partial + 1) [0]))
@@ -74,8 +47,7 @@
   ;(eval (list map (fn [x] (+ 1 x)) [0]))
   ;=> (1)
   [x]
-  (-> `(def ~(gensym) ~x)
-      eval
+  (-> (intern *ns* (gensym) x)
       str
       (subs 2)
       symbol))
@@ -87,7 +59,7 @@
          test/function? operator
          list? operator
          `(fn [& more#]
-            (->> (map (comp gensymize quote-seq) more#)
+            (->> (map gensymize more#)
                  (cons '~operator)
                  eval))))
 
@@ -106,21 +78,48 @@
 ;                           `(apply ~f## more##))
 ;                         fs)))))
 
-(defn ecurry
-  [arity f]
-  (fn [& outer-more]
-    (let [n (count outer-more)]
-      (case-eval arity
-                 n (apply f outer-more)
-                 (ecurry (- arity n)
-                         (fn [& inner-more]
-                           (apply f (concat outer-more inner-more))))))))
+(defn- get-required-arity
+  [f]
+  (-> (exc/try-or-recover (-> f
+                              .getRequiredArity
+                              maybe/just)
+                          (fn [_]
+                            (-> (maybe/nothing)
+                                exc/success)))
+      m/join))
 
-(defmacro curry
+(def get-non-variadic-arities
+  (comp (partial map (comp alength
+                           (functionize .getParameterTypes)))
+        (partial filter (comp (partial = "invoke")
+                              (functionize .getName)))
+        (functionize .getDeclaredMethods)
+        class))
+
+(def get-arities
+  (build (comp distinct
+               maybe/cat-maybes
+               cons)
+         get-required-arity
+         (comp (partial map maybe/just)
+               get-non-variadic-arities)))
+
+(def get-currying-arity
+  (comp (partial max 2)
+        (partial apply min)
+        get-arities))
+
+(defn curry
   ([f]
-   `(m/curry ~f))
-  ([arity f]
-   `(ecurry ~arity ~f)))
+   (curry f (get-currying-arity f)))
+  ([f arity]
+   (fn [& outer-more]
+     (let [n (count outer-more)]
+       (case-eval arity
+                  n (apply f outer-more)
+                  (curry (fn [& inner-more]
+                           (apply f (concat outer-more inner-more)))
+                         (- arity n)))))))
 
 (defn maybe
   [expr]
@@ -186,22 +185,33 @@
 (def printall
   (partial run! println))
 
+(def printstream
+  (partial (flip rx/on-next) println))
+
 (defn get-thread-name
   []
   (-> (Thread/currentThread)
       .getName))
 
+(defn transfer*
+  [apath transfer-fn structure]
+  ((build (partial s/setval* apath)
+          transfer-fn
+          identity)
+    structure))
+
 (defn make-add-action
   [f]
-  (build (partial s/setval* [:actions s/END])
-         (comp vector f)
-         identity))
+  (partial transfer*
+           [:actions s/END]
+           (comp vector
+                 f)))
 
 ;This definition is less readable.
 ;(defn make-add-action
 ;  [f]
 ;  (build (partial s/transform* :actions)
-;         (comp (flip (curry 2 conj))
+;         (comp (flip (curry conj 2))
 ;               f)
 ;         identity))
 

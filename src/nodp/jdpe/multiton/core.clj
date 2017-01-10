@@ -1,8 +1,8 @@
-(ns nodp.jdpe.multiton.core)
+(ns nodp.jdpe.multiton.core
+  (:require [nodp.helpers :as helpers]))
 
-(defn- make-describe
-  [generator]
-  (partial str "next " generator ": "))
+(def make-describe
+  ((helpers/flip ((helpers/curry str 4) "next ")) ": "))
 
 (map (make-describe "engine") (range 3))
 

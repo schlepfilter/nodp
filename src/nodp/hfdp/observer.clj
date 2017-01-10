@@ -6,15 +6,16 @@
   (:import (rx.functions FuncN)))
 
 (def measurement
-  (rx/of {:temperature 80
-          :humidity    65
-          :pressure    (rationalize 30.4)}
-         {:temperature 82
-          :humidity    70
-          :pressure    (rationalize 29.2)}
-         {:temperature 78
-          :humidity    90
-          :pressure    (rationalize 29.2)}))
+  (-> (rx/of {:temperature 80
+              :humidity    65
+              :pressure    (rationalize 30.4)}
+             {:temperature 82
+              :humidity    70
+              :pressure    (rationalize 29.2)}
+             {:temperature 78
+              :humidity    90
+              :pressure    (rationalize 29.2)})
+      .publish))
 
 (def pressure
   (rx/map :pressure measurement))
@@ -22,6 +23,7 @@
 (def delta
   (->> pressure
        (rx/buffer 2 1)
+       (rx/skip 1)
        (rx/map (comp (partial apply -)
                      reverse))))
 
@@ -35,10 +37,7 @@
 (def forecast-stream
   (rx/map forecast delta))
 
-(def printstream
-  (partial (helpers/flip rx/on-next) println))
-
-(printstream forecast-stream)
+(helpers/printstream forecast-stream)
 
 (def temperature
   (rx/map :temperature measurement))
@@ -68,31 +67,11 @@
     (call [_ objs]
       (apply f objs))))
 
-(defmacro if-observable?
-  [x then else]
-  `(helpers/casep ~x
-                  rx/observable? ~then
-                  ~else))
-
 (defn- with-latest-from
   [x & more]
-  (.withLatestFrom (last more)
-                   (if-observable? x
-                                   more
-                                   (drop-last more))
-                   (-> (if-observable? x
-                                       vector
-                                       x)
-                       rxfnn)))
-
-;This is harder to read.
-;(defn- with-latest-from
-;  [x & more]
-;  (apply (partial (helpers/functionize .withLatestFrom) (last more))
-;         (s/transform s/LAST rxfnn
-;           (if (rx/observable? x)
-;            [more vector]
-;            [(drop-last more) x]))))
+  (helpers/casep x
+                 rx/observable? (apply with-latest-from vector x more)
+                 (.withLatestFrom (last more) (drop-last more) (rxfnn x))))
 
 (def statistic-stream
   (with-latest-from (comp str/join
@@ -103,7 +82,7 @@
                     min-temperature
                     average-temperature))
 
-(printstream statistic-stream)
+(helpers/printstream statistic-stream)
 
 (defn- get-now
   [{:keys [temperature humidity]}]
@@ -116,4 +95,6 @@
 (def now-stream
   (rx/map get-now measurement))
 
-(printstream now-stream)
+(helpers/printstream now-stream)
+
+(rx/connect! measurement)

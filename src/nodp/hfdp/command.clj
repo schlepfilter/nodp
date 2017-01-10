@@ -29,16 +29,18 @@
    :redo    []})
 
 (def add-undo
-  (helpers/build (partial s/setval* [:undos s/END])
-                 vector
-                 identity))
+  (partial helpers/transfer* [:undos s/END] vector))
 
 (defmulti get-action (comp first keys))
 
-(defmethod get-action :light
-  [{light :light}]
-  (-> (str "Light is dimmed to " light "%")
-      maybe/just))
+(def get-percent
+  (partial (helpers/flip str) "%"))
+
+(helpers/defpfmethod get-action :light
+                     (comp maybe/just
+                           (partial str "Light is dimmed to ")
+                           get-percent
+                           :light))
 
 (def location
   "Living Room")
@@ -143,13 +145,12 @@
 (def make-set-fan
   (make-make-change :fan))
 
-(defn- defset-fan
-  [fan]
-  (eval `(def ~(->> fan
-                    name
-                    (str "set-fan-")
-                    symbol)
-           (make-set-fan ~fan))))
+(def defset-fan
+  (helpers/build (partial intern *ns*)
+                 (comp symbol
+                       (partial str "set-fan-")
+                       name)
+                 make-set-fan))
 
 (def defsets-fan
   (comp (partial run! defset-fan)
@@ -159,16 +160,16 @@
 
 (defn- defpush-button
   [{:keys [slot on] :as m}]
-  (eval `(def ~(->> (if on
+  (intern *ns* (->> (if on
                       "on"
                       "off")
                     (str "push-button-" slot "-")
                     symbol)
-           (make-push-button ~m))))
+          (make-push-button m)))
 
 (def map-key
-  (comp (helpers/curry 2 map)
-        (helpers/curry 2 array-map)))
+  (comp (helpers/curry map)
+        (helpers/curry array-map)))
 
 (def get-buttons
   (comp (partial map (partial apply merge))
