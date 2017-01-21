@@ -3,7 +3,8 @@
             [beicon.core :as rx]
             [incanter.distributions :as distributions]
             [nodp.helpers :as helpers])
-  (:import (rx.functions FuncN)))
+  (:import (rx.functions FuncN)
+           (rx Observable)))
 
 (def measurement
   (-> (rx/of {:temperature 80
@@ -67,20 +68,21 @@
     (call [_ objs]
       (apply f objs))))
 
-(defn- with-latest-from
+(defn- combine-latest
   [x & more]
   (helpers/casep x
-                 rx/observable? (apply with-latest-from vector x more)
-                 (.withLatestFrom (last more) (drop-last more) (rxfnn x))))
+                 rx/observable? (apply combine-latest vector x more)
+                 (Observable/combineLatest more (rxfnn x))))
 
 (def statistic-stream
-  (with-latest-from (comp str/join
-                          (partial interleave
-                                   ["Avg/Max/Min temperature = " "/" "/"])
-                          vector)
-                    max-temperature
-                    min-temperature
-                    average-temperature))
+  ;TODO use a glitch-free library
+  (combine-latest (comp str/join
+                        (partial interleave
+                                 ["Avg/Max/Min temperature = " "/" "/"])
+                        vector)
+                  average-temperature
+                  max-temperature
+                  min-temperature))
 
 (helpers/printstream statistic-stream)
 
