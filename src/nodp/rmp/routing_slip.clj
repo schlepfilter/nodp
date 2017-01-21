@@ -1,4 +1,4 @@
-(ns nodp.eip.routing-slip
+(ns nodp.rmp.routing-slip
   (:require [nodp.helpers :as helpers]))
 
 (def customer

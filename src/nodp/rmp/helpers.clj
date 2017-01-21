@@ -1,4 +1,4 @@
-(ns nodp.eip.helpers
+(ns nodp.rmp.helpers
   (:require [clojure.string :as str]
             [nodp.helpers :as helpers]))
 
