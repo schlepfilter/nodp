@@ -25,8 +25,7 @@
   {:actions []
    :undos   []
    :now     {:control control
-             :fan     :off}
-   :redo    []})
+             :fan     :off}})
 
 (def add-undo
   (partial helpers/transfer* [:undos s/END] vector))
