@@ -1,6 +1,6 @@
-(ns nodp.eip.competing-consumers.thread
+(ns nodp.rmp.competing-consumers.thread
   (:require [nodp.helpers :as helpers]
-            [nodp.eip.competing-consumers.core :as core]))
+            [nodp.rmp.competing-consumers.core :as core]))
 
 (defn- consume
   [work-item]

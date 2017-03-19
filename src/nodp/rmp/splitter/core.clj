@@ -1,4 +1,4 @@
-(ns nodp.eip.splitter.core
+(ns nodp.rmp.splitter.core
   (:require [nodp.helpers :as helpers]))
 
 (def items

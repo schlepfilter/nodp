@@ -1,8 +1,8 @@
 (ns nodp.hfdp.command
   (:require [clojure.data :as data]
+            [clojure.math.combinatorics :as combo]
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
-            [clojure.math.combinatorics :as combo]
             [com.rpl.specter :as s]
             [nodp.helpers :as helpers]))
 
@@ -15,6 +15,7 @@
    (s/multi-path :on :off)])
 
 (def nop
+  ;TODO replace nothing with unit
   (-> (maybe/nothing)
       constantly))
 
@@ -25,8 +26,7 @@
   {:actions []
    :undos   []
    :now     {:control control
-             :fan     :off}
-   :redo    []})
+             :fan     :off}})
 
 (def add-undo
   (partial helpers/transfer* [:undos s/END] vector))

@@ -59,4 +59,6 @@
 (def decorate
   (partial map/merge-with-key decorate*))
 
-(describe (decorate troll smart))
+(-> troll
+    (decorate smart)
+    describe)
