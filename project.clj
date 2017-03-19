@@ -30,7 +30,7 @@
                                          {:source-paths ["src" "test"]
                                           :compiler     {:output-to  "target/test/main.js"
                                                          :output-dir "target/test/out"
-                                                         :main       nodp.test.core}}}}
+                                                         :main       nodp.test.runner}}}}
                     :doo       {:paths {:karma "node_modules/karma/bin/karma"}}}}
   :npm {:dependencies [[karma "0.13.19"]
                        [karma-cljs-test "0.1.0"]]})
