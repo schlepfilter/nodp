@@ -30,7 +30,7 @@
     <orderEntry type="library" name="Leiningen: com.googlecode.netlib-java/netlib-java:0.9.3" level="project" />
     <orderEntry type="library" name="Leiningen: com.lowagie/itext:2.1.7" level="project" />
     <orderEntry type="library" name="Leiningen: com.postspectacular/dependency:0.1.2" level="project" />
-    <orderEntry type="library" name="Leiningen: com.rpl/specter:0.13.1" level="project" />
+    <orderEntry type="library" name="Leiningen: com.rpl/specter:1.0.0" level="project" />
     <orderEntry type="library" name="Leiningen: commons-codec:1.10" level="project" />
     <orderEntry type="library" name="Leiningen: congomongo:0.3.3" level="project" />
     <orderEntry type="library" name="Leiningen: de.kotka/lazymap:3.1.0" level="project" />

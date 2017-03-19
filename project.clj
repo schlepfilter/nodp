@@ -4,8 +4,9 @@
   :license {:name "Eclipse Public License"
             :url  "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.8.0"]
+                 [org.clojure/clojurescript "1.9.494"]
                  [clojurewerkz/money "1.9.0"]
-                 [com.rpl/specter "0.13.1"]
+                 [com.rpl/specter "1.0.0"]
                  [funcool/beicon "2.7.0"]
                  [funcool/cats "2.0.0"]
                  [funcool/cuerdas "2.0.2"]
@@ -17,9 +18,18 @@
                  [potemkin "0.4.3"]
                  [prismatic/plumbing "0.5.3"]
                  [thi.ng/geom "0.0.908"]]
-  :plugins [[lein-ancient "0.6.10"]]
   :main ^:skip-aot nodp.core
   :target-path "target/%s"
-  :profiles {:dev     {:dependencies [[org.clojure/tools.namespace "0.2.11"]
-                                      [spyscope "0.1.6"]]}
-             :uberjar {:aot :all}})
+  :profiles {:dev  {:plugins      [[lein-ancient "0.6.10"]
+                                   [lein-npm "0.6.2"]]
+                    :dependencies [[org.clojure/tools.namespace "0.2.11"]
+                                   [spyscope "0.1.6"]]}
+             :test {:plugins   [[lein-doo "0.1.7"]]
+                    :cljsbuild {:builds {:test
+                                         {:source-paths ["src" "test"]
+                                          :compiler     {:output-to  "target/test/main.js"
+                                                         :output-dir "target/test/out"
+                                                         :main       nodp.test.core}}}}
+                    :doo       {:paths {:karma "node_modules/karma/bin/karma"}}}}
+  :npm {:dependencies [[karma "0.13.19"]
+                       [karma-cljs-test "0.1.0"]]})

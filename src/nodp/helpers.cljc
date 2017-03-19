@@ -1,6 +1,5 @@
 (ns nodp.helpers
   (:require [clojure.string :as str]
-            [clojure.test :as test]
             [beicon.core :as rx]
             [cats.builtin]
             [cats.core :as m]
@@ -8,6 +7,7 @@
             [cats.monad.maybe :as maybe]
             [com.rpl.specter :as s]
     #?@(:clj [
+            [clojure.test :as test]
             [clojurewerkz.money.amounts :as ma]
             [clojurewerkz.money.currencies :as mc]
             [potemkin :as potemkin]])))
