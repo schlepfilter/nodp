@@ -5,6 +5,7 @@
             :url  "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.9.494"]
+                 [org.clojure/test.check "0.9.0"]
                  [clojurewerkz/money "1.9.0"]
                  [com.rpl/specter "1.0.0"]
                  [funcool/beicon "2.7.0"]
