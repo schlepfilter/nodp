@@ -1,8 +1,8 @@
 (ns nodp.hfdp.command
   (:require [clojure.data :as data]
+            [clojure.math.combinatorics :as combo]
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
-            [clojure.math.combinatorics :as combo]
             [com.rpl.specter :as s]
             [nodp.helpers :as helpers]))
 
