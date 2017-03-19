@@ -1,4 +1,5 @@
 (ns nodp.test.runner
-  (:require [doo.runner :as runner :include-macros true]))
+  (:require [doo.runner :as runner :include-macros true]
+            [nodp.test.helpers.frp]))
 
-(runner/do-all-tests)
+(runner/doo-all-tests)
