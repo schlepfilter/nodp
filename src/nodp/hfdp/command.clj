@@ -15,6 +15,7 @@
    (s/multi-path :on :off)])
 
 (def nop
+  ;TODO replace nothing with unit
   (-> (maybe/nothing)
       constantly))
 
