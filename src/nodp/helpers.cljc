@@ -98,32 +98,32 @@
                (partial filter (comp (partial = "invoke")
                                      (functionize .getName)))
                (functionize .getDeclaredMethods)
-               class))))
+               class))
 
-(def get-arities
-  (build (comp distinct
-               maybe/cat-maybes
-               cons)
-         get-required-arity
-         (comp (partial map maybe/just)
-               get-non-variadic-arities)))
+       (def get-arities
+         (build (comp distinct
+                      maybe/cat-maybes
+                      cons)
+                get-required-arity
+                (comp (partial map maybe/just)
+                      get-non-variadic-arities)))
 
-(def get-currying-arity
-  (comp (partial max 2)
-        (partial apply min)
-        get-arities))
+       (def get-currying-arity
+         (comp (partial max 2)
+               (partial apply min)
+               get-arities))
 
-(defn curry
-  ([f]
-   (curry f (get-currying-arity f)))
-  ([f arity]
-   (fn [& outer-more]
-     (let [n (count outer-more)]
-       (case-eval arity
-                  n (apply f outer-more)
-                  (curry (fn [& inner-more]
-                           (apply f (concat outer-more inner-more)))
-                         (- arity n)))))))
+       (defn curry
+         ([f]
+          (curry f (get-currying-arity f)))
+         ([f arity]
+          (fn [& outer-more]
+            (let [n (count outer-more)]
+              (case-eval arity
+                         n (apply f outer-more)
+                         (curry (fn [& inner-more]
+                                  (apply f (concat outer-more inner-more)))
+                                (- arity n)))))))))
 
 (defn infer
   "Given an optional value infer its context. If context is already set, it
