@@ -137,8 +137,6 @@
    (cond
      (satisfies? p/Contextual v)
      (p/-get-context v)
-     (not (nil? ctx/*context*))
-     ctx/*context*
      :else
      (ctx/throw-illegal-argument
        (str "No context is set and it can not be automatically "
