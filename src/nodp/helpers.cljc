@@ -148,24 +148,24 @@
            x2 m2]
           (m/return (x1 x2))))
 
-(defmacro reify-monad
-  [pure mbind & more]
-  `(reify
-     p/Context
-     p/Functor
-     (~'-fmap [_# f# fa#]
-       ((m/lift-m 1 f#) fa#))
-     p/Applicative
-     (~'-pure [_# v#]
-       (~pure v#))
-     (~'-fapply [_# fab# fa#]
-       (ap fab# fa#))
-     p/Monad
-     (~'-mreturn [_# a#]
-       (m/pure a#))
-     (~'-mbind [_# ma# f#]
-       (~mbind ma# f#))
-     ~@more))
+#?(:clj (defmacro reify-monad
+          [pure mbind & more]
+          `(reify
+             p/Context
+             p/Functor
+             (~'-fmap [_# f# fa#]
+               ((m/lift-m 1 f#) fa#))
+             p/Applicative
+             (~'-pure [_# v#]
+               (~pure v#))
+             (~'-fapply [_# fab# fa#]
+               (ap fab# fa#))
+             p/Monad
+             (~'-mreturn [_# a#]
+               (m/pure a#))
+             (~'-mbind [_# ma# f#]
+               (~mbind ma# f#))
+             ~@more)))
 
 (defn maybe*
   [expr]
@@ -177,12 +177,12 @@
    (do (defmacro maybe-if
          [test then]
          `(maybe* (if ~test
-                   ~then)))
+                    ~then)))
 
        (defmacro maybe-if-not
          [test then]
          `(maybe* (if-not ~test
-                   ~then)))))
+                    ~then)))))
 
 (def comp-just
   (partial comp maybe/just))
