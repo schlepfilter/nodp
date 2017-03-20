@@ -2,9 +2,11 @@
   (:require [clojure.string :as str]
             [beicon.core :as rx]
             [cats.builtin]
+            [cats.context :as ctx]
             [cats.core :as m]
             [cats.monad.exception :as exc]
             [cats.monad.maybe :as maybe]
+            [cats.protocols :as p]
             [com.rpl.specter :as s]
     #?@(:clj [
             [clojure.test :as test]
@@ -122,6 +124,50 @@
                   (curry (fn [& inner-more]
                            (apply f (concat outer-more inner-more)))
                          (- arity n)))))))
+
+(defn infer
+  "Given an optional value infer its context. If context is already set, it
+  is returned as is without any inference operation."
+  {:no-doc true}
+  ([]
+   (when (nil? ctx/*context*)
+     (ctx/throw-illegal-argument "No context is set."))
+   ctx/*context*)
+  ([v]
+   (cond
+     (satisfies? p/Contextual v)
+     (p/-get-context v)
+     (not (nil? ctx/*context*))
+     ctx/*context*
+     :else
+     (ctx/throw-illegal-argument
+       (str "No context is set and it can not be automatically "
+            "resolved from provided value")))))
+
+(defn ap
+  [m1 m2]
+  (m/mlet [x1 m1
+           x2 m2]
+          (m/return (x1 x2))))
+
+(defmacro reify-monad
+  [pure mbind & more]
+  `(reify
+     p/Context
+     p/Functor
+     (~'-fmap [_# f# fa#]
+       ((m/lift-m 1 f#) fa#))
+     p/Applicative
+     (~'-pure [_# v#]
+       (~pure v#))
+     (~'-fapply [_# fab# fa#]
+       (ap fab# fa#))
+     p/Monad
+     (~'-mreturn [_# a#]
+       (m/pure a#))
+     (~'-mbind [_# ma# f#]
+       (~mbind ma# f#))
+     ~@more))
 
 (defn maybe*
   [expr]
