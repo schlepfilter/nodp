@@ -4,6 +4,16 @@
 
 (defrecord Unit
   []
+  p/Contextual
+  (-get-context [_]
+    (reify
+      p/Context
+      p/Semigroup
+      (-mappend [_ _ _]
+        (Unit.))
+      p/Monoid
+      (-mempty [_]
+        (Unit.))))
   p/Printable
   (-repr [_]
     (str "#[unit]")))
