@@ -123,7 +123,7 @@
                            (apply f (concat outer-more inner-more)))
                          (- arity n)))))))
 
-(defn maybe
+(defn maybe*
   [expr]
   (casep expr
          nil? (maybe/nothing)
@@ -132,12 +132,12 @@
 #?(:clj
    (do (defmacro maybe-if
          [test then]
-         `(maybe (if ~test
+         `(maybe* (if ~test
                    ~then)))
 
        (defmacro maybe-if-not
          [test then]
-         `(maybe (if-not ~test
+         `(maybe* (if-not ~test
                    ~then)))))
 
 (def comp-just

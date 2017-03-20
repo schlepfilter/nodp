@@ -36,10 +36,10 @@
 (def describe-hair
   (make-get-fragment (constantly (maybe/just "with"))
                      (comp (partial m/<$> name)
-                           helpers/maybe
+                           helpers/maybe*
                            :hair-color)
                      (helpers/comp-just describe-hair-type
-                                        helpers/maybe
+                                        helpers/maybe*
                                         :hair-type)))
 
 (defn- make-describe-keyword
@@ -75,7 +75,7 @@
                      (helpers/comp-just describe-weapon
                                         :weapon)
                      (comp (partial m/<$> describe-armor)
-                           helpers/maybe
+                           helpers/maybe*
                            :armor)))
 
 (get-hero {:first-name "Riobard"
