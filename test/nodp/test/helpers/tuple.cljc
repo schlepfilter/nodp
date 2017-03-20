@@ -14,6 +14,13 @@
             (gen/return unit/unit)))
 
 (clojure-test/defspec
+  tuple-monad-right-identity-law
+  10
+  (prop/for-all [a gen/any]
+                (= (m/>>= (tuple/tuple unit/unit a) m/return)
+                   (tuple/tuple unit/unit a))))
+
+(clojure-test/defspec
   tuple-monad-left-identity-law
   10
   (prop/for-all [a gen/any
