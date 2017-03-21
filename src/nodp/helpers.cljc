@@ -12,7 +12,8 @@
             [clojure.test :as test]
             [clojurewerkz.money.amounts :as ma]
             [clojurewerkz.money.currencies :as mc]
-            [potemkin :as potemkin]])))
+            [potemkin :as potemkin]]))
+  #?(:cljs (:require-macros [nodp.helpers :refer [casep build]])))
 
 (defn call-pred
   ([_]
@@ -40,24 +41,24 @@
     ([x y & more]
      (apply f y x more))))
 
-(defn gensymize
-  ;This function works around java.lang.ExceptionInInitializerError
-  ;(eval (list map (partial + 1) [0]))
-  ;CompilerException java.lang.ExceptionInInitializerError
-  ;(eval (list map (def x (partial + 1)) [0]))
-  ;=> (1)
-  ;(eval (list map inc [0]))
-  ;=> (1)
-  ;(eval (list map (fn [x] (+ 1 x)) [0]))
-  ;=> (1)
-  [x]
-  (-> (intern *ns* (gensym) x)
-      str
-      (subs 2)
-      symbol))
-
 #?(:clj
-   (do (defmacro functionize
+   (do (defn gensymize
+         ;This function works around java.lang.ExceptionInInitializerError
+         ;(eval (list map (partial + 1) [0]))
+         ;CompilerException java.lang.ExceptionInInitializerError
+         ;(eval (list map (def x (partial + 1)) [0]))
+         ;=> (1)
+         ;(eval (list map inc [0]))
+         ;=> (1)
+         ;(eval (list map (fn [x] (+ 1 x)) [0]))
+         ;=> (1)
+         [x]
+         (-> (intern *ns* (gensym) x)
+             str
+             (subs 2)
+             symbol))
+
+       (defmacro functionize
          ;If operator is a list, then it returns a value, which can be passed arround.
          [operator]
          (casep operator
