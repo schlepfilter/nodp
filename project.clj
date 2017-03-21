@@ -23,6 +23,7 @@
                  [thi.ng/geom "0.0.908"]]
   :source-paths ["script" "src"]
   :target-path "target/%s"
+  :clean-targets ^{:protect false} [:target-path "resources/public/js"]
   :profiles {:dev
              {:plugins      [[com.jakemccrary/lein-test-refresh "0.19.0"]
                              [lein-ancient "0.6.10"]
@@ -42,7 +43,7 @@
                                               :source-map-timestamp true
                                               :preloads             [devtools.preload]
                                               :external-config      {:devtools/config {:features-to-install :all}}}
-                               :figwheel true}
+                               :figwheel     true}
                               {:id           "test"
                                :source-paths ["src" "test"]
                                :compiler     {:output-to  "target/test/main.js"
