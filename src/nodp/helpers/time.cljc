@@ -38,9 +38,8 @@
 
 (util/make-printable Time)
 
-(defn time
-  [x]
-  (Time. x))
+(def time
+  ->Time)
 
 (defn now
   []
