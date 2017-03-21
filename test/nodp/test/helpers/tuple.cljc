@@ -30,11 +30,6 @@
    (gen/set gen/any)
    (gen/map gen/any gen/any)])
 
-(defn scalar-monoid-vector
-  [n]
-  (gen/one-of (map (partial (helpers/flip gen/vector) n)
-                   scalar-monoids)))
-
 (def scalar-monoid
   (gen/one-of scalar-monoids))
 
@@ -45,6 +40,11 @@
 (def mempty
   (gen/fmap (comp m/mempty helpers/infer)
             monoid))
+
+(defn scalar-monoid-vector
+  [n]
+  (gen/one-of (map (partial (helpers/flip gen/vector) n)
+                   scalar-monoids)))
 
 (clojure-test/defspec
   tuple-monad-right-identity-law
