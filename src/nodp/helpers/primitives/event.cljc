@@ -32,10 +32,7 @@
          `(do (defevent {:invokable true
                          :clj       ~clj})
               (defevent {:invokable false
-                         :clj       ~clj})))
+                         :clj       ~clj})))))
 
-       (defevents true)))
-
-#?(:cljs
-   (defevents false))
-
+(defevents #?(:clj  true
+              :cljs false))
