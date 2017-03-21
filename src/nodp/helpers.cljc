@@ -70,12 +70,6 @@
                         (cons '~operator)
                         eval))))
 
-       ;This defintion is not compatible with ClojureScript
-       ;(defmacro build
-       ;  [operator & fs]
-       ;  `(comp (partial apply (functionize ~operator))
-       ;         (juxt ~@fs)))
-
        ;This definition is harder to read.
        ;This definition doesn't use functionize.
        (defmacro build
@@ -85,6 +79,12 @@
               (~operator ~@(map (fn [f##]
                                   `(apply ~f## more##))
                                 fs)))))
+
+       ;This defintion is not compatible with ClojureScript
+       ;(defmacro build
+       ;  [operator & fs]
+       ;  `(comp (partial apply (functionize ~operator))
+       ;         (juxt ~@fs)))
 
        (defn- get-required-arity
          [f]
