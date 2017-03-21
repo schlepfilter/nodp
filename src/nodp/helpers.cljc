@@ -25,6 +25,7 @@
          [x & clauses]
          `(condp call-pred ~x
             ~@clauses))
+
        (defmacro case-eval
          [x & clauses]
          `(condp = ~x
