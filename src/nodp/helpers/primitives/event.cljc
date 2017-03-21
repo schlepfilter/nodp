@@ -5,20 +5,14 @@
   #?(:clj
      (:import (clojure.lang IDeref))))
 
-(defn- deref*
-  [e]
-  (helpers/get-value e @helpers/network-state))
-
 (defrecord Event
   [id]
   p/Printable
   (-repr [_]
     (str "#[event " id "]"))
-  #?@(:clj  [IDeref
-             (deref [e]
-               (deref* e))]
-      :cljs [IDeref
-             (-deref [e]
-                     (deref* e))]))
+  IDeref
+  (#?(:clj  deref
+      :cljs -deref) [e]
+    (helpers/get-value e @helpers/network-state)))
 
 (util/make-printable Event)
