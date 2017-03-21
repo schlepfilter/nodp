@@ -50,13 +50,13 @@
   tuple-monad-left-identity-law
   10
   (prop/for-all [a gen/any
-                 f function
+                 f* function
                  monoid* monoid]
-                (let [get-monadic-value (comp (partial tuple/tuple monoid*)
-                                              f)]
+                (let [f (comp (partial tuple/tuple monoid*)
+                              f*)]
                   (= (m/>>= (tuple/tuple (-> monoid*
                                              helpers/infer
                                              m/mempty)
                                          a)
-                            get-monadic-value)
-                     (get-monadic-value a)))))
+                            f)
+                     (f a)))))
