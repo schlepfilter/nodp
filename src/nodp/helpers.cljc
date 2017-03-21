@@ -70,20 +70,21 @@
                         (cons '~operator)
                         eval))))
 
-       (defmacro build
-         [operator & fs]
-         `(comp (partial apply (functionize ~operator))
-                (juxt ~@fs)))
+       ;This defintion is not compatible with ClojureScript
+       ;(defmacro build
+       ;  [operator & fs]
+       ;  `(comp (partial apply (functionize ~operator))
+       ;         (juxt ~@fs)))
 
        ;This definition is harder to read.
        ;This definition doesn't use functionize.
-       ;(defmacro build
-       ;  [operator & fs]
-       ;  (potemkin/unify-gensyms
-       ;    `(fn [& more##]
-       ;       (~operator ~@(map (fn [f##]
-       ;                           `(apply ~f## more##))
-       ;                         fs)))))
+       (defmacro build
+         [operator & fs]
+         (potemkin/unify-gensyms
+           `(fn [& more##]
+              (~operator ~@(map (fn [f##]
+                                  `(apply ~f## more##))
+                                fs)))))
 
        (defn- get-required-arity
          [f]
@@ -221,7 +222,7 @@
         type))
 
 (def make-add-node
-  (build (curry s/transform*)
+  (build (curry 3 s/transform*)
          (comp (partial vector :dependency)
                get-keyword)
          (comp (partial (flip graph/add-nodes))
