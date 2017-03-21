@@ -26,12 +26,11 @@
   (#?(:clj  deref
       :cljs -deref) [_]
     x)
-  #?@(:clj  [Comparable
-             (compareTo [x* y*]
-               (compare @x* @y*))]
-      :cljs [IComparable
-             (-compare [x* y*]
-                       (compare @x* @y*))])
+  #?(:clj  Comparable
+     :cljs IComparable)
+  (#?(:clj  compareTo
+      :cljs -compare) [x* y*]
+    (compare @x* @y*))
   p/Printable
   (-repr [_]
     (str "#[time " x "]")))
