@@ -15,13 +15,13 @@
   p/Contextual
   (-get-context [_]
     (reify
+      p/Context
       p/Semigroup
       (-mappend [_ x* y*]
         (Time. (max @x* @y*)))
       p/Monoid
       (-mempty [_]
-        (Time. 0))
-      p/Context))
+        (Time. 0))))
   #?@(:clj  [Comparable
              (compareTo [x* y*]
                (compare @x* @y*))
