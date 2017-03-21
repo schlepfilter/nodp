@@ -27,7 +27,8 @@
                (gen/return unit/unit)
                (gen/vector gen/any)
                (gen/list gen/any)
-               (gen/set gen/any)]))
+               (gen/set gen/any)
+               (gen/map gen/any gen/any)]))
 
 (def monoid
   (gen/one-of [monoid-scalar
