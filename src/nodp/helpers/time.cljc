@@ -22,21 +22,19 @@
       p/Monoid
       (-mempty [_]
         (Time. 0))))
+  IDeref
+  (#?(:clj  deref
+      :cljs -deref) [_]
+    x)
   #?@(:clj  [Comparable
              (compareTo [x* y*]
-               (compare @x* @y*))
-             IDeref
-             (deref [_]
-               x)]
+               (compare @x* @y*))]
       :cljs [IComparable
              (-compare [x* y*]
-                       (compare @x* @y*))
-             IDeref
-             (-deref [_]
-                     x)])
+                       (compare @x* @y*))])
   p/Printable
   (-repr [_]
-    (str "#[time " (pr-str x) "]")))
+    (str "#[time " x "]")))
 
 (util/make-printable Time)
 
