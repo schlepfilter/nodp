@@ -220,6 +220,13 @@
         str
         type))
 
+(def make-add-node
+  (build (curry s/transform*)
+         (comp (partial vector :dependency)
+               get-keyword)
+         (comp (partial (flip graph/add-nodes))
+               :id)))
+
 #?(:clj
    (do (defmacro defpfmethod
          [multifn dispatch-val f]
