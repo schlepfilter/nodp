@@ -22,7 +22,17 @@
               (gen/one-of [(gen/return (maybe/nothing))
                            (gen/return (maybe/just a))]))))
 
-(def monoid-scalar
+(defn scalar-monoids
+  [n]
+  (gen/one-of (map (partial (helpers/flip gen/vector) n)
+                   [gen/string
+                    (gen/return unit/unit)
+                    (gen/vector gen/any)
+                    (gen/list gen/any)
+                    (gen/set gen/any)
+                    (gen/map gen/any gen/any)])))
+
+(def scalar-monoid
   (gen/one-of [gen/string
                (gen/return unit/unit)
                (gen/vector gen/any)
@@ -31,8 +41,8 @@
                (gen/map gen/any gen/any)]))
 
 (def monoid
-  (gen/one-of [monoid-scalar
-               (gen/recursive-gen maybe monoid-scalar)]))
+  (gen/one-of [scalar-monoid
+               (gen/recursive-gen maybe scalar-monoid)]))
 
 (def mempty
   (gen/fmap (comp m/mempty helpers/infer)
@@ -60,3 +70,19 @@
                                          a)
                             f)
                      (f a)))))
+
+(clojure-test/defspec
+  tuple-monad-associativity-law
+  10
+  (prop/for-all [a gen/any
+                 monoids (scalar-monoids 3)
+                 f* function
+                 g* function]
+                (let [f (comp (partial tuple/tuple (second monoids))
+                              f*)
+                      g (comp (partial tuple/tuple (last monoids))
+                              g*)
+                      ma (tuple/tuple (first monoids) a)]
+                  (= (m/->= ma f g)
+                     (m/>>= ma (fn [x]
+                                 (m/>>= (f x) g)))))))
