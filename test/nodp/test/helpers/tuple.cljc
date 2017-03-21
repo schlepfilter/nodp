@@ -22,23 +22,21 @@
               (gen/one-of [(gen/return (maybe/nothing))
                            (gen/return (maybe/just a))]))))
 
-(defn scalar-monoids
+(def scalar-monoids
+  [gen/string
+   (gen/return unit/unit)
+   (gen/vector gen/any)
+   (gen/list gen/any)
+   (gen/set gen/any)
+   (gen/map gen/any gen/any)])
+
+(defn scalar-monoid-vector
   [n]
   (gen/one-of (map (partial (helpers/flip gen/vector) n)
-                   [gen/string
-                    (gen/return unit/unit)
-                    (gen/vector gen/any)
-                    (gen/list gen/any)
-                    (gen/set gen/any)
-                    (gen/map gen/any gen/any)])))
+                   scalar-monoids)))
 
 (def scalar-monoid
-  (gen/one-of [gen/string
-               (gen/return unit/unit)
-               (gen/vector gen/any)
-               (gen/list gen/any)
-               (gen/set gen/any)
-               (gen/map gen/any gen/any)]))
+  (gen/one-of scalar-monoids))
 
 (def monoid
   (gen/one-of [scalar-monoid
@@ -75,7 +73,7 @@
   tuple-monad-associativity-law
   10
   (prop/for-all [a gen/any
-                 monoids (scalar-monoids 3)
+                 monoids (scalar-monoid-vector 3)
                  f* function
                  g* function]
                 (let [f (comp (partial tuple/tuple (second monoids))
