@@ -210,6 +210,16 @@
 ;                     second))
 ;        vector))
 
+(def get-keyword
+  (comp keyword
+        str/lower-case
+        last
+        (partial (flip str/split) #"\.")
+        ;JavaScript doesn't seem to implement lookbehind
+        ;(partial re-find #"(?<=\.)\w*$")
+        str
+        type))
+
 #?(:clj
    (do (defmacro defpfmethod
          [multifn dispatch-val f]
