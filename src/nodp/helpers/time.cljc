@@ -26,7 +26,9 @@
             (compareTo [x* y*]
               (compare @x* @y*))])
   #?@(:clj [IDeref
-            (deref [_] x)])
+            (deref [_] x)]
+      :cljs [IDeref
+             (-deref [_] x)])
   p/Printable
   (-repr [_]
     (str "#[time " (pr-str x) "]")))
