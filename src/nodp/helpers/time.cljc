@@ -26,7 +26,8 @@
              (compareTo [x* y*]
                (compare @x* @y*))
              IDeref
-             (deref [_] x)]
+             (deref [_]
+               x)]
       :cljs [IComparable
              (-compare [x* y*]
                        (compare @x* @y*))
