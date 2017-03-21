@@ -2,7 +2,7 @@
   (:require [cats.protocols :as p]
             [cats.util :as util]
             [nodp.helpers :as helpers])
-  #?(:cljs (:require-macros [nodp.helpers.primitives.event :refer [defevent]]))
+  #?(:cljs (:require-macros [nodp.helpers.primitives.event :refer [defevent defevents]]))
   #?(:clj
      (:import (clojure.lang IDeref))))
 
@@ -27,16 +27,15 @@
 
               (util/make-printable ~(get-record-name invokable))))
 
-       (defevent {:invokable true
-                  :clj       true})
+       (defmacro defevents
+         [clj]
+         `(do (defevent {:invokable true
+                         :clj       ~clj})
+              (defevent {:invokable false
+                         :clj       ~clj})))
 
-       (defevent {:invokable false
-                  :clj       true})))
+       (defevents true)))
 
 #?(:cljs
-   (do (defevent {:invokable true
-                  :clj       false})
-
-       (defevent {:invokable false
-                  :clj       false})))
+   (defevents false))
 
