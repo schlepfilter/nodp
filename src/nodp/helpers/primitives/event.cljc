@@ -3,36 +3,15 @@
             [cats.util :as util]
             [nodp.helpers :as helpers])
   #?(:clj
-           (:import (clojure.lang IDeref))
-     :cljs (:require-macros [nodp.helpers.primitives.event :refer [defevent defevents]])))
+     (:import (clojure.lang IDeref))))
 
-(defn get-record-name
-  [invokable]
-  (if invokable
-    'Event
-    'MemptyEvent))
+(defrecord Event
+  [id]
+  p/Printable
+  (-repr [_]
+    (str "#[event " id "]"))
+  #?@(:clj [IDeref
+            (deref [e]
+              (helpers/get-value e @helpers/network-state))]))
 
-#?(:clj
-   (do (defmacro defevent
-         [{:keys [invokable clj]}]
-         `(do (defrecord ~(get-record-name invokable)
-                [~'id]
-                ~@(if clj
-                    `[IDeref
-                      (deref [e#]
-                             (helpers/get-value e# @helpers/network-state))])
-                p/Printable
-                (~'-repr [_#]
-                  (str "#[event " (pr-str ~'id) "]")))
-
-              (util/make-printable ~(get-record-name invokable))))
-
-       (defmacro defevents
-         [clj]
-         `(do (defevent {:invokable true
-                         :clj       ~clj})
-              (defevent {:invokable false
-                         :clj       ~clj})))))
-
-(defevents #?(:clj  true
-              :cljs false))
+(util/make-printable Event)
