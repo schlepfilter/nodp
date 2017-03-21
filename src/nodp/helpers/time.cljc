@@ -31,7 +31,8 @@
              (-compare [x* y*]
                        (compare @x* @y*))
              IDeref
-             (-deref [_] x)])
+             (-deref [_]
+                     x)])
   p/Printable
   (-repr [_]
     (str "#[time " (pr-str x) "]")))
