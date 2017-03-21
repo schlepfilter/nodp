@@ -12,19 +12,31 @@
     'Event
     'MemptyEvent))
 
-#?(:clj (defmacro defevent
-          [invokable]
-          `(do (defrecord ~(get-record-name invokable)
-                 [~'id]
-                 #?@(:clj [IDeref
-                           (deref [e#]
+#?(:clj
+   (do (defmacro defevent
+         [{:keys [invokable clj]}]
+         `(do (defrecord ~(get-record-name invokable)
+                [~'id]
+                ~@(if clj
+                    `[IDeref
+                      (deref [e#]
                              (helpers/get-value e# @helpers/network-state))])
-                 p/Printable
-                 (~'-repr [_#]
-                   (str "#[event " (pr-str ~'id) "]")))
+                p/Printable
+                (~'-repr [_#]
+                  (str "#[event " (pr-str ~'id) "]")))
 
-               (util/make-printable ~(get-record-name invokable)))))
+              (util/make-printable ~(get-record-name invokable))))
 
-(defevent true)
+       (defevent {:invokable true
+                  :clj       true})
 
-(defevent false)
+       (defevent {:invokable false
+                  :clj       true})))
+
+#?(:cljs
+   (do (defevent {:invokable true
+                  :clj       false})
+
+       (defevent {:invokable false
+                  :clj       false})))
+
