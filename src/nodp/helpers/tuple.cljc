@@ -5,6 +5,10 @@
             [cats.util :as util]
             [nodp.helpers :as helpers]))
 
+(declare ->Tuple)
+;In ClojureScript declare works around the following warning:
+;WARNING: Use of undeclared Var nodp.helpers.tuple/->Tuple
+
 (defrecord Tuple
   [fst snd]
   p/Contextual
