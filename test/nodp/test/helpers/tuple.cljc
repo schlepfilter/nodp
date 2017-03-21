@@ -1,5 +1,6 @@
 (ns nodp.test.helpers.tuple
   (:require [cats.core :as m]
+            [cats.monad.maybe :as maybe]
             [clojure.test.check]
             [clojure.test.check.clojure-test :as clojure-test :include-macros true]
             [clojure.test.check.generators :as gen]
@@ -14,12 +15,23 @@
                          (gen/generate gen/any))))
             (gen/return unit/unit)))
 
-(def monoid
+(defn maybe
+  [generator]
+  (gen/bind generator
+            (fn [a]
+              (gen/one-of [(gen/return (maybe/nothing))
+                           (gen/return (maybe/just a))]))))
+
+(def monoid-scalar
   (gen/one-of [gen/string
                (gen/return unit/unit)
                (gen/vector gen/any)
                (gen/list gen/any)
                (gen/set gen/any)]))
+
+(def monoid
+  (gen/one-of [monoid-scalar
+               (gen/recursive-gen maybe monoid-scalar)]))
 
 (def mempty
   (gen/fmap (comp m/mempty helpers/infer)
