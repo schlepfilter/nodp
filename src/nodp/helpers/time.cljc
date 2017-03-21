@@ -22,12 +22,15 @@
       (-mempty [_]
         (Time. 0))
       p/Context))
-  #?@(:clj [Comparable
-            (compareTo [x* y*]
-              (compare @x* @y*))])
-  #?@(:clj [IDeref
-            (deref [_] x)]
-      :cljs [IDeref
+  #?@(:clj  [Comparable
+             (compareTo [x* y*]
+               (compare @x* @y*))
+             IDeref
+             (deref [_] x)]
+      :cljs [IComparable
+             (-compare [x* y*]
+                       (compare @x* @y*))
+             IDeref
              (-deref [_] x)])
   p/Printable
   (-repr [_]
