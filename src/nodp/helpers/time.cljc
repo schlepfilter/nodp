@@ -44,4 +44,6 @@
 
 (defn now
   []
-  (time (c/to-long (t/now))))
+  (-> (t/now)
+      c/to-long
+      time))
