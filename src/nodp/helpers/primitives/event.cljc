@@ -1,7 +1,10 @@
 (ns nodp.helpers.primitives.event
   (:require [cats.protocols :as p]
-            [cats.util :as util])
-  #?(:cljs (:require-macros [nodp.helpers.primitives.event :refer [defevent]])))
+            [cats.util :as util]
+            [nodp.helpers :as helpers])
+  #?(:cljs (:require-macros [nodp.helpers.primitives.event :refer [defevent]]))
+  #?(:clj
+     (:import (clojure.lang IDeref))))
 
 (defn get-record-name
   [invokable]
@@ -13,6 +16,9 @@
           [invokable]
           `(do (defrecord ~(get-record-name invokable)
                  [~'id]
+                 #?@(:clj [IDeref
+                           (deref [e#]
+                             (helpers/get-value e# @helpers/network-state))])
                  p/Printable
                  (~'-repr [_#]
                    (str "#[event " (pr-str ~'id) "]")))

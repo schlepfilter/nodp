@@ -8,6 +8,7 @@
             [cats.monad.maybe :as maybe]
             [cats.protocols :as p]
             [com.rpl.specter :as s]
+            [loom.graph :as graph]
     #?@(:clj [
             [clojure.test :as test]
             [clojurewerkz.money.amounts :as ma]
@@ -188,6 +189,26 @@
 
 (def comp-just
   (partial comp maybe/just))
+
+(def initial-network
+  {:active     false
+   :dependency {:event    (graph/digraph)
+                :behavior (graph/digraph)}})
+
+(def network-state
+  (atom initial-network))
+
+(defn get-value
+  [node network]
+  ((:id node) (:value network)))
+
+;This definition is harder to read.
+;(def get-value
+;  (comp (m/<*> (comp :id
+;                     first)
+;               (comp :value
+;                     second))
+;        vector))
 
 #?(:clj
    (do (defmacro defpfmethod
