@@ -2,9 +2,9 @@
   (:require [cats.protocols :as p]
             [cats.util :as util]
             [nodp.helpers :as helpers])
-  #?(:cljs (:require-macros [nodp.helpers.primitives.event :refer [defevent defevents]]))
   #?(:clj
-     (:import (clojure.lang IDeref))))
+           (:import (clojure.lang IDeref))
+     :cljs (:require-macros [nodp.helpers.primitives.event :refer [defevent defevents]])))
 
 (defn get-record-name
   [invokable]
