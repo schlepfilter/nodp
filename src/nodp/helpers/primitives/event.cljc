@@ -1,8 +1,9 @@
 (ns nodp.helpers.primitives.event
-  (:require [cats.protocols :as p]
+  (:require [cats.monad.maybe :as maybe]
+            [cats.protocols :as p]
             [cats.util :as util]
             [nodp.helpers :as helpers]
-            [cats.monad.maybe :as maybe])
+            [com.rpl.specter :as s])
   #?(:clj
            (:import (clojure.lang IDeref))
      :cljs (:require-macros [nodp.helpers.primitives.event :refer [event*]])))
@@ -19,14 +20,27 @@
 
 (util/make-printable Event)
 
+(defn get-start
+  [entity network]
+  ((:id entity) (:start network)))
+
+(helpers/defcurried set-start
+  [entity a network]
+  (if (maybe/nothing? (get-start entity network))
+    (s/setval [:start (:id entity)] a network)
+    network))
+
+(defn make-set-start-value
+  [entity a]
+  (comp (helpers/set-value entity a) (set-start entity a)))
+
 #?(:clj (defmacro event*
-          ;TODO rename node
           [entity-name & fs]
           `(helpers/get-entity ~entity-name
                                Event.
                                ~@fs
-                               ;TODO set start and value
-                               )))
+                               (make-set-start-value ~entity-name
+                                                     (maybe/nothing)))))
 
 (defn event
   []

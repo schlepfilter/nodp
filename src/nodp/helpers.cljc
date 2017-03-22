@@ -252,6 +252,13 @@
                                         (make-add-node ~entity-name)))
              ~entity-name)))
 
+(defcurried set-value
+            [node x graph]
+            (s/setval*
+              [:value (:id node)]
+              x
+              graph))
+
 #?(:clj
    (do (defmacro defpfmethod
          [multifn dispatch-val f]
