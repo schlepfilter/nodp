@@ -199,6 +199,9 @@
 (def network-state
   (atom initial-network))
 
+(def initialize
+  (partial reset! network-state initial-network))
+
 (defn get-value
   [node network]
   ((:id node) (:value network)))
