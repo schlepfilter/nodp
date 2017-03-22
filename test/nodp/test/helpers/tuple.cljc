@@ -82,5 +82,5 @@
                               g*)
                       ma (tuple/tuple (first monoids) a)]
                   (= (m/->= ma f g)
-                     (m/>>= ma (fn [x]
-                                 (m/>>= (f x) g)))))))
+                     (m/>>= ma (comp (partial m/=<< g)
+                                     f))))))
