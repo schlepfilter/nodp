@@ -229,15 +229,15 @@
   (build (m/curry s/transform*)
          (comp (partial vector :dependency)
                get-keyword)
-         (comp (partial (flip graph/add-nodes))
+         (comp (flip graph/add-nodes)
                :id)))
 
-#?(:clj (defmacro get-node
-          [node-name constructor & fs]
-          `(let [~node-name (~constructor (keyword (gensym)))]
+#?(:clj (defmacro get-entity
+          [entity-name constructor & fs]
+          `(let [~entity-name (~constructor (keyword (gensym)))]
              (swap! network-state (comp ~@fs
-                                        (make-add-node ~node-name)))
-             ~node-name)))
+                                        (make-add-node ~entity-name)))
+             ~entity-name)))
 
 #?(:clj
    (do (defmacro defpfmethod

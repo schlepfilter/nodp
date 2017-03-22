@@ -21,12 +21,12 @@
 
 #?(:clj (defmacro event*
           ;TODO rename node
-          [node-name & fs]
-          `(helpers/get-node ~node-name
-                             Event.
-                             ~@fs
-                             ;TODO set start and value
-                             )))
+          [entity-name & fs]
+          `(helpers/get-entity ~entity-name
+                               Event.
+                               ~@fs
+                               ;TODO set start and value
+                               )))
 
 (defn event
   []
