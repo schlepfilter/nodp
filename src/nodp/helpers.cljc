@@ -234,7 +234,9 @@
 
 #?(:clj (defmacro get-entity
           [entity-name constructor & fs]
-          `(let [~entity-name (~constructor (keyword (gensym)))]
+          `(let [~entity-name (-> (gensym)
+                                  keyword
+                                  ~constructor)]
              (swap! network-state (comp ~@fs
                                         (make-add-node ~entity-name)))
              ~entity-name)))
