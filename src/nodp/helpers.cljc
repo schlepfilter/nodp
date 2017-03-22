@@ -1,4 +1,5 @@
 (ns nodp.helpers
+  (:refer-clojure :exclude [defcurried])
   (:require [clojure.string :as str]
             [beicon.core :as rx]
             [cats.builtin]
@@ -14,7 +15,10 @@
             [clojurewerkz.money.amounts :as ma]
             [clojurewerkz.money.currencies :as mc]
             [potemkin :as potemkin]]))
-  #?(:cljs (:require-macros [nodp.helpers :refer [casep build]])))
+  #?(:cljs (:require-macros [nodp.helpers :refer [build
+                                                  case-eval
+                                                  casep
+                                                  defcurried]])))
 
 (defn call-pred
   ([_]
