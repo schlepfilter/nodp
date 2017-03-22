@@ -228,6 +228,13 @@
          (comp (partial (flip graph/add-nodes))
                :id)))
 
+#?(:clj (defmacro get-node
+          [node-name constructor & fs]
+          `(let [~node-name (~constructor (keyword (gensym)))]
+             (swap! network-state (comp ~@fs
+                                        (make-add-node ~node-name)))
+             ~node-name)))
+
 #?(:clj
    (do (defmacro defpfmethod
          [multifn dispatch-val f]
