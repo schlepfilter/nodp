@@ -4,7 +4,7 @@
             [clojure.test.check]
             [clojure.test.check.clojure-test :as clojure-test :include-macros true]
             [clojure.test.check.generators :as gen]
-            [clojure.test.check.properties :as prop]
+            [clojure.test.check.properties :as prop :include-macros true]
             [nodp.helpers :as helpers]
             [nodp.helpers.tuple :as tuple]
             [nodp.helpers.unit :as unit]))
