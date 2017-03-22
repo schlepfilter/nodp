@@ -21,8 +21,8 @@
 (util/make-printable Event)
 
 (helpers/defcurried get-start
-                    [entity network]
-                    ((:id entity) (:start network)))
+                    [e network]
+                    ((:id e) (:start network)))
 
 (defn if-then-else
   [if-function then-function else]
@@ -31,23 +31,23 @@
     else))
 
 (helpers/defcurried set-start
-                    [entity a network]
-                    (if-then-else (comp maybe/nothing? (get-start entity))
-                                  (partial s/setval* [:start (:id entity)] a)
+                    [e a network]
+                    (if-then-else (comp maybe/nothing? (get-start e))
+                                  (partial s/setval* [:start (:id e)] a)
                                   network))
 
 (defn make-set-start-value
-  [entity a]
-  (comp (helpers/set-value entity a)
-        (set-start entity a)))
+  [e a]
+  (comp (helpers/set-value e a)
+        (set-start e a)))
 
 #?(:clj (defmacro event*
-          [entity-name & fs]
-          `(helpers/get-entity ~entity-name
-                               Event.
-                               ~@fs
-                               (make-set-start-value ~entity-name
-                                                     (maybe/nothing)))))
+          [event-name & fs]
+          `(helpers/get-entity ~event-name
+                          Event.
+                          ~@fs
+                          (make-set-start-value ~event-name
+                                                (maybe/nothing)))))
 
 (defn event
   []
