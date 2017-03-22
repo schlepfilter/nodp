@@ -2,8 +2,8 @@
   (:require [cats.monad.maybe :as maybe]
             [cats.protocols :as p]
             [cats.util :as util]
-            [nodp.helpers :as helpers]
-            [com.rpl.specter :as s])
+            [com.rpl.specter :as s]
+            [nodp.helpers :as helpers])
   #?(:clj
            (:import (clojure.lang IDeref))
      :cljs (:require-macros [nodp.helpers.primitives.event :refer [event*]])))
@@ -21,8 +21,8 @@
 (util/make-printable Event)
 
 (helpers/defcurried get-start
-  [entity network]
-  ((:id entity) (:start network)))
+                    [entity network]
+                    ((:id entity) (:start network)))
 
 (defn if-then-else
   [if-function then-function else]
@@ -33,8 +33,8 @@
 (helpers/defcurried set-start
                     [entity a network]
                     (if-then-else (comp maybe/nothing? (get-start entity))
-                      (partial s/setval* [:start (:id entity)] a)
-                      network))
+                                  (partial s/setval* [:start (:id entity)] a)
+                                  network))
 
 (defn make-set-start-value
   [entity a]
