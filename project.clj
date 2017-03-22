@@ -26,35 +26,40 @@
   :clean-targets ^{:protect false} [:target-path
                                     "resources/public/js"
                                     "resources/public/test/js"]
-  :profiles {:dev
-             {:plugins      [[com.jakemccrary/lein-test-refresh "0.19.0"]
-                             [lein-ancient "0.6.10"]
-                             [lein-figwheel "0.5.9"]
-                             [lein-npm "0.6.2"]]
-              :dependencies [[binaryage/devtools "0.9.2"]
-                             [figwheel-sidecar "0.5.9"]
-                             [org.clojure/tools.namespace "0.2.11"]
-                             [spyscope "0.1.6"]]
-              :cljsbuild    {:builds
-                             [{:id           "app"
-                               :source-paths ["src"]
-                               :compiler     {:output-to            "resources/public/js/main.js"
-                                              :output-dir           "resources/public/js/out"
-                                              :main                 nodp.core
-                                              :asset-path           "/js/out"
-                                              :source-map-timestamp true
-                                              :preloads             [devtools.preload]
-                                              :external-config      {:devtools/config {:features-to-install :all}}}
-                               :figwheel     true}
-                              {:id           "test"
-                               :source-paths ["src" "test"]
-                               :compiler     {:output-to            "resources/public/test/js/main.js"
-                                              :output-dir           "resources/public/test/js/out"
-                                              :main                 nodp.test.core
-                                              :asset-path           "/test/js/out"
-                                              :source-map-timestamp true
-                                              :preloads             [devtools.preload]
-                                              :external-config      {:devtools/config {:features-to-install :all}}}
-                               :figwheel true}]}}}
+  :profiles
+  {:dev  {:dependencies [[binaryage/devtools "0.9.2"]
+                         [figwheel-sidecar "0.5.9"]
+                         [org.clojure/tools.namespace "0.2.11"]
+                         [spyscope "0.1.6"]]
+          :plugins      [[com.jakemccrary/lein-test-refresh "0.19.0"]
+                         [lein-ancient "0.6.10"]
+                         [lein-npm "0.6.2"]]
+          :cljsbuild    {:builds
+                         [{:id           "app"
+                           :source-paths ["src"]
+                           :compiler     {:output-to            "resources/public/js/main.js"
+                                          :output-dir           "resources/public/js/out"
+                                          :main                 nodp.core
+                                          :asset-path           "/js/out"
+                                          :source-map-timestamp true
+                                          :preloads             [devtools.preload]
+                                          :external-config      {:devtools/config
+                                                                 {:features-to-install :all}}}
+                           :figwheel     true}]}}
+   :test {:dependencies [[binaryage/devtools "0.9.2"]]
+          :plugins      [[lein-figwheel "0.5.9"]]
+          :cljsbuild    {:builds
+                         {:test
+                          {:source-paths ["src" "test"]
+                           :compiler     {:output-to            "resources/public/test/js/main.js"
+                                          :output-dir           "resources/public/test/js/out"
+                                          :main                 nodp.test.core
+                                          :asset-path           "/test/js/out"
+                                          :source-map-timestamp true
+                                          :preloads             [devtools.preload]
+                                          :external-config      {:devtools/config
+                                                                 {:features-to-install :all}}}
+                           :figwheel     true}}}
+          :figwheel {:server-port 3450}}}
   :npm {:dependencies [[karma "0.13.19"]
                        [karma-cljs-test "0.1.0"]]})
