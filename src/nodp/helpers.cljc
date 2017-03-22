@@ -213,9 +213,14 @@
 (def initialize
   (partial reset! network-state initial-network))
 
-(defn get-value
-  [node network]
-  ((:id node) (:value network)))
+(defn make-get
+  [k]
+  (curry (fn [entity network]
+           ((:id entity) (k network)))
+         2))
+
+(def get-value
+  (make-get :value))
 
 ;This definition is harder to read.
 ;(def get-value

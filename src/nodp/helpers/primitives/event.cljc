@@ -20,9 +20,8 @@
 
 (util/make-printable Event)
 
-(helpers/defcurried get-start
-                    [e network]
-                    ((:id e) (:start network)))
+(def get-start
+  (helpers/make-get :start))
 
 (defn if-then-else
   [if-function then-function else]
@@ -44,10 +43,10 @@
 #?(:clj (defmacro event*
           [event-name & fs]
           `(helpers/get-entity ~event-name
-                          Event.
-                          ~@fs
-                          (make-set-start-value ~event-name
-                                                (maybe/nothing)))))
+                               Event.
+                               ~@fs
+                               (make-set-start-value ~event-name
+                                                     (maybe/nothing)))))
 
 (defn event
   []
