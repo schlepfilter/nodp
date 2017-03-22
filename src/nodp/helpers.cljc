@@ -222,7 +222,7 @@
         type))
 
 (def make-add-node
-  (build (curry 3 s/transform*)
+  (build (m/curry s/transform*)
          (comp (partial vector :dependency)
                get-keyword)
          (comp (partial (flip graph/add-nodes))
