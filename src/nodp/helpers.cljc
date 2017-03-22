@@ -218,10 +218,11 @@
   (comp keyword
         str/lower-case
         last
-        (partial (flip str/split) #"\.")
+        (partial (flip str/split) #?(:clj #"\."
+                                     :cljs #"/"))
         ;JavaScript doesn't seem to implement lookbehind
         ;(partial re-find #"(?<=\.)\w*$")
-        str
+        pr-str
         type))
 
 (def make-add-node

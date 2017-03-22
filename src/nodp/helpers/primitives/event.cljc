@@ -4,7 +4,7 @@
             [nodp.helpers :as helpers]
             [cats.monad.maybe :as maybe])
   #?(:clj
-     (:import (clojure.lang IDeref))
+           (:import (clojure.lang IDeref))
      :cljs (:require-macros [nodp.helpers.primitives.event :refer [event*]])))
 
 (defrecord Event
