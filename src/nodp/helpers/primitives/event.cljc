@@ -20,6 +20,7 @@
 (util/make-printable Event)
 
 #?(:clj (defmacro event*
+          ;TODO rename node
           [node-name & fs]
           `(helpers/get-node ~node-name
                              Event.
