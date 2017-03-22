@@ -21,7 +21,7 @@
                  [potemkin "0.4.3"]
                  [prismatic/plumbing "0.5.3"]
                  [thi.ng/geom "0.0.908"]]
-  :source-paths ["script" "src"]
+  :source-paths ["src"]
   :target-path "target/%s"
   :clean-targets ^{:protect false} [:target-path
                                     "resources/public/js"
