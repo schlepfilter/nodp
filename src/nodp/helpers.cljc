@@ -115,19 +115,26 @@
        (def get-currying-arity
          (comp (partial max 2)
                (partial apply min)
-               get-arities))
+               get-arities))))
 
-       (defn curry
-         ([f]
-          (curry f (get-currying-arity f)))
-         ([f arity]
-          (fn [& outer-more]
-            (let [n (count outer-more)]
-              (case-eval arity
-                         n (apply f outer-more)
-                         (curry (fn [& inner-more]
-                                  (apply f (concat outer-more inner-more)))
-                                (- arity n)))))))))
+(defn curry
+  #?(:clj ([f]
+           (curry f (get-currying-arity f))))
+  ([f arity]
+   (fn [& outer-more]
+     (let [n (count outer-more)]
+       (case-eval arity
+                  n (apply f outer-more)
+                  (curry (fn [& inner-more]
+                           (apply f (concat outer-more inner-more)))
+                         (- arity n)))))))
+
+#?(:clj (defmacro defcurried
+          [f-name bindings body]
+          `(def ~f-name
+             (curry (fn ~bindings
+                      ~body)
+                    ~(count bindings)))))
 
 (defn infer
   "Given an optional value infer its context. If context is already set, it
@@ -218,7 +225,7 @@
   (comp keyword
         str/lower-case
         last
-        (partial (flip str/split) #?(:clj #"\."
+        (partial (flip str/split) #?(:clj  #"\."
                                      :cljs #"/"))
         ;JavaScript doesn't seem to implement lookbehind
         ;(partial re-find #"(?<=\.)\w*$")
