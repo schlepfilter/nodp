@@ -25,14 +25,15 @@
   ((:id entity) (:start network)))
 
 (helpers/defcurried set-start
-  [entity a network]
-  (if (maybe/nothing? (get-start entity network))
-    (s/setval [:start (:id entity)] a network)
-    network))
+                    [entity a network]
+                    (if (maybe/nothing? (get-start entity network))
+                      (s/setval [:start (:id entity)] a network)
+                      network))
 
 (defn make-set-start-value
   [entity a]
-  (comp (helpers/set-value entity a) (set-start entity a)))
+  (comp (helpers/set-value entity a)
+        (set-start entity a)))
 
 #?(:clj (defmacro event*
           [entity-name & fs]
