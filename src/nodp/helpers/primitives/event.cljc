@@ -65,6 +65,7 @@
   [id]
   IFn
   (invoke [e a]
+    ;e stands for an event as in Push-Pull Functional Reactive Programming.
     (let [[past current] (get-times)]
       (reset! helpers/network-state
               (update-network! (tuple/tuple past a)
@@ -74,7 +75,6 @@
   IDeref
   (#?(:clj  deref
       :cljs -deref) [e]
-    ;e stands for an event as in Push-Pull Functional Reactive Programming.
     (helpers/get-value e @helpers/network-state))
   p/Printable
   (-repr [_]
