@@ -50,15 +50,15 @@
   (comp (helpers/set-value a e)
         (set-start a e)))
 
-(defn make-update-event!
+(defn make-modify-event!
   [occurrence e]
   (partial call-functions!
            (concat [(partial s/setval* [:time :event] (tuple/fst occurrence))
                     (make-set-start-value (maybe/just occurrence) e)])))
 
-(defn update-network!
+(defn modify-network!
   [occurrence t e network]
-  (call-functions! [(make-update-event! occurrence e)]
+  (call-functions! [(make-modify-event! occurrence e)]
                    network))
 
 (defrecord Event
@@ -68,7 +68,7 @@
     ;e stands for an event as in Push-Pull Functional Reactive Programming.
     (let [[past current] (get-times)]
       (reset! helpers/network-state
-              (update-network! (tuple/tuple past a)
+              (modify-network! (tuple/tuple past a)
                                current
                                e
                                @helpers/network-state))))
