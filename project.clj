@@ -20,6 +20,7 @@
                  [org.flatland/ordered "1.5.4"]
                  [potemkin "0.4.3"]
                  [prismatic/plumbing "0.5.3"]
+                 [riddley "0.1.14"]
                  [thi.ng/geom "0.0.908"]]
   :source-paths ["src"]
   :target-path "target/%s"

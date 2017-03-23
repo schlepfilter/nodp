@@ -148,7 +148,7 @@
     <orderEntry type="library" name="Leiningen: potemkin:0.4.3" level="project" />
     <orderEntry type="library" name="Leiningen: prismatic/plumbing:0.5.3" level="project" />
     <orderEntry type="library" name="Leiningen: prismatic/schema:1.0.1" level="project" />
-    <orderEntry type="library" name="Leiningen: riddley:0.1.12" level="project" />
+    <orderEntry type="library" name="Leiningen: riddley:0.1.14" level="project" />
     <orderEntry type="library" name="Leiningen: ring-cors:0.1.8" level="project" />
     <orderEntry type="library" name="Leiningen: ring/ring-codec:1.0.1" level="project" />
     <orderEntry type="library" name="Leiningen: ring/ring-core:1.5.0" level="project" />

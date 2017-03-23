@@ -3,9 +3,11 @@
             [clojure.test.check.generators :as gen]
             [clojure.test.check.properties :as prop :include-macros true]
             [nodp.helpers.frp :as frp]
-    #?(:clj
+    #?@(:clj  [
             [clojure.test :as test]
-       :cljs [cljs.test :as test :include-macros true])))
+            [riddley.walk :as walk]]
+        :cljs [[cljs.test :as test :include-macros true]]))
+  #?(:cljs (:require-macros [nodp.test.helpers.frp :refer [with-return]])))
 
 (defn fixture
   [f]
@@ -13,3 +15,31 @@
   (f))
 
 (test/use-fixtures :each fixture)
+
+(defn promise-or-atom
+  []
+  #?(:clj  (promise)
+     :cljs (atom false)))
+
+(def deliver-or-reset!
+  #?(:clj  deliver
+     :cljs reset!))
+
+#?(:clj (defmacro with-return
+          [return-name expr]
+          (potemkin/unify-gensyms
+            `(let [result-state## (promise-or-atom)]
+               ~(walk/walk-exprs
+                  (partial = return-name)
+                  (fn [_#]
+                    `(partial deliver-or-reset! result-state##)) expr)
+               @result-state##))))
+
+(clojure-test/defspec
+  with-return-true
+  10
+  (prop/for-all [a gen/any]
+                (with-return
+                  return
+                  (do (return true)
+                      false))))
