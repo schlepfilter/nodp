@@ -7,7 +7,7 @@
             [clojure.test :as test]
             [riddley.walk :as walk]]
         :cljs [[cljs.test :as test :include-macros true]]))
-  #?(:cljs (:require-macros [nodp.test.helpers.frp :refer [with-return]])))
+  #?(:cljs (:require-macros [nodp.test.helpers.frp :refer [with-result]])))
 
 (defn fixture
   [f]
@@ -25,17 +25,17 @@
   #?(:clj  deliver
      :cljs reset!))
 
-#?(:clj (defmacro with-return
-          [return-name expr]
+#?(:clj (defmacro with-result
+          [result-name expr]
           (potemkin/unify-gensyms
             `(let [result-state## (promise-or-atom)]
                ~(walk/walk-exprs
-                  (partial = return-name)
+                  (partial = result-name)
                   (fn [_#]
                     `(partial deliver-or-reset! result-state##)) expr)
                @result-state##))))
 
-(test/deftest with-return-true
-  (test/is (with-return return
-                        (do (return true)
+(test/deftest with-result-true
+  (test/is (with-result result
+                        (do (result true)
                             false))))
