@@ -38,7 +38,12 @@
                            maybe/just)) expr)
                @@result-state##))))
 
-(test/deftest with-result-true
-  (test/is (with-result result
-                        (do (result true)
-                            false))))
+(clojure-test/defspec
+  with-result-identity
+  10
+  (prop/for-all [a gen/any
+                 b gen/any]
+                (= (with-result result
+                                (do (result a)
+                                    b))
+                   a)))
