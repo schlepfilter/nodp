@@ -40,11 +40,10 @@
 
 (helpers/defcurried set-start
                     [a e network]
-                    (do
-                      (if-then-else (comp maybe/nothing?
-                                          (get-start e))
-                                    (partial s/setval* [:start (:id e)] a)
-                                    network)))
+                    (if-then-else (comp maybe/nothing?
+                                        (get-start e))
+                                  (partial s/setval* [:start (:id e)] a)
+                                  network))
 
 (defn make-set-start-value
   [a e]
