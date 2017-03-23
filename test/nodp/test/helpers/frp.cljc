@@ -35,11 +35,7 @@
                     `(partial deliver-or-reset! result-state##)) expr)
                @result-state##))))
 
-(clojure-test/defspec
-  with-return-true
-  10
-  (prop/for-all [a gen/any]
-                (with-return
-                  return
-                  (do (return true)
-                      a))))
+(test/deftest with-return-true
+  (test/is (with-return return
+                        (do (return true)
+                            false))))
