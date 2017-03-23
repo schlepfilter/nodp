@@ -30,24 +30,24 @@
     else))
 
 (helpers/defcurried set-start
-                    [e a network]
+                    [a e network]
                     (if-then-else (comp maybe/nothing?
                                         (get-start e))
                                   (partial s/setval* [:start (:id e)] a)
                                   network))
 
 (defn make-set-start-value
-  [e a]
-  (comp (helpers/set-value e a)
-        (set-start e a)))
+  [a e]
+  (comp (helpers/set-value a e)
+        (set-start a e)))
 
 #?(:clj (defmacro event*
           [event-name & fs]
           `(helpers/get-entity ~event-name
                                Event.
                                ~@fs
-                               (make-set-start-value ~event-name
-                                                     helpers/nothing))))
+                               (make-set-start-value helpers/nothing
+                                                     ~event-name))))
 
 (defn event
   []

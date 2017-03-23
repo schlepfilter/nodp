@@ -261,11 +261,8 @@
              ~entity-name)))
 
 (defcurried set-value
-            [node x graph]
-            (s/setval*
-              [:value (:id node)]
-              x
-              graph))
+            [a entity network]
+            (s/setval [:value (:id entity)] a network))
 
 #?(:clj
    (do (defmacro defpfmethod
