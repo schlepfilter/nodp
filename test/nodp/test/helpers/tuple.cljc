@@ -1,7 +1,6 @@
 (ns nodp.test.helpers.tuple
   (:require [cats.core :as m]
             [cats.monad.maybe :as maybe]
-            [clojure.test.check]
             [clojure.test.check.clojure-test :as clojure-test :include-macros true]
             [clojure.test.check.generators :as gen]
             [clojure.test.check.properties :as prop :include-macros true]
