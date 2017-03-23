@@ -36,7 +36,7 @@
 
 (defmethod greet false
   [_]
-  (maybe/nothing))
+  helpers/nothing)
 
 (helpers/defcurried make-visit
                     [hierarchy target]

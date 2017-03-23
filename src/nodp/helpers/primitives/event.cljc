@@ -47,7 +47,7 @@
                                Event.
                                ~@fs
                                (make-set-start-value ~event-name
-                                                     (maybe/nothing)))))
+                                                     helpers/nothing))))
 
 (defn event
   []

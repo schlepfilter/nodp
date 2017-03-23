@@ -19,7 +19,7 @@
   [generator]
   (gen/bind generator
             (fn [a]
-              (gen/one-of [(gen/return (maybe/nothing))
+              (gen/one-of [(gen/return helpers/nothing)
                            (gen/return (maybe/just a))]))))
 
 (def scalar-monoids

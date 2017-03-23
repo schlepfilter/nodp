@@ -46,6 +46,9 @@
     ([x y & more]
      (apply f y x more))))
 
+(def nothing
+  (maybe/nothing))
+
 #?(:clj
    (do (defn gensymize
          ;This function works around java.lang.ExceptionInInitializerError
@@ -96,7 +99,7 @@
                                      .getRequiredArity
                                      maybe/just)
                                  (fn [_]
-                                   (-> (maybe/nothing)
+                                   (-> nothing
                                        exc/success)))
              m/join))
 
@@ -185,7 +188,7 @@
 (defn maybe*
   [expr]
   (casep expr
-         nil? (maybe/nothing)
+         nil? nothing
          (maybe/just expr)))
 
 #?(:clj

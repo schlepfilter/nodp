@@ -48,7 +48,7 @@
 (defn- get-preposition
   [light]
   (case light
-    :off (maybe/nothing)
+    :off helpers/nothing
     (maybe/just "on")))
 
 (def get-description
@@ -74,7 +74,7 @@
 
 (defmethod get-action :control
   [_]
-  (maybe/nothing))
+  helpers/nothing)
 
 ;This definition is harder to read.
 ;(helpers/defpfmethod get-action :control
