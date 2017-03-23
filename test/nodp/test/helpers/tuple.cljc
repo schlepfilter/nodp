@@ -46,7 +46,7 @@
                    scalar-monoids)))
 
 (clojure-test/defspec
-  tuple-monad-right-identity-law
+  monad-right-identity-law
   10
   (prop/for-all [a gen/any
                  mempty* mempty]
@@ -54,7 +54,7 @@
                    (tuple/tuple mempty* a))))
 
 (clojure-test/defspec
-  tuple-monad-left-identity-law
+  monad-left-identity-law
   10
   (prop/for-all [a gen/any
                  f* function
@@ -69,7 +69,7 @@
                      (f a)))))
 
 (clojure-test/defspec
-  tuple-monad-associativity-law
+  monad-associativity-law
   10
   (prop/for-all [a gen/any
                  monoids (scalar-monoid-vector 3)
