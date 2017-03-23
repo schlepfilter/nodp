@@ -8,10 +8,10 @@
             [cats.monad.maybe :as maybe]
             [nodp.helpers.frp :as frp]
             [nodp.helpers :as helpers]
-    #?@(:clj  [
-            [clojure.test :as test]
-            [riddley.walk :as walk]]
-        :cljs [[cljs.test :as test :include-macros true]]))
+            [#?(:clj  clojure.test
+                :cljs cljs.test) :as test :include-macros true]
+    #?(:clj
+            [riddley.walk :as walk]))
   #?(:cljs (:require-macros [nodp.test.helpers.frp :refer [with-result]])))
 
 (defn fixture
