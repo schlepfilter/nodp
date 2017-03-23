@@ -1,6 +1,12 @@
 (ns nodp.test.helpers.tuple
   (:require [cats.core :as m]
             [cats.monad.maybe :as maybe]
+    ;clojure.test.check is required to avoid the following warning.
+    ;Figwheel: Watching build - test
+    ;Figwheel: Cleaning build - test
+    ;Compiling "resources/public/test/js/main.js" from ["src" "test"]...
+    ;WARNING: Use of undeclared Var clojure.test.check/quick-check
+            [clojure.test.check]
             [clojure.test.check.clojure-test :as clojure-test :include-macros true]
             [clojure.test.check.generators :as gen]
             [clojure.test.check.properties :as prop :include-macros true]
