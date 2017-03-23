@@ -4,7 +4,8 @@
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
             [com.rpl.specter :as s]
-            [nodp.helpers :as helpers]))
+            [nodp.helpers :as helpers]
+            [nodp.helpers.unit :as unit]))
 
 (def slot-n 2)
 
@@ -15,9 +16,7 @@
    (s/multi-path :on :off)])
 
 (def nop
-  ;TODO replace nothing with unit
-  (-> (maybe/nothing)
-      constantly))
+  (constantly unit/unit))
 
 (def control
   (s/setval do-path nop []))
