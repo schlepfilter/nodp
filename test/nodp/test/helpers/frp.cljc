@@ -6,8 +6,9 @@
             [clojure.test.check.generators :as gen]
             [clojure.test.check.properties :as prop :include-macros true]
             [cats.monad.maybe :as maybe]
-            [nodp.helpers.frp :as frp]
             [nodp.helpers :as helpers]
+            [nodp.helpers.frp :as frp]
+            [nodp.helpers.tuple :as tuple]
             [#?(:clj  clojure.test
                 :cljs cljs.test) :as test :include-macros true]
     #?(:clj
@@ -20,6 +21,14 @@
   (f))
 
 (test/use-fixtures :each fixture)
+
+(clojure-test/defspec
+  invoke-identity
+  10
+  (prop/for-all [a gen/any]
+                (let [e (frp/event)]
+                  (e a)
+                  (= (tuple/snd @@e) a))))
 
 (defn promise-or-atom
   []
