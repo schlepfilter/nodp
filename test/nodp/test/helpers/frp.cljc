@@ -2,7 +2,9 @@
   (:require [clojure.test.check.clojure-test :as clojure-test :include-macros true]
             [clojure.test.check.generators :as gen]
             [clojure.test.check.properties :as prop :include-macros true]
+            [cats.monad.maybe :as maybe]
             [nodp.helpers.frp :as frp]
+            [nodp.helpers :as helpers]
     #?@(:clj  [
             [clojure.test :as test]
             [riddley.walk :as walk]]
@@ -19,7 +21,7 @@
 (defn promise-or-atom
   []
   #?(:clj  (promise)
-     :cljs (atom false)))
+     :cljs (atom helpers/nothing)))
 
 (def deliver-or-reset!
   #?(:clj  deliver
@@ -32,8 +34,9 @@
                ~(walk/walk-exprs
                   (partial = result-name)
                   (fn [_#]
-                    `(partial deliver-or-reset! result-state##)) expr)
-               @result-state##))))
+                    `(comp (partial deliver-or-reset! result-state##)
+                           maybe/just)) expr)
+               @@result-state##))))
 
 (test/deftest with-result-true
   (test/is (with-result result
