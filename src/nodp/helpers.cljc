@@ -262,6 +262,7 @@
 
 (defcurried set-value
             ;The order of a and entity is consistent with the parameters of primitives
+            ;entity stands for an event or behavior
             [a entity network]
             (s/setval [:value (:id entity)] a network))
 
