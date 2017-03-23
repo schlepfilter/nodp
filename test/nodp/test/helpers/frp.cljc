@@ -27,6 +27,7 @@
   10
   (prop/for-all [a gen/any]
                 (let [e (frp/event)]
+                  (frp/activate)
                   (e a)
                   (= (tuple/snd @@e) a))))
 

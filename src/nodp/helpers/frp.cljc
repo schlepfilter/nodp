@@ -7,3 +7,6 @@
 
 (def event
   event/event)
+
+(def activate
+  event/activate)

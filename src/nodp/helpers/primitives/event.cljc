@@ -64,15 +64,16 @@
 (defrecord Event
   [id]
   IFn
-  (#?(:clj invoke
+  (#?(:clj  invoke
       :cljs -invoke) [e a]
     ;e stands for an event as in Push-Pull Functional Reactive Programming.
-    (let [[past current] (get-times)]
-      (reset! helpers/network-state
-              (modify-network! (tuple/tuple past a)
-                               current
-                               e
-                               @helpers/network-state))))
+    (if (:active @helpers/network-state)
+      (let [[past current] (get-times)]
+       (reset! helpers/network-state
+               (modify-network! (tuple/tuple past a)
+                                current
+                                e
+                                @helpers/network-state)))))
   IDeref
   (#?(:clj  deref
       :cljs -deref) [e]
@@ -94,3 +95,6 @@
 (defn event
   []
   (event* e))
+
+(def activate
+  (partial swap! helpers/network-state (partial s/setval* :active true)))
