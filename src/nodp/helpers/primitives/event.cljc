@@ -16,7 +16,7 @@
   IDeref
   (#?(:clj  deref
       :cljs -deref) [e]
-    ;e stands for an event as in Push-Pull Functional Reactive Programming
+    ;e stands for an event as in Push-Pull Functional Reactive Programming.
     (helpers/get-value e @helpers/network-state)))
 
 (util/make-printable Event)

@@ -239,8 +239,9 @@
         last
         (partial (flip str/split) #?(:clj  #"\."
                                      :cljs #"/"))
-        ;JavaScript doesn't seem to implement lookbehind
-        ;(partial re-find #"(?<=\.)\w*$")
+        ;JavaScript doesn't seem to implement lookbehind.
+        ;=> (partial re-find #"(?<=\.)\w*$")
+        ;#object[SyntaxError SyntaxError: Invalid regular expression: /(?<=\.)\w*$/: Invalid group]
         pr-str
         type))
 
@@ -261,8 +262,8 @@
              ~entity-name)))
 
 (defcurried set-value
-            ;The order of a and entity is consistent with the parameters of primitives
-            ;entity stands for an event or behavior
+            ;The order of a and entity is consistent with the parameters of primitives.
+            ;entity stands for an event or behavior.
             [a entity network]
             (s/setval [:value (:id entity)] a network))
 
