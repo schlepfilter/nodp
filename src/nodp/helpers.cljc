@@ -261,6 +261,7 @@
              ~entity-name)))
 
 (defcurried set-value
+            ;The order of a and entity is consistent with the parameters of primitives
             [a entity network]
             (s/setval [:value (:id entity)] a network))
 
