@@ -64,7 +64,8 @@
 (defrecord Event
   [id]
   IFn
-  (invoke [e a]
+  (#?(:clj invoke
+      :cljs -invoke) [e a]
     ;e stands for an event as in Push-Pull Functional Reactive Programming.
     (let [[past current] (get-times)]
       (reset! helpers/network-state
