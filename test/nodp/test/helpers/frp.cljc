@@ -1,5 +1,8 @@
 (ns nodp.test.helpers.frp
-  (:require [clojure.test.check.clojure-test :as clojure-test :include-macros true]
+  (:require [clojure.test.check]
+            [clojure.test.check.clojure-test
+             :as clojure-test
+             :include-macros true]
             [clojure.test.check.generators :as gen]
             [clojure.test.check.properties :as prop :include-macros true]
             [cats.monad.maybe :as maybe]
