@@ -214,6 +214,7 @@
   (atom initial-network))
 
 (def initialize
+  ;TODO call timers
   (partial reset! network-state initial-network))
 
 (defn make-get
