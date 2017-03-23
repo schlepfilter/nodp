@@ -27,4 +27,4 @@
   {:build-ids  ["app" "test"]
    :all-builds [app-build test-build]})
 
-(repl-api/cljs-repl)
+(repl-api/cljs-repl "app")
