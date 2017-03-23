@@ -23,7 +23,15 @@
 (test/use-fixtures :each fixture)
 
 (clojure-test/defspec
-  invoke-identity
+  invoke-inactive
+  10
+  (prop/for-all [a gen/any]
+                (let [e (frp/event)]
+                  (e a)
+                  (maybe/nothing? @e))))
+
+(clojure-test/defspec
+  invoke-active
   10
   (prop/for-all [a gen/any]
                 (let [e (frp/event)]
