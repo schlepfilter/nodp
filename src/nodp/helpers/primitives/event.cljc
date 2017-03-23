@@ -10,14 +10,14 @@
 
 (defrecord Event
   [id]
-  p/Printable
-  (-repr [_]
-    (str "#[event " id "]"))
   IDeref
   (#?(:clj  deref
       :cljs -deref) [e]
     ;e stands for an event as in Push-Pull Functional Reactive Programming.
-    (helpers/get-value e @helpers/network-state)))
+    (helpers/get-value e @helpers/network-state))
+  p/Printable
+  (-repr [_]
+    (str "#[event " id "]")))
 
 (util/make-printable Event)
 
