@@ -2,14 +2,14 @@
   (:require [clojure.test.check.clojure-test :as clojure-test :include-macros true]
             [clojure.test.check.generators :as gen]
             [clojure.test.check.properties :as prop :include-macros true]
-            [nodp.helpers :as helpers]
+            [nodp.helpers.frp :as frp]
     #?(:clj
             [clojure.test :as test]
        :cljs [cljs.test :as test :include-macros true])))
 
 (defn fixture
   [f]
-  (helpers/initialize)
+  (frp/initialize)
   (f))
 
 (test/use-fixtures :each fixture)
