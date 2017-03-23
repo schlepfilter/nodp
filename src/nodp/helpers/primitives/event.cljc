@@ -51,17 +51,15 @@
   (comp (helpers/set-value a e)
         (set-start a e)))
 
-(helpers/defcurried
-  update-event!
-  [occurrence e network]
-  (call-functions!
-    (concat [(partial s/setval* [:time :event] (tuple/fst occurrence))
-             (make-set-start-value (maybe/just occurrence) e)])
-    network))
+(defn make-update-event!
+  [occurrence e]
+  (partial call-functions!
+           (concat [(partial s/setval* [:time :event] (tuple/fst occurrence))
+                    (make-set-start-value (maybe/just occurrence) e)])))
 
 (defn update-network!
   [occurrence t e network]
-  (call-functions! [(update-event! occurrence e)]
+  (call-functions! [(make-update-event! occurrence e)]
                    network))
 
 (defrecord Event
