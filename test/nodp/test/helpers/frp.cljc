@@ -37,11 +37,11 @@
 (clojure-test/defspec
   invoke-active
   10
-  (prop/for-all [a gen/any]
+  (prop/for-all [as (gen/vector gen/any)]
                 (let [e (frp/event)]
                   (frp/activate)
-                  (e a)
-                  (= (tuple/snd @@e) a))))
+                  (run! e as)
+                  (= (tuple/snd @@e) (last as)))))
 
 #?(:clj (defmacro with-result
           [result-name & body]
