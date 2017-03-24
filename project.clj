@@ -35,7 +35,4 @@
                         [org.clojure/tools.namespace "0.2.11"]
                         [spyscope "0.1.6"]]
          :plugins      [[com.jakemccrary/lein-test-refresh "0.19.0"]
-                        [lein-ancient "0.6.10"]
-                        [lein-npm "0.6.2"]]}}
-  :npm {:dependencies [[karma "0.13.19"]
-                       [karma-cljs-test "0.1.0"]]})
+                        [lein-ancient "0.6.10"]]}})
