@@ -65,8 +65,7 @@
 (defn run-effects!
   [network]
   ;TODO review
-  (run! (fn [f!]
-          (f! network))
+  (run! (partial (helpers/flip helpers/funcall) network)
         (:effects network)))
 
 (defn make-handle
