@@ -44,23 +44,14 @@
                   (e a)
                   (= (tuple/snd @@e) a))))
 
-(defn promise-or-atom
-  []
-  #?(:clj  (promise)
-     :cljs (atom helpers/nothing)))
-
-(def deliver-or-reset!
-  #?(:clj  deliver
-     :cljs reset!))
-
 #?(:clj (defmacro with-result
           [result-name expr]
           (potemkin/unify-gensyms
-            `(let [result-state## (promise-or-atom)]
+            `(let [result-state## (atom helpers/nothing)]
                ~(walk/walk-exprs
                   (partial = result-name)
                   (fn [_#]
-                    `(comp (partial deliver-or-reset! result-state##)
+                    `(comp (partial reset! result-state##)
                            maybe/just)) expr)
                @@result-state##))))
 
