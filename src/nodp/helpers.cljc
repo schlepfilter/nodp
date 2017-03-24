@@ -140,10 +140,10 @@
                          (- arity n)))))))
 
 #?(:clj (defmacro defcurried
-          [function-name bindings body]
+          [function-name bindings & body]
           `(def ~function-name
              (curry (fn ~bindings
-                      ~body)
+                      ~@body)
                     ~(count bindings)))))
 
 (defn infer
