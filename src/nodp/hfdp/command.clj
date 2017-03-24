@@ -30,7 +30,8 @@
 (def add-undo
   (partial helpers/transfer* [:undos s/END] vector))
 
-(defmulti get-action (comp first keys))
+(defmulti get-action (comp first
+                           keys))
 
 (def get-percent
   (partial (helpers/flip str) "%"))
