@@ -10,13 +10,13 @@
                                    vector))
 
 (defmethod make-call-modifier :event
-  [f entity]
+  [f e]
   ;TODO review
   (fn [network]
-    (if (and (maybe/just? (helpers/get-value entity network))
+    (if (and (maybe/just? (helpers/get-value e network))
              (= (:event (:time network))
-                (event/get-time entity network)))
-      (f (tuple/snd @(helpers/get-value entity network))))))
+                (event/get-time e network)))
+      (f (tuple/snd @(helpers/get-value e network))))))
 
 (defn on
   [f entity]
