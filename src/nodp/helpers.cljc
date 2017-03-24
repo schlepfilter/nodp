@@ -227,14 +227,6 @@
 (def get-value
   (make-get :value))
 
-;This definition is harder to read.
-;(def get-value
-;  (comp (m/<*> (comp :id
-;                     first)
-;               (comp :value
-;                     second))
-;        vector))
-
 (def get-keyword
   (comp keyword
         str/lower-case
