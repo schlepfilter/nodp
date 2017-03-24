@@ -61,12 +61,10 @@
   ;TODO modify behavior
   (call-functions! [(partial modify-event! occurrence e)]
                    network))
-
-(defn run-effects!
-  [network]
-  ;TODO review
-  (run! (partial (helpers/flip helpers/funcall) network)
-        (:effects network)))
+(def run-effects!
+  (helpers/build run!
+                 (helpers/curry (helpers/flip helpers/funcall) 2)
+                 :effects))
 
 (defn make-handle
   [a e]
