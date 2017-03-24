@@ -29,9 +29,9 @@
 (clojure-test/defspec
   invoke-inactive
   10
-  (prop/for-all [a gen/any]
+  (prop/for-all [as (gen/vector gen/any)]
                 (let [e (frp/event)]
-                  (e a)
+                  (run! e as)
                   (maybe/nothing? @e))))
 
 (clojure-test/defspec
