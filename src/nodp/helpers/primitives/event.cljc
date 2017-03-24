@@ -84,7 +84,8 @@
       :cljs -invoke) [e a]
     ;e stands for an event as in Push-Pull Functional Reactive Programming.
     (if (:active @helpers/network-state)
-      (queue (make-handle a e))))
+      (-> (make-handle a e)
+          queue)))
   IDeref
   (#?(:clj  deref
       :cljs -deref) [e]
