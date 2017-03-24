@@ -2,7 +2,8 @@
   (:require [cats.monad.maybe :as maybe]
             [com.rpl.specter :as s]
             [nodp.helpers :as helpers :include-macros true]
-            [nodp.helpers.tuple :as tuple])
+            [nodp.helpers.tuple :as tuple]
+            [cats.core :as m])
   #?(:cljs (:require-macros [nodp.helpers.effect :refer [defcurriedmethod]])))
 
 (defmulti call-modifier (comp helpers/get-keyword
@@ -29,11 +30,8 @@
                   (if (now? e network)
                     (f (tuple/snd @(helpers/get-value e network)))))
 
-(defn on
-  [f entity]
-  ;TODO review
-  (swap! helpers/network-state
-         (partial s/setval*
-                  [:effects s/END]
-                  [(call-modifier f entity)])))
-
+(def on
+  (comp (partial swap! helpers/network-state)
+        ((m/curry s/setval*) [:effects s/END])
+        vector
+        call-modifier))
