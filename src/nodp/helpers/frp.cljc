@@ -1,5 +1,6 @@
 (ns nodp.helpers.frp
   (:require [nodp.helpers :as helpers]
+            [nodp.helpers.effect :as effect]
             [nodp.helpers.primitives.event :as event]))
 
 (def restart
@@ -10,3 +11,6 @@
 
 (def activate
   event/activate)
+
+(def on
+  effect/on)

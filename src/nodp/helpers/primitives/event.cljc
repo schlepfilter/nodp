@@ -62,15 +62,24 @@
   (call-functions! [(partial modify-event! occurrence e)]
                    network))
 
+(defn run-effects!
+  [network]
+  ;TODO review
+  (run! (fn [f!]
+          (f! network))
+        (:effects network)))
+
 (defn make-handle
   [a e]
   (fn []
     (let [[past current] (get-times)]
+      ;TODO review
       (reset! helpers/network-state
               (modify-network! (tuple/tuple past a)
                                current
                                e
-                               @helpers/network-state)))))
+                               @helpers/network-state))
+      (run-effects! @helpers/network-state))))
 
 (defn get-input
   []
@@ -112,3 +121,8 @@
 
 (def activate
   (partial swap! helpers/network-state (partial s/setval* :active true)))
+
+(defn get-time
+  [e network]
+  ;TODO review
+  (tuple/fst @(helpers/get-value e network)))

@@ -64,3 +64,15 @@
                                 (result a)
                                 b)
                    a)))
+
+(clojure-test/defspec
+  on-identity
+  10
+  (prop/for-all [a gen/any]
+                (= (with-result result
+                                (let [e (frp/event)]
+                                  (frp/on (fn [a*]
+                                            (result a*)) e)
+                                  (frp/activate)
+                                  (e a)))
+                   a)))
