@@ -11,6 +11,7 @@
 
 (defmethod make-call-modifier :event
   [f entity]
+  ;TODO review
   (fn [network]
     (if (and (maybe/just? (helpers/get-value entity network))
              (= (:event (:time network))
@@ -19,6 +20,7 @@
 
 (defn on
   [f entity]
+  ;TODO review
   (swap! helpers/network-state
          (partial s/setval*
                   [:effects s/END]
