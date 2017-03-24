@@ -238,11 +238,9 @@
   ;TODO call stop
   start)
 
-(defn make-get
-  [k]
-  (curry (fn [entity network]
-           ((:id entity) (k network)))
-         2))
+(defcurried make-get
+            [k entity network]
+            ((:id entity) (k network)))
 
 (def get-value
   (make-get :value))
