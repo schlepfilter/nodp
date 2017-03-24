@@ -215,10 +215,10 @@
   [f]
   ;TODO handle exceptions
   (let [c (async/chan)]
-    (async/go (loop []
-                (let [x (async/<! c)]
-                  (f x))
-                (recur)))
+    (async/go-loop []
+      (let [x (async/<! c)]
+        (f x))
+      (recur))
     c))
 
 (defn funcall
