@@ -242,8 +242,8 @@
             [k entity network]
             ((:id entity) (k network)))
 
-(def get-value
-  (make-get :value))
+(def get-latest
+  (make-get :latest))
 
 (def get-keyword
   (comp keyword
@@ -273,11 +273,11 @@
                                         (make-add-node ~entity-name)))
              ~entity-name)))
 
-(defcurried set-value
+(defcurried set-latest
             ;The order of a and entity is consistent with the parameters of primitives.
             ;entity stands for an event or behavior.
             [a entity network]
-            (s/setval [:value (:id entity)] a network))
+            (s/setval [:latest (:id entity)] a network))
 
 #?(:clj
    (do (defmacro defpfmethod

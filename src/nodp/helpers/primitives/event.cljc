@@ -27,8 +27,8 @@
 (def call-functions!
   (helpers/flip (partial reduce (helpers/flip helpers/funcall))))
 
-(def get-origin
-  (helpers/make-get :origin))
+(def get-earliest
+  (helpers/make-get :earliest))
 
 (defn if-then-else
   [if-function then-function else]
@@ -36,24 +36,24 @@
     (then-function else)
     else))
 
-(helpers/defcurried set-origin
+(helpers/defcurried set-earliest
                     [a e network]
                     (if-then-else (comp maybe/nothing?
-                                        (get-origin e))
-                                  (partial s/setval* [:origin (:id e)] a)
+                                        (get-earliest e))
+                                  (partial s/setval* [:earliest (:id e)] a)
                                   network))
 
-(defn make-set-origin-value
+(defn make-set-earliest-latest
   [a e]
-  (comp (helpers/set-value a e)
-        (set-origin a e)))
+  (comp (helpers/set-latest a e)
+        (set-earliest a e)))
 
 (defn modify-event!
   [occurrence e network]
   (call-functions!
     ;TODO concatenate modifiers
     (concat [(partial s/setval* [:time :event] (tuple/fst occurrence))
-             (make-set-origin-value (maybe/just occurrence) e)])
+             (make-set-earliest-latest (maybe/just occurrence) e)])
     network))
 
 (defn modify-network!
@@ -94,7 +94,7 @@
   IDeref
   (#?(:clj  deref
       :cljs -deref) [e]
-    (helpers/get-value e @helpers/network-state))
+    (helpers/get-latest e @helpers/network-state))
   p/Printable
   (-repr [_]
     (str "#[event " id "]")))
@@ -106,8 +106,8 @@
           `(helpers/get-entity ~event-name
                                Event.
                                ~@fs
-                               (make-set-origin-value helpers/nothing
-                                                      ~event-name))))
+                               (make-set-earliest-latest helpers/nothing
+                                                         ~event-name))))
 
 (defn event
   []

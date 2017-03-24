@@ -13,7 +13,7 @@
 (defn now?
   [e network]
   (maybe/maybe false
-               (helpers/get-value e network)
+               (helpers/get-latest e network)
                (comp (partial = (:event (:time network)))
                      tuple/fst)))
 
@@ -28,7 +28,7 @@
                   [f e network]
                   ;TODO review
                   (if (now? e network)
-                    (f (tuple/snd @(helpers/get-value e network)))))
+                    (f (tuple/snd @(helpers/get-latest e network)))))
 
 (def on
   (comp (partial swap! helpers/network-state)
