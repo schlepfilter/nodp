@@ -2,7 +2,6 @@
   (:require [cats.monad.maybe :as maybe]
             [com.rpl.specter :as s]
             [nodp.helpers :as helpers]
-            [nodp.helpers.primitives.event :as event]
             [nodp.helpers.tuple :as tuple]))
 
 (defmulti make-call-modifier (comp helpers/get-keyword
