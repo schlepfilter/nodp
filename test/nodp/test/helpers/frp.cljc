@@ -68,10 +68,10 @@
 (clojure-test/defspec
   on-identity
   10
-  (prop/for-all [a gen/any]
+  (prop/for-all [as (gen/vector gen/any)]
                 (= (with-result result
                                 (let [e (frp/event)]
                                   (frp/on result e)
                                   (frp/activate)
-                                  (e a)))
-                   a)))
+                                  (run! e as)))
+                   (last as))))
