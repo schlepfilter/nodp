@@ -70,12 +70,9 @@
   [a e]
   (fn []
     (let [[past current] (get-times)]
-      ;TODO review
-      (reset! helpers/network-state
-              (modify-network! (tuple/tuple past a)
-                               current
-                               e
-                               @helpers/network-state))
+      (->> @helpers/network-state
+           (modify-network! (tuple/tuple past a) current e)
+           (reset! helpers/network-state))
       (run-effects! @helpers/network-state))))
 
 (defn get-input
