@@ -70,9 +70,13 @@
                                e
                                @helpers/network-state)))))
 
-(defn queue
-  [a e]
-  (async/put! (:input @helpers/network-state) (make-handle a e)))
+(defn get-input
+  []
+  (:input @helpers/network-state))
+
+(def queue
+  (comp (partial async/put! get-input)
+        make-handle))
 
 (defrecord Event
   [id]
