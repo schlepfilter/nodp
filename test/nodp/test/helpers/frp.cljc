@@ -21,8 +21,7 @@
 (defn fixture
   [f]
   (frp/restart)
-  (with-redefs [event/queue (comp helpers/funcall
-                                  event/make-handle)]
+  (with-redefs [event/queue helpers/funcall]
     (f)))
 
 (test/use-fixtures :each fixture)

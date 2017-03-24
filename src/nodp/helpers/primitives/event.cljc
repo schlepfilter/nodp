@@ -75,8 +75,7 @@
   (:input @helpers/network-state))
 
 (def queue
-  (comp (partial async/put! get-input)
-        make-handle))
+  (partial async/put! get-input))
 
 (defrecord Event
   [id]
@@ -85,7 +84,7 @@
       :cljs -invoke) [e a]
     ;e stands for an event as in Push-Pull Functional Reactive Programming.
     (if (:active @helpers/network-state)
-      (queue a e)))
+      (queue (make-handle a e))))
   IDeref
   (#?(:clj  deref
       :cljs -deref) [e]
