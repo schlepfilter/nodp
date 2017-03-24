@@ -71,8 +71,7 @@
   (prop/for-all [a gen/any]
                 (= (with-result result
                                 (let [e (frp/event)]
-                                  (frp/on (fn [a*]
-                                            (result a*)) e)
+                                  (frp/on result e)
                                   (frp/activate)
                                   (e a)))
                    a)))
