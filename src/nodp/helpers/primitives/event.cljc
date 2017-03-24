@@ -15,9 +15,9 @@
 (defn get-new-time
   [past]
   (let [current (time/now)]
-    (if-not (= past current)
-      current
-      (get-new-time past))))
+    (if (= past current)
+      (get-new-time past)
+      current)))
 
 (defn get-times
   []
