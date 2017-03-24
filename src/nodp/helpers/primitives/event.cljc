@@ -53,11 +53,13 @@
 (defn make-modify-event!
   [occurrence e]
   (partial call-functions!
+           ;TODO concatenate modifiers
            (concat [(partial s/setval* [:time :event] (tuple/fst occurrence))
                     (make-set-origin-value (maybe/just occurrence) e)])))
 
 (defn modify-network!
   [occurrence t e network]
+  ;TODO modify behavior
   (call-functions! [(make-modify-event! occurrence e)]
                    network))
 
