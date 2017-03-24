@@ -6,8 +6,11 @@
             [clojure.test.check.generators :as gen]
             [clojure.test.check.properties :as prop :include-macros true]
             [cats.monad.maybe :as maybe]
+            [#?(:clj  clojure.core.async
+                :cljs cljs.core.async) :as async]
             [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]
+            [nodp.helpers.primitives.event :as event]
             [nodp.helpers.tuple :as tuple]
             [#?(:clj  clojure.test
                 :cljs cljs.test) :as test :include-macros true]
@@ -18,7 +21,9 @@
 (defn fixture
   [f]
   (frp/restart)
-  (f))
+  (with-redefs [event/queue (comp helpers/funcall
+                                  event/make-handle)]
+    (f)))
 
 (test/use-fixtures :each fixture)
 

@@ -8,6 +8,8 @@
             [cats.monad.exception :as exc]
             [cats.monad.maybe :as maybe]
             [cats.protocols :as p]
+            [#?(:clj  clojure.core.async
+                :cljs cljs.core.async) :as async]
             [com.rpl.specter :as s]
             [loom.graph :as graph]
     #?@(:clj [
@@ -15,10 +17,11 @@
             [clojurewerkz.money.amounts :as ma]
             [clojurewerkz.money.currencies :as mc]
             [potemkin :as potemkin]]))
-  #?(:cljs (:require-macros [nodp.helpers :refer [build
-                                                  case-eval
-                                                  casep
-                                                  defcurried]])))
+  #?(:cljs (:require-macros [cljs.core.async.macros :as async]
+             [nodp.helpers :refer [build
+                                   case-eval
+                                   casep
+                                   defcurried]])))
 
 (defn call-pred
   ([_]
@@ -208,11 +211,28 @@
 (def network-state
   (atom {}))
 
+(defn get-queue
+  [f]
+  ;TODO handle exceptions
+  (let [c (async/chan)]
+    (async/go (loop []
+                (let [x (async/<! c)]
+                  (f x))
+                (recur)))
+    c))
+
+(defn funcall
+  ([f]
+   (f))
+  ([f & more]
+   (apply f more)))
+
 (defn start
   []
   (reset! network-state {:active     false
                          :dependency {:event    (graph/digraph)
-                                      :behavior (graph/digraph)}}))
+                                      :behavior (graph/digraph)}
+                         :input      (get-queue funcall)}))
 
 (def restart
   ;TODO call stop

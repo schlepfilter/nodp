@@ -2,6 +2,8 @@
   (:require [cats.monad.maybe :as maybe]
             [cats.protocols :as p]
             [cats.util :as util]
+            [#?(:clj  clojure.core.async
+                :cljs cljs.core.async) :as async]
             [com.rpl.specter :as s]
             [nodp.helpers :as helpers]
             [nodp.helpers.time :as time]
@@ -22,12 +24,8 @@
   (let [past (time/now)]
     [past (get-new-time past)]))
 
-(defn funcall
-  [f & more]
-  (apply f more))
-
 (def call-functions!
-  (helpers/flip (partial reduce (helpers/flip funcall))))
+  (helpers/flip (partial reduce (helpers/flip helpers/funcall))))
 
 (def get-origin
   (helpers/make-get :origin))
@@ -62,6 +60,19 @@
   ;TODO modify behavior
   (call-functions! [(make-modify-event! occurrence e)]
                    network))
+(defn make-handle
+  [a e]
+  (fn []
+    (let [[past current] (get-times)]
+      (reset! helpers/network-state
+              (modify-network! (tuple/tuple past a)
+                               current
+                               e
+                               @helpers/network-state)))))
+
+(defn queue
+  [a e]
+  (async/put! (:input @helpers/network-state) (make-handle a e)))
 
 (defrecord Event
   [id]
@@ -70,12 +81,7 @@
       :cljs -invoke) [e a]
     ;e stands for an event as in Push-Pull Functional Reactive Programming.
     (if (:active @helpers/network-state)
-      (let [[past current] (get-times)]
-        (reset! helpers/network-state
-                (modify-network! (tuple/tuple past a)
-                                 current
-                                 e
-                                 @helpers/network-state)))))
+      (queue a e)))
   IDeref
   (#?(:clj  deref
       :cljs -deref) [e]
