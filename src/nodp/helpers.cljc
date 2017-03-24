@@ -205,17 +205,18 @@
 (def comp-just
   (partial comp maybe/just))
 
-(def initial-network
-  {:active     false
-   :dependency {:event    (graph/digraph)
-                :behavior (graph/digraph)}})
-
 (def network-state
-  (atom initial-network))
+  (atom {}))
 
-(def initialize
-  ;TODO call timers
-  (partial reset! network-state initial-network))
+(defn start
+  []
+  (reset! network-state {:active     false
+                         :dependency {:event    (graph/digraph)
+                                      :behavior (graph/digraph)}}))
+
+(def restart
+  ;TODO call stop
+  start)
 
 (defn make-get
   [k]

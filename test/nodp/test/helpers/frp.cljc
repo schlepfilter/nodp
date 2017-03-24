@@ -17,7 +17,7 @@
 
 (defn fixture
   [f]
-  (frp/initialize)
+  (frp/restart)
   (f))
 
 (test/use-fixtures :each fixture)

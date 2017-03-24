@@ -2,8 +2,8 @@
   (:require [nodp.helpers :as helpers]
             [nodp.helpers.primitives.event :as event]))
 
-(def initialize
-  helpers/initialize)
+(def restart
+  helpers/restart)
 
 (def event
   event/event)
