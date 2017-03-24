@@ -29,8 +29,8 @@
 (def call-functions!
   (helpers/flip (partial reduce (helpers/flip funcall))))
 
-(def get-start
-  (helpers/make-get :start))
+(def get-origin
+  (helpers/make-get :origin))
 
 (defn if-then-else
   [if-function then-function else]
@@ -38,23 +38,23 @@
     (then-function else)
     else))
 
-(helpers/defcurried set-start
+(helpers/defcurried set-origin
                     [a e network]
                     (if-then-else (comp maybe/nothing?
-                                        (get-start e))
-                                  (partial s/setval* [:start (:id e)] a)
+                                        (get-origin e))
+                                  (partial s/setval* [:origin (:id e)] a)
                                   network))
 
-(defn make-set-start-value
+(defn make-set-origin-value
   [a e]
   (comp (helpers/set-value a e)
-        (set-start a e)))
+        (set-origin a e)))
 
 (defn make-modify-event!
   [occurrence e]
   (partial call-functions!
            (concat [(partial s/setval* [:time :event] (tuple/fst occurrence))
-                    (make-set-start-value (maybe/just occurrence) e)])))
+                    (make-set-origin-value (maybe/just occurrence) e)])))
 
 (defn modify-network!
   [occurrence t e network]
@@ -69,11 +69,11 @@
     ;e stands for an event as in Push-Pull Functional Reactive Programming.
     (if (:active @helpers/network-state)
       (let [[past current] (get-times)]
-       (reset! helpers/network-state
-               (modify-network! (tuple/tuple past a)
-                                current
-                                e
-                                @helpers/network-state)))))
+        (reset! helpers/network-state
+                (modify-network! (tuple/tuple past a)
+                                 current
+                                 e
+                                 @helpers/network-state)))))
   IDeref
   (#?(:clj  deref
       :cljs -deref) [e]
@@ -89,8 +89,8 @@
           `(helpers/get-entity ~event-name
                                Event.
                                ~@fs
-                               (make-set-start-value helpers/nothing
-                                                     ~event-name))))
+                               (make-set-origin-value helpers/nothing
+                                                      ~event-name))))
 
 (defn event
   []
