@@ -24,11 +24,15 @@
                                                  ~@body)
                                                ~(count bindings)))))
 
+(def get-value
+  (comp tuple/snd
+        deref
+        helpers/get-latest))
+
 (defcurriedmethod call-modifier :event
                   [f e network]
-                  ;TODO review
                   (if (now? e network)
-                    (f (tuple/snd @(helpers/get-latest e network)))))
+                    (f (get-value e network))))
 
 (def on
   (comp (partial swap! helpers/network-state)
