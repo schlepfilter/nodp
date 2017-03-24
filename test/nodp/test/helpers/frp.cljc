@@ -44,14 +44,14 @@
                   (= (tuple/snd @@e) a))))
 
 #?(:clj (defmacro with-result
-          [result-name expr]
+          [result-name body]
           (potemkin/unify-gensyms
             `(let [result-state## (atom helpers/nothing)]
                ~(walk/walk-exprs
                   (partial = result-name)
                   (fn [_#]
                     `(comp (partial reset! result-state##)
-                           maybe/just)) expr)
+                           maybe/just)) body)
                @@result-state##))))
 
 (clojure-test/defspec
