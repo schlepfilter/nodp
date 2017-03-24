@@ -9,13 +9,18 @@
                                    second
                                    vector))
 
+(defn now?
+  [e network]
+  (maybe/maybe false
+               (helpers/get-value e network)
+               (comp (partial = (:event (:time network)))
+                     tuple/fst)))
+
 (defmethod make-call-modifier :event
   [f e]
   ;TODO review
   (fn [network]
-    (if (and (maybe/just? (helpers/get-value e network))
-             (= (:event (:time network))
-                (event/get-time e network)))
+    (if (now? e network)
       (f (tuple/snd @(helpers/get-value e network))))))
 
 (defn on
