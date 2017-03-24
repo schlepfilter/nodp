@@ -121,8 +121,3 @@
 
 (def activate
   (partial swap! helpers/network-state (partial s/setval* :active true)))
-
-(defn get-time
-  [e network]
-  ;TODO review
-  (tuple/fst @(helpers/get-value e network)))
