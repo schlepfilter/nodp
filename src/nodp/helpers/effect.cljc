@@ -1,12 +1,13 @@
 (ns nodp.helpers.effect
   (:require [cats.monad.maybe :as maybe]
             [com.rpl.specter :as s]
-            [nodp.helpers :as helpers]
-            [nodp.helpers.tuple :as tuple]))
+            [nodp.helpers :as helpers :include-macros true]
+            [nodp.helpers.tuple :as tuple])
+  #?(:cljs (:require-macros [nodp.helpers.effect :refer [defcurriedmethod]])))
 
-(defmulti make-call-modifier (comp helpers/get-keyword
-                                   second
-                                   vector))
+(defmulti call-modifier (comp helpers/get-keyword
+                              second
+                              vector))
 
 (defn now?
   [e network]
@@ -15,12 +16,18 @@
                (comp (partial = (:event (:time network)))
                      tuple/fst)))
 
-(defmethod make-call-modifier :event
-  [f e]
-  ;TODO review
-  (fn [network]
-    (if (now? e network)
-      (f (tuple/snd @(helpers/get-value e network))))))
+#?(:clj (defmacro defcurriedmethod
+          [multifn dispatch-val bindings & body]
+          `(helpers/defpfmethod ~multifn ~dispatch-val
+                                (helpers/curry (fn ~bindings
+                                                 ~@body)
+                                               ~(count bindings)))))
+
+(defcurriedmethod call-modifier :event
+                  [f e network]
+                  ;TODO review
+                  (if (now? e network)
+                    (f (tuple/snd @(helpers/get-value e network)))))
 
 (defn on
   [f entity]
@@ -28,5 +35,5 @@
   (swap! helpers/network-state
          (partial s/setval*
                   [:effects s/END]
-                  [(make-call-modifier f entity)])))
+                  [(call-modifier f entity)])))
 
