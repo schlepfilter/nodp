@@ -71,6 +71,7 @@
   (prop/for-all [as (gen/vector gen/any)]
                 (= (with-result result
                                 (let [e (frp/event)]
+                                  ;TODO ensure that result is only fired when e is invoked by comparing the values that are passed to result and as
                                   (frp/on result e)
                                   (frp/activate)
                                   (run! e as)))
