@@ -16,7 +16,8 @@
                 :cljs cljs.test) :as test :include-macros true]
     #?(:clj
             [riddley.walk :as walk]))
-  #?(:cljs (:require-macros [nodp.test.helpers.frp :refer [with-result]])))
+  #?(:cljs (:require-macros [nodp.test.helpers.frp :refer [with-exit
+                                                           with-exitv]])))
 
 (defn fixture
   [f]
@@ -43,36 +44,57 @@
                   (run! e as)
                   (= (tuple/snd @@e) (last as)))))
 
-#?(:clj (defmacro with-result
-          [result-name & body]
+#?(:clj (defmacro with-exit
+          [exit-name & body]
           (potemkin/unify-gensyms
-            `(let [result-state## (atom helpers/nothing)]
+            `(let [exit-state## (atom helpers/nothing)]
                ~(walk/walk-exprs
-                  (partial = result-name)
+                  (partial = exit-name)
                   (fn [_#]
-                    `(comp (partial reset! result-state##)
+                    `(comp (partial reset! exit-state##)
                            maybe/just))
                   (cons 'do body))
-               @@result-state##))))
+               @@exit-state##))))
 
 (clojure-test/defspec
-  with-result-identity
+  with-exit-identity
   10
   (prop/for-all [a gen/any
                  b gen/any]
-                (= (with-result result
-                                (result a)
-                                b)
+                (= (with-exit exit
+                              (exit a)
+                              b)
                    a)))
+
+#?(:clj (defmacro with-exitv
+          [exit-name & body]
+          (potemkin/unify-gensyms
+            `(let [exits-state## (atom [])]
+               ~(walk/walk-exprs
+                  (partial = exit-name)
+                  (fn [_#]
+                    `(comp (partial swap! exits-state##)
+                           (helpers/curry (helpers/flip conj) 2)))
+                  (cons 'do body))
+               @exits-state##))))
+
+(clojure-test/defspec
+  with-exitv-identity
+  10
+  (prop/for-all [a gen/any
+                 b gen/any]
+                (= (with-exitv exit
+                               (exit a)
+                               b)
+                   [a])))
 
 (clojure-test/defspec
   on-identity
   10
   (prop/for-all [as (gen/vector gen/any)]
-                (= (with-result result
-                                (let [e (frp/event)]
-                                  ;TODO ensure that result is only fired when e is invoked by comparing the values that are passed to result and as
-                                  (frp/on result e)
-                                  (frp/activate)
-                                  (run! e as)))
-                   (last as))))
+                (= (with-exitv exit
+                               (let [e (frp/event)]
+                                 (frp/on exit e)
+                                 (frp/activate)
+                                 (run! e as)))
+                   as)))
