@@ -81,12 +81,14 @@
 (clojure-test/defspec
   with-exitv-identity
   10
-  (prop/for-all [a gen/any
+  (prop/for-all [as (gen/vector gen/any)
                  b gen/any]
                 (= (with-exitv exit
-                               (exit a)
+                               (->> as
+                                    (map exit)
+                                    doall)
                                b)
-                   [a])))
+                   as)))
 
 (clojure-test/defspec
   on-identity
