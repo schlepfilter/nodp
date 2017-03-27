@@ -53,7 +53,7 @@
                   (fn [_#]
                     `(comp (partial reset! exit-state##)
                            maybe/just))
-                  (cons 'do body))
+                  (cons `do body))
                @@exit-state##))))
 
 (clojure-test/defspec
@@ -75,7 +75,7 @@
                   (fn [_#]
                     `(comp (partial swap! exits-state##)
                            (helpers/curry 2 (helpers/flip conj))))
-                  (cons 'do body))
+                  (cons `do body))
                @exits-state##))))
 
 (clojure-test/defspec
