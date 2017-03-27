@@ -129,22 +129,22 @@
 
 (defn curry
   #?(:clj ([f]
-           (curry f (get-currying-arity f))))
-  ([f arity]
+           (curry (get-currying-arity f) f)))
+  ([arity f]
    (fn [& outer-more]
      (let [n (count outer-more)]
        (case-eval arity
                   n (apply f outer-more)
-                  (curry (fn [& inner-more]
-                           (apply f (concat outer-more inner-more)))
-                         (- arity n)))))))
+                  (curry (- arity n)
+                         (fn [& inner-more]
+                           (apply f (concat outer-more inner-more)))))))))
 
 #?(:clj (defmacro defcurried
           [function-name bindings & body]
           `(def ~function-name
-             (curry (fn ~bindings
-                      ~@body)
-                    ~(count bindings)))))
+             (curry ~(count bindings)
+                    (fn ~bindings
+                      ~@body)))))
 
 (defn infer
   "Given an optional value infer its context. If context is already set, it

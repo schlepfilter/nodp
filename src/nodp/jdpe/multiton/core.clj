@@ -2,7 +2,7 @@
   (:require [nodp.helpers :as helpers]))
 
 (def make-describe
-  ((helpers/flip ((helpers/curry str 4) "next ")) ": "))
+  ((helpers/flip ((helpers/curry 4 str) "next ")) ": "))
 
 (map (make-describe "engine") (range 3))
 

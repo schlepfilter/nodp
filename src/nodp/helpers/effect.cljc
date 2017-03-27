@@ -20,9 +20,9 @@
 #?(:clj (defmacro defcurriedmethod
           [multifn dispatch-val bindings & body]
           `(helpers/defpfmethod ~multifn ~dispatch-val
-                                (helpers/curry (fn ~bindings
-                                                 ~@body)
-                                               ~(count bindings)))))
+                                (helpers/curry ~(count bindings)
+                                               (fn ~bindings
+                                                 ~@body)))))
 
 (def get-value
   (comp tuple/snd

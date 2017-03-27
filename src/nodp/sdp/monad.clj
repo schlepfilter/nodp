@@ -7,10 +7,10 @@
    (m/<$> f x))
   ([f x & more]
    (apply m/<*>
-          (m/<$> (helpers/curry f
-                                (-> more
+          (m/<$> (helpers/curry (-> more
                                     count
-                                    inc))
+                                    inc)
+                                f)
                  x)
           more)))
 

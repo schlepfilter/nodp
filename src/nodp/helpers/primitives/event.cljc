@@ -63,7 +63,7 @@
                    network))
 (def run-effects!
   (helpers/build run!
-                 (helpers/curry (helpers/flip helpers/funcall) 2)
+                 (helpers/curry 2 (helpers/flip helpers/funcall))
                  :effects))
 
 (defn make-handle

@@ -74,7 +74,7 @@
                   (partial = exit-name)
                   (fn [_#]
                     `(comp (partial swap! exits-state##)
-                           (helpers/curry (helpers/flip conj) 2)))
+                           (helpers/curry 2 (helpers/flip conj))))
                   (cons 'do body))
                @exits-state##))))
 
