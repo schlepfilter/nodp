@@ -133,7 +133,6 @@
                                (make-set-earliest-latest helpers/nothing
                                                          ~event-name))))
 
-
 (def get-value
   (comp tuple/snd
         deref
