@@ -133,7 +133,7 @@
                                ~@fs
                                (set-earliest-latest helpers/nothing
                                                     ~event-name))))
-(defn delay-sync-mbind
+(defn delay-sync->>=
   [parent-event child-event network]
   (maybe/maybe
     network
@@ -162,9 +162,9 @@
           (fn [network]
             (do (reset! helpers/network-state network)
                 (let [parent-event (f (get-value ma network))]
-                  (delay-sync-mbind parent-event
-                                    child-event
-                                    @helpers/network-state))))
+                  (delay-sync->>= parent-event
+                                  child-event
+                                  @helpers/network-state))))
           child-event)
         (helpers/make-add-edges ma child-event)))))
 
