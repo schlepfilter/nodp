@@ -160,7 +160,9 @@
         (helpers/make-set-modifier
           (fn [network]
             (do (reset! helpers/network-state network)
-                (let [parent-event (f (get-value ma network))]
+                (let [parent-event (->> network
+                                        (get-value ma)
+                                        f)]
                   (delay-sync->>= parent-event
                                   child-event
                                   @helpers/network-state))))
