@@ -65,17 +65,6 @@
        alg/topsort
        (mapcat (:modifier network))))
 
-;This definition is harder to read.
-;(defn get-modifiers
-;  [k entity network]
-;  (mapcat
-;    (:modifier network)
-;    ((helpers/build filter
-;                    (comp set
-;                          (partial (helpers/flip alg/bf-traverse) (:id entity)))
-;                    alg/topsort)
-;      (k (:dependency network)))))
-
 (defn modify-event!
   [occurrence e network]
   (call-functions
