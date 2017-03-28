@@ -53,9 +53,9 @@
 
 (defn reachable-subgraph
   [g n]
-  (graph/subgraph g
-                  (alg/bf-traverse g
-                                   n)))
+  (->> n
+       (alg/bf-traverse g)
+       (graph/subgraph g)))
 
 (defn get-modifiers
   [k entity network]
