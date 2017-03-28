@@ -82,8 +82,26 @@
 (def queue
   (partial async/put! get-input))
 
+#?(:clj (defmacro event*
+          [event-name & fs]
+          `(helpers/get-entity ~event-name
+                               Event.
+                               ~@fs
+                               (make-set-earliest-latest helpers/nothing
+                                                         ~event-name))))
+
 (defrecord Event
   [id]
+  p/Contextual
+  (-get-context [_]
+    (reify
+      p/Context
+      p/Monad
+      (-mreturn [_ a]
+        (event* e
+                (make-set-earliest-latest
+                  (maybe/just (tuple/tuple (time/time 0) a))
+                  e)))))
   IFn
   (#?(:clj  invoke
       :cljs -invoke) [e a]
@@ -101,17 +119,10 @@
 
 (util/make-printable Event)
 
-#?(:clj (defmacro event*
-          [event-name & fs]
-          `(helpers/get-entity ~event-name
-                               Event.
-                               ~@fs
-                               (make-set-earliest-latest helpers/nothing
-                                                         ~event-name))))
-
 (defn event
   []
   (event* e))
 
 (def activate
   (partial swap! helpers/network-state (partial s/setval* :active true)))
+

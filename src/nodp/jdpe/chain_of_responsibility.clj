@@ -1,5 +1,6 @@
 (ns nodp.jdpe.chain-of-responsibility
-  (:require [cats.core :as m]
+  (:require [cats.builtin]
+            [cats.core :as m]
             [cats.monad.either :as either]
             [nodp.helpers :as helpers]))
 

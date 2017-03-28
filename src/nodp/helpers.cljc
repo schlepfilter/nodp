@@ -2,7 +2,6 @@
   (:refer-clojure :exclude [defcurried])
   (:require [clojure.string :as str]
             [beicon.core :as rx]
-            [cats.builtin]
             [cats.context :as ctx]
             [cats.core :as m]
             [cats.monad.exception :as exc]

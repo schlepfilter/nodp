@@ -5,7 +5,9 @@
              :include-macros true]
             [clojure.test.check.generators :as gen]
             [clojure.test.check.properties :as prop :include-macros true]
+            [cats.core :as m]
             [cats.monad.maybe :as maybe]
+            [cats.protocols :as p]
             [#?(:clj  clojure.core.async
                 :cljs cljs.core.async) :as async]
             [nodp.helpers :as helpers]
@@ -46,6 +48,15 @@
 
 (def probability
   (gen/double* {:min 0 :max 1}))
+
+(clojure-test/defspec
+  event-return-time
+  10
+  (prop/for-all [a gen/any]
+                (-> @@(m/return (helpers/infer (frp/event)) a)
+                    tuple/fst
+                    deref
+                    (= 0))))
 
 #?(:clj (defmacro with-exit
           [exit-name & body]

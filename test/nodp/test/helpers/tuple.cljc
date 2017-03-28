@@ -1,5 +1,6 @@
 (ns nodp.test.helpers.tuple
-  (:require [cats.core :as m]
+  (:require [cats.builtin]
+            [cats.core :as m]
             [cats.monad.maybe :as maybe]
     ;clojure.test.check is required to avoid the following warning.
     ;Figwheel: Watching build - test
