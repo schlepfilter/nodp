@@ -44,6 +44,9 @@
                   (run! e as)
                   (= (tuple/snd @@e) (last as)))))
 
+(def probability
+  (gen/double* {:min 0 :max 1}))
+
 #?(:clj (defmacro with-exit
           [exit-name & body]
           (potemkin/unify-gensyms
