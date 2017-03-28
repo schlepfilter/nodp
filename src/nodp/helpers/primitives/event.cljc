@@ -6,6 +6,7 @@
             [#?(:clj  clojure.core.async
                 :cljs cljs.core.async) :as async]
             [com.rpl.specter :as s]
+            [loom.alg :as alg]
             [nodp.helpers :as helpers]
             [nodp.helpers.time :as time]
             [nodp.helpers.tuple :as tuple])
@@ -48,6 +49,23 @@
   [a e]
   (comp (helpers/set-latest a e)
         (set-earliest a e)))
+
+(defn get-modifiers
+  [k entity network]
+  (mapcat (:modifier network)
+          (filter (set (alg/bf-traverse (k (:dependency network)) (:id entity)))
+                  (alg/topsort (k (:dependency network))))))
+
+;This definition is harder to read.
+;(defn get-modifiers
+;  [k entity network]
+;  (mapcat
+;    (:modifier network)
+;    ((helpers/build filter
+;                    (comp set
+;                          (partial (helpers/flip alg/bf-traverse) (:id entity)))
+;                    alg/topsort)
+;      (k (:dependency network)))))
 
 (defn modify-event!
   [occurrence e network]
