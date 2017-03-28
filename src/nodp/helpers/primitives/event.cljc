@@ -46,10 +46,11 @@
                                   (partial s/setval* [:earliest (:id e)] a)
                                   network))
 
-(defn make-set-earliest-latest
-  [a e]
-  (comp (helpers/set-latest a e)
-        (set-earliest a e)))
+(helpers/defcurried set-earliest-latest
+                    [a e network]
+                    (->> network
+                         (helpers/set-latest a e)
+                         (set-earliest a e)))
 
 (defn reachable-subgraph
   [g n]
@@ -69,7 +70,7 @@
   [occurrence e network]
   (call-functions
     (concat [(partial s/setval* [:time :event] (tuple/fst occurrence))
-             (make-set-earliest-latest (maybe/just occurrence) e)]
+             (set-earliest-latest (maybe/just occurrence) e)]
             (get-modifiers :event e network))
     network))
 
@@ -130,8 +131,17 @@
           `(helpers/get-entity ~event-name
                                Event.
                                ~@fs
-                               (make-set-earliest-latest helpers/nothing
-                                                         ~event-name))))
+                               (set-earliest-latest helpers/nothing
+                                                    ~event-name))))
+(defn delay-sync-mbind
+  [parent-event child-event network]
+  (maybe/maybe
+    network
+    (get-earliest parent-event network)
+    (comp (fn [a]
+            (set-earliest-latest a child-event network))
+          maybe/just
+          (partial m/<*> (tuple/tuple (:event (:time network)) identity)))))
 
 (def get-value
   (comp tuple/snd
@@ -142,7 +152,7 @@
   (helpers/reify-monad
     (fn [a]
       (event* e
-              (make-set-earliest-latest
+              (set-earliest-latest
                 (maybe/just (tuple/tuple (time/time 0) a))
                 e)))
     (fn [ma f]
@@ -152,7 +162,9 @@
           (fn [network]
             (do (reset! helpers/network-state network)
                 (let [parent-event (f (get-value ma network))]
-                  @helpers/network-state)))
+                  (delay-sync-mbind parent-event
+                                    child-event
+                                    @helpers/network-state))))
           child-event)
         (helpers/make-add-edges ma child-event)))))
 
