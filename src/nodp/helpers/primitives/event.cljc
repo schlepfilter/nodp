@@ -152,9 +152,8 @@
   (helpers/reify-monad
     (fn [a]
       (event* e
-              (set-earliest-latest
-                (maybe/just (tuple/tuple (time/time 0) a))
-                e)))
+              (set-earliest-latest (maybe/just (tuple/tuple (time/time 0) a))
+                                   e)))
     (fn [ma f]
       (event*
         child-event
