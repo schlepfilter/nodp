@@ -136,18 +136,13 @@
                                                          ~event-name))))
 
 (def context
-  (reify
-    p/Context
-    p/Functor
-    (-fmap [_ f fa]
-      ((m/lift-m 1 f) fa))
-    p/Monad
-    (-mreturn [_ a]
+  (helpers/reify-monad
+    (fn [a]
       (event* e
               (make-set-earliest-latest
                 (maybe/just (tuple/tuple (time/time 0) a))
                 e)))
-    (-mbind [_ ma f]
+    (fn [ma f]
       (event*
         child-event
         (helpers/make-set-modifier

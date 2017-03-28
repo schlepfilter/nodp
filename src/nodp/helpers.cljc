@@ -182,7 +182,7 @@
                (ap fab# fa#))
              p/Monad
              (~'-mreturn [_# a#]
-               (m/pure a#))
+               (~pure a#))
              (~'-mbind [_# ma# f#]
                (~mbind ma# f#))
              ~@more)))
