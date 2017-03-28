@@ -7,6 +7,7 @@
                 :cljs cljs.core.async) :as async]
             [com.rpl.specter :as s]
             [loom.alg :as alg]
+            [loom.graph :as graph]
             [nodp.helpers :as helpers]
             [nodp.helpers.time :as time]
             [nodp.helpers.tuple :as tuple])
@@ -53,8 +54,10 @@
 (defn get-modifiers
   [k entity network]
   (mapcat (:modifier network)
-          (filter (set (alg/bf-traverse (k (:dependency network)) (:id entity)))
-                  (alg/topsort (k (:dependency network))))))
+          (alg/topsort
+            (graph/subgraph (k (:dependency network))
+                            (alg/bf-traverse (k (:dependency network))
+                                             (:id entity))))))
 
 ;This definition is harder to read.
 ;(defn get-modifiers
