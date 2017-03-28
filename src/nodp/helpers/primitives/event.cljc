@@ -131,6 +131,9 @@
     (-mbind [_ ma f]
       (event*
         child-event
+        (helpers/make-set-modifier
+          (fn [network])
+          child-event)
         (helpers/make-add-edges ma child-event)))))
 
 (util/make-printable Event)

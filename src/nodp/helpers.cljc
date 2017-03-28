@@ -269,6 +269,12 @@
            [:dependency (get-keyword parent)]
            (partial (flip graph/add-edges) (map :id [parent child]))))
 
+(defn make-set-modifier
+  [f entity]
+  (partial s/setval*
+           [:modifier (:id entity) s/END]
+           [f]))
+
 #?(:clj (defmacro get-entity
           [entity-name constructor & fs]
           `(let [~entity-name (-> (gensym)
