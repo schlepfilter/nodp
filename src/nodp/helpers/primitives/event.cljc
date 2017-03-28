@@ -1,5 +1,6 @@
 (ns nodp.helpers.primitives.event
-  (:require [cats.monad.maybe :as maybe]
+  (:require [cats.core :as m]
+            [cats.monad.maybe :as maybe]
             [cats.protocols :as p]
             [cats.util :as util]
             [#?(:clj  clojure.core.async
@@ -118,13 +119,19 @@
 (def context
   (reify
     p/Context
+    p/Functor
+    (-fmap [_ f fa]
+      ((m/lift-m 1 f) fa))
     p/Monad
     (-mreturn [_ a]
       (event* e
               (make-set-earliest-latest
                 (maybe/just (tuple/tuple (time/time 0) a))
-                e)))))
-
+                e)))
+    (-mbind [_ ma f]
+      (event*
+        child-event
+        (helpers/make-add-edges ma child-event)))))
 
 (util/make-printable Event)
 
