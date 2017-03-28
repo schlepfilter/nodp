@@ -25,7 +25,7 @@
   (let [past (time/now)]
     [past (get-new-time past)]))
 
-(def call-functions!
+(def call-functions
   (helpers/flip (partial reduce (helpers/flip helpers/funcall))))
 
 (def get-earliest
@@ -51,7 +51,7 @@
 
 (defn modify-event!
   [occurrence e network]
-  (call-functions!
+  (call-functions
     ;TODO concatenate modifiers
     (concat [(partial s/setval* [:time :event] (tuple/fst occurrence))
              (make-set-earliest-latest (maybe/just occurrence) e)])
@@ -60,8 +60,8 @@
 (defn modify-network!
   [occurrence t e network]
   ;TODO modify behavior
-  (call-functions! [(partial modify-event! occurrence e)]
-                   network))
+  (call-functions [(partial modify-event! occurrence e)]
+                  network))
 (def run-effects!
   (helpers/build run!
                  (helpers/curry 2 (helpers/flip helpers/funcall))
