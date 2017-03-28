@@ -231,7 +231,8 @@
   (reset! network-state {:active     false
                          :dependency {:event    (graph/digraph)
                                       :behavior (graph/digraph)}
-                         :input      (get-queue funcall)}))
+                         :input      (get-queue funcall)
+                         :modifier   {}}))
 
 (def restart
   ;TODO call stop

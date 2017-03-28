@@ -70,9 +70,9 @@
 (defn modify-event!
   [occurrence e network]
   (call-functions
-    ;TODO concatenate modifiers
     (concat [(partial s/setval* [:time :event] (tuple/fst occurrence))
-             (make-set-earliest-latest (maybe/just occurrence) e)])
+             (make-set-earliest-latest (maybe/just occurrence) e)]
+            (get-modifiers :event e network))
     network))
 
 (defn modify-network!
@@ -98,8 +98,9 @@
   []
   (:input @helpers/network-state))
 
-(def queue
-  (partial async/put! get-input))
+(defn queue
+  [f]
+  (async/put! (get-input) f))
 
 (declare context)
 
@@ -150,7 +151,8 @@
       (event*
         child-event
         (helpers/make-set-modifier
-          (fn [network])
+          (fn [network]
+            network)
           child-event)
         (helpers/make-add-edges ma child-event)))))
 
