@@ -51,13 +51,19 @@
   (comp (helpers/set-latest a e)
         (set-earliest a e)))
 
+(defn reachable-subgraph
+  [g n]
+  (graph/subgraph g
+                  (alg/bf-traverse g
+                                   n)))
+
 (defn get-modifiers
   [k entity network]
-  (mapcat (:modifier network)
-          (alg/topsort
-            (graph/subgraph (k (:dependency network))
-                            (alg/bf-traverse (k (:dependency network))
-                                             (:id entity))))))
+  (->> entity
+       :id
+       (reachable-subgraph (k (:dependency network)))
+       alg/topsort
+       (mapcat (:modifier network))))
 
 ;This definition is harder to read.
 ;(defn get-modifiers
