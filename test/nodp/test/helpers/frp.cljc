@@ -13,6 +13,7 @@
             [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.primitives.event :as event]
+            [nodp.helpers.time :as time]
             [nodp.helpers.tuple :as tuple]
             [#?(:clj  clojure.test
                 :cljs cljs.test) :as test :include-macros true]
@@ -50,13 +51,11 @@
   (gen/double* {:min 0 :max 1}))
 
 (clojure-test/defspec
-  event-return-time
+  event-return
   10
   (prop/for-all [a gen/any]
-                (-> @@(m/return (helpers/infer (frp/event)) a)
-                    tuple/fst
-                    deref
-                    (= 0))))
+                (= @@(m/return (helpers/infer (frp/event)) a)
+                   (tuple/tuple (time/time 0) a))))
 
 #?(:clj (defmacro with-exit
           [exit-name & body]
