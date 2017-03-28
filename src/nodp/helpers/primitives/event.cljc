@@ -82,26 +82,16 @@
 (def queue
   (partial async/put! get-input))
 
-#?(:clj (defmacro event*
-          [event-name & fs]
-          `(helpers/get-entity ~event-name
-                               Event.
-                               ~@fs
-                               (make-set-earliest-latest helpers/nothing
-                                                         ~event-name))))
+(declare context)
 
 (defrecord Event
   [id]
   p/Contextual
   (-get-context [_]
-    (reify
-      p/Context
-      p/Monad
-      (-mreturn [_ a]
-        (event* e
-                (make-set-earliest-latest
-                  (maybe/just (tuple/tuple (time/time 0) a))
-                  e)))))
+    context
+    ;If context is inlined, the following error seems to occur.
+    ;java.lang.LinkageError: loader (instance of clojure/lang/DynamicClassLoader): attempted duplicate class definition for name: "nodp/helpers/primitives/event/Event"
+    )
   IFn
   (#?(:clj  invoke
       :cljs -invoke) [e a]
@@ -117,6 +107,25 @@
   (-repr [_]
     (str "#[event " id "]")))
 
+#?(:clj (defmacro event*
+          [event-name & fs]
+          `(helpers/get-entity ~event-name
+                               Event.
+                               ~@fs
+                               (make-set-earliest-latest helpers/nothing
+                                                         ~event-name))))
+
+(def context
+  (reify
+    p/Context
+    p/Monad
+    (-mreturn [_ a]
+      (event* e
+              (make-set-earliest-latest
+                (maybe/just (tuple/tuple (time/time 0) a))
+                e)))))
+
+
 (util/make-printable Event)
 
 (defn event
@@ -125,4 +134,3 @@
 
 (def activate
   (partial swap! helpers/network-state (partial s/setval* :active true)))
-
