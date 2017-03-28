@@ -133,6 +133,12 @@
                                (make-set-earliest-latest helpers/nothing
                                                          ~event-name))))
 
+
+(def get-value
+  (comp tuple/snd
+        deref
+        helpers/get-latest))
+
 (def context
   (helpers/reify-monad
     (fn [a]
@@ -145,7 +151,9 @@
         child-event
         (helpers/make-set-modifier
           (fn [network]
-            network)
+            (do (reset! helpers/network-state network)
+                (let [parent-event (f (get-value ma network))]
+                  @helpers/network-state)))
           child-event)
         (helpers/make-add-edges ma child-event)))))
 

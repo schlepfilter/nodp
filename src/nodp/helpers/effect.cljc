@@ -1,9 +1,10 @@
 (ns nodp.helpers.effect
-  (:require [cats.monad.maybe :as maybe]
+  (:require [cats.core :as m]
+            [cats.monad.maybe :as maybe]
             [com.rpl.specter :as s]
             [nodp.helpers :as helpers :include-macros true]
-            [nodp.helpers.tuple :as tuple]
-            [cats.core :as m])
+            [nodp.helpers.primitives.event :as event]
+            [nodp.helpers.tuple :as tuple])
   #?(:cljs (:require-macros [nodp.helpers.effect :refer [defcurriedmethod]])))
 
 (defmulti call-modifier (comp helpers/get-keyword
@@ -24,15 +25,10 @@
                                                (fn ~bindings
                                                  ~@body)))))
 
-(def get-value
-  (comp tuple/snd
-        deref
-        helpers/get-latest))
-
 (defcurriedmethod call-modifier :event
                   [f e network]
                   (if (now? e network)
-                    (f (get-value e network))))
+                    (f (event/get-value e network))))
 
 (def on
   (comp (partial swap! helpers/network-state)
