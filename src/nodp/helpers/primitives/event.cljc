@@ -133,7 +133,8 @@
                                ~@fs
                                (set-earliest-latest helpers/nothing
                                                     ~event-name))))
-(defn delay-sync->>=
+(helpers/defcurried
+  delay-sync->>=
   [parent-event child-event network]
   (maybe/maybe
     network
@@ -171,9 +172,10 @@
                   (let [parent-event (->> network
                                           (get-value ma)
                                           f)]
-                    (->> @helpers/network-state
-                         (helpers/add-edge parent-event child-event)
-                         (delay-sync->>= parent-event child-event))))
+                    (call-functions ((juxt helpers/add-edge delay-sync->>=)
+                                      parent-event
+                                      child-event)
+                                    @helpers/network-state)))
               network))
           child-event)
         (helpers/add-edge ma child-event)))))
