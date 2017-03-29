@@ -135,16 +135,14 @@
 (def events-tuple
   (gen/bind events
             (fn [es]
-              (gen/tuple
-                (gen/return es)
-                (gen/bind
-                  (gen/vector test-helpers/function (count es))
-                  (fn [fs]
-                    (gen/return
-                      (map (fn [f e]
-                             ((m/lift-a 1 f) e))
-                           fs
-                           es))))))))
+              (->> (fn [fs]
+                     (gen/return
+                       (map (fn [f e]
+                              ((m/lift-a 1 f) e))
+                            fs
+                            es)))
+                   (gen/bind (gen/vector test-helpers/function (count es)))
+                   (gen/tuple (gen/return es))))))
 
 (defn make-iterate
   [coll]
