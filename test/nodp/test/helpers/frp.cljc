@@ -145,18 +145,23 @@
         (swap! state rest)
         result))))
 
+(defn contains-value?
+  [coll x]
+  (contains? (set coll) x))
+
 (clojure-test/defspec
-  event->>=-left-bias
+  event->>=-member
   5
-  (prop/for-all [es events
+  (prop/for-all [input-events events
                  f! function!]
                 (let [outer-event (frp/event)
-                      output-event (->> es
-                                        (map (m/lift-a 1 f!))
+                      fmapped-events (map (m/lift-a 1 f!) input-events)
+                      output-event (->> fmapped-events
                                         make-iterate
                                         (m/>>= outer-event))]
                   (frp/activate)
-                  (dotimes [_ (count es)]
+                  (dotimes [_ (count input-events)]
                     (outer-event unit/unit))
-                  (run! (partial (helpers/flip helpers/funcall) unit/unit) es)
-                  true)))
+                  (run! (partial (helpers/flip helpers/funcall) unit/unit)
+                        input-events)
+                  (contains-value? (map deref fmapped-events) @output-event))))
