@@ -164,14 +164,38 @@
       (contains? x)))
 
 (clojure-test/defspec
+  event->>=-delay-nonoccurrence
+  5
+  (prop/for-all [events-tuple* events-tuple]
+                (let [outer-event (frp/event)
+                      bound-event (->> events-tuple*
+                                       second
+                                       make-iterate
+                                       (m/>>= outer-event))]
+                  (frp/activate)
+                  (dotimes [_ (-> events-tuple*
+                                  first
+                                  count
+                                  dec)]
+                    (outer-event unit/unit))
+                  (run! (partial (helpers/flip helpers/funcall) unit/unit)
+                        (first events-tuple*))
+                  (or (maybe/nothing? @bound-event)
+                      (contains-value? (->> events-tuple*
+                                            second
+                                            drop-last
+                                            (map deref))
+                                       @bound-event)))))
+
+(clojure-test/defspec
   event->>=-member
   5
   (prop/for-all [events-tuple* events-tuple]
                 (let [outer-event (frp/event)
-                      output-event (->> events-tuple*
-                                        second
-                                        make-iterate
-                                        (m/>>= outer-event))]
+                      bound-event (->> events-tuple*
+                                       second
+                                       make-iterate
+                                       (m/>>= outer-event))]
                   (frp/activate)
                   (dotimes [_ (-> events-tuple*
                                   first
@@ -180,4 +204,4 @@
                   (run! (partial (helpers/flip helpers/funcall) unit/unit)
                         (first events-tuple*))
                   (contains-value? (map deref (second events-tuple*))
-                                   @output-event))))
+                                   @bound-event))))
