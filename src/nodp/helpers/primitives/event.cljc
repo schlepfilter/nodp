@@ -152,13 +152,14 @@
 (defn make-merge-sync
   [parent-event child-event]
   (helpers/make-set-modifier
-    (fn [network]
-      (if (and (now? parent-event network)
-               (not (now? child-event network)))
-        (helpers/set-latest (helpers/get-latest parent-event network)
-                            child-event
-                            network)
-        network))
+    (partial if-then-else
+             (helpers/build and
+                            (partial now? parent-event)
+                            (partial (complement now?) child-event))
+             (helpers/build helpers/set-latest
+                            (partial helpers/get-latest parent-event)
+                            (constantly child-event)
+                            identity))
     child-event))
 
 (helpers/defcurried
