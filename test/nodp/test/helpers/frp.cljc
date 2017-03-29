@@ -151,5 +151,9 @@
   10
   (prop/for-all [es events]
                 (let [outer-event (frp/event)
-                      output-event (m/>>= outer-event (make-iterate es))])
-                true))
+                      output-event (m/>>= outer-event (make-iterate es))]
+                  (frp/activate)
+                  (dotimes [_ (count es)]
+                    (outer-event unit/unit))
+                  (run! (partial (helpers/flip helpers/funcall) unit/unit) es)
+                  true)))
