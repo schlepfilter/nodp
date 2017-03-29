@@ -119,7 +119,9 @@
       (-> (make-handle a e)
           queue)))
   #?(:clj (applyTo [e coll]
-            (e (first coll))))
+            (-> coll
+                first
+                e)))
   IDeref
   (#?(:clj  deref
       :cljs -deref) [e]
