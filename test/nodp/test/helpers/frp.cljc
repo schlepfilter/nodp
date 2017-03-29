@@ -10,13 +10,13 @@
             [cats.protocols :as p]
             [#?(:clj  clojure.core.async
                 :cljs cljs.core.async) :as async]
+            [#?(:clj  clojure.test
+                :cljs cljs.test) :as test :include-macros true]
             [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.time :as time]
             [nodp.helpers.tuple :as tuple]
-            [#?(:clj  clojure.test
-                :cljs cljs.test) :as test :include-macros true]
     #?(:clj
             [riddley.walk :as walk]))
   #?(:cljs (:require-macros [nodp.test.helpers.frp :refer [with-exit
@@ -120,8 +120,6 @@
                   (if (= 1.0 probability*)
                     0
                     (int (* probability* (inc (count coll))))))))
-
-(reduce conj-event [] [0.5 0.75 0.8 1.0 0.0])
 
 (def get-events
   (partial reduce conj-event []))
