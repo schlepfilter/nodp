@@ -118,6 +118,8 @@
     (if (:active @helpers/network-state)
       (-> (make-handle a e)
           queue)))
+  #?(:clj (applyTo [e coll]
+            (e (first coll))))
   IDeref
   (#?(:clj  deref
       :cljs -deref) [e]
