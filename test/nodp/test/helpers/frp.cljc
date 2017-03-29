@@ -132,11 +132,8 @@
             (gen/return unit/unit)))
 
 (def events
-  (gen/bind function!
-            (fn [f]
-              (gen/fmap (comp (partial map (m/lift-a 1 f))
-                              get-events)
-                        (gen/vector probability)))))
+  (gen/fmap get-events
+            (gen/vector probability)))
 
 (defn make-iterate
   [coll]
@@ -149,9 +146,13 @@
 (clojure-test/defspec
   event->>=-left-bias
   10
-  (prop/for-all [es events]
+  (prop/for-all [es events
+                 f! function!]
                 (let [outer-event (frp/event)
-                      output-event (m/>>= outer-event (make-iterate es))]
+                      output-event (->> es
+                                        (map (m/lift-a 1 f!))
+                                        make-iterate
+                                        (m/>>= outer-event))]
                   (frp/activate)
                   (dotimes [_ (count es)]
                     (outer-event unit/unit))
