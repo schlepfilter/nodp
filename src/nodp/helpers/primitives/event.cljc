@@ -148,6 +148,13 @@
         deref
         helpers/get-latest))
 
+(defn now?
+  [e network]
+  (maybe/maybe false
+               (helpers/get-latest e network)
+               (comp (partial = (:event (:time network)))
+                     tuple/fst)))
+
 (def context
   (helpers/reify-monad
     (fn [a]
@@ -159,15 +166,17 @@
         child-event
         (helpers/make-set-modifier
           (fn [network]
-            (do (reset! helpers/network-state network)
-                (let [parent-event (->> network
-                                        (get-value ma)
-                                        f)]
-                  (delay-sync->>= parent-event
-                                  child-event
-                                  @helpers/network-state))))
+            (if (now? ma network)
+              (do (reset! helpers/network-state network)
+                  (let [parent-event (->> network
+                                          (get-value ma)
+                                          f)]
+                    (->> @helpers/network-state
+                         (helpers/add-edge parent-event child-event)
+                         (delay-sync->>= parent-event child-event))))
+              network))
           child-event)
-        (helpers/make-add-edges ma child-event)))))
+        (helpers/add-edge ma child-event)))))
 
 (util/make-printable Event)
 

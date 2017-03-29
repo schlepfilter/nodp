@@ -11,13 +11,6 @@
                               second
                               vector))
 
-(defn now?
-  [e network]
-  (maybe/maybe false
-               (helpers/get-latest e network)
-               (comp (partial = (:event (:time network)))
-                     tuple/fst)))
-
 #?(:clj (defmacro defcurriedmethod
           [multifn dispatch-val bindings & body]
           `(helpers/defpfmethod ~multifn ~dispatch-val
@@ -27,7 +20,7 @@
 
 (defcurriedmethod call-modifier :event
                   [f e network]
-                  (if (now? e network)
+                  (if (event/now? e network)
                     (f (event/get-value e network))))
 
 (def on

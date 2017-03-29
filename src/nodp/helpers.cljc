@@ -264,11 +264,14 @@
          (comp (flip graph/add-nodes)
                :id)))
 
-(defn make-add-edges
-  [parent child]
-  (partial s/transform*
-           [:dependency (get-keyword parent)]
-           (partial (flip graph/add-edges) (map :id [parent child]))))
+(defcurried add-edge
+            [parent child network]
+            ;(println parent)
+            ;(println (:id child))
+            (s/transform
+              [:dependency (get-keyword parent)]
+              (partial (flip graph/add-edges) (map :id [parent child]))
+              network))
 
 (defn make-set-modifier
   [f entity]
