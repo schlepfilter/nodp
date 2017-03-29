@@ -118,10 +118,15 @@
 
 (defn conj-event
   [coll probability*]
-  (conj coll (nth (conj coll (event/event))
-                  (if (= 1.0 probability*)
-                    0
-                    (int (* probability* (inc (count coll))))))))
+  (->> coll
+       count
+       inc
+       (* probability*)
+       int
+       (if (= 1.0 probability*)
+         0)
+       (nth (conj coll (event/event)))
+       (conj coll)))
 
 (def get-events
   (partial reduce conj-event []))
