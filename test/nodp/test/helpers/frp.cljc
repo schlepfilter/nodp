@@ -156,7 +156,9 @@
 
 (defn contains-value?
   [coll x]
-  (contains? (set coll) x))
+  (-> coll
+      set
+      (contains? x)))
 
 (clojure-test/defspec
   event->>=-member
