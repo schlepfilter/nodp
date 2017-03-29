@@ -132,8 +132,10 @@
             (gen/return unit/unit)))
 
 (def events
-  (gen/fmap get-events
-            (gen/vector probability)))
+  (->> probability
+       gen/vector
+       gen/not-empty
+       (gen/fmap get-events)))
 
 (defn make-iterate
   [coll]
@@ -145,7 +147,7 @@
 
 (clojure-test/defspec
   event->>=-left-bias
-  10
+  5
   (prop/for-all [es events
                  f! function!]
                 (let [outer-event (frp/event)
