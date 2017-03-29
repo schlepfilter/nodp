@@ -168,7 +168,9 @@
                                         make-iterate
                                         (m/>>= outer-event))]
                   (frp/activate)
-                  (dotimes [_ (count (first events-tuple*))]
+                  (dotimes [_ (-> events-tuple*
+                                  first
+                                  count)]
                     (outer-event unit/unit))
                   (run! (partial (helpers/flip helpers/funcall) unit/unit)
                         (first events-tuple*))
