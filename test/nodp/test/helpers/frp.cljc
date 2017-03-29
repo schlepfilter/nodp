@@ -113,3 +113,18 @@
                                  (frp/activate)
                                  (run! e as)))
                    as)))
+
+(defn conj-event
+  [coll probability*]
+  (conj coll (nth (conj coll (event/event))
+                  (if (= 1.0 probability*)
+                    0
+                    (int (* probability* (inc (count coll))))))))
+
+(reduce conj-event [] [0.5 0.75 0.8 1.0 0.0])
+
+(def get-events
+  (partial reduce conj-event []))
+
+(def events
+  (gen/fmap get-events (gen/vector probability)))
