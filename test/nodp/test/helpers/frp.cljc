@@ -188,6 +188,24 @@
                                        @bound-event)))))
 
 (clojure-test/defspec
+  event->>=-delay
+  5
+  (prop/for-all [inner-events events]
+                (let [outer-event (frp/event)
+                      bound-event (->> inner-events
+                                       make-iterate
+                                       (m/>>= outer-event))]
+                  (frp/activate)
+                  (dotimes [_ (-> inner-events
+                                  count
+                                  dec)]
+                    (outer-event unit/unit))
+                  (run! (partial (helpers/flip helpers/funcall) unit/unit)
+                        inner-events)
+                  (outer-event unit/unit)
+                  (= (tuple/fst outer-event) (tuple/fst @bound-event)))))
+
+(clojure-test/defspec
   event->>=-member
   5
   (prop/for-all [events-tuple* events-tuple]
