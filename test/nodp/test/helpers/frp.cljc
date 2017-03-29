@@ -164,7 +164,7 @@
       (contains? x)))
 
 (clojure-test/defspec
-  event->>=-delay-nonoccurrence
+  event->>=-nonmember
   5
   (prop/for-all [events-tuple* events-tuple]
                 (let [outer-event (frp/event)
