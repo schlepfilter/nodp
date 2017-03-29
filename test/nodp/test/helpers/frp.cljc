@@ -157,16 +157,3 @@
                     (outer-event unit/unit))
                   (run! (partial (helpers/flip helpers/funcall) unit/unit) es)
                   true)))
-
-
-(frp/restart)
-
-(def a-event (frp/event))
-
-(def b-event (m/<$> inc a-event))
-
-(frp/activate)
-
-(a-event 2)
-
-(:dependency @helpers/network-state)
