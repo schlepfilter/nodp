@@ -137,6 +137,30 @@
                                ~@fs
                                (set-earliest-latest helpers/nothing
                                                     ~event-name))))
+(defn now?
+  [e network]
+  (maybe/maybe false
+               (helpers/get-latest e network)
+               (comp (partial = (:event (:time network)))
+                     tuple/fst)))
+
+(def get-value
+  (comp tuple/snd
+        deref
+        helpers/get-latest))
+
+(defn make-merge-sync
+  [parent-event child-event]
+  (helpers/make-set-modifier
+    (fn [network]
+      (if (and (now? parent-event network)
+               (not (now? child-event network)))
+        (helpers/set-latest (helpers/get-latest parent-event network)
+                            child-event
+                            network)
+        network))
+    child-event))
+
 (helpers/defcurried
   delay-sync->>=
   [parent-event child-event network]
@@ -147,18 +171,6 @@
             (set-earliest-latest a child-event network))
           maybe/just
           (partial m/<*> (tuple/tuple (:event (:time network)) identity)))))
-
-(def get-value
-  (comp tuple/snd
-        deref
-        helpers/get-latest))
-
-(defn now?
-  [e network]
-  (maybe/maybe false
-               (helpers/get-latest e network)
-               (comp (partial = (:event (:time network)))
-                     tuple/fst)))
 
 (def context
   (helpers/reify-monad
@@ -176,7 +188,9 @@
                   (let [parent-event (->> network
                                           (get-value ma)
                                           f)]
-                    (call-functions ((juxt helpers/add-edge delay-sync->>=)
+                    (call-functions ((juxt helpers/add-edge
+                                           make-merge-sync
+                                           delay-sync->>=)
                                       parent-event
                                       child-event)
                                     @helpers/network-state)))
