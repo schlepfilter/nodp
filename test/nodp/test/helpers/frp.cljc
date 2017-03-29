@@ -17,6 +17,7 @@
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.time :as time]
             [nodp.helpers.tuple :as tuple]
+            [nodp.helpers.unit :as unit]
     #?(:clj
             [riddley.walk :as walk]))
   #?(:cljs (:require-macros [nodp.test.helpers.frp :refer [with-exit
@@ -124,5 +125,31 @@
 (def get-events
   (partial reduce conj-event []))
 
+(def function!
+  (gen/fmap (fn [_]
+              (fn [_]
+                (gen/generate gen/any)))
+            (gen/return unit/unit)))
+
 (def events
-  (gen/fmap get-events (gen/vector probability)))
+  (gen/bind function!
+            (fn [f]
+              (gen/fmap (comp (partial map (m/lift-a 1 f))
+                              get-events)
+                        (gen/vector probability)))))
+
+(defn make-iterate
+  [coll]
+  (let [state (atom coll)]
+    (fn [& _]
+      (let [result (first @state)]
+        (swap! state rest)
+        result))))
+
+(clojure-test/defspec
+  event->>=-left-bias
+  10
+  (prop/for-all [es events]
+                (let [outer-event (frp/event)
+                      output-event (m/>>= outer-event (make-iterate es))])
+                true))
