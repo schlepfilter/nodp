@@ -13,13 +13,8 @@
             [clojure.test.check.properties :as prop :include-macros true]
             [nodp.helpers :as helpers]
             [nodp.helpers.tuple :as tuple]
-            [nodp.helpers.unit :as unit]))
-
-(def function
-  (gen/fmap (fn [_]
-              (memoize (fn [_]
-                         (gen/generate gen/any))))
-            (gen/return unit/unit)))
+            [nodp.helpers.unit :as unit]
+            [nodp.test.helpers :as test-helpers]))
 
 (defn maybe
   [generator]
@@ -64,7 +59,7 @@
   monad-left-identity-law
   10
   (prop/for-all [a gen/any
-                 f* function
+                 f* test-helpers/function
                  monoid* monoid]
                 (let [f (comp (partial tuple/tuple monoid*)
                               f*)]
@@ -80,8 +75,8 @@
   10
   (prop/for-all [a gen/any
                  monoids (scalar-monoid-vector 3)
-                 f* function
-                 g* function]
+                 f* test-helpers/function
+                 g* test-helpers/function]
                 (let [f (comp (partial tuple/tuple (second monoids))
                               f*)
                       g (comp (partial tuple/tuple (last monoids))

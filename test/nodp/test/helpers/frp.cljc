@@ -18,6 +18,7 @@
             [nodp.helpers.time :as time]
             [nodp.helpers.tuple :as tuple]
             [nodp.helpers.unit :as unit]
+            [nodp.test.helpers :as test-helpers]
     #?(:clj
             [riddley.walk :as walk]))
   #?(:cljs (:require-macros [nodp.test.helpers.frp :refer [with-exit
@@ -125,17 +126,25 @@
 (def get-events
   (partial reduce conj-event []))
 
-(def function!
-  (gen/fmap (fn [_]
-              (fn [_]
-                (gen/generate gen/any)))
-            (gen/return unit/unit)))
-
 (def events
   (->> probability
        gen/vector
        gen/not-empty
        (gen/fmap get-events)))
+
+(def events-tuple
+  (gen/bind events
+            (fn [es]
+              (gen/tuple
+                (gen/return es)
+                (gen/bind
+                  (gen/vector test-helpers/function (count es))
+                  (fn [fs]
+                    (gen/return
+                      (map (fn [f e]
+                             ((m/lift-a 1 f) e))
+                           fs
+                           es))))))))
 
 (defn make-iterate
   [coll]
@@ -152,16 +161,16 @@
 (clojure-test/defspec
   event->>=-member
   5
-  (prop/for-all [input-events events
-                 f! function!]
+  (prop/for-all [events-tuple* events-tuple]
                 (let [outer-event (frp/event)
-                      fmapped-events (map (m/lift-a 1 f!) input-events)
-                      output-event (->> fmapped-events
+                      output-event (->> events-tuple*
+                                        second
                                         make-iterate
                                         (m/>>= outer-event))]
                   (frp/activate)
-                  (dotimes [_ (count input-events)]
+                  (dotimes [_ (count (first events-tuple*))]
                     (outer-event unit/unit))
                   (run! (partial (helpers/flip helpers/funcall) unit/unit)
-                        input-events)
-                  (contains-value? (map deref fmapped-events) @output-event))))
+                        (first events-tuple*))
+                  (contains-value? (map deref (second events-tuple*))
+                                   @output-event))))
