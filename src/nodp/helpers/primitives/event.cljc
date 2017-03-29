@@ -35,8 +35,10 @@
 
 (defn if-then-else
   [if-function then-function else]
-  (if (if-function else)
-    (then-function else)
+  ((helpers/build if
+                  if-function
+                  then-function
+                  identity)
     else))
 
 (helpers/defcurried set-earliest
