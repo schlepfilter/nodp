@@ -169,22 +169,19 @@
 (clojure-test/defspec
   event->>=-nonmember
   5
-  (prop/for-all [events-tuple* events-tuple]
+  (prop/for-all [[input-events fmapped-events] events-tuple]
                 (let [outer-event (frp/event)
-                      bound-event (->> events-tuple*
-                                       second
+                      bound-event (->> fmapped-events
                                        make-iterate
                                        (m/>>= outer-event))]
                   (frp/activate)
-                  (dotimes [_ (-> events-tuple*
-                                  first
+                  (dotimes [_ (-> input-events
                                   count
                                   dec)]
                     (outer-event unit/unit))
-                  (call-units (first events-tuple*))
+                  (call-units input-events)
                   (or (maybe/nothing? @bound-event)
-                      (contains-value? (->> events-tuple*
-                                            second
+                      (contains-value? (->> fmapped-events
                                             drop-last
                                             (map deref))
                                        @bound-event)))))
@@ -209,38 +206,31 @@
 (clojure-test/defspec
   event->>=-member
   5
-  (prop/for-all [events-tuple* events-tuple]
+  (prop/for-all [[inner-events fmapped-events] events-tuple]
                 (let [outer-event (frp/event)
-                      bound-event (->> events-tuple*
-                                       second
+                      bound-event (->> fmapped-events
                                        make-iterate
                                        (m/>>= outer-event))]
                   (frp/activate)
-                  (dotimes [_ (-> events-tuple*
-                                  first
-                                  count)]
+                  (dotimes [_ (count inner-events)]
                     (outer-event unit/unit))
-                  (call-units (first events-tuple*))
-                  (contains-value? (map deref (second events-tuple*))
+                  (call-units inner-events)
+                  (contains-value? (map deref fmapped-events)
                                    @bound-event))))
 
 (clojure-test/defspec
   event->>=-left-bias
   5
-  (prop/for-all [events-tuple* events-tuple]
+  (prop/for-all [[inner-events fmapped-events] events-tuple]
                 (let [outer-event (frp/event)
-                      bound-event (->> events-tuple*
-                                       second
+                      bound-event (->> fmapped-events
                                        make-iterate
                                        (m/>>= outer-event))]
                   (frp/activate)
-                  (dotimes [_ (-> events-tuple*
-                                  first
-                                  count)]
+                  (dotimes [_ (count inner-events)]
                     (outer-event unit/unit))
-                  (call-units (first events-tuple*))
-                  (->> events-tuple*
-                       second
+                  (call-units inner-events)
+                  (->> fmapped-events
                        (map deref)
                        (filter (comp (partial = (tuple/fst @@bound-event))
                                      tuple/fst
