@@ -223,3 +223,28 @@
                         (first events-tuple*))
                   (contains-value? (map deref (second events-tuple*))
                                    @bound-event))))
+
+(clojure-test/defspec
+  event->>=-left-bias
+  5
+  (prop/for-all [events-tuple* events-tuple]
+                (let [outer-event (frp/event)
+                      bound-event (->> events-tuple*
+                                       second
+                                       make-iterate
+                                       (m/>>= outer-event))]
+                  (frp/activate)
+                  (dotimes [_ (-> events-tuple*
+                                  first
+                                  count)]
+                    (outer-event unit/unit))
+                  (run! (partial (helpers/flip helpers/funcall) unit/unit)
+                        (first events-tuple*))
+                  (->> events-tuple*
+                       second
+                       (map deref)
+                       (filter (comp (partial = (tuple/fst @@bound-event))
+                                     tuple/fst
+                                     deref))
+                       first
+                       (= @bound-event)))))
