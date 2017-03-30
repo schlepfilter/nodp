@@ -4,7 +4,9 @@
             [nodp.helpers :as helpers])
   #?(:clj
            (:import (clojure.lang IDeref))
-     :cljs (:require-macros [nodp.helpers.primitives.behavior :refer [behavior*]])))
+     :cljs (:require-macros [nodp.helpers.primitives.behavior
+                             :refer
+                             [behavior*]])))
 
 (declare context)
 
@@ -35,3 +37,10 @@
       (behavior* b
                  (helpers/set-latest a b)))
     (fn [ma f])))
+
+(defn switcher
+  [parent-behavior parent-event]
+  (let [child-behavior
+        (behavior* child-behavior*
+                   (helpers/set-latest @parent-behavior child-behavior*))]
+    child-behavior))

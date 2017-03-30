@@ -1,4 +1,5 @@
 (ns nodp.helpers.derived.behavior
+  (:refer-clojure :exclude [stepper])
   (:require [cats.context :as ctx]
             [cats.core :as m]
             [nodp.helpers.primitives.behavior :as behavior]))
@@ -8,3 +9,8 @@
   (->> a
        m/pure
        (ctx/with-context behavior/context)))
+
+(defn stepper
+  [a e]
+  (behavior/switcher (behavior a)
+                     (m/<$> behavior e)))
