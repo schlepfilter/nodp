@@ -237,3 +237,10 @@
                                      deref))
                        first
                        (= @bound-event)))))
+
+(clojure-test/defspec
+  behavior-return
+  10
+  (prop/for-all [a gen/any]
+                (= @(m/return (helpers/infer (frp/behavior unit/unit)) a)
+                   a)))
