@@ -163,6 +163,9 @@
       set
       (contains? x)))
 
+(def call-units
+  (partial run! (partial (helpers/flip helpers/funcall) unit/unit)))
+
 (clojure-test/defspec
   event->>=-nonmember
   5
@@ -178,8 +181,7 @@
                                   count
                                   dec)]
                     (outer-event unit/unit))
-                  (run! (partial (helpers/flip helpers/funcall) unit/unit)
-                        (first events-tuple*))
+                  (call-units (first events-tuple*))
                   (or (maybe/nothing? @bound-event)
                       (contains-value? (->> events-tuple*
                                             second
@@ -200,8 +202,7 @@
                                   count
                                   dec)]
                     (outer-event unit/unit))
-                  (run! (partial (helpers/flip helpers/funcall) unit/unit)
-                        inner-events)
+                  (call-units inner-events)
                   (outer-event unit/unit)
                   (= (tuple/fst outer-event) (tuple/fst @bound-event)))))
 
@@ -219,8 +220,7 @@
                                   first
                                   count)]
                     (outer-event unit/unit))
-                  (run! (partial (helpers/flip helpers/funcall) unit/unit)
-                        (first events-tuple*))
+                  (call-units (first events-tuple*))
                   (contains-value? (map deref (second events-tuple*))
                                    @bound-event))))
 
@@ -238,8 +238,7 @@
                                   first
                                   count)]
                     (outer-event unit/unit))
-                  (run! (partial (helpers/flip helpers/funcall) unit/unit)
-                        (first events-tuple*))
+                  (call-units (first events-tuple*))
                   (->> events-tuple*
                        second
                        (map deref)
