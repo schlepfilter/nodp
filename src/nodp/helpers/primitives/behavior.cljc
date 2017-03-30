@@ -1,5 +1,6 @@
 (ns nodp.helpers.primitives.behavior
   (:require [cats.protocols :as p]
+            [cats.util :as util]
             [nodp.helpers :as helpers])
   #?(:clj
            (:import (clojure.lang IDeref))
@@ -15,13 +16,18 @@
   IDeref
   (#?(:clj  deref
       :cljs -deref) [b]
-    (helpers/get-latest b @helpers/network-state)))
+    (helpers/get-latest b @helpers/network-state))
+  p/Printable
+  (-repr [_]
+    (str "#[behavior " id "]")))
 
 #?(:clj (defmacro behavior*
           [event-name & fs]
           `(helpers/get-entity ~event-name
                                Behavior.
                                ~@fs)))
+
+(util/make-printable Behavior)
 
 (def context
   (helpers/reify-monad
