@@ -186,6 +186,11 @@
                                             (map deref))
                                        @bound-event)))))
 
+(def get-time
+  (comp tuple/fst
+        deref
+        deref))
+
 (clojure-test/defspec
   event->>=-delay
   5
@@ -201,7 +206,7 @@
                     (outer-event unit/unit))
                   (call-units inner-events)
                   (outer-event unit/unit)
-                  (= (tuple/fst @@outer-event) (tuple/fst @@bound-event)))))
+                  (= (get-time outer-event) (get-time bound-event)))))
 
 (clojure-test/defspec
   event->>=-member
@@ -232,7 +237,7 @@
                   (call-units inner-events)
                   (->> fmapped-events
                        (map deref)
-                       (filter (comp (partial = (tuple/fst @@bound-event))
+                       (filter (comp (partial = (get-time bound-event))
                                      tuple/fst
                                      deref))
                        first
