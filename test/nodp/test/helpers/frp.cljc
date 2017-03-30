@@ -125,7 +125,7 @@
        int
        (if (= 1.0 probability*)
          0)
-       (nth (conj coll (event/event)))
+       (nth (conj coll (frp/event)))
        (conj coll)))
 
 (def get-events

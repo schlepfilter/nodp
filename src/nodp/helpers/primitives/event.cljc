@@ -203,9 +203,5 @@
 
 (util/make-printable Event)
 
-(defn event
-  []
-  (event* e))
-
 (def activate
   (partial swap! helpers/network-state (partial s/setval* :active true)))

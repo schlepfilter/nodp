@@ -1,11 +1,14 @@
-(ns nodp.helpers.effect
+(ns nodp.helpers.io
   (:require [cats.core :as m]
-            [cats.monad.maybe :as maybe]
             [com.rpl.specter :as s]
             [nodp.helpers :as helpers :include-macros true]
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.tuple :as tuple])
-  #?(:cljs (:require-macros [nodp.helpers.effect :refer [defcurriedmethod]])))
+  #?(:cljs (:require-macros [nodp.helpers.io :refer [defcurriedmethod]])))
+
+(defn event
+  []
+  (event/event* e))
 
 (defmulti call-modifier (comp helpers/get-keyword
                               second
