@@ -201,7 +201,7 @@
                     (outer-event unit/unit))
                   (call-units inner-events)
                   (outer-event unit/unit)
-                  (= (tuple/fst outer-event) (tuple/fst @bound-event)))))
+                  (= (tuple/fst @@outer-event) (tuple/fst @@bound-event)))))
 
 (clojure-test/defspec
   event->>=-member
