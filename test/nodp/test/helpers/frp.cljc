@@ -146,15 +146,6 @@
                                        fs
                                        es)))))
 
-(def events-behaviors
-  (gen/let [[input-events fmapped-events] events-tuple
-            as (gen/vector gen/any (count input-events))]
-           (gen/tuple (gen/return input-events)
-                      (gen/return
-                        (map frp/stepper
-                             as
-                             fmapped-events)))))
-
 (defn make-iterate
   [coll]
   (let [state (atom coll)]
@@ -255,3 +246,20 @@
   (prop/for-all [a gen/any]
                 (= @(m/return (helpers/infer (frp/behavior unit/unit)) a)
                    a)))
+
+(def events-behaviors
+  (gen/let [[input-events fmapped-events] events-tuple
+            as (gen/vector gen/any (count input-events))]
+           (gen/tuple (gen/return input-events)
+                      (gen/return
+                        (map frp/stepper
+                             as
+                             fmapped-events)))))
+
+(clojure-test/defspec
+  swithcer-zero
+  5
+  (prop/for-all [[es bs] events-behaviors]
+                (let [e (frp/event)
+                      b (frp/switcher (first bs) e)]
+                  (= @b @(first bs)))))
