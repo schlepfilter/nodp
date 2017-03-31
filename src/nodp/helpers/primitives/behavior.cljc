@@ -1,6 +1,8 @@
 (ns nodp.helpers.primitives.behavior
-  (:require [cats.protocols :as p]
+  (:require [cats.monad.maybe :as maybe]
+            [cats.protocols :as p]
             [cats.util :as util]
+            [nodp.helpers.tuple :as tuple]
             [nodp.helpers :as helpers])
   #?(:clj
            (:import (clojure.lang IDeref))
@@ -42,5 +44,17 @@
   [parent-behavior parent-event]
   (let [child-behavior
         (behavior* child-behavior*
-                   (helpers/set-latest @parent-behavior child-behavior*))]
+                   (helpers/set-latest @parent-behavior child-behavior*)
+                   (helpers/make-set-modifier
+                     (fn [network]
+                       (helpers/set-latest
+                         (helpers/get-latest
+                           (maybe/maybe parent-behavior
+                                        (helpers/get-latest parent-event
+                                                            network)
+                                        tuple/snd)
+                           network)
+                         child-behavior*
+                         network))
+                     child-behavior*))]
     child-behavior))

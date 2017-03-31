@@ -1,5 +1,6 @@
 (ns nodp.helpers.primitives.event
-  (:require [cats.core :as m]
+  (:require [cats.builtin]
+            [cats.core :as m]
             [cats.monad.maybe :as maybe]
             [cats.protocols :as p]
             [cats.util :as util]
@@ -60,20 +61,28 @@
        (alg/bf-traverse g)
        (graph/subgraph g)))
 
+(defn make-get-modifiers*
+  [network]
+  (comp (partial mapcat (:modifier network))
+        alg/topsort))
+
+(def get-behavior-modifiers
+  (m/<*> make-get-modifiers*
+         (comp :behavior
+               :dependency)))
+
+(defn modify-behavior!
+  [t network]
+  (call-functions (cons (partial s/setval* [:time :behavior] t)
+                        (get-behavior-modifiers network))
+                  network))
+
 (defn get-event-modifiers
   [e network]
   (->> e
        :id
        (reachable-subgraph (:event (:dependency network)))
-       alg/topsort
-       (mapcat (:modifier network))))
-
-(defn modify-behavior!
-  [t network]
-  ;TODO concatenate modifiers
-  (call-functions (cons (partial s/setval* [:time :behavior] t)
-                        [])
-                  network))
+       ((make-get-modifiers* network))))
 
 (defn modify-event!
   [occurrence e network]
