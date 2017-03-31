@@ -138,16 +138,13 @@
        (gen/fmap get-events)))
 
 (def events-tuple
-  (gen/bind events
-            (fn [es]
-              (->> (fn [fs]
-                     (gen/return
-                       (map (fn [f e]
-                              ((m/lift-a 1 f) e))
-                            fs
-                            es)))
-                   (gen/bind (gen/vector test-helpers/function (count es)))
-                   (gen/tuple (gen/return es))))))
+  (gen/let [es events
+            fs (gen/vector test-helpers/function (count es))]
+           (gen/tuple (gen/return es)
+                      (gen/return (map (fn [f e]
+                                         ((m/lift-a 1 f) e))
+                                       fs
+                                       es)))))
 
 (def events-behaviors
   (gen/bind events-tuple
