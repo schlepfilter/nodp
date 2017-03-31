@@ -266,8 +266,7 @@
 
 (clojure-test/defspec
   switcher-positive
-  {:num-tests 5
-   :seed      1490951086880}
+  5
   (prop/for-all [[es bs] events-behaviors]
                 (let [e (frp/event)
                       b (frp/switcher (first bs) e)]

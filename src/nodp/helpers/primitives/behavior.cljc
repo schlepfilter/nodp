@@ -68,7 +68,6 @@
                                    (fn [x]
                                      (helpers/add-edge (tuple/snd x)
                                                        child-behavior
-                                                       network)))
-                      network)
+                                                       network))))
                     child-event))
     child-behavior))
