@@ -257,9 +257,21 @@
                              fmapped-events)))))
 
 (clojure-test/defspec
-  swithcer-zero
+  switcher-zero
   5
   (prop/for-all [[es bs] events-behaviors]
                 (let [e (frp/event)
                       b (frp/switcher (first bs) e)]
                   (= @b @(first bs)))))
+
+(clojure-test/defspec
+  switcher-positive
+  {:num-tests 5
+   :seed      1490951086880}
+  (prop/for-all [[es bs] events-behaviors]
+                (let [e (frp/event)
+                      b (frp/switcher (first bs) e)]
+                  (frp/activate)
+                  (run! e (rest bs))
+                  (call-units es)
+                  (= @b @(last bs)))))

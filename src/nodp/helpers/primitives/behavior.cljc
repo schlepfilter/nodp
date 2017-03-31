@@ -2,6 +2,7 @@
   (:require [cats.monad.maybe :as maybe]
             [cats.protocols :as p]
             [cats.util :as util]
+            [nodp.helpers.primitives.event :as event]
             [nodp.helpers.tuple :as tuple]
             [nodp.helpers :as helpers])
   #?(:clj
@@ -44,6 +45,7 @@
   [parent-behavior parent-event]
   (let [child-behavior
         (behavior* child-behavior*
+                   (helpers/add-edge parent-behavior child-behavior*)
                    (helpers/set-latest @parent-behavior child-behavior*)
                    (helpers/make-set-modifier
                      (fn [network]
@@ -57,4 +59,16 @@
                          child-behavior*
                          network))
                      child-behavior*))]
+    (event/event* child-event
+                  (helpers/add-edge parent-event child-event)
+                  (helpers/make-set-modifier
+                    (fn [network]
+                      (maybe/maybe network
+                                   (helpers/get-latest parent-event network)
+                                   (fn [x]
+                                     (helpers/add-edge (tuple/snd x)
+                                                       child-behavior
+                                                       network)))
+                      network)
+                    child-event))
     child-behavior))

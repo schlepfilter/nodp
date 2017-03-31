@@ -94,9 +94,9 @@
 
 (defn modify-network!
   [occurrence t e network]
-  ;TODO modify behavior
   (call-functions [(partial modify-behavior! (tuple/fst occurrence))
-                   (partial modify-event! occurrence e)]
+                   (partial modify-event! occurrence e)
+                   (partial modify-behavior! t)]
                   network))
 (def run-effects!
   (helpers/build run!
