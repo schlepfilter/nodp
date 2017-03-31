@@ -147,15 +147,13 @@
                                        es)))))
 
 (def events-behaviors
-  (gen/bind events-tuple
-            (fn [[input-events fmapped-events]]
-              (gen/tuple (gen/return input-events)
-                         (gen/bind (gen/vector gen/any (count input-events))
-                                   (fn [as]
-                                     (gen/return
-                                       (map frp/stepper
-                                            as
-                                            fmapped-events))))))))
+  (gen/let [[input-events fmapped-events] events-tuple
+            as (gen/vector gen/any (count input-events))]
+           (gen/tuple (gen/return input-events)
+                      (gen/return
+                        (map frp/stepper
+                             as
+                             fmapped-events)))))
 
 (defn make-iterate
   [coll]
