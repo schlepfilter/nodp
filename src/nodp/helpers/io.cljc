@@ -8,7 +8,7 @@
 
 (defn event
   []
-  (event/event* e))
+  (event/event* _))
 
 (defmulti call-modifier (comp helpers/get-keyword
                               second
