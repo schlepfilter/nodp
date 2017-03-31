@@ -199,27 +199,25 @@
               (set-earliest-latest (maybe/just (tuple/tuple (time/time 0) a))
                                    e)))
     (fn [ma f]
-      (event*
-        child-event
-        (helpers/make-set-modifier
-          (fn [network]
-            (if (now? ma network)
-              (do (reset! helpers/network-state network)
-                  (let [parent-event (->> network
-                                          (get-value ma)
-                                          f)]
-                    (call-functions ((juxt helpers/add-edge
-                                           make-merge-sync
-                                           delay-sync->>=)
-                                      parent-event
-                                      child-event)
-                                    @helpers/network-state)))
-              network))
-          child-event)
-        (helpers/add-edge ma child-event)))))
+      (event* child-event
+              (helpers/make-set-modifier
+                (fn [network]
+                  (if (now? ma network)
+                    (do (reset! helpers/network-state network)
+                        (let [parent-event (->> network
+                                                (get-value ma)
+                                                f)]
+                          (call-functions ((juxt helpers/add-edge
+                                                 make-merge-sync
+                                                 delay-sync->>=)
+                                            parent-event
+                                            child-event)
+                                          @helpers/network-state)))
+                    network))
+                child-event)
+              (helpers/add-edge ma child-event)))))
 
 (util/make-printable Event)
 
 (def activate
   (partial swap! helpers/network-state (partial s/setval* :active true)))
-
