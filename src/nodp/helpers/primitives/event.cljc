@@ -61,12 +61,19 @@
        (graph/subgraph g)))
 
 (defn get-modifiers
-  [k entity network]
-  (->> entity
+  [k e network]
+  (->> e
        :id
        (reachable-subgraph (k (:dependency network)))
        alg/topsort
        (mapcat (:modifier network))))
+
+(defn modify-behavior!
+  [t network]
+  ;TODO concatenate modifiers
+  (call-functions (cons (partial s/setval* [:time :behavior] t)
+                        [])
+                  network))
 
 (defn modify-event!
   [occurrence e network]
@@ -79,7 +86,8 @@
 (defn modify-network!
   [occurrence t e network]
   ;TODO modify behavior
-  (call-functions [(partial modify-event! occurrence e)]
+  (call-functions [(partial modify-behavior! (tuple/fst occurrence))
+                   (partial modify-event! occurrence e)]
                   network))
 (def run-effects!
   (helpers/build run!
