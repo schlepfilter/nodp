@@ -60,11 +60,11 @@
        (alg/bf-traverse g)
        (graph/subgraph g)))
 
-(defn get-modifiers
-  [k e network]
+(defn get-event-modifiers
+  [e network]
   (->> e
        :id
-       (reachable-subgraph (k (:dependency network)))
+       (reachable-subgraph (:event (:dependency network)))
        alg/topsort
        (mapcat (:modifier network))))
 
@@ -80,7 +80,7 @@
   (call-functions
     (concat [(partial s/setval* [:time :event] (tuple/fst occurrence))
              (set-earliest-latest (maybe/just occurrence) e)]
-            (get-modifiers :event e network))
+            (get-event-modifiers e network))
     network))
 
 (defn modify-network!
@@ -213,3 +213,4 @@
 
 (def activate
   (partial swap! helpers/network-state (partial s/setval* :active true)))
+
