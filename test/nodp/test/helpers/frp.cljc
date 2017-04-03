@@ -26,16 +26,16 @@
 
 (defn fixture
   [f]
-  (frp/restart)
   (with-redefs [event/queue helpers/funcall]
     (f)))
 
-(test/use-fixtures :each fixture)
+(test/use-fixtures :once fixture)
 
 (clojure-test/defspec
   invoke-inactive
   10
   (prop/for-all [as (gen/vector gen/any)]
+                (frp/restart)
                 (let [e (frp/event)]
                   (run! e as)
                   (maybe/nothing? @e))))
@@ -44,6 +44,7 @@
   invoke-active
   10
   (prop/for-all [as (gen/vector gen/any)]
+                (frp/restart)
                 (let [e (frp/event)]
                   (frp/activate)
                   (run! e as)
@@ -56,6 +57,7 @@
   event-return
   10
   (prop/for-all [a gen/any]
+                (frp/restart)
                 (= @@(m/return (helpers/infer (frp/event)) a)
                    (tuple/tuple (time/time 0) a))))
 
@@ -167,6 +169,7 @@
   event->>=-nonmember
   5
   (prop/for-all [[input-events fmapped-events] events-tuple]
+                (frp/restart)
                 (let [outer-event (frp/event)
                       bound-event (->> fmapped-events
                                        make-iterate
@@ -192,6 +195,7 @@
   event->>=-delay
   5
   (prop/for-all [inner-events events]
+                (frp/restart)
                 (let [outer-event (frp/event)
                       bound-event (->> inner-events
                                        make-iterate
@@ -209,6 +213,7 @@
   event->>=-member
   5
   (prop/for-all [[inner-events fmapped-events] events-tuple]
+                (frp/restart)
                 (let [outer-event (frp/event)
                       bound-event (->> fmapped-events
                                        make-iterate
@@ -224,6 +229,7 @@
   event->>=-left-bias
   5
   (prop/for-all [[inner-events fmapped-events] events-tuple]
+                (frp/restart)
                 (let [outer-event (frp/event)
                       bound-event (->> fmapped-events
                                        make-iterate
@@ -244,6 +250,7 @@
   behavior-return
   10
   (prop/for-all [a gen/any]
+                (frp/restart)
                 (= @(m/return (helpers/infer (frp/behavior unit/unit)) a)
                    a)))
 
@@ -260,6 +267,7 @@
   switcher-zero
   5
   (prop/for-all [[es bs] events-behaviors]
+                (frp/restart)
                 (let [e (frp/event)
                       b (frp/switcher (first bs) e)]
                   (= @b @(first bs)))))
@@ -268,6 +276,7 @@
   switcher-positive
   5
   (prop/for-all [[es bs] events-behaviors]
+                (frp/restart)
                 (let [e (frp/event)
                       b (frp/switcher (first bs) e)]
                   (frp/activate)
