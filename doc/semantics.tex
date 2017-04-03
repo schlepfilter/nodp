@@ -4,7 +4,14 @@
   >>= :: E_a \rightarrow f \rightarrow E_a
 \end{align*}
 \begin{align*}
-  &occs\ (>>= e\ f) = foldr\ merge\ []\circ map\ delayOccs\circ map\ (\lambda(\hat{t}_a, a) \rightarrow (\hat{t}_a , f\ a))\ (occs\ e)
+  occs\ (>>= e\ f) = foldr\ merge\ []\circ map\ delayOccs\circ map\ (\lambda(\hat{t}_a, a) \rightarrow (\hat{t}_a , f\ a))\ (occs\ e)
+\end{align*}
+\begin{align*}
+  transduce :: xform \rightarrow (a \rightarrow b \rightarrow a) \rightarrow a \rightarrow E_b \rightarrow E_a
+\end{align*}
+\begin{align*}
+  &occs\ (transduce\ xform\ f\ a\ e)\\
+  &\quad= scanl\ (liftA2\ f)\ a\ (mapMaybe\ (xform\ (\lambda\_\ x\rightarrow just\ x)\ nothing)\ (occs\ e))
 \end{align*}
 \begin{align*}
   >>= :: B_a \rightarrow f \rightarrow B_a
