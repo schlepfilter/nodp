@@ -239,6 +239,7 @@
   start)
 
 (def call-functions
+  ;TODO move this function to event
   (flip (partial reduce (flip funcall))))
 
 (defcurried make-get

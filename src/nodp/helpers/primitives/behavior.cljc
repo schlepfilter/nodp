@@ -39,7 +39,22 @@
     (fn [a]
       (behavior* b
                  (helpers/set-latest a b)))
-    (fn [ma f])))
+    (fn [ma f]
+      (behavior*
+        child-behavior
+        (helpers/make-set-modifier
+          (fn [network]
+            (do (reset! helpers/network-state network)
+                (let [parent-behavior (->> network
+                                           (helpers/get-latest ma)
+                                           f)]
+                  (helpers/set-latest
+                    (helpers/get-latest parent-behavior @helpers/network-state)
+                    child-behavior
+                    @helpers/network-state))))
+          child-behavior)
+        (helpers/set-latest @(f @ma) child-behavior)
+        (helpers/add-edge ma child-behavior)))))
 
 (defn switcher
   [parent-behavior parent-event]

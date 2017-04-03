@@ -283,3 +283,19 @@
                   (run! e (rest bs))
                   (call-units es)
                   (= @b @(last bs)))))
+
+(clojure-test/defspec
+  behavior->>=
+  5
+  (prop/for-all [f test-helpers/function
+                 as (gen/vector gen/any)
+                 a gen/any]
+                (frp/restart)
+                (let [e (frp/event)
+                      outer-behavior (frp/stepper a e)
+                      bound-behavior (m/>>= outer-behavior
+                                            (comp frp/behavior
+                                                  f))]
+                  (frp/activate)
+                  (run! e as)
+                  (= @bound-behavior (f @outer-behavior)))))
