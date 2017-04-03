@@ -1,0 +1,10 @@
+\documentclass[fleqn]{amsart}
+\begin{document}
+\begin{align*}
+  >>= :: E_a \rightarrow f \rightarrow E_a
+\end{align*}
+\begin{align*}
+  &occs(>>= e\ f) =\\
+  &\quad foldr\ merge\ []\circ map\ delayOccs\circ map\ (\lambda(\hat{t}_a, a) \rightarrow (\hat{t}_a , f\ a))\ (occs\ e)
+\end{align*}
+\end{document}
