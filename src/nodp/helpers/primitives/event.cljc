@@ -156,6 +156,7 @@
                                ~@fs
                                (set-earliest-latest helpers/nothing
                                                     ~event-name))))
+
 (defn now?
   [e network]
   (maybe/maybe false
@@ -221,4 +222,3 @@
 
 (def activate
   (partial swap! helpers/network-state (partial s/setval* :active true)))
-
