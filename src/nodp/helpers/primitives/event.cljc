@@ -28,9 +28,6 @@
   (let [past (time/now)]
     [past (get-new-time past)]))
 
-(def call-functions
-  (helpers/flip (partial reduce (helpers/flip helpers/funcall))))
-
 (def get-earliest
   (helpers/make-get :earliest))
 
@@ -73,9 +70,9 @@
 
 (defn modify-behavior!
   [t network]
-  (call-functions (cons (partial s/setval* [:time :behavior] t)
-                        (get-behavior-modifiers network))
-                  network))
+  (helpers/call-functions (cons (partial s/setval* [:time :behavior] t)
+                                (get-behavior-modifiers network))
+                          network))
 
 (defn get-event-modifiers
   [e network]
@@ -86,7 +83,7 @@
 
 (defn modify-event!
   [occurrence e network]
-  (call-functions
+  (helpers/call-functions
     (concat [(partial s/setval* [:time :event] (tuple/fst occurrence))
              (set-earliest-latest (maybe/just occurrence) e)]
             (get-event-modifiers e network))
@@ -94,10 +91,10 @@
 
 (defn modify-network!
   [occurrence t e network]
-  (call-functions [(partial modify-behavior! (tuple/fst occurrence))
-                   (partial modify-event! occurrence e)
-                   (partial modify-behavior! t)]
-                  network))
+  (helpers/call-functions [(partial modify-behavior! (tuple/fst occurrence))
+                           (partial modify-event! occurrence e)
+                           (partial modify-behavior! t)]
+                          network))
 (def run-effects!
   (helpers/build run!
                  (helpers/curry 2 (helpers/flip helpers/funcall))
@@ -207,12 +204,12 @@
                         (let [parent-event (->> network
                                                 (get-value ma)
                                                 f)]
-                          (call-functions ((juxt helpers/add-edge
-                                                 make-merge-sync
-                                                 delay-sync->>=)
-                                            parent-event
-                                            child-event)
-                                          @helpers/network-state)))
+                          (helpers/call-functions ((juxt helpers/add-edge
+                                                         make-merge-sync
+                                                         delay-sync->>=)
+                                                    parent-event
+                                                    child-event)
+                                                  @helpers/network-state)))
                     network))
                 child-event)
               (helpers/add-edge ma child-event)))))
@@ -221,3 +218,4 @@
 
 (def activate
   (partial swap! helpers/network-state (partial s/setval* :active true)))
+

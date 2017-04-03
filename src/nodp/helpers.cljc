@@ -238,6 +238,9 @@
   ;TODO call stop
   start)
 
+(def call-functions
+  (flip (partial reduce (flip funcall))))
+
 (defcurried make-get
             [k entity network]
             ((:id entity) (k network)))
