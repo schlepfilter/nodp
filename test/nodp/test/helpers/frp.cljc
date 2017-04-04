@@ -147,12 +147,21 @@
 (defn events-tuple*
   [events-generator]
   (gen/let [es events-generator
-            fs (gen/vector (test-helpers/function gen/any) (count es))]
+            fs (gen/vector (test-helpers/function gen/any) (count es))
+            xs (gen/vector gen/boolean (count es))]
            (gen/tuple (gen/return es)
                       (gen/return (map (fn [f e]
                                          ((m/lift-a 1 f) e))
                                        fs
-                                       es)))))
+                                       es))
+                      (gen/return (partial run!
+                                           helpers/funcall
+                                           (map (fn [e x]
+                                                  (fn []
+                                                    (if x
+                                                      (e unit/unit))))
+                                                es
+                                                xs))))))
 
 (def events-tuple
   (comp events-tuple*
@@ -183,7 +192,7 @@
 (clojure-test/defspec
   event->>=-nonmember
   5
-  (prop/for-all [[input-events fmapped-events] (events-tuple)]
+  (prop/for-all [[input-events fmapped-events invoke] (events-tuple)]
                 (frp/restart)
                 (let [outer-event (frp/event)
                       bound-event (->> fmapped-events
@@ -194,8 +203,7 @@
                                   count
                                   dec)]
                     (outer-event unit/unit))
-                  ;TODO call some of input-events
-                  (call-units input-events)
+                  (invoke)
                   (or (maybe/nothing? @bound-event)
                       (contains-event-value? (drop-last fmapped-events)
                                              bound-event)))))
@@ -238,7 +246,7 @@
 (clojure-test/defspec
   event->>=-left-bias
   5
-  (prop/for-all [[inner-events fmapped-events] (events-tuple)]
+  (prop/for-all [[inner-events fmapped-events invoke] (events-tuple)]
                 (frp/restart)
                 (let [outer-event (frp/event)
                       bound-event (->> fmapped-events
@@ -247,18 +255,16 @@
                   (frp/activate)
                   (dotimes [_ (count inner-events)]
                     (outer-event unit/unit))
-                  ;TODO call some of input-events
-                  (call-units inner-events)
+                  (invoke)
                   (left-biased? bound-event fmapped-events))))
 
 (clojure-test/defspec
   event-<>
   5
-  (prop/for-all [[input-events fmapped-events] (events-tuple)]
+  (prop/for-all [[input-events fmapped-events invoke] (events-tuple)]
                 (let [mappended-event (apply m/<> fmapped-events)]
                   (frp/activate)
-                  ;TODO call some of input-events
-                  (call-units input-events)
+                  (invoke)
                   (left-biased? mappended-event fmapped-events))))
 
 (def xform
