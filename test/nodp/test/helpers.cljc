@@ -11,8 +11,9 @@
                (random/make-random))]
      (rose/root (gen/call-gen generator rng size)))))
 
-(def function
+(defn function
+  [generator]
   (gen/fmap (fn [n]
               (memoize (fn [x]
-                         (generate gen/any {:seed (+ n (hash x))}))))
+                         (generate generator {:seed (+ n (hash x))}))))
             gen/int))

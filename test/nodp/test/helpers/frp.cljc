@@ -146,7 +146,7 @@
 (defn events-tuple*
   [events-generator]
   (gen/let [es events-generator
-            fs (gen/vector test-helpers/function (count es))]
+            fs (gen/vector (test-helpers/function gen/any) (count es))]
            (gen/tuple (gen/return es)
                       (gen/return (map (fn [f e]
                                          ((m/lift-a 1 f) e))
@@ -321,7 +321,7 @@
 (clojure-test/defspec
   behavior->>=
   5
-  (prop/for-all [f test-helpers/function
+  (prop/for-all [f (test-helpers/function gen/any)
                  as (gen/vector gen/any)
                  a gen/any]
                 (frp/restart)
@@ -334,16 +334,10 @@
                   (run! e as)
                   (= @bound-behavior (f @outer-behavior)))))
 
-(def predicate
-  (gen/fmap (fn [n]
-              (memoize (fn [x]
-                         (test-helpers/generate gen/boolean {:seed (+ n (hash x))}))))
-            gen/int))
-
 (def xform
   (gen/one-of [(gen/fmap map
-                         test-helpers/function)
+                         (test-helpers/function gen/any))
                (gen/fmap mapcat
-                         test-helpers/function)
+                         (test-helpers/function gen/any))
                (gen/fmap filter
-                         predicate)]))
+                         (test-helpers/function gen/boolean))]))

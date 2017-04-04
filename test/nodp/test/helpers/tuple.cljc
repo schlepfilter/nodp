@@ -59,7 +59,7 @@
   monad-left-identity-law
   10
   (prop/for-all [a gen/any
-                 f* test-helpers/function
+                 f* (test-helpers/function gen/any)
                  monoid* monoid]
                 (let [f (comp (partial tuple/tuple monoid*)
                               f*)]
@@ -75,8 +75,8 @@
   10
   (prop/for-all [a gen/any
                  monoids (scalar-monoid-vector 3)
-                 f* test-helpers/function
-                 g* test-helpers/function]
+                 f* (test-helpers/function gen/any)
+                 g* (test-helpers/function gen/any)]
                 (let [f (comp (partial tuple/tuple (second monoids))
                               f*)
                       g (comp (partial tuple/tuple (last monoids))
