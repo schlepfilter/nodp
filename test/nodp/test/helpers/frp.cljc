@@ -133,20 +133,28 @@
 (def get-events
   (partial reduce conj-event []))
 
-(def events
-  (->> probability
-       gen/vector
-       gen/not-empty
-       (gen/fmap get-events)))
+(defn probabilities
+  ([]
+   (gen/not-empty (gen/vector probability)))
+  ([n]
+   (gen/vector probability n)))
 
-(def events-tuple
-  (gen/let [es events
+(def events
+  (comp (partial gen/fmap get-events)
+        probabilities))
+
+(defn events-tuple*
+  [events-generator]
+  (gen/let [es events-generator
             fs (gen/vector test-helpers/function (count es))]
            (gen/tuple (gen/return es)
                       (gen/return (map (fn [f e]
                                          ((m/lift-a 1 f) e))
                                        fs
                                        es)))))
+
+(def events-tuple
+  (comp events-tuple* events))
 
 (defn make-iterate
   [coll]
@@ -168,7 +176,7 @@
 (clojure-test/defspec
   event->>=-nonmember
   5
-  (prop/for-all [[input-events fmapped-events] events-tuple]
+  (prop/for-all [[input-events fmapped-events] (events-tuple)]
                 (frp/restart)
                 (let [outer-event (frp/event)
                       bound-event (->> fmapped-events
@@ -194,7 +202,7 @@
 (clojure-test/defspec
   event->>=-delay
   5
-  (prop/for-all [inner-events events]
+  (prop/for-all [inner-events (events)]
                 (frp/restart)
                 (let [outer-event (frp/event)
                       bound-event (->> inner-events
@@ -212,7 +220,7 @@
 (clojure-test/defspec
   event->>=-member
   5
-  (prop/for-all [[inner-events fmapped-events] events-tuple]
+  (prop/for-all [[inner-events fmapped-events] (events-tuple)]
                 (frp/restart)
                 (let [outer-event (frp/event)
                       bound-event (->> fmapped-events
@@ -228,7 +236,7 @@
 (clojure-test/defspec
   event->>=-left-bias
   5
-  (prop/for-all [[inner-events fmapped-events] events-tuple]
+  (prop/for-all [[inner-events fmapped-events] (events-tuple)]
                 (frp/restart)
                 (let [outer-event (frp/event)
                       bound-event (->> fmapped-events
@@ -255,7 +263,7 @@
                    a)))
 
 (def events-behaviors
-  (gen/let [[input-events fmapped-events] events-tuple
+  (gen/let [[input-events fmapped-events] (events-tuple)
             as (gen/vector gen/any (count input-events))]
            (gen/tuple (gen/return input-events)
                       (gen/return
