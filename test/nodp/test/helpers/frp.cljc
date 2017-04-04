@@ -279,7 +279,7 @@
 (clojure-test/defspec
   event-<>
   5
-  (prop/for-all [[input-events fmapped-events invoke] (events-tuple)]
+  (prop/for-all [[input-events fmapped-events invoke] (events-tuple 2)]
                 (let [mappended-event (apply m/<> fmapped-events)]
                   (frp/activate)
                   (invoke)
