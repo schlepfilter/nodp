@@ -193,6 +193,7 @@
                                   count
                                   dec)]
                     (outer-event unit/unit))
+                  ;TODO call some of input-events
                   (call-units input-events)
                   (or (maybe/nothing? @bound-event)
                       (contains-event-value? (drop-last fmapped-events)
@@ -245,6 +246,7 @@
                   (frp/activate)
                   (dotimes [_ (count inner-events)]
                     (outer-event unit/unit))
+                  ;TODO call some of input-events
                   (call-units inner-events)
                   (left-biased? bound-event fmapped-events))))
 
@@ -254,6 +256,7 @@
   (prop/for-all [[input-events fmapped-events] (events-tuple)]
                 (let [mappended-event (apply m/<> fmapped-events)]
                   (frp/activate)
+                  ;TODO call some of input-events
                   (call-units input-events)
                   (left-biased? mappended-event fmapped-events))))
 
