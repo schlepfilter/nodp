@@ -154,7 +154,8 @@
                                        es)))))
 
 (def events-tuple
-  (comp events-tuple* events))
+  (comp events-tuple*
+        events))
 
 (defn make-iterate
   [coll]
