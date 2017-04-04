@@ -268,6 +268,23 @@
                   (contains-event-value? fmapped-events mappended-event))))
 
 (clojure-test/defspec
+  event-<>-left-bias
+  5
+  (prop/for-all [[input-events fmapped-events] (events-tuple)]
+                (let [mappended-event (apply m/<> fmapped-events)]
+                  (frp/activate)
+                  (call-units input-events)
+                  (->> fmapped-events
+                       (map deref)
+                       (filter
+                         (comp (partial = (apply (partial max-key deref)
+                                                 (map get-time fmapped-events)))
+                               tuple/fst
+                               deref))
+                       first
+                       (= @mappended-event)))))
+
+(clojure-test/defspec
   behavior-return
   10
   (prop/for-all [a gen/any]

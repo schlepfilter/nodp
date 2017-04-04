@@ -192,6 +192,12 @@
           maybe/just
           (partial m/<*> (tuple/tuple (:event (:time network)) identity)))))
 
+(def get-time-value
+  (comp deref
+        tuple/fst
+        deref
+        helpers/get-latest))
+
 (def context
   (helpers/reify-monad
     (fn [a]
@@ -216,7 +222,26 @@
               (helpers/add-edge ma)))
     p/Semigroup
     (-mappend [_ left-event right-event]
-              left-event)))
+              (event*
+                child-event
+                (helpers/set-modifier
+                  (fn [network]
+                    (set-earliest-latest
+                      (cond (-> (helpers/get-latest left-event network)
+                                maybe/nothing?)
+                            (helpers/get-latest right-event network)
+                            (-> (helpers/get-latest right-event network)
+                                maybe/nothing?)
+                            (helpers/get-latest left-event network)
+                            (< (get-time-value left-event network)
+                               (get-time-value right-event network))
+                            (helpers/get-latest right-event network)
+                            :else
+                            (helpers/get-latest left-event network))
+                      child-event
+                      network)))
+                (helpers/add-edge left-event)
+                (helpers/add-edge right-event)))))
 
 (util/make-printable Event)
 
