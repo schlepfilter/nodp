@@ -38,11 +38,11 @@
   (helpers/reify-monad
     (fn [a]
       (behavior* b
-                 (helpers/set-latest a b)))
+                 (helpers/set-latest a)))
     (fn [ma f]
       (behavior*
         child-behavior
-        (helpers/make-set-modifier
+        (helpers/set-modifier
           (fn [network]
             (do (reset! helpers/network-state network)
                 (let [parent-behavior (->> network
@@ -51,18 +51,17 @@
                   (helpers/set-latest
                     (helpers/get-latest parent-behavior @helpers/network-state)
                     child-behavior
-                    @helpers/network-state))))
-          child-behavior)
-        (helpers/set-latest @(f @ma) child-behavior)
-        (helpers/add-edge ma child-behavior)))))
+                    @helpers/network-state)))))
+        (helpers/set-latest @(f @ma))
+        (helpers/add-edge ma)))))
 
 (defn switcher
   [parent-behavior parent-event]
   (let [child-behavior
         (behavior* child-behavior*
-                   (helpers/add-edge parent-behavior child-behavior*)
-                   (helpers/set-latest @parent-behavior child-behavior*)
-                   (helpers/make-set-modifier
+                   (helpers/add-edge parent-behavior)
+                   (helpers/set-latest @parent-behavior)
+                   (helpers/set-modifier
                      (fn [network]
                        (helpers/set-latest
                          (helpers/get-latest
@@ -72,17 +71,15 @@
                                         tuple/snd)
                            network)
                          child-behavior*
-                         network))
-                     child-behavior*))]
+                         network))))]
     (event/event* child-event
-                  (helpers/add-edge parent-event child-event)
-                  (helpers/make-set-modifier
+                  (helpers/add-edge parent-event)
+                  (helpers/set-modifier
                     (fn [network]
                       (maybe/maybe network
                                    (helpers/get-latest parent-event network)
                                    (fn [x]
                                      (helpers/add-edge (tuple/snd x)
                                                        child-behavior
-                                                       network))))
-                    child-event))
+                                                       network))))))
     child-behavior))

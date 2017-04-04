@@ -273,19 +273,21 @@
               (partial (flip graph/add-edges) (map :id [parent child]))
               network))
 
-(defn make-set-modifier
-  [f entity]
-  (partial s/setval*
-           [:modifier (:id entity) s/END]
-           [f]))
+(defcurried set-modifier
+            [f entity network]
+            (s/setval [:modifier (:id entity) s/END]
+                      [f]
+                      network))
 
 #?(:clj (defmacro get-entity
           [entity-name constructor & fs]
           `(let [~entity-name (-> (gensym)
                                   keyword
                                   ~constructor)]
-             (swap! network-state (comp ~@fs
-                                        (make-add-node ~entity-name)))
+             (swap! network-state
+                    ~(cons `comp
+                           (map (partial (flip list) entity-name)
+                                (cons `make-add-node fs))))
              ~entity-name)))
 
 (defcurried set-latest

@@ -154,8 +154,7 @@
           `(helpers/get-entity ~event-name
                                Event.
                                ~@fs
-                               (set-earliest-latest helpers/nothing
-                                                    ~event-name))))
+                               (set-earliest-latest helpers/nothing))))
 
 (defn now?
   [e network]
@@ -171,7 +170,7 @@
 
 (defn make-merge-sync
   [parent-event child-event]
-  (helpers/make-set-modifier
+  (helpers/set-modifier
     (partial if-then-else
              (helpers/build and
                             (partial now? parent-event)
@@ -197,11 +196,10 @@
   (helpers/reify-monad
     (fn [a]
       (event* e
-              (set-earliest-latest (maybe/just (tuple/tuple (time/time 0) a))
-                                   e)))
+              (set-earliest-latest (maybe/just (tuple/tuple (time/time 0) a)))))
     (fn [ma f]
       (event* child-event
-              (helpers/make-set-modifier
+              (helpers/set-modifier
                 (fn [network]
                   (if (now? ma network)
                     (do (reset! helpers/network-state network)
@@ -214,9 +212,8 @@
                                             parent-event
                                             child-event)
                                           @helpers/network-state)))
-                    network))
-                child-event)
-              (helpers/add-edge ma child-event)))))
+                    network)))
+              (helpers/add-edge ma)))))
 
 (util/make-printable Event)
 
