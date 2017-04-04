@@ -280,6 +280,15 @@
                   (call-units input-events)
                   (left-biased? mappended-event fmapped-events))))
 
+(def xform
+  ;TODO use map to generate similar xforms
+  (gen/one-of [(gen/fmap map
+                         (test-helpers/function gen/any))
+               (gen/fmap mapcat
+                         (test-helpers/function gen/any))
+               (gen/fmap filter
+                         (test-helpers/function gen/boolean))]))
+
 (clojure-test/defspec
   behavior-return
   10
@@ -333,12 +342,3 @@
                   (frp/activate)
                   (run! e as)
                   (= @bound-behavior (f @outer-behavior)))))
-
-(def xform
-  ;TODO use map to generate similar xforms
-  (gen/one-of [(gen/fmap map
-                         (test-helpers/function gen/any))
-               (gen/fmap mapcat
-                         (test-helpers/function gen/any))
-               (gen/fmap filter
-                         (test-helpers/function gen/boolean))]))
