@@ -164,14 +164,19 @@
         (swap! state rest)
         result))))
 
+(def call-units
+  (partial run! (partial (helpers/flip helpers/funcall) unit/unit)))
+
 (defn contains-value?
   [coll x]
   (-> coll
       set
       (contains? x)))
 
-(def call-units
-  (partial run! (partial (helpers/flip helpers/funcall) unit/unit)))
+(defn contains-event-value?
+  [es e]
+  (contains-value? (map deref es)
+                   @e))
 
 (clojure-test/defspec
   event->>=-nonmember
@@ -189,10 +194,8 @@
                     (outer-event unit/unit))
                   (call-units input-events)
                   (or (maybe/nothing? @bound-event)
-                      (contains-value? (->> fmapped-events
-                                            drop-last
-                                            (map deref))
-                                       @bound-event)))))
+                      (contains-event-value? (drop-last fmapped-events)
+                                             bound-event)))))
 
 (def get-time
   (comp tuple/fst
@@ -230,8 +233,7 @@
                   (dotimes [_ (count inner-events)]
                     (outer-event unit/unit))
                   (call-units inner-events)
-                  (contains-value? (map deref fmapped-events)
-                                   @bound-event))))
+                  (contains-event-value? fmapped-events bound-event))))
 
 (clojure-test/defspec
   event->>=-left-bias
@@ -261,8 +263,7 @@
                 (let [mappended-event (apply m/<> fmapped-events)]
                   (frp/activate)
                   (call-units input-events)
-                  (contains-value? (map deref fmapped-events)
-                                   @mappended-event))))
+                  (contains-event-value? fmapped-events mappended-event))))
 
 (clojure-test/defspec
   behavior-return
