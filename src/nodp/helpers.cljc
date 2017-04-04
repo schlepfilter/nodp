@@ -279,15 +279,20 @@
                       [f]
                       network))
 
+(defn comp-entity-functions
+  [entity-name fs]
+  (cons `comp
+        (map (partial (flip list) entity-name)
+             fs)))
+
 #?(:clj (defmacro get-entity
           [entity-name constructor & fs]
           `(let [~entity-name (-> (gensym)
                                   keyword
                                   ~constructor)]
              (swap! network-state
-                    ~(cons `comp
-                           (map (partial (flip list) entity-name)
-                                (cons `make-add-node fs))))
+                    ~(comp-entity-functions entity-name
+                                            (cons `make-add-node fs)))
              ~entity-name)))
 
 (defcurried set-latest
