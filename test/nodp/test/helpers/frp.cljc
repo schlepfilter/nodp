@@ -335,6 +335,7 @@
                   (= @bound-behavior (f @outer-behavior)))))
 
 (def xform
+  ;TODO use map to generate similar xforms
   (gen/one-of [(gen/fmap map
                          (test-helpers/function gen/any))
                (gen/fmap mapcat
