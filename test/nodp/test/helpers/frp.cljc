@@ -220,21 +220,6 @@
                   (outer-event unit/unit)
                   (= (get-time outer-event) (get-time bound-event)))))
 
-(clojure-test/defspec
-  event->>=-member
-  5
-  (prop/for-all [[inner-events fmapped-events] (events-tuple)]
-                (frp/restart)
-                (let [outer-event (frp/event)
-                      bound-event (->> fmapped-events
-                                       make-iterate
-                                       (m/>>= outer-event))]
-                  (frp/activate)
-                  (dotimes [_ (count inner-events)]
-                    (outer-event unit/unit))
-                  (call-units inner-events)
-                  (contains-event-value? fmapped-events bound-event))))
-
 (defn left-biased?
   [e es]
   (->> es
@@ -263,16 +248,7 @@
                   (left-biased? bound-event fmapped-events))))
 
 (clojure-test/defspec
-  event-<>-member
-  5
-  (prop/for-all [[input-events fmapped-events] (events-tuple)]
-                (let [mappended-event (apply m/<> fmapped-events)]
-                  (frp/activate)
-                  (call-units input-events)
-                  (contains-event-value? fmapped-events mappended-event))))
-
-(clojure-test/defspec
-  event-<>-left-bias
+  event-<>
   5
   (prop/for-all [[input-events fmapped-events] (events-tuple)]
                 (let [mappended-event (apply m/<> fmapped-events)]
