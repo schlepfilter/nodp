@@ -226,20 +226,19 @@
                 child-event
                 (helpers/set-modifier
                   (fn [network]
-                    (set-earliest-latest
-                      (cond (-> (helpers/get-latest left-event network)
-                                maybe/nothing?)
-                            (helpers/get-latest right-event network)
-                            (-> (helpers/get-latest right-event network)
-                                maybe/nothing?)
-                            (helpers/get-latest left-event network)
-                            (< (get-time-value left-event network)
-                               (get-time-value right-event network))
-                            (helpers/get-latest right-event network)
-                            :else
-                            (helpers/get-latest left-event network))
-                      child-event
-                      network)))
+                    (-> (cond (-> (helpers/get-latest left-event network)
+                                  maybe/nothing?)
+                              right-event
+                              (-> (helpers/get-latest right-event network)
+                                  maybe/nothing?)
+                              left-event
+                              (< (get-time-value left-event network)
+                                 (get-time-value right-event network))
+                              right-event
+                              :else
+                              left-event)
+                        (helpers/get-latest network)
+                        (set-earliest-latest child-event network))))
                 (helpers/add-edge left-event)
                 (helpers/add-edge right-event)))))
 
