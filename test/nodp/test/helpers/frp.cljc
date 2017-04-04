@@ -250,9 +250,11 @@
                   (call-units inner-events)
                   (->> fmapped-events
                        (map deref)
-                       (filter (comp (partial = (get-time bound-event))
-                                     tuple/fst
-                                     deref))
+                       (filter
+                         (comp (partial = (apply (partial max-key deref)
+                                                 (map get-time fmapped-events)))
+                               tuple/fst
+                               deref))
                        first
                        (= @bound-event)))))
 
