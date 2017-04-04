@@ -333,3 +333,17 @@
                   (frp/activate)
                   (run! e as)
                   (= @bound-behavior (f @outer-behavior)))))
+
+(def predicate
+  (gen/fmap (fn [n]
+              (memoize (fn [x]
+                         (test-helpers/generate gen/boolean {:seed (+ n (hash x))}))))
+            gen/int))
+
+(def xform
+  (gen/one-of [(gen/fmap map
+                         test-helpers/function)
+               (gen/fmap mapcat
+                         test-helpers/function)
+               (gen/fmap filter
+                         predicate)]))
