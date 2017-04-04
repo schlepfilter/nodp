@@ -127,6 +127,7 @@
        int
        (if (= 1.0 probability*)
          0)
+       ;TODO return either (frp/event) or (m/return (helpers/infer (frp/event)))
        (nth (conj coll (frp/event)))
        (conj coll)))
 
