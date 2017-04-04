@@ -235,6 +235,18 @@
                   (call-units inner-events)
                   (contains-event-value? fmapped-events bound-event))))
 
+(defn left-biased?
+  [e es]
+  (->> es
+       (map deref)
+       (filter
+         (comp (partial = (apply (partial max-key deref)
+                                 (map get-time es)))
+               tuple/fst
+               deref))
+       first
+       (= @e)))
+
 (clojure-test/defspec
   event->>=-left-bias
   5
@@ -248,15 +260,7 @@
                   (dotimes [_ (count inner-events)]
                     (outer-event unit/unit))
                   (call-units inner-events)
-                  (->> fmapped-events
-                       (map deref)
-                       (filter
-                         (comp (partial = (apply (partial max-key deref)
-                                                 (map get-time fmapped-events)))
-                               tuple/fst
-                               deref))
-                       first
-                       (= @bound-event)))))
+                  (left-biased? bound-event fmapped-events))))
 
 (clojure-test/defspec
   event-<>-member
@@ -274,15 +278,7 @@
                 (let [mappended-event (apply m/<> fmapped-events)]
                   (frp/activate)
                   (call-units input-events)
-                  (->> fmapped-events
-                       (map deref)
-                       (filter
-                         (comp (partial = (apply (partial max-key deref)
-                                                 (map get-time fmapped-events)))
-                               tuple/fst
-                               deref))
-                       first
-                       (= @mappended-event)))))
+                  (left-biased? mappended-event fmapped-events))))
 
 (clojure-test/defspec
   behavior-return
