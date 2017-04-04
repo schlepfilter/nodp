@@ -266,8 +266,6 @@
 
 (defcurried add-edge
             [parent child network]
-            ;(println parent)
-            ;(println (:id child))
             (s/transform
               [:dependency (get-keyword parent)]
               (partial (flip graph/add-edges) (map :id [parent child]))
