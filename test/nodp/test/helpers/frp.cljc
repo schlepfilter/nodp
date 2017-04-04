@@ -231,17 +231,35 @@
                   (outer-event unit/unit)
                   (= (get-time outer-event) (get-time bound-event)))))
 
-(defn left-biased?
+(defn all-nothing?
+  [e es]
+  (and (maybe/nothing? @e)
+       (not-any? maybe/just? (map deref es))))
+
+(def get-just-latests
+  (comp (partial filter maybe/just?)
+        (partial map deref)))
+
+(def get-time-value
+  (comp tuple/fst
+        deref))
+
+(defn left-biased?*
   [e es]
   (->> es
-       (map deref)
-       (filter
-         (comp (partial = (apply (partial max-key deref)
-                                 (map get-time es)))
-               tuple/fst
-               deref))
+       get-just-latests
+       (filter (comp (partial = (apply (partial max-key deref)
+                                       (->> es
+                                            get-just-latests
+                                            (map get-time-value))))
+                     get-time-value))
        first
        (= @e)))
+
+(def left-biased?
+  (helpers/build or
+                 all-nothing?
+                 left-biased?*))
 
 (clojure-test/defspec
   event->>=-left-bias
