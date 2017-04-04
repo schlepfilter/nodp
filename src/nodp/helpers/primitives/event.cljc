@@ -195,7 +195,7 @@
 (def context
   (helpers/reify-monad
     (fn [a]
-      (event* e
+      (event* _
               (set-earliest-latest (maybe/just (tuple/tuple (time/time 0) a)))))
     (fn [ma f]
       (event* child-event

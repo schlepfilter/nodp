@@ -37,7 +37,7 @@
 (def context
   (helpers/reify-monad
     (fn [a]
-      (behavior* b
+      (behavior* _
                  (helpers/set-latest a)))
     (fn [ma f]
       (behavior*
@@ -72,7 +72,7 @@
                            network)
                          child-behavior*
                          network))))]
-    (event/event* child-event
+    (event/event* _
                   (helpers/add-edge parent-event)
                   (helpers/set-modifier
                     (fn [network]
