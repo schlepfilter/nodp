@@ -240,7 +240,9 @@
                         (helpers/get-latest network)
                         (set-earliest-latest child-event network))))
                 (helpers/add-edge left-event)
-                (helpers/add-edge right-event)))))
+                (helpers/add-edge right-event)
+                ;TODO set earliest and latest
+                ))))
 
 (util/make-printable Event)
 
