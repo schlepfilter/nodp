@@ -217,7 +217,7 @@
                                   count
                                   dec)]
                     (outer-event unit/unit))
-                  (call-units inner-events)
+                  ((last inner-events) unit/unit)
                   (outer-event unit/unit)
                   (= (get-time outer-event) (get-time bound-event)))))
 
