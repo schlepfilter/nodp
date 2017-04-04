@@ -255,6 +255,16 @@
                        (= @bound-event)))))
 
 (clojure-test/defspec
+  event-<>-member
+  5
+  (prop/for-all [[input-events fmapped-events] (events-tuple)]
+                (let [mappended-event (apply m/<> fmapped-events)]
+                  (frp/activate)
+                  (call-units input-events)
+                  (contains-value? (map deref fmapped-events)
+                                   @mappended-event))))
+
+(clojure-test/defspec
   behavior-return
   10
   (prop/for-all [a gen/any]

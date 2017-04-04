@@ -213,7 +213,10 @@
                                             child-event)
                                           @helpers/network-state)))
                     network)))
-              (helpers/add-edge ma)))))
+              (helpers/add-edge ma)))
+    p/Semigroup
+    (-mappend [_ left-event right-event]
+              left-event)))
 
 (util/make-printable Event)
 
