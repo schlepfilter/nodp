@@ -32,7 +32,6 @@
 
 (test/use-fixtures :once fixture)
 
-;TODO use fixtures instead of restrt-for-all
 #?(:clj (defmacro restart-for-all
           [bindings & body]
           `(do (frp/restart)
