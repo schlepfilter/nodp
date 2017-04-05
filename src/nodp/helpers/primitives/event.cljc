@@ -240,6 +240,15 @@
                                 (helpers/set-modifier
                                   (modify->>=! ma f child-event*))
                                 (helpers/add-edge ma))]
+        ;The second argument of swap! "may be called
+        ;multiple times, and thus should be free of side effects." (clojure.core)
+        ;The evaluation of the following code terminates in ClojureScript but doesn't seem to terminate in Clojure presumably because the second argument of swap! calls reset! on the same atom as swap!
+        ;(event* child-event
+        ;        (modify->>=! ma f))
+        ;The evaluation of the following code terminates in ClojureScript but doesn't seem to terminate in Clojure
+        ;(let [state (atom 0)]
+        ;  (swap! state
+        ;         (fn [_] (swap! state inc))))
         (modify->>=! ma f child-event @helpers/network-state)
         child-event))
     p/Semigroup
