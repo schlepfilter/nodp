@@ -236,6 +236,7 @@
                                           @helpers/network-state)))
                     network)))
               (helpers/add-edge ma)
+              ;TODO add edge and synchronize
               (set-earliest-latest
                 (if (maybe/just? @ma)
                   @(f (get-value ma @helpers/network-state))
