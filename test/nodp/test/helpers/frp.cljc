@@ -62,8 +62,12 @@
   event-return
   10
   (restart-for-all [a gen/any]
-                   (= @@(m/return (helpers/infer (frp/event)) a)
-                      (tuple/tuple (time/time 0) a))))
+                   (= @@(-> (frp/event)
+                            helpers/infer
+                            (m/return a))
+                      (-> 0
+                          time/time
+                          (tuple/tuple a)))))
 
 #?(:clj (defmacro with-exit
           [exit-name & body]
@@ -158,7 +162,9 @@
   [events-generator]
   (gen/let [es events-generator
             fs (gen/vector (test-helpers/function gen/any) (count es))
-            xs (gen/vector gen/boolean (count es))]
+            xs (->> es
+                    count
+                    (gen/vector gen/boolean))]
            (gen/tuple (gen/return es)
                       (gen/return (map (fn [f e]
                                          ((m/lift-a 1 f) e))
@@ -321,7 +327,9 @@
 
 (def events-behaviors
   (gen/let [[input-events fmapped-events] (events-tuple)
-            as (gen/vector gen/any (count input-events))]
+            as (->> input-events
+                    count
+                    (gen/vector gen/any))]
            (gen/tuple (gen/return input-events)
                       (gen/return
                         (map frp/stepper
@@ -333,7 +341,9 @@
   5
   (restart-for-all [[es bs] events-behaviors]
                    (let [e (frp/event)
-                         b (frp/switcher (first bs) e)]
+                         b (-> bs
+                               first
+                               (frp/switcher e))]
                      (= @b @(first bs)))))
 
 (clojure-test/defspec
@@ -341,7 +351,9 @@
   5
   (restart-for-all [[es bs] events-behaviors]
                    (let [e (frp/event)
-                         b (frp/switcher (first bs) e)]
+                         b (-> bs
+                               first
+                               (frp/switcher e))]
                      (frp/activate)
                      (run! e (rest bs))
                      (call-units es)
