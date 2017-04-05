@@ -21,7 +21,8 @@
             [nodp.test.helpers :as test-helpers]
     #?(:clj
             [riddley.walk :as walk]))
-  #?(:cljs (:require-macros [nodp.test.helpers.frp :refer [with-exit
+  #?(:cljs (:require-macros [nodp.test.helpers.frp :refer [restart-for-all
+                                                           with-exit
                                                            with-exitv]])))
 
 (defn fixture
@@ -31,24 +32,28 @@
 
 (test/use-fixtures :once fixture)
 
+#?(:clj (defmacro restart-for-all
+          [bindings & body]
+          `(do (frp/restart)
+               (prop/for-all ~bindings
+                             ~@body))))
+
 (clojure-test/defspec
   invoke-inactive
   10
-  (prop/for-all [as (gen/vector gen/any)]
-                (frp/restart)
-                (let [e (frp/event)]
-                  (run! e as)
-                  (maybe/nothing? @e))))
+  (restart-for-all [as (gen/vector gen/any)]
+                   (let [e (frp/event)]
+                     (run! e as)
+                     (maybe/nothing? @e))))
 
 (clojure-test/defspec
   invoke-active
   10
-  (prop/for-all [as (gen/vector gen/any)]
-                (frp/restart)
-                (let [e (frp/event)]
-                  (frp/activate)
-                  (run! e as)
-                  (= (tuple/snd @@e) (last as)))))
+  (restart-for-all [as (gen/vector gen/any)]
+                   (let [e (frp/event)]
+                     (frp/activate)
+                     (run! e as)
+                     (= (tuple/snd @@e) (last as)))))
 
 (def probability
   (gen/double* {:min 0 :max 1}))
@@ -56,10 +61,9 @@
 (clojure-test/defspec
   event-return
   10
-  (prop/for-all [a gen/any]
-                (frp/restart)
-                (= @@(m/return (helpers/infer (frp/event)) a)
-                   (tuple/tuple (time/time 0) a))))
+  (restart-for-all [a gen/any]
+                   (= @@(m/return (helpers/infer (frp/event)) a)
+                      (tuple/tuple (time/time 0) a))))
 
 #?(:clj (defmacro with-exit
           [exit-name & body]
@@ -110,13 +114,13 @@
 (clojure-test/defspec
   on-identity
   10
-  (prop/for-all [as (gen/vector gen/any)]
-                (= (with-exitv exit
-                               (let [e (frp/event)]
-                                 (frp/on exit e)
-                                 (frp/activate)
-                                 (run! e as)))
-                   as)))
+  (restart-for-all [as (gen/vector gen/any)]
+                   (= (with-exitv exit
+                                  (let [e (frp/event)]
+                                    (frp/on exit e)
+                                    (frp/activate)
+                                    (run! e as)))
+                      as)))
 
 (defn conj-event
   [coll probability*]
@@ -192,21 +196,20 @@
 (clojure-test/defspec
   event->>=-nonmember
   5
-  (prop/for-all [[input-events fmapped-events invoke] (events-tuple)]
-                (frp/restart)
-                (let [outer-event (frp/event)
-                      bound-event (->> fmapped-events
-                                       make-iterate
-                                       (m/>>= outer-event))]
-                  (frp/activate)
-                  (dotimes [_ (-> input-events
-                                  count
-                                  dec)]
-                    (outer-event unit/unit))
-                  (invoke)
-                  (or (maybe/nothing? @bound-event)
-                      (contains-event-value? (drop-last fmapped-events)
-                                             bound-event)))))
+  (restart-for-all [[input-events fmapped-events invoke] (events-tuple)]
+                   (let [outer-event (frp/event)
+                         bound-event (->> fmapped-events
+                                          make-iterate
+                                          (m/>>= outer-event))]
+                     (frp/activate)
+                     (dotimes [_ (-> input-events
+                                     count
+                                     dec)]
+                       (outer-event unit/unit))
+                     (invoke)
+                     (or (maybe/nothing? @bound-event)
+                         (contains-event-value? (drop-last fmapped-events)
+                                                bound-event)))))
 
 (def get-time
   (comp tuple/fst
@@ -216,20 +219,19 @@
 (clojure-test/defspec
   event->>=-delay
   5
-  (prop/for-all [inner-events (events)]
-                (frp/restart)
-                (let [outer-event (frp/event)
-                      bound-event (->> inner-events
-                                       make-iterate
-                                       (m/>>= outer-event))]
-                  (frp/activate)
-                  (dotimes [_ (-> inner-events
-                                  count
-                                  dec)]
-                    (outer-event unit/unit))
-                  ((last inner-events) unit/unit)
-                  (outer-event unit/unit)
-                  (= (get-time outer-event) (get-time bound-event)))))
+  (restart-for-all [inner-events (events)]
+                   (let [outer-event (frp/event)
+                         bound-event (->> inner-events
+                                          make-iterate
+                                          (m/>>= outer-event))]
+                     (frp/activate)
+                     (dotimes [_ (-> inner-events
+                                     count
+                                     dec)]
+                       (outer-event unit/unit))
+                     ((last inner-events) unit/unit)
+                     (outer-event unit/unit)
+                     (= (get-time outer-event) (get-time bound-event)))))
 
 (defn all-nothing?
   [e es]
@@ -264,27 +266,25 @@
 (clojure-test/defspec
   event->>=-left-bias
   5
-  (prop/for-all [[inner-events fmapped-events invoke] (events-tuple)]
-                (frp/restart)
-                (let [outer-event (frp/event)
-                      bound-event (->> fmapped-events
-                                       make-iterate
-                                       (m/>>= outer-event))]
-                  (frp/activate)
-                  (dotimes [_ (count inner-events)]
-                    (outer-event unit/unit))
-                  (invoke)
-                  (left-biased? bound-event fmapped-events))))
+  (restart-for-all [[inner-events fmapped-events invoke] (events-tuple)]
+                   (let [outer-event (frp/event)
+                         bound-event (->> fmapped-events
+                                          make-iterate
+                                          (m/>>= outer-event))]
+                     (frp/activate)
+                     (dotimes [_ (count inner-events)]
+                       (outer-event unit/unit))
+                     (invoke)
+                     (left-biased? bound-event fmapped-events))))
 
 (clojure-test/defspec
   event-<>
   5
-  (prop/for-all [[input-events fmapped-events invoke] (events-tuple 2)]
-                (frp/restart)
-                (let [mappended-event (apply m/<> fmapped-events)]
-                  (frp/activate)
-                  (invoke)
-                  (left-biased? mappended-event fmapped-events))))
+  (restart-for-all [[input-events fmapped-events invoke] (events-tuple 2)]
+                   (let [mappended-event (apply m/<> fmapped-events)]
+                     (frp/activate)
+                     (invoke)
+                     (left-biased? mappended-event fmapped-events))))
 
 (def xform
   ;TODO use map to generate similar xforms
@@ -298,10 +298,9 @@
 (clojure-test/defspec
   behavior-return
   10
-  (prop/for-all [a gen/any]
-                (frp/restart)
-                (= @(m/return (helpers/infer (frp/behavior unit/unit)) a)
-                   a)))
+  (restart-for-all [a gen/any]
+                   (= @(m/return (helpers/infer (frp/behavior unit/unit)) a)
+                      a)))
 
 (def events-behaviors
   (gen/let [[input-events fmapped-events] (events-tuple)
@@ -315,36 +314,33 @@
 (clojure-test/defspec
   switcher-zero
   5
-  (prop/for-all [[es bs] events-behaviors]
-                (frp/restart)
-                (let [e (frp/event)
-                      b (frp/switcher (first bs) e)]
-                  (= @b @(first bs)))))
+  (restart-for-all [[es bs] events-behaviors]
+                   (let [e (frp/event)
+                         b (frp/switcher (first bs) e)]
+                     (= @b @(first bs)))))
 
 (clojure-test/defspec
   switcher-positive
   5
-  (prop/for-all [[es bs] events-behaviors]
-                (frp/restart)
-                (let [e (frp/event)
-                      b (frp/switcher (first bs) e)]
-                  (frp/activate)
-                  (run! e (rest bs))
-                  (call-units es)
-                  (= @b @(last bs)))))
+  (restart-for-all [[es bs] events-behaviors]
+                   (let [e (frp/event)
+                         b (frp/switcher (first bs) e)]
+                     (frp/activate)
+                     (run! e (rest bs))
+                     (call-units es)
+                     (= @b @(last bs)))))
 
 (clojure-test/defspec
   behavior->>=
   5
-  (prop/for-all [f (test-helpers/function gen/any)
-                 as (gen/vector gen/any)
-                 a gen/any]
-                (frp/restart)
-                (let [e (frp/event)
-                      outer-behavior (frp/stepper a e)
-                      bound-behavior (m/>>= outer-behavior
-                                            (comp frp/behavior
-                                                  f))]
-                  (frp/activate)
-                  (run! e as)
-                  (= @bound-behavior (f @outer-behavior)))))
+  (restart-for-all [f (test-helpers/function gen/any)
+                    as (gen/vector gen/any)
+                    a gen/any]
+                   (let [e (frp/event)
+                         outer-behavior (frp/stepper a e)
+                         bound-behavior (m/>>= outer-behavior
+                                               (comp frp/behavior
+                                                     f))]
+                     (frp/activate)
+                     (run! e as)
+                     (= @bound-behavior (f @outer-behavior)))))
