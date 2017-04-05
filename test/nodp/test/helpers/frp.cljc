@@ -280,6 +280,7 @@
   event-<>
   5
   (prop/for-all [[input-events fmapped-events invoke] (events-tuple 2)]
+                (frp/restart)
                 (let [mappended-event (apply m/<> fmapped-events)]
                   (frp/activate)
                   (invoke)
