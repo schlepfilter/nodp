@@ -291,6 +291,13 @@
                      (invoke)
                      (left-biased? mappended-event fmapped-events))))
 
+(clojure-test/defspec
+  event-mempty
+  10
+  (restart-for-all [a gen/any]
+                   (= @(m/mempty (helpers/infer (frp/event)))
+                      helpers/nothing)))
+
 (def xform
   ;TODO use map to generate similar xforms
   (gen/one-of [(gen/fmap map

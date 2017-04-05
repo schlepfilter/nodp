@@ -1,5 +1,6 @@
 (ns nodp.helpers.io
-  (:require [cats.core :as m]
+  (:require [cats.context :as ctx]
+            [cats.core :as m]
             [com.rpl.specter :as s]
             [nodp.helpers :as helpers :include-macros true]
             [nodp.helpers.primitives.event :as event]
@@ -8,7 +9,8 @@
 
 (defn event
   []
-  (event/event* _))
+  (->> (m/mempty)
+       (ctx/with-context event/context)))
 
 (defmulti call-modifier (comp helpers/get-keyword
                               second

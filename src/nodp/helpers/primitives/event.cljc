@@ -205,6 +205,7 @@
                           (let [parent-event (->> network
                                                   (get-value ma)
                                                   f)]
+                            ;TODO remove with-redefs after cats.context is fixed
                             (with-redefs [cats.context/infer helpers/infer]
                               (call-functions ((juxt helpers/add-edge
                                                      make-merge-sync
@@ -258,7 +259,10 @@
                         (modify-<>! left-event right-event child-event))
                       (helpers/add-edge left-event)
                       (helpers/add-edge right-event)
-                      (modify-<>! left-event right-event)))))
+                      (modify-<>! left-event right-event)))
+    p/Monoid
+    (-mempty [_]
+             (event* _))))
 
 (util/make-printable Event)
 
