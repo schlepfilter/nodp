@@ -198,7 +198,7 @@
         deref
         helpers/get-latest))
 
-(helpers/defcurried modify->>=
+(helpers/defcurried modify->>=!
                     [ma f child-event network]
                     (if (now? ma network)
                       (do (swap! helpers/network-state (constantly network))
@@ -214,7 +214,7 @@
                                               @helpers/network-state))))
                       network))
 
-(helpers/defcurried modify-<>
+(helpers/defcurried modify-<>!
                     [left-event right-event child-event network]
                     (-> (cond (-> (helpers/get-latest left-event network)
                                   maybe/nothing?)
@@ -238,19 +238,19 @@
     (fn [ma f]
       (let [child-event (event* child-event*
                                 (helpers/set-modifier
-                                  (modify->>= ma f child-event*))
+                                  (modify->>=! ma f child-event*))
                                 (helpers/add-edge ma))]
-        (modify->>= ma f child-event @helpers/network-state)
+        (modify->>=! ma f child-event @helpers/network-state)
         child-event))
     p/Semigroup
     (-mappend [_ left-event right-event]
               (event*
                 child-event
                 (helpers/set-modifier
-                  (modify-<> left-event right-event child-event))
+                  (modify-<>! left-event right-event child-event))
                 (helpers/add-edge left-event)
                 (helpers/add-edge right-event)
-                (modify-<> left-event right-event)))))
+                (modify-<>! left-event right-event)))))
 
 (util/make-printable Event)
 
