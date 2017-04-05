@@ -11,6 +11,7 @@
                 :cljs cljs.core.async) :as async]
             [com.rpl.specter :as s]
             [loom.graph :as graph]
+            [nodp.helpers.time :as time]
     #?@(:clj [
             [clojure.test :as test]
             [clojurewerkz.money.amounts :as ma]
@@ -232,7 +233,8 @@
                          :dependency {:event    (graph/digraph)
                                       :behavior (graph/digraph)}
                          :input      (get-queue funcall)
-                         :modifier   {}}))
+                         :modifier   {}
+                         :time       {:event (time/time 0)}}))
 
 (def restart
   ;TODO call stop

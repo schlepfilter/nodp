@@ -220,8 +220,10 @@
                                           @helpers/network-state)))
                     network)))
               (helpers/add-edge ma)
-              ;TODO set earliest and latest
-              ))
+              (set-earliest-latest
+                (if (maybe/just? @ma)
+                  @(f (get-value ma @helpers/network-state))
+                  helpers/nothing))))
     p/Semigroup
     (-mappend [_ left-event right-event]
               (event*
