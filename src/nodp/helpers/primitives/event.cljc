@@ -198,22 +198,6 @@
         deref
         helpers/get-latest))
 
-(helpers/defcurried modify-<>
-                    [left-event right-event child-event network]
-                    (-> (cond (-> (helpers/get-latest left-event network)
-                                  maybe/nothing?)
-                              right-event
-                              (-> (helpers/get-latest right-event network)
-                                  maybe/nothing?)
-                              left-event
-                              (< (get-time-value left-event network)
-                                 (get-time-value right-event network))
-                              right-event
-                              :else
-                              left-event)
-                        (helpers/get-latest network)
-                        (set-earliest-latest child-event network)))
-
 (helpers/defcurried modify->>=
                     [ma f child-event network]
                     (if (now? ma network)
@@ -229,6 +213,22 @@
                                                 child-event)
                                               @helpers/network-state))))
                       network))
+
+(helpers/defcurried modify-<>
+                    [left-event right-event child-event network]
+                    (-> (cond (-> (helpers/get-latest left-event network)
+                                  maybe/nothing?)
+                              right-event
+                              (-> (helpers/get-latest right-event network)
+                                  maybe/nothing?)
+                              left-event
+                              (< (get-time-value left-event network)
+                                 (get-time-value right-event network))
+                              right-event
+                              :else
+                              left-event)
+                        (helpers/get-latest network)
+                        (set-earliest-latest child-event network)))
 
 (def context
   (helpers/reify-monad
