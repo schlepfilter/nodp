@@ -246,25 +246,22 @@
   (and (maybe/nothing? @e)
        (not-any? maybe/just? (map deref es))))
 
-(def get-just-latests
-  (comp (partial filter maybe/just?)
+(def get-tuples
+  (comp maybe/cat-maybes
         (partial map deref)))
-
-(def get-time-value
-  (comp tuple/fst
-        deref))
 
 (defn left-biased?*
   [e es]
   (->> es
-       get-just-latests
+       get-tuples
        (filter (comp (partial = (apply (partial max-key deref)
                                        (->> es
-                                            get-just-latests
-                                            (map get-time-value))))
-                     get-time-value))
+                                            get-tuples
+                                            (map tuple/fst))))
+                     tuple/fst))
        first
-       (= @e)))
+       tuple/snd
+       (= (tuple/snd @@e))))
 
 (def left-biased?
   (helpers/build or
