@@ -214,33 +214,34 @@
                         (helpers/get-latest network)
                         (set-earliest-latest child-event network)))
 
+(helpers/defcurried modify->>=
+                    [ma f child-event network]
+                    (if (now? ma network)
+                      (do (swap! helpers/network-state (constantly network))
+                          (let [parent-event (->> network
+                                                  (get-value ma)
+                                                  f)]
+                            (with-redefs [cats.context/infer helpers/infer]
+                              (call-functions ((juxt helpers/add-edge
+                                                     make-merge-sync
+                                                     delay-sync->>=)
+                                                parent-event
+                                                child-event)
+                                              @helpers/network-state))))
+                      network))
+
 (def context
   (helpers/reify-monad
     (fn [a]
       (event* _
               (set-earliest-latest (maybe/just (tuple/tuple (time/time 0) a)))))
     (fn [ma f]
-      (event* child-event
-              (helpers/set-modifier
-                (fn [network]
-                  (if (now? ma network)
-                    (do (reset! helpers/network-state network)
-                        (let [parent-event (->> network
-                                                (get-value ma)
-                                                f)]
-                          (call-functions ((juxt helpers/add-edge
-                                                 make-merge-sync
-                                                 delay-sync->>=)
-                                            parent-event
-                                            child-event)
-                                          @helpers/network-state)))
-                    network)))
-              (helpers/add-edge ma)
-              ;TODO add edge and synchronize
-              (set-earliest-latest
-                (if (maybe/just? @ma)
-                  @(f (get-value ma @helpers/network-state))
-                  helpers/nothing))))
+      (let [child-event (event* child-event*
+                                (helpers/set-modifier
+                                  (modify->>= ma f child-event*))
+                                (helpers/add-edge ma))]
+        (modify->>= ma f child-event @helpers/network-state)
+        child-event))
     p/Semigroup
     (-mappend [_ left-event right-event]
               (event*
