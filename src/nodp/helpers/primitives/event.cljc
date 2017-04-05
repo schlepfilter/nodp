@@ -198,6 +198,22 @@
         deref
         helpers/get-latest))
 
+(helpers/defcurried modify-mappend
+                    [left-event right-event child-event network]
+                    (-> (cond (-> (helpers/get-latest left-event network)
+                                  maybe/nothing?)
+                              right-event
+                              (-> (helpers/get-latest right-event network)
+                                  maybe/nothing?)
+                              left-event
+                              (< (get-time-value left-event network)
+                                 (get-time-value right-event network))
+                              right-event
+                              :else
+                              left-event)
+                        (helpers/get-latest network)
+                        (set-earliest-latest child-event network)))
+
 (def context
   (helpers/reify-monad
     (fn [a]
@@ -229,24 +245,10 @@
               (event*
                 child-event
                 (helpers/set-modifier
-                  (fn [network]
-                    (-> (cond (-> (helpers/get-latest left-event network)
-                                  maybe/nothing?)
-                              right-event
-                              (-> (helpers/get-latest right-event network)
-                                  maybe/nothing?)
-                              left-event
-                              (< (get-time-value left-event network)
-                                 (get-time-value right-event network))
-                              right-event
-                              :else
-                              left-event)
-                        (helpers/get-latest network)
-                        (set-earliest-latest child-event network))))
+                  (modify-mappend left-event right-event child-event))
                 (helpers/add-edge left-event)
                 (helpers/add-edge right-event)
-                ;TODO set earliest and latest
-                ))))
+                (modify-mappend left-event right-event)))))
 
 (util/make-printable Event)
 
