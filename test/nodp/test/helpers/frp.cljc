@@ -284,8 +284,7 @@
 
 (clojure-test/defspec
   event-<>
-  {:num-tests 5
-   :seed      1491399080366}
+  5
   (restart-for-all [[input-events fmapped-events invoke] (events-tuple 2)]
                    (let [mappended-event (apply m/<> fmapped-events)]
                      (frp/activate)
