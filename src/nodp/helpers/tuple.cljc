@@ -1,6 +1,5 @@
 (ns nodp.helpers.tuple
-  (:require [cats.context :as ctx]
-            [cats.core :as m]
+  (:require [cats.core :as m]
             [cats.protocols :as p]
             [cats.util :as util]
             [nodp.helpers :as helpers]))
@@ -16,11 +15,11 @@
     (helpers/reify-monad
       ;TODO use cats.context/infer after cats.context is fixed
       (partial ->Tuple (m/mempty
-                         (with-redefs [ctx/infer helpers/infer]
-                           (ctx/infer fst))))
+                         (with-redefs [cats.context/infer helpers/infer]
+                           (cats.context/infer fst))))
       (fn [ma f]
         ;TODO use cats.context/infer after cats.context is fixed
-        (Tuple. (with-redefs [ctx/infer helpers/infer]
+        (Tuple. (with-redefs [cats.context/infer helpers/infer]
                   (m/mappend (:fst ma)
                              (:fst (f (:snd ma)))))
                 (:snd (f (:snd ma)))))))
