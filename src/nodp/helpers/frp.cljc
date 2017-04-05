@@ -1,13 +1,12 @@
 (ns nodp.helpers.frp
   (:refer-clojure :exclude [stepper])
-  (:require [nodp.helpers :as helpers]
-            [nodp.helpers.io :as io]
+  (:require [nodp.helpers.io :as io]
             [nodp.helpers.primitives.behavior :as behavior]
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.derived.behavior :as derived-behavior]))
 
 (def restart
-  helpers/restart)
+  event/restart)
 
 (def activate
   event/activate)

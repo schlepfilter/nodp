@@ -266,5 +266,19 @@
 
 (util/make-printable Event)
 
+(defn start
+  []
+  (reset! helpers/network-state {:active     false
+                         :dependency {:event    (graph/digraph)
+                                      :behavior (graph/digraph)}
+                         :input      (helpers/get-queue helpers/funcall)
+                         :modifier   {}
+                         :time       {:event (time/time 0)}}))
+
+(def restart
+  ;TODO call stop
+  start)
+
+
 (def activate
   (partial swap! helpers/network-state (partial s/setval* :active true)))
