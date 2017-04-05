@@ -123,6 +123,12 @@
                                     (run! e as)))
                       as)))
 
+(defn event
+  []
+  (gen/one-of [(gen/fmap (partial m/return (helpers/infer (frp/event)))
+                         gen/any)
+               (gen/return (frp/event))]))
+
 (defn conj-event
   [coll probability*]
   (->> coll
@@ -132,8 +138,8 @@
        int
        (if (= 1.0 probability*)
          0)
-       ;TODO return either (frp/event) or (m/return (helpers/infer (frp/event)))
-       (nth (conj coll (frp/event)))
+       (nth (conj coll
+                  (test-helpers/generate (event) {:seed (hash probability*)})))
        (conj coll)))
 
 (def get-events
