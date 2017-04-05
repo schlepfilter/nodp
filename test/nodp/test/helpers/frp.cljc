@@ -196,8 +196,10 @@
 
 (defn contains-event-value?
   [es e]
-  (contains-value? (map deref es)
-                   @e))
+  (contains-value? (map (comp tuple/snd
+                              deref
+                              deref) es)
+                   (tuple/snd @@e)))
 
 (clojure-test/defspec
   event->>=-nonmember
