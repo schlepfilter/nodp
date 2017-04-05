@@ -198,7 +198,7 @@
         deref
         helpers/get-latest))
 
-(helpers/defcurried modify-mappend
+(helpers/defcurried modify-<>
                     [left-event right-event child-event network]
                     (-> (cond (-> (helpers/get-latest left-event network)
                                   maybe/nothing?)
@@ -245,10 +245,10 @@
               (event*
                 child-event
                 (helpers/set-modifier
-                  (modify-mappend left-event right-event child-event))
+                  (modify-<> left-event right-event child-event))
                 (helpers/add-edge left-event)
                 (helpers/add-edge right-event)
-                (modify-mappend left-event right-event)))))
+                (modify-<> left-event right-event)))))
 
 (util/make-printable Event)
 
