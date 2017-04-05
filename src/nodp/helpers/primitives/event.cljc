@@ -253,13 +253,12 @@
         child-event))
     p/Semigroup
     (-mappend [_ left-event right-event]
-              (event*
-                child-event
-                (helpers/set-modifier
-                  (modify-<>! left-event right-event child-event))
-                (helpers/add-edge left-event)
-                (helpers/add-edge right-event)
-                (modify-<>! left-event right-event)))))
+              (event* child-event
+                      (helpers/set-modifier
+                        (modify-<>! left-event right-event child-event))
+                      (helpers/add-edge left-event)
+                      (helpers/add-edge right-event)
+                      (modify-<>! left-event right-event)))))
 
 (util/make-printable Event)
 
