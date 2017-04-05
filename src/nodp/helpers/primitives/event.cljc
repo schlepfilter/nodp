@@ -219,7 +219,9 @@
                                             child-event)
                                           @helpers/network-state)))
                     network)))
-              (helpers/add-edge ma)))
+              (helpers/add-edge ma)
+              ;TODO set earliest and latest
+              ))
     p/Semigroup
     (-mappend [_ left-event right-event]
               (event*
