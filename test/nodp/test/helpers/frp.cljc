@@ -355,7 +355,9 @@
                                first
                                (frp/switcher e))]
                      (frp/activate)
-                     (run! e (rest bs))
+                     (->> bs
+                          rest
+                          (run! e))
                      (call-units es)
                      (= @b @(last bs)))))
 
