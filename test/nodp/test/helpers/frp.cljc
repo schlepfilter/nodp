@@ -295,7 +295,9 @@
   event-mempty
   10
   (restart-for-all [a gen/any]
-                   (= @(m/mempty (helpers/infer (frp/event)))
+                   (= @(-> (frp/event)
+                           helpers/infer
+                           m/mempty)
                       helpers/nothing)))
 
 (def xform
@@ -311,7 +313,10 @@
   behavior-return
   10
   (restart-for-all [a gen/any]
-                   (= @(m/return (helpers/infer (frp/behavior unit/unit)) a)
+                   (= @(-> unit/unit
+                           frp/behavior
+                           helpers/infer
+                           (m/return a))
                       a)))
 
 (def events-behaviors
