@@ -273,28 +273,27 @@
 
 (helpers/defcurried modify-transduce-transduction-event
                     [step f parent-event transduction-event network]
-                    ;TODO test parent-event is now
-                    (maybe/maybe
-                      network
-                      (helpers/get-latest parent-event network)
-                      (fn [latest-value]
-                        (let [stepped (step helpers/nothing
-                                            (tuple/snd latest-value))]
-                          ;TODO extract maybe-then-else
-                          (maybe/maybe
-                            network
-                            stepped
-                            (fn [stepped-value]
-                              (helpers/set-latest
-                                (maybe/just
-                                  (tuple/tuple
-                                    (:event (:time network))
-                                    (f (tuple/snd
-                                         @(helpers/get-latest transduction-event
-                                                              network))
-                                       stepped-value)))
-                                transduction-event
-                                network)))))))
+                    (if (now? parent-event network)
+                      (let [stepped (step helpers/nothing
+                                          (tuple/snd
+                                            @(helpers/get-latest parent-event
+                                                                 network)))]
+                        ;TODO extract maybe-then-else
+                        (maybe/maybe
+                          network
+                          stepped
+                          (fn [stepped-value]
+                            (helpers/set-latest
+                              (maybe/just
+                                (tuple/tuple
+                                  (:event (:time network))
+                                  (f (tuple/snd
+                                       @(helpers/get-latest transduction-event
+                                                            network))
+                                     stepped-value)))
+                              transduction-event
+                              network))))
+                      network))
 
 (helpers/defcurried modify-transduce-child-event
                     [transduction-event child-event network]
