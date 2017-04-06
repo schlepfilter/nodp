@@ -169,6 +169,13 @@
         deref
         helpers/get-latest))
 
+(defn make-sync
+  [parent-event child-event]
+  (helpers/build helpers/set-latest
+                 (partial helpers/get-latest parent-event)
+                 (constantly child-event)
+                 identity))
+
 (defn make-merge-sync
   [parent-event child-event]
   (helpers/set-modifier
@@ -176,10 +183,7 @@
              (helpers/build and
                             (partial now? parent-event)
                             (partial (complement now?) child-event))
-             (helpers/build helpers/set-latest
-                            (partial helpers/get-latest parent-event)
-                            (constantly child-event)
-                            identity))
+             (make-sync parent-event child-event))
     child-event))
 
 (helpers/defcurried
@@ -291,6 +295,12 @@
                                 transduction-event
                                 network)))))))
 
+(helpers/defcurried modify-transduce-child-event
+                    [transduction-event child-event network]
+                    (if-then-else (partial now? transduction-event)
+                                  (make-sync transduction-event child-event)
+                                  network))
+
 (defn transduce
   [xform f init parent-event]
   (let [step (xform (comp maybe/just
@@ -306,8 +316,11 @@
                                                  transduction-event*))
           (modify-transduce-transduction-event step f parent-event)
           (set-earliest-latest (maybe/just (tuple/tuple (time/time 0) init)))
-          (helpers/add-edge parent-event))])
-  (event* child-event))
+          (helpers/add-edge parent-event))]
+    (event* child-event
+            (helpers/set-modifier
+              (modify-transduce-child-event transduction-event child-event))
+            (helpers/add-edge transduction-event))))
 
 (defn start
   []
