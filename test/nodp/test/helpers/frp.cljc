@@ -322,6 +322,7 @@
                     f (test-helpers/function gen/any)
                     init gen/any
                     as (gen/vector gen/any)]
+                   ;TODO generate event
                    (let [input-event (frp/event)
                          transduced-event (frp/transduce xf f init input-event)]
                      (frp/activate)

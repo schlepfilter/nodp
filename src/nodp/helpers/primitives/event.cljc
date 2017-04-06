@@ -299,6 +299,7 @@
                     [transduction-event child-event network]
                     (if-then-else (partial now? transduction-event)
                                   (make-sync transduction-event child-event)
+                                  ;TODO set nothing
                                   network))
 
 (defn transduce
