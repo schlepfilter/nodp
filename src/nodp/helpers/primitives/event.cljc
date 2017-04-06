@@ -267,8 +267,8 @@
 
 (util/make-printable Event)
 
-(helpers/defcurried modify-transduce-internal-event
-                    [step f parent-event internal-event network]
+(helpers/defcurried modify-transduce-transduction-event
+                    [step f parent-event transduction-event network]
                     ;TODO extract maybe-then-else
                     (maybe/maybe
                       network
@@ -285,10 +285,10 @@
                                   (tuple/tuple
                                     (:event (:time network))
                                     (f (tuple/snd
-                                         @(helpers/get-latest internal-event
+                                         @(helpers/get-latest transduction-event
                                                               network))
                                        stepped-value)))
-                                internal-event
+                                transduction-event
                                 network)))))))
 
 (defn transduce
@@ -296,17 +296,17 @@
   (let [step (xform (comp maybe/just
                           second
                           vector))
-        internal-event (event*
-                         internal-event*
-                         (helpers/set-modifier
-                           (modify-transduce-internal-event step
-                                                            f
-                                                            parent-event
-                                                            internal-event*))
-                         (modify-transduce-internal-event step f parent-event)
-                         (set-earliest-latest
-                           (maybe/just (tuple/tuple (time/time 0) init)))
-                         (helpers/add-edge parent-event))])
+        transduction-event
+        (event*
+          transduction-event*
+          (helpers/set-modifier
+            (modify-transduce-transduction-event step
+                                                 f
+                                                 parent-event
+                                                 transduction-event*))
+          (modify-transduce-transduction-event step f parent-event)
+          (set-earliest-latest (maybe/just (tuple/tuple (time/time 0) init)))
+          (helpers/add-edge parent-event))])
   (event* child-event))
 
 (defn start
