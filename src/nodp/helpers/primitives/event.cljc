@@ -278,7 +278,6 @@
                                           (tuple/snd
                                             @(helpers/get-latest parent-event
                                                                  network)))]
-                        ;TODO extract maybe-then-else
                         (maybe/maybe
                           network
                           stepped
