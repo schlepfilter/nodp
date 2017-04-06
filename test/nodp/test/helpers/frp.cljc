@@ -315,10 +315,16 @@
                (gen/fmap filter
                          (test-helpers/function gen/boolean))]))
 
+(def restart
+  (gen/fmap (fn [_]
+              (frp/restart))
+            (gen/return unit/unit)))
+
 (clojure-test/defspec
   transduce-identity
   5
-  (restart-for-all [xf xform
+  (restart-for-all [_ restart
+                    xf xform
                     f (test-helpers/function gen/any)
                     init gen/any
                     as (gen/vector gen/any)]
