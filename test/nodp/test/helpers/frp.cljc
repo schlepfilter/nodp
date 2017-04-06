@@ -32,11 +32,16 @@
 
 (test/use-fixtures :once fixture)
 
+(def restart
+  (gen/fmap (fn [_]
+              (frp/restart))
+            (gen/return unit/unit)))
+
 #?(:clj (defmacro restart-for-all
           [bindings & body]
-          `(do (frp/restart)
-               (prop/for-all ~bindings
-                             ~@body))))
+          `(prop/for-all ~(concat `[_# restart]
+                                  bindings)
+                         ~@body)))
 
 (clojure-test/defspec
   invoke-inactive
@@ -315,16 +320,10 @@
                (gen/fmap filter
                          (test-helpers/function gen/boolean))]))
 
-(def restart
-  (gen/fmap (fn [_]
-              (frp/restart))
-            (gen/return unit/unit)))
-
 (clojure-test/defspec
   transduce-identity
   5
-  (restart-for-all [_ restart
-                    xf xform
+  (restart-for-all [xf xform
                     f (test-helpers/function gen/any)
                     init gen/any
                     as (gen/vector gen/any)]
