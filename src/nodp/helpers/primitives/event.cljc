@@ -267,14 +267,50 @@
 
 (util/make-printable Event)
 
+(helpers/defcurried modify-transduce-internal-event
+                    [step f parent-event internal-event network]
+                    ;TODO extract maybe-then-else
+                    (maybe/maybe
+                      network
+                      (helpers/get-latest parent-event network)
+                      (fn [latest-value]
+                        (let [stepped (step helpers/nothing
+                                            (tuple/snd latest-value))]
+                          (maybe/maybe
+                            ;TODO make modification false
+                            network
+                            stepped
+                            (fn [stepped-value]
+                              (helpers/set-latest
+                                (maybe/just
+                                  (tuple/tuple
+                                    (:event (:time network))
+                                    {:transduction
+                                     (f (:transduction
+                                          @(helpers/get-latest internal-event
+                                                               network))
+                                        stepped-value)
+                                     :modification
+                                     true}))
+                                internal-event
+                                network)))))))
+
 (defn transduce
   [xform f init parent-event]
   (let [step (xform (comp maybe/just
                           second
                           vector))
-        internal-event (event* internal-event*
-                               (set-earliest-latest {:transduction init
-                                                     :modification false}))])
+        internal-event (event*
+                         internal-event*
+                         (helpers/set-modifier
+                           (modify-transduce-internal-event step
+                                                            f
+                                                            parent-event
+                                                            internal-event*))
+                         (helpers/add-edge parent-event)
+                         (set-earliest-latest (maybe/just
+                                                {:transduction init
+                                                 :modification false})))])
   (event* child-event))
 
 (defn start
