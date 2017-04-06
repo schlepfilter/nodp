@@ -323,16 +323,19 @@
 (clojure-test/defspec
   transduce-identity
   5
-  (restart-for-all [xf xform
+  (restart-for-all [input-event (event)
+                    xf xform
                     f (test-helpers/function gen/any)
                     init gen/any
                     as (gen/vector gen/any)]
-                   ;TODO generate event
-                   (let [input-event (frp/event)
-                         transduced-event (frp/transduce xf f init input-event)]
+                   (let [transduced-event (frp/transduce xf f init input-event)
+                         earliest @input-event]
                      (frp/activate)
                      (run! input-event as)
-                     (->> as
+                     (->> (maybe/maybe as
+                                       earliest
+                                       (comp (partial (helpers/flip cons) as)
+                                             tuple/snd))
                           (maybe/map-maybe (partial (xf (comp maybe/just
                                                               second
                                                               vector))
