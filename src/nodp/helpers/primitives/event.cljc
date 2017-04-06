@@ -273,13 +273,14 @@
 
 (helpers/defcurried modify-transduce-transduction-event
                     [step f parent-event transduction-event network]
-                    ;TODO extract maybe-then-else
+                    ;TODO test parent-event is now
                     (maybe/maybe
                       network
                       (helpers/get-latest parent-event network)
                       (fn [latest-value]
                         (let [stepped (step helpers/nothing
                                             (tuple/snd latest-value))]
+                          ;TODO extract maybe-then-else
                           (maybe/maybe
                             network
                             stepped
@@ -299,7 +300,6 @@
                     [transduction-event child-event network]
                     (if-then-else (partial now? transduction-event)
                                   (make-sync transduction-event child-event)
-                                  ;TODO set nothing
                                   network))
 
 (defn transduce
