@@ -303,9 +303,10 @@
                                                             f
                                                             parent-event
                                                             internal-event*))
-                         (helpers/add-edge parent-event)
+                         (modify-transduce-internal-event step f parent-event)
                          (set-earliest-latest
-                           (maybe/just (tuple/tuple (time/time 0) init))))])
+                           (maybe/just (tuple/tuple (time/time 0) init)))
+                         (helpers/add-edge parent-event))])
   (event* child-event))
 
 (defn start
