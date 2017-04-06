@@ -272,7 +272,9 @@
   (let [step (xform (comp maybe/just
                           second
                           vector))
-        internal-event (event* internal-event*)])
+        internal-event (event* internal-event*
+                               (set-earliest-latest {:transduction init
+                                                     :modification false}))])
   (event* child-event))
 
 (defn start
