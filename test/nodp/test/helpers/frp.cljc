@@ -332,7 +332,7 @@
                                                               vector))
                                                     helpers/nothing))
                           (reduce f init)
-                          (= @@transduced-event)))))
+                          (= (tuple/snd @@transduced-event))))))
 
 (clojure-test/defspec
   behavior-return
