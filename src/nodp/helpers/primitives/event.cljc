@@ -309,15 +309,16 @@
         transduction-event
         (event*
           transduction-event*
+          (modify-transduce-transduction-event step f parent-event)
+          (set-earliest-latest (maybe/just (tuple/tuple (time/time 0) init)))
           (helpers/set-modifier
             (modify-transduce-transduction-event step
                                                  f
                                                  parent-event
                                                  transduction-event*))
-          (modify-transduce-transduction-event step f parent-event)
-          (set-earliest-latest (maybe/just (tuple/tuple (time/time 0) init)))
           (helpers/add-edge parent-event))]
     (event* child-event
+            (modify-transduce-child-event transduction-event)
             (helpers/set-modifier
               (modify-transduce-child-event transduction-event child-event))
             (helpers/add-edge transduction-event))))
