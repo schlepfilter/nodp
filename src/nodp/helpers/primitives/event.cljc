@@ -277,7 +277,6 @@
                         (let [stepped (step helpers/nothing
                                             (tuple/snd latest-value))]
                           (maybe/maybe
-                            ;TODO make modification false
                             network
                             stepped
                             (fn [stepped-value]
@@ -285,13 +284,10 @@
                                 (maybe/just
                                   (tuple/tuple
                                     (:event (:time network))
-                                    {:transduction
-                                     (f (:transduction
-                                          @(helpers/get-latest internal-event
-                                                               network))
-                                        stepped-value)
-                                     :modification
-                                     true}))
+                                    (f (tuple/snd
+                                         @(helpers/get-latest internal-event
+                                                              network))
+                                       stepped-value)))
                                 internal-event
                                 network)))))))
 
@@ -308,9 +304,8 @@
                                                             parent-event
                                                             internal-event*))
                          (helpers/add-edge parent-event)
-                         (set-earliest-latest (maybe/just
-                                                {:transduction init
-                                                 :modification false})))])
+                         (set-earliest-latest
+                           (maybe/just (tuple/tuple (time/time 0) init))))])
   (event* child-event))
 
 (defn start
