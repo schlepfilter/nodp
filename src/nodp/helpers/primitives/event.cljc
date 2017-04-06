@@ -1,4 +1,5 @@
 (ns nodp.helpers.primitives.event
+  (:refer-clojure :exclude [transduce])
   (:require [cats.builtin]
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
@@ -266,19 +267,26 @@
 
 (util/make-printable Event)
 
+(defn transduce
+  [xform f init parent-event]
+  (let [step (xform (comp maybe/just
+                          second
+                          vector))
+        internal-event (event* internal-event*)])
+  (event* child-event))
+
 (defn start
   []
   (reset! helpers/network-state {:active     false
-                         :dependency {:event    (graph/digraph)
-                                      :behavior (graph/digraph)}
-                         :input      (helpers/get-queue helpers/funcall)
-                         :modifier   {}
-                         :time       {:event (time/time 0)}}))
+                                 :dependency {:event    (graph/digraph)
+                                              :behavior (graph/digraph)}
+                                 :input      (helpers/get-queue helpers/funcall)
+                                 :modifier   {}
+                                 :time       {:event (time/time 0)}}))
 
 (def restart
   ;TODO call stop
   start)
-
 
 (def activate
   (partial swap! helpers/network-state (partial s/setval* :active true)))

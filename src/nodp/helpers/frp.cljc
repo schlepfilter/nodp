@@ -1,5 +1,5 @@
 (ns nodp.helpers.frp
-  (:refer-clojure :exclude [stepper])
+  (:refer-clojure :exclude [stepper transduce])
   (:require [nodp.helpers.io :as io]
             [nodp.helpers.primitives.behavior :as behavior]
             [nodp.helpers.primitives.event :as event]
@@ -10,6 +10,9 @@
 
 (def activate
   event/activate)
+
+(def transduce
+  event/transduce)
 
 (def switcher
   behavior/switcher)

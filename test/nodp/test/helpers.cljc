@@ -14,6 +14,6 @@
 (defn function
   [generator]
   (gen/fmap (fn [n]
-              (memoize (fn [x]
-                         (generate generator {:seed (+ n (hash x))}))))
+              (memoize (fn [& more]
+                         (generate generator {:seed (+ n (hash more))}))))
             gen/int))
