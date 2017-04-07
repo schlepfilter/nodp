@@ -13,4 +13,5 @@
 (defn stepper
   [a e]
   (behavior/switcher (behavior a)
-                     (m/<$> behavior e)))
+                     ;TODO use cats.core after cats.context is fixed
+                     (nodp.helpers/<$> behavior e)))

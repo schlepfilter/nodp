@@ -168,6 +168,12 @@
            x2 m2]
           (m/return (x1 x2))))
 
+;TODO remove this function after cats.context is fixed
+(defn <$>
+  [& more]
+  (with-redefs [cats.context/infer infer]
+    (apply m/fmap more)))
+
 #?(:clj (defmacro reify-monad
           [pure mbind & more]
           `(reify
