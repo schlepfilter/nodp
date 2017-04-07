@@ -43,15 +43,18 @@
 (def epoch-state
   (atom 0))
 
+(defn now-long
+  []
+  (-> (t/now)
+      c/to-long))
+
 (defn start
   []
-  (->> (t/now)
-       c/to-long
+  (->> (now-long)
        (reset! epoch-state)))
 
 (defn now
   []
-  (-> (t/now)
-      c/to-long
+  (-> (now-long)
       (- @epoch-state)
       time))
