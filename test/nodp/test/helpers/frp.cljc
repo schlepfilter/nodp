@@ -298,7 +298,7 @@
   event-<>
   5
   (restart-for-all [[input-events fmapped-events invoke] (events-tuple 2)]
-                   (let [mappended-event (apply m/<> fmapped-events)]
+                   (let [mappended-event (apply nodp.helpers/<> fmapped-events)]
                      (frp/activate)
                      (invoke)
                      (left-biased? mappended-event fmapped-events))))
