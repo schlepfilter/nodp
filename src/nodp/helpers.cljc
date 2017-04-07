@@ -174,6 +174,12 @@
   (with-redefs [cats.context/infer infer]
     (apply m/fmap more)))
 
+;TODO remove this function after cats.context is fixed
+(defn >>=
+  [& more]
+  (with-redefs [cats.context/infer infer]
+    (apply m/>>= more)))
+
 #?(:clj (defmacro reify-monad
           [pure mbind & more]
           `(reify

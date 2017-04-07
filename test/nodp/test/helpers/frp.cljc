@@ -220,7 +220,7 @@
                    (let [outer-event (frp/event)
                          bound-event (->> fmapped-events
                                           make-iterate
-                                          (m/>>= outer-event))]
+                                          (nodp.helpers/>>= outer-event))]
                      (frp/activate)
                      (dotimes [_ (-> input-events
                                      count
@@ -243,7 +243,7 @@
                    (let [outer-event (frp/event)
                          bound-event (->> inner-events
                                           make-iterate
-                                          (m/>>= outer-event))]
+                                          (nodp.helpers/>>= outer-event))]
                      (frp/activate)
                      (dotimes [_ (-> inner-events
                                      count
@@ -287,7 +287,7 @@
                    (let [outer-event (frp/event)
                          bound-event (->> fmapped-events
                                           make-iterate
-                                          (m/>>= outer-event))]
+                                          (nodp.helpers/>>= outer-event))]
                      (frp/activate)
                      (dotimes [_ (count inner-events)]
                        (outer-event unit/unit))
@@ -400,9 +400,9 @@
                     a gen/any]
                    (let [e (frp/event)
                          outer-behavior (frp/stepper a e)
-                         bound-behavior (m/>>= outer-behavior
-                                               (comp frp/behavior
-                                                     f))]
+                         bound-behavior (nodp.helpers/>>= outer-behavior
+                                                          (comp frp/behavior
+                                                                f))]
                      (frp/activate)
                      (run! e as)
                      (= @bound-behavior (f @outer-behavior)))))

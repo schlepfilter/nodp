@@ -52,7 +52,7 @@
   10
   (prop/for-all [a gen/any
                  mempty* mempty]
-                (= (m/>>= (tuple/tuple mempty* a) m/return)
+                (= (nodp.helpers/>>= (tuple/tuple mempty* a) m/return)
                    (tuple/tuple mempty* a))))
 
 (clojure-test/defspec
@@ -63,11 +63,11 @@
                  monoid* monoid]
                 (let [f (comp (partial tuple/tuple monoid*)
                               f*)]
-                  (= (m/>>= (tuple/tuple (-> monoid*
-                                             helpers/infer
-                                             m/mempty)
-                                         a)
-                            f)
+                  (= (nodp.helpers/>>= (tuple/tuple (-> monoid*
+                                                        helpers/infer
+                                                        m/mempty)
+                                                    a)
+                                       f)
                      (f a)))))
 
 (clojure-test/defspec
@@ -83,5 +83,5 @@
                               g*)
                       ma (tuple/tuple (first monoids) a)]
                   (= (m/->= ma f g)
-                     (m/>>= ma (comp (partial m/=<< g)
-                                     f))))))
+                     (nodp.helpers/>>= ma (comp (partial m/=<< g)
+                                                f))))))
