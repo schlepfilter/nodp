@@ -319,6 +319,8 @@
                (gen/fmap mapcat
                          (test-helpers/function gen/any))
                (gen/fmap filter
+                         (test-helpers/function gen/boolean))
+               (gen/fmap remove
                          (test-helpers/function gen/boolean))]))
 
 (clojure-test/defspec
