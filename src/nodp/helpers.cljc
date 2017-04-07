@@ -199,6 +199,12 @@
     (apply m/<*> more)))
 
 ;TODO remove this function after cats.context is fixed
+(defn return
+  [& more]
+  (with-redefs [cats.context/infer infer]
+    (apply m/return more)))
+
+;TODO remove this function after cats.context is fixed
 (defn >>=
   [& more]
   (with-redefs [cats.context/infer infer]

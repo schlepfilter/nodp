@@ -52,7 +52,7 @@
   10
   (prop/for-all [a gen/any
                  mempty* mempty]
-                (= (nodp.helpers/>>= (tuple/tuple mempty* a) m/return)
+                (= (nodp.helpers/>>= (tuple/tuple mempty* a) nodp.helpers/return)
                    (tuple/tuple mempty* a))))
 
 (clojure-test/defspec

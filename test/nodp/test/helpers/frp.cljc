@@ -69,7 +69,7 @@
   (restart-for-all [a gen/any]
                    (= @@(-> (frp/event)
                             helpers/infer
-                            (m/return a))
+                            (nodp.helpers/return a))
                       (-> 0
                           time/time
                           (tuple/tuple a)))))
@@ -133,7 +133,7 @@
 
 (defn event
   []
-  (gen/one-of [(gen/fmap (partial m/return (helpers/infer (frp/event)))
+  (gen/one-of [(gen/fmap (partial nodp.helpers/return (helpers/infer (frp/event)))
                          gen/any)
                (gen/return (frp/event))]))
 
@@ -353,7 +353,7 @@
                    (= @(-> unit/unit
                            frp/behavior
                            helpers/infer
-                           (m/return a))
+                           (nodp.helpers/return a))
                       a)))
 
 (def events-behaviors
