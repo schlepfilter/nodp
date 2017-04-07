@@ -7,7 +7,7 @@
 (defn behavior
   [a]
   (->> a
-       m/pure
+       nodp.helpers/pure
        (ctx/with-context behavior/context)))
 
 (defn stepper
