@@ -40,8 +40,18 @@
 (def time
   ->Time)
 
+(def epoch-state
+  (atom 0))
+
+(defn start
+  []
+  (->> (t/now)
+       c/to-long
+       (reset! epoch-state)))
+
 (defn now
   []
   (-> (t/now)
       c/to-long
+      (- @epoch-state)
       time))

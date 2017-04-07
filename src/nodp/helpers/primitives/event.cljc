@@ -336,4 +336,5 @@
   start)
 
 (def activate
-  (partial swap! helpers/network-state (partial s/setval* :active true)))
+  (juxt (partial swap! helpers/network-state (partial s/setval* :active true))
+        time/start))
