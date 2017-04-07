@@ -57,23 +57,22 @@
 
 (defn switcher
   [parent-behavior parent-event]
-  (let [child-behavior
-        (behavior* child-behavior*
-                   (helpers/add-edge parent-behavior)
-                   (helpers/set-latest @parent-behavior)
-                   (helpers/set-modifier
-                     (fn [network]
-                       (helpers/set-latest
-                         (helpers/get-latest
-                           (maybe/maybe parent-behavior
-                                        (helpers/get-latest parent-event
-                                                            network)
-                                        tuple/snd)
-                           network)
+  (let [child-behavior (behavior*
                          child-behavior*
-                         network))))]
-    (event/event* _
-                  (helpers/add-edge parent-event)
+                         (helpers/add-edge parent-behavior)
+                         (helpers/set-latest @parent-behavior)
+                         (helpers/set-modifier
+                           (fn [network]
+                             (helpers/set-latest
+                               (helpers/get-latest
+                                 (maybe/maybe parent-behavior
+                                              (helpers/get-latest parent-event
+                                                                  network)
+                                              tuple/snd)
+                                 network)
+                               child-behavior*
+                               network))))]
+    (event/event* _ (helpers/add-edge parent-event)
                   (helpers/set-modifier
                     (fn [network]
                       (maybe/maybe network
