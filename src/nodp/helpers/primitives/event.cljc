@@ -62,9 +62,9 @@
         alg/topsort))
 
 (def get-behavior-modifiers
-  (m/<*> make-get-modifiers*
-         (comp :behavior
-               :dependency)))
+  (nodp.helpers/<*> make-get-modifiers*
+                    (comp :behavior
+                          :dependency)))
 
 (defn modify-behavior!
   [t network]
@@ -195,7 +195,7 @@
     (comp (fn [a]
             (set-earliest-latest a child-event network))
           maybe/just
-          (partial m/<*> (tuple/tuple (:event (:time network)) identity)))))
+          (partial nodp.helpers/<*> (tuple/tuple (:event (:time network)) identity)))))
 
 (def get-time-value
   (comp deref

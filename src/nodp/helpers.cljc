@@ -184,7 +184,13 @@
 (defn <$>
   [& more]
   (with-redefs [cats.context/infer infer]
-    (apply m/fmap more)))
+    (apply m/<$> more)))
+
+;TODO remove this function after cats.context is fixed
+(defn <*>
+  [& more]
+  (with-redefs [cats.context/infer infer]
+    (apply m/<*> more)))
 
 ;TODO remove this function after cats.context is fixed
 (defn >>=
