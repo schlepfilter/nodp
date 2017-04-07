@@ -175,6 +175,12 @@
     (apply m/<> more)))
 
 ;TODO remove this function after cats.context is fixed
+(defn mempty
+  [& more]
+  (with-redefs [cats.context/infer infer]
+    (apply m/mempty more)))
+
+;TODO remove this function after cats.context is fixed
 (defn <$>
   [& more]
   (with-redefs [cats.context/infer infer]

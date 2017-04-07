@@ -39,7 +39,7 @@
                (gen/recursive-gen maybe scalar-monoid)]))
 
 (def mempty
-  (gen/fmap (comp m/mempty helpers/infer)
+  (gen/fmap (comp nodp.helpers/mempty helpers/infer)
             monoid))
 
 (defn scalar-monoid-vector
@@ -65,7 +65,7 @@
                               f*)]
                   (= (nodp.helpers/>>= (tuple/tuple (-> monoid*
                                                         helpers/infer
-                                                        m/mempty)
+                                                        nodp.helpers/mempty)
                                                     a)
                                        f)
                      (f a)))))

@@ -309,7 +309,7 @@
   (restart-for-all [a gen/any]
                    (= @(-> (frp/event)
                            helpers/infer
-                           m/mempty)
+                           nodp.helpers/mempty)
                       helpers/nothing)))
 
 (def xform

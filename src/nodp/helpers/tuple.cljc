@@ -14,7 +14,7 @@
   (-get-context [_]
     (helpers/reify-monad
       ;TODO remove with-redefs after cats.context is fixed
-      (partial ->Tuple (m/mempty
+      (partial ->Tuple (nodp.helpers/mempty
                          (with-redefs [cats.context/infer helpers/infer]
                            (cats.context/infer fst))))
       (fn [ma f]

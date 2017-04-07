@@ -9,7 +9,7 @@
 
 (defn event
   []
-  (->> (m/mempty)
+  (->> (nodp.helpers/mempty)
        (ctx/with-context event/context)))
 
 (defmulti call-modifier (comp helpers/get-keyword
