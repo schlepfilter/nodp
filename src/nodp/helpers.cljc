@@ -162,12 +162,6 @@
        (str "No context is set and it can not be automatically "
             "resolved from provided value")))))
 
-(defn ap
-  [m1 m2]
-  (m/mlet [x1 m1
-           x2 m2]
-          (m/return (x1 x2))))
-
 ;TODO remove this function after cats.context is fixed
 (defn <>
   [& more]
@@ -221,6 +215,19 @@
           [& more]
           `(with-redefs [cats.context/infer infer]
              (m/lift-m ~@more))))
+
+;TODO remove this macro after cats.context is fixed
+#?(:clj (defmacro mlet
+          [& more]
+          `(with-redefs [cats.context/infer infer]
+             (m/mlet ~@more))))
+
+(defn ap
+  [m1 m2]
+  (mlet [x1 m1
+         x2 m2]
+        (return (x1 x2))))
+
 
 #?(:clj (defmacro reify-monad
           [pure mbind & more]
