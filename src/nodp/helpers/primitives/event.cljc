@@ -246,6 +246,7 @@
                                 (helpers/set-modifier
                                   (modify->>=! ma f child-event*))
                                 (helpers/add-edge ma))]
+        ;TODO call modify-events! in activate
         (->> @helpers/network-state
              (modify->>=! ma f child-event)
              (reset! helpers/network-state))
