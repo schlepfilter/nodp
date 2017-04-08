@@ -156,8 +156,7 @@
 (defn probabilities
   ([]
    (-> probability
-       gen/vector
-       gen/not-empty))
+       (gen/vector 2 10)))
   ([n]
    (gen/vector probability n)))
 
@@ -218,14 +217,14 @@
 (clojure-test/defspec
   event->>=-nonmember
   5
-  (restart-for-all [[input-events fmapped-events invoke] (events-tuple)]
+  (restart-for-all [[_ fmapped-events invoke] (events-tuple)]
                    ;TODO generate outer-event
                    (let [outer-event (frp/event)
                          bound-event (->> fmapped-events
                                           make-iterate
                                           (nodp.helpers/>>= outer-event))]
                      (frp/activate)
-                     (dotimes [_ (-> input-events
+                     (dotimes [_ (-> fmapped-events
                                      count
                                      dec)]
                        (outer-event unit/unit))
@@ -286,13 +285,13 @@
 (clojure-test/defspec
   event->>=-left-bias
   5
-  (restart-for-all [[inner-events fmapped-events invoke] (events-tuple)]
+  (restart-for-all [[_ fmapped-events invoke] (events-tuple)]
                    (let [outer-event (frp/event)
                          bound-event (->> fmapped-events
                                           make-iterate
                                           (nodp.helpers/>>= outer-event))]
                      (frp/activate)
-                     (dotimes [_ (count inner-events)]
+                     (dotimes [_ (count fmapped-events)]
                        (outer-event unit/unit))
                      (invoke)
                      (left-biased? bound-event fmapped-events))))
@@ -300,7 +299,7 @@
 (clojure-test/defspec
   event-<>
   5
-  (restart-for-all [[input-events fmapped-events invoke] (events-tuple 2)]
+  (restart-for-all [[_ fmapped-events invoke] (events-tuple 2)]
                    (let [mappended-event (apply nodp.helpers/<> fmapped-events)]
                      (frp/activate)
                      (invoke)
