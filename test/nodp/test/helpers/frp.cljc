@@ -156,7 +156,8 @@
 (defn probabilities
   ([]
    (-> probability
-       (gen/vector 2 10)))
+       gen/vector
+       gen/not-empty))
   ([n]
    (gen/vector probability n)))
 
