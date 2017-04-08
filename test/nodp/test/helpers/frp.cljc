@@ -176,18 +176,27 @@
                       (gen/return (map (fn [f e]
                                          ((nodp.helpers/lift-a 1 f) e))
                                        fs
-                                       es))
+                                       es)))))
+
+(defn events-invoke*
+  [events-tuple-generator]
+  (gen/let [[input-events fmapped-events] events-tuple-generator
+            xs (->> input-events
+                    count
+                    (gen/vector gen/boolean))]
+           (gen/tuple (gen/return fmapped-events)
                       (gen/return (partial run!
                                            helpers/funcall
                                            (map (fn [e x]
                                                   (fn []
                                                     (if x
                                                       (e unit/unit))))
-                                                es
+                                                input-events
                                                 xs))))))
 
-(def events-tuple
-  (comp events-tuple*
+(def events-invoke
+  (comp events-invoke*
+        events-tuple*
         events))
 
 (defn make-iterate
@@ -217,7 +226,7 @@
 (clojure-test/defspec
   event->>=-nonmember
   5
-  (restart-for-all [[_ fmapped-events invoke] (events-tuple)]
+  (restart-for-all [[fmapped-events invoke] (events-invoke)]
                    ;TODO generate outer-event
                    (let [outer-event (frp/event)
                          bound-event (->> fmapped-events
@@ -285,7 +294,7 @@
 (clojure-test/defspec
   event->>=-left-bias
   5
-  (restart-for-all [[_ fmapped-events invoke] (events-tuple)]
+  (restart-for-all [[fmapped-events invoke] (events-invoke)]
                    (let [outer-event (frp/event)
                          bound-event (->> fmapped-events
                                           make-iterate
@@ -299,7 +308,7 @@
 (clojure-test/defspec
   event-<>
   5
-  (restart-for-all [[_ fmapped-events invoke] (events-tuple 2)]
+  (restart-for-all [[fmapped-events invoke] (events-invoke 2)]
                    (let [mappended-event (apply nodp.helpers/<> fmapped-events)]
                      (frp/activate)
                      (invoke)
@@ -357,6 +366,10 @@
                            helpers/infer
                            (nodp.helpers/return a))
                       a)))
+
+(def events-tuple
+  (comp events-tuple*
+        events))
 
 (def events-behaviors
   (gen/let [[input-events fmapped-events] (events-tuple)
