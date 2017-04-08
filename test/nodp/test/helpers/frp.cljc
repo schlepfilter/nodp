@@ -162,7 +162,6 @@
    (gen/vector probability n)))
 
 (def events
-  ;TODO filter events
   (comp (partial gen/fmap get-events)
         probabilities))
 
