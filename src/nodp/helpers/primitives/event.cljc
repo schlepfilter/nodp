@@ -206,7 +206,7 @@
 (helpers/defcurried modify->>=!
                     [ma f child-event network]
                     (if (now? ma network)
-                      (do (swap! helpers/network-state (constantly network))
+                      (do (reset! helpers/network-state network)
                           (let [parent-event (->> network
                                                   (get-value ma)
                                                   f)]
