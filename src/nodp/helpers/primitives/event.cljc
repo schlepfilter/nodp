@@ -210,14 +210,12 @@
                           (let [parent-event (->> network
                                                   (get-value ma)
                                                   f)]
-                            ;TODO remove with-redefs after cats.context is fixed
-                            (with-redefs [cats.context/infer helpers/infer]
-                              (call-functions ((juxt helpers/add-edge
-                                                     make-merge-sync
-                                                     delay-sync->>=)
-                                                parent-event
-                                                child-event)
-                                              @helpers/network-state))))
+                            (call-functions ((juxt helpers/add-edge
+                                                   make-merge-sync
+                                                   delay-sync->>=)
+                                              parent-event
+                                              child-event)
+                                            @helpers/network-state)))
                       network))
 
 (helpers/defcurried modify-<>!

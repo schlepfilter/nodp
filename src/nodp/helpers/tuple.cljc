@@ -13,15 +13,11 @@
   p/Contextual
   (-get-context [_]
     (helpers/reify-monad
-      ;TODO remove with-redefs after cats.context is fixed
       (partial ->Tuple (nodp.helpers/mempty
-                         (with-redefs [cats.context/infer helpers/infer]
-                           (cats.context/infer fst))))
+                         (helpers/infer fst)))
       (fn [ma f]
-        ;TODO remove with-redefs after cats.context is fixed
-        (Tuple. (with-redefs [cats.context/infer helpers/infer]
-                  (m/mappend (:fst ma)
-                             (:fst (f (:snd ma)))))
+        (Tuple. (nodp.helpers/<> (:fst ma)
+                                 (:fst (f (:snd ma))))
                 (:snd (f (:snd ma)))))))
 
   p/Printable
