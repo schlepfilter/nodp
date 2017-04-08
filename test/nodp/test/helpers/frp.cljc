@@ -173,7 +173,7 @@
                     (gen/vector gen/boolean))]
            (gen/tuple (gen/return es)
                       (gen/return (map (fn [f e]
-                                         ((m/lift-a 1 f) e))
+                                         ((nodp.helpers/lift-a 1 f) e))
                                        fs
                                        es))
                       (gen/return (partial run!

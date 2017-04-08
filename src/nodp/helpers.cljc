@@ -210,6 +210,12 @@
   (with-redefs [cats.context/infer infer]
     (apply m/>>= more)))
 
+;TODO remove this macro after cats.context is fixed
+#?(:clj (defmacro lift-a
+          [& more]
+          `(with-redefs [cats.context/infer infer]
+             (m/lift-a ~@more))))
+
 #?(:clj (defmacro reify-monad
           [pure mbind & more]
           `(reify
