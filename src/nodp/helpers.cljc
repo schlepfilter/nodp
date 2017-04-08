@@ -216,13 +216,19 @@
           `(with-redefs [cats.context/infer infer]
              (m/lift-a ~@more))))
 
+;TODO remove this macro after cats.context is fixed
+#?(:clj (defmacro lift-m
+          [& more]
+          `(with-redefs [cats.context/infer infer]
+             (m/lift-m ~@more))))
+
 #?(:clj (defmacro reify-monad
           [pure mbind & more]
           `(reify
              p/Context
              p/Functor
              (~'-fmap [_# f# fa#]
-               ((m/lift-m 1 f#) fa#))
+               ((nodp.helpers/lift-m 1 f#) fa#))
              p/Applicative
              (~'-pure [_# v#]
                (~pure v#))
