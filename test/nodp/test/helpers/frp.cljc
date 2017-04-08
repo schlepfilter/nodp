@@ -44,7 +44,7 @@
                          ~@body)))
 
 (clojure-test/defspec
-  invoke-inactive
+  call-inactive
   10
   (restart-for-all [as (gen/vector gen/any)]
                    (let [e (frp/event)]
@@ -52,7 +52,7 @@
                      (maybe/nothing? @e))))
 
 (clojure-test/defspec
-  invoke-active
+  call-active
   10
   (restart-for-all [as (gen/vector gen/any)]
                    (let [e (frp/event)]
@@ -175,7 +175,7 @@
                                        fs
                                        es)))))
 
-(defn events-invoke*
+(defn events-call*
   [events-tuple-generator]
   (gen/let [[input-events fmapped-events] events-tuple-generator
             xs (->> input-events
@@ -191,8 +191,8 @@
                                                 input-events
                                                 xs))))))
 
-(def events-invoke
-  (comp events-invoke*
+(def events-call
+  (comp events-call*
         events-tuple*
         events))
 
@@ -223,7 +223,7 @@
 (clojure-test/defspec
   event->>=-nonmember
   5
-  (restart-for-all [[fmapped-events invoke] (events-invoke)]
+  (restart-for-all [[fmapped-events call] (events-call)]
                    ;TODO generate outer-event
                    (let [outer-event (frp/event)
                          bound-event (->> fmapped-events
@@ -234,7 +234,7 @@
                                      count
                                      dec)]
                        (outer-event unit/unit))
-                     (invoke)
+                     (call)
                      (or (maybe/nothing? @bound-event)
                          (contains-event-value? (drop-last fmapped-events)
                                                 bound-event)))))
@@ -291,7 +291,7 @@
 (clojure-test/defspec
   event->>=-left-bias
   5
-  (restart-for-all [[fmapped-events invoke] (events-invoke)]
+  (restart-for-all [[fmapped-events call] (events-call)]
                    (let [outer-event (frp/event)
                          bound-event (->> fmapped-events
                                           make-iterate
@@ -299,16 +299,16 @@
                      (frp/activate)
                      (dotimes [_ (count fmapped-events)]
                        (outer-event unit/unit))
-                     (invoke)
+                     (call)
                      (left-biased? bound-event fmapped-events))))
 
 (clojure-test/defspec
   event-<>
   5
-  (restart-for-all [[fmapped-events invoke] (events-invoke 2)]
+  (restart-for-all [[fmapped-events call] (events-call 2)]
                    (let [mappended-event (apply nodp.helpers/<> fmapped-events)]
                      (frp/activate)
-                     (invoke)
+                     (call)
                      (left-biased? mappended-event fmapped-events))))
 
 (clojure-test/defspec
