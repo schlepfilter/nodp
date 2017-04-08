@@ -220,11 +220,13 @@
 
 (helpers/defcurried modify-<>!
                     [left-event right-event child-event network]
-                    (-> (cond (-> (helpers/get-latest left-event network)
-                                  maybe/nothing?)
+                    (-> (cond (->> network
+                                   (helpers/get-latest left-event)
+                                   maybe/nothing?)
                               right-event
-                              (-> (helpers/get-latest right-event network)
-                                  maybe/nothing?)
+                              (->> network
+                                   (helpers/get-latest right-event)
+                                   maybe/nothing?)
                               left-event
                               (< (get-time-value left-event network)
                                  (get-time-value right-event network))
