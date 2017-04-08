@@ -217,6 +217,7 @@
   event->>=-nonmember
   5
   (restart-for-all [[input-events fmapped-events invoke] (events-tuple)]
+                   ;TODO generate outer-event
                    (let [outer-event (frp/event)
                          bound-event (->> fmapped-events
                                           make-iterate
