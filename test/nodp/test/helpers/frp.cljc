@@ -171,8 +171,7 @@
   (gen/let [es events-generator
             fs (gen/vector (test-helpers/function gen/any) (count es))]
            (gen/tuple (gen/return es)
-                      (gen/return (map (fn [f e]
-                                         ((nodp.helpers/lift-a 1 f) e))
+                      (gen/return (map nodp.helpers/<$>
                                        fs
                                        es)))))
 
