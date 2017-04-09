@@ -72,7 +72,8 @@
                                  network)
                                child-behavior*
                                network))))]
-    (event/event* _ (helpers/add-edge parent-event)
+    (event/event* _
+                  (helpers/add-edge parent-event)
                   (helpers/set-modifier
                     (fn [network]
                       (maybe/maybe network
