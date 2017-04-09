@@ -171,9 +171,9 @@
   (gen/let [es events-generator
             fs (gen/vector (test-helpers/function gen/any) (count es))]
            (gen/tuple (gen/return es)
-                      (gen/return (map nodp.helpers/<$>
-                                       fs
-                                       es)))))
+                      (gen/return (doall (map nodp.helpers/<$>
+                                              fs
+                                              es))))))
 
 (defn events-call*
   [events-tuple-generator]
