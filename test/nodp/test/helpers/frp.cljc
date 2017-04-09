@@ -408,12 +408,11 @@
 (clojure-test/defspec
   behavior->>=
   5
-  (restart-for-all [f (test-helpers/function gen/any)
+  (restart-for-all [e (event)
+                    f (test-helpers/function gen/any)
                     as (gen/vector gen/any)
                     a gen/any]
-                   ;TODO generate event
-                   (let [e (frp/event)
-                         outer-behavior (frp/stepper a e)
+                   (let [outer-behavior (frp/stepper a e)
                          bound-behavior (nodp.helpers/>>= outer-behavior
                                                           (comp frp/behavior
                                                                 f))]
