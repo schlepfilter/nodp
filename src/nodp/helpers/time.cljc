@@ -51,6 +51,8 @@
 (defn start
   []
   (->> (now-long)
+       ;dec ensures times for events are strictly increasing.
+       dec
        (reset! epoch-state)))
 
 (defn now
