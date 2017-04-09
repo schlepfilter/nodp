@@ -133,7 +133,8 @@
 
 (defn event
   []
-  (gen/one-of [(gen/fmap (partial nodp.helpers/return (helpers/infer (frp/event)))
+  (gen/one-of [(gen/fmap (partial nodp.helpers/return
+                                  (helpers/infer (frp/event)))
                          gen/any)
                (gen/return (frp/event))]))
 
