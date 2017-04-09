@@ -374,9 +374,9 @@
                     count
                     (gen/vector gen/any))]
            (gen/tuple (gen/return input-events)
-                      (gen/return (map frp/stepper
-                                       as
-                                       fmapped-events)))))
+                      (gen/return (doall (map frp/stepper
+                                              as
+                                              fmapped-events))))))
 
 (clojure-test/defspec
   switcher-zero
