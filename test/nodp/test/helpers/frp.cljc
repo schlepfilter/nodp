@@ -393,12 +393,12 @@
   switcher-positive
   5
   (restart-for-all [[es bs] events-behaviors]
-                   ;TODO generate event
                    (let [e (frp/event)
                          b (-> bs
                                first
                                (frp/switcher e))]
                      (frp/activate)
+                     ;TODO call some of es
                      (->> bs
                           rest
                           (run! e))
