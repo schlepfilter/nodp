@@ -227,7 +227,7 @@
   event->>=-nonmember
   5
   (restart-for-all [[fmapped-events call] (events-call)]
-                   ;TODO generate outer-event
+                   ;TODO generate event
                    (let [outer-event (frp/event)
                          bound-event (->> fmapped-events
                                           make-iterate
@@ -295,6 +295,7 @@
   event->>=-left-bias
   5
   (restart-for-all [[fmapped-events call] (events-call)]
+                   ;TODO generate event
                    (let [outer-event (frp/event)
                          bound-event (->> fmapped-events
                                           make-iterate
@@ -392,6 +393,7 @@
   switcher-positive
   5
   (restart-for-all [[es bs] events-behaviors]
+                   ;TODO generate event
                    (let [e (frp/event)
                          b (-> bs
                                first
@@ -409,6 +411,7 @@
   (restart-for-all [f (test-helpers/function gen/any)
                     as (gen/vector gen/any)
                     a gen/any]
+                   ;TODO generate event
                    (let [e (frp/event)
                          outer-behavior (frp/stepper a e)
                          bound-behavior (nodp.helpers/>>= outer-behavior
