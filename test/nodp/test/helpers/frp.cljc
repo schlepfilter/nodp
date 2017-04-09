@@ -191,10 +191,13 @@
                                                 input-events
                                                 xs))))))
 
+(def events-tuple
+  (comp events-tuple*
+        events))
+
 (def events-call
   (comp events-call*
-        events-tuple*
-        events))
+        events-tuple))
 
 (defn make-iterate
   [coll]
@@ -363,10 +366,6 @@
                            helpers/infer
                            (nodp.helpers/return a))
                       a)))
-
-(def events-tuple
-  (comp events-tuple*
-        events))
 
 (def events-behaviors
   (gen/let [[input-events fmapped-events] (events-tuple)
