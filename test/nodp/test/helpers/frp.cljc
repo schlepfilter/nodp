@@ -382,7 +382,7 @@
 (clojure-test/defspec
   switcher-zero
   5
-  (restart-for-all [[es bs] events-behaviors]
+  (restart-for-all [[_ bs] events-behaviors]
                    (let [e (frp/event)
                          b (-> bs
                                first
