@@ -162,19 +162,6 @@
   ([n]
    (gen/vector probability n)))
 
-(def events
-  (comp (partial gen/fmap get-events)
-        probabilities))
-
-(defn events-tuple*
-  [events-generator]
-  (gen/let [es events-generator
-            fs (gen/vector (test-helpers/function gen/any) (count es))]
-           (gen/tuple (gen/return es)
-                      (gen/return (doall (map nodp.helpers/<$>
-                                              fs
-                                              es))))))
-
 (defn events-call*
   [events-tuple-generator]
   (gen/let [[input-events fmapped-events] events-tuple-generator
@@ -190,6 +177,19 @@
                                                       (e unit/unit))))
                                                 input-events
                                                 xs))))))
+
+(defn events-tuple*
+  [events-generator]
+  (gen/let [es events-generator
+            fs (gen/vector (test-helpers/function gen/any) (count es))]
+           (gen/tuple (gen/return es)
+                      (gen/return (doall (map nodp.helpers/<$>
+                                              fs
+                                              es))))))
+
+(def events
+  (comp (partial gen/fmap get-events)
+        probabilities))
 
 (def events-tuple
   (comp events-tuple*
