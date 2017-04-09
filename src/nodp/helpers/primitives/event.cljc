@@ -205,6 +205,7 @@
 
 (helpers/defcurried modify->>=!
                     [ma f child-event network]
+                    ;Testing with now? assumes times for events are strictly increasing.
                     (if (now? ma network)
                       (do (reset! helpers/network-state network)
                           (let [parent-event (->> network
