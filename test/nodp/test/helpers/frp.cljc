@@ -294,8 +294,7 @@
 
 (clojure-test/defspec
   event->>=-left-bias
-  {:num-tests 5
-   :seed      1491779413641}
+  5
   (restart-for-all [[fmapped-events call] (events-call)]
                    ;TODO generate event
                    (let [outer-event (frp/event)
