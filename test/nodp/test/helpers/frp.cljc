@@ -370,6 +370,31 @@
                            (nodp.helpers/return a))
                       a)))
 
+(def event-behaviors
+  (gen/let [[input-events fmapped-events] (events-tuple)
+            a test-helpers/any-equal
+            switcher-event (gen/one-of
+                             [(gen/return (helpers/return
+                                            (helpers/infer (frp/event))
+                                            (frp/stepper a (frp/event))))
+                              (gen/return (frp/event))])
+            as (->> input-events
+                    count
+                    (gen/vector test-helpers/any-equal))]
+           (gen/tuple (gen/return switcher-event)
+                      (gen/return (doall (map frp/stepper
+                                              as
+                                              fmapped-events))))))
+
+(clojure-test/defspec
+  switcher-zero
+  5
+  (restart-for-all [[e bs] event-behaviors]
+                   (let [b (-> bs
+                               first
+                               (frp/switcher e))]
+                     (= @b @(first bs)))))
+
 (def events-behaviors
   (gen/let [[input-events fmapped-events] (events-tuple)
             as (->> input-events
@@ -382,17 +407,6 @@
 
 (def behaviors-call
   (entities-call* events-behaviors))
-
-(clojure-test/defspec
-  switcher-zero
-  5
-  (restart-for-all [[_ bs] events-behaviors]
-                   ;TODO generate event
-                   (let [e (frp/event)
-                         b (-> bs
-                               first
-                               (frp/switcher e))]
-                     (= @b @(first bs)))))
 
 (clojure-test/defspec
   switcher-positive
