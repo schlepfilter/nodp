@@ -390,6 +390,7 @@
 (clojure-test/defspec
   switcher-zero
   5
+  ;TODO replace event-behaviors with event-behavior
   (restart-for-all [[e bs] event-behaviors]
                    (let [b (-> bs
                                first
