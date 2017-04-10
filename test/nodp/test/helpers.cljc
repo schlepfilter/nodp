@@ -17,3 +17,20 @@
               (memoize (fn [& more]
                          (generate generator {:seed (+ n (hash more))}))))
             gen/int))
+
+(def simple-type-equal
+  (gen/one-of [gen/int
+               gen/large-integer
+               (gen/double* {:NaN? false})
+               gen/char
+               gen/string
+               gen/ratio
+               gen/boolean
+               gen/keyword
+               gen/keyword-ns
+               gen/symbol
+               gen/symbol-ns
+               gen/uuid]))
+
+(def any-equal
+  (gen/recursive-gen gen/container-type simple-type-equal))

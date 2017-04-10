@@ -54,7 +54,7 @@
 (clojure-test/defspec
   call-active
   10
-  (restart-for-all [as (gen/vector gen/any)]
+  (restart-for-all [as (gen/vector test-helpers/any-equal)]
                    (let [e (frp/event)]
                      (frp/activate)
                      (run! e as)
@@ -181,7 +181,8 @@
 (defn events-tuple*
   [events-generator]
   (gen/let [es events-generator
-            fs (gen/vector (test-helpers/function gen/any) (count es))]
+            fs (gen/vector (test-helpers/function test-helpers/any-equal)
+                           (count es))]
            (gen/tuple (gen/return es)
                       (gen/return (doall (map nodp.helpers/<$>
                                               fs
