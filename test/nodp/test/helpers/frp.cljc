@@ -398,6 +398,7 @@
                                  (helpers/return
                                    (helpers/infer (frp/event))
                                    return-behavior))])
+            ;TODO interpose calling input-events and calling switching-event without changing the order of switched-behaviors with which to call switching-event
             calls (gen/return (concat (map (fn [input-event]
                                              (fn []
                                                (input-event unit/unit)))
