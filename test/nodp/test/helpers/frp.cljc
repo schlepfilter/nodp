@@ -289,20 +289,23 @@
                  all-nothing?
                  left-biased?*))
 
+(def call-units
+  (partial run! (partial (helpers/flip helpers/funcall) unit/unit)))
+
 (clojure-test/defspec
   event->>=-left-bias
-  {:num-tests 5
-   :seed      1491787014556}
-  (restart-for-all [[fmapped-events call] (events-call)]
+  5
+  (restart-for-all [[input-events fmapped-events] (events-tuple)]
                    ;TODO generate event
                    (let [outer-event (frp/event)
                          bound-event (->> fmapped-events
                                           make-iterate
                                           (nodp.helpers/>>= outer-event))]
                      (frp/activate)
+                     ;TODO interleave calling outer-event and calling input-events
                      (dotimes [_ (count fmapped-events)]
                        (outer-event unit/unit))
-                     (call)
+                     (call-units input-events)
                      (left-biased? bound-event fmapped-events))))
 
 (clojure-test/defspec
@@ -399,6 +402,7 @@
                                first
                                (frp/switcher e))]
                      (frp/activate)
+                     ;TODO interleave calling e and calling input-events
                      (->> bs
                           rest
                           (run! e))
