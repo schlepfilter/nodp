@@ -373,54 +373,56 @@
                            (nodp.helpers/return a))
                       a)))
 
-(def event-behavior
-  (gen/let [[_ [fmapped-event]] (events-tuple 1)
-            a1 test-helpers/any-equal
-            switcher-event (gen/one-of
-                             [(gen/return (helpers/return
-                                            (helpers/infer (frp/event))
-                                            (frp/stepper a1 (frp/event))))
-                              (gen/return (frp/event))])
-            a2 test-helpers/any-equal]
-           (gen/tuple (gen/return switcher-event)
-                      (gen/return (frp/stepper a2 fmapped-event)))))
-
-(clojure-test/defspec
-  switcher-zero
-  5
-  (restart-for-all [[e first-behavior] event-behavior]
-                   (let [switched-behavior (frp/switcher first-behavior e)]
-                     (= @switched-behavior @first-behavior))))
-
-(def events-behaviors
-  (gen/let [[input-events fmapped-events] (events-tuple)
+(def switcher
+  (gen/let [probabilities (gen/sized (comp (partial gen/vector probability 2)
+                                           (partial + 2)))
+            input-events (gen/fmap get-events
+                                   (gen/return probabilities))
+            fs (gen/vector (test-helpers/function test-helpers/any-equal)
+                           (count input-events))
+            fmapped-events (gen/return (doall (map nodp.helpers/<$>
+                                                   fs
+                                                   input-events)))
             as (->> input-events
                     count
-                    (gen/vector test-helpers/any-equal))]
-           (gen/tuple (gen/return input-events)
-                      (gen/return (doall (map frp/stepper
-                                              as
-                                              fmapped-events))))))
-
-(def behaviors-call
-  (entities-call* events-behaviors))
+                    (gen/vector test-helpers/any-equal))
+            [first-behavior
+             return-behavior
+             & switched-behaviors
+             :as all-behaviors] (gen/return (doall (map frp/stepper
+                                                        as
+                                                        fmapped-events)))
+            switching-event (gen/one-of
+                              [(gen/return (frp/event))
+                               (gen/return
+                                 (helpers/return
+                                   (helpers/infer (frp/event))
+                                   return-behavior))])
+            xs (gen/vector gen/boolean (count input-events))
+            calls (gen/shuffle (concat (map (fn [x input-event]
+                                              (fn []
+                                                (if x
+                                                  (input-event unit/unit))))
+                                            xs
+                                            input-events)
+                                       (map (fn [switched-behavior]
+                                              (fn []
+                                                (switching-event switched-behavior)))
+                                            switched-behaviors)))]
+           (gen/tuple (gen/return (fn []
+                                    (run! helpers/funcall calls)))
+                      (gen/return (frp/switcher first-behavior switching-event))
+                      (gen/return (last (if (maybe/just? @switching-event)
+                                          all-behaviors
+                                          (cons first-behavior switched-behaviors)))))))
 
 (clojure-test/defspec
-  switcher-positive
+  switcher-last
   5
-  (restart-for-all [[bs call] behaviors-call]
-                   ;TODO generate event
-                   (let [e (frp/event)
-                         b (-> bs
-                               first
-                               (frp/switcher e))]
-                     (frp/activate)
-                     ;TODO interleave calling e and calling input-events
-                     (->> bs
-                          rest
-                          (run! e))
-                     (call)
-                     (= @b @(last bs)))))
+  (restart-for-all [[call switched-behavior last-behavior] (gen/no-shrink switcher)]
+                   (frp/activate)
+                   (call)
+                   (= @switched-behavior @last-behavior)))
 
 (clojure-test/defspec
   behavior->>=
