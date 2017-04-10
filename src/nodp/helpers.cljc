@@ -334,6 +334,7 @@
           `(let [~entity-name (-> (gensym)
                                   keyword
                                   ~constructor)]
+             ;TODO replace swap! with reset!
              (swap! network-state
                     ~(comp-entity-functions entity-name
                                             (cons `make-add-node fs)))
