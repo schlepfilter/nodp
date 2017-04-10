@@ -256,7 +256,7 @@
                                           make-iterate
                                           (nodp.helpers/>>= outer-event))]
                      (frp/activate)
-                     ;TODO interleave calling outer-event and calling input-events
+                     ;TODO interpose calling outer-event and calling input-events
                      (dotimes [_ (-> inner-events
                                      count
                                      dec)]
@@ -305,7 +305,7 @@
                                           make-iterate
                                           (nodp.helpers/>>= outer-event))]
                      (frp/activate)
-                     ;TODO interleave calling outer-event and calling input-events
+                     ;TODO interpose calling outer-event and calling input-events
                      (dotimes [_ (count fmapped-events)]
                        (outer-event unit/unit))
                      (call-units input-events)
