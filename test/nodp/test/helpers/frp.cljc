@@ -254,6 +254,7 @@
                                           make-iterate
                                           (nodp.helpers/>>= outer-event))]
                      (frp/activate)
+                     ;TODO interleave calling outer-event and calling input-events
                      (dotimes [_ (-> inner-events
                                      count
                                      dec)]
