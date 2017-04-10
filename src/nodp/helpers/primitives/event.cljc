@@ -341,4 +341,8 @@
 
 (def activate
   (juxt (partial swap! helpers/network-state (partial s/setval* :active true))
-        time/start))
+        time/start
+        (fn []
+          ;switcher's behavior-valued event may be a unit event
+          (reset! helpers/network-state (modify-behavior! (time/now) @helpers/network-state)))))
+

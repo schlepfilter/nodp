@@ -398,17 +398,14 @@
                                  (helpers/return
                                    (helpers/infer (frp/event))
                                    return-behavior))])
-            xs (gen/vector gen/boolean (count input-events))
-            calls (gen/shuffle (concat (map (fn [x input-event]
-                                              (fn []
-                                                (if x
-                                                  (input-event unit/unit))))
-                                            xs
-                                            input-events)
-                                       (map (fn [switched-behavior]
-                                              (fn []
-                                                (switching-event switched-behavior)))
-                                            switched-behaviors)))]
+            calls (gen/return (concat (map (fn [input-event]
+                                             (fn []
+                                               (input-event unit/unit)))
+                                           input-events)
+                                      (map (fn [switched-behavior]
+                                             (fn []
+                                               (switching-event switched-behavior)))
+                                           switched-behaviors)))]
            (gen/tuple (gen/return (fn []
                                     (run! helpers/funcall calls)))
                       (gen/return (frp/switcher first-behavior switching-event))
