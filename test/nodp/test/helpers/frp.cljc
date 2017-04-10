@@ -387,6 +387,7 @@
   switcher-zero
   5
   (restart-for-all [[_ bs] events-behaviors]
+                   ;TODO generate event
                    (let [e (frp/event)
                          b (-> bs
                                first
@@ -397,6 +398,7 @@
   switcher-positive
   5
   (restart-for-all [[bs call] behaviors-call]
+                   ;TODO generate event
                    (let [e (frp/event)
                          b (-> bs
                                first
