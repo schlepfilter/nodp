@@ -26,10 +26,10 @@
 (def scalar-monoids
   [gen/string
    (gen/return unit/unit)
-   (gen/vector gen/any)
-   (gen/list gen/any)
-   (gen/set gen/any)
-   (gen/map gen/any gen/any)])
+   (gen/vector test-helpers/any-equal)
+   (gen/list test-helpers/any-equal)
+   (gen/set test-helpers/any-equal)
+   (gen/map test-helpers/any-equal test-helpers/any-equal)])
 
 (def scalar-monoid
   (gen/one-of scalar-monoids))
@@ -50,7 +50,7 @@
 (clojure-test/defspec
   monad-right-identity-law
   10
-  (prop/for-all [a gen/any
+  (prop/for-all [a test-helpers/any-equal
                  mempty* mempty]
                 (= (nodp.helpers/>>= (tuple/tuple mempty* a) nodp.helpers/return)
                    (tuple/tuple mempty* a))))
@@ -58,8 +58,8 @@
 (clojure-test/defspec
   monad-left-identity-law
   10
-  (prop/for-all [a gen/any
-                 f* (test-helpers/function gen/any)
+  (prop/for-all [a test-helpers/any-equal
+                 f* (test-helpers/function test-helpers/any-equal)
                  monoid* monoid]
                 (let [f (comp (partial tuple/tuple monoid*)
                               f*)]
@@ -73,10 +73,10 @@
 (clojure-test/defspec
   monad-associativity-law
   10
-  (prop/for-all [a gen/any
+  (prop/for-all [a test-helpers/any-equal
                  monoids (scalar-monoid-vector 3)
-                 f* (test-helpers/function gen/any)
-                 g* (test-helpers/function gen/any)]
+                 f* (test-helpers/function test-helpers/any-equal)
+                 g* (test-helpers/function test-helpers/any-equal)]
                 (let [f (comp (partial tuple/tuple (second monoids))
                               f*)
                       g (comp (partial tuple/tuple (last monoids))

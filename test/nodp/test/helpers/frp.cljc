@@ -46,7 +46,7 @@
 (clojure-test/defspec
   call-inactive
   10
-  (restart-for-all [as (gen/vector gen/any)]
+  (restart-for-all [as (gen/vector test-helpers/any-equal)]
                    (let [e (frp/event)]
                      (run! e as)
                      (maybe/nothing? @e))))
@@ -66,7 +66,7 @@
 (clojure-test/defspec
   event-return
   10
-  (restart-for-all [a gen/any]
+  (restart-for-all [a test-helpers/any-equal]
                    (= @@(-> (frp/event)
                             helpers/infer
                             (nodp.helpers/return a))
@@ -89,8 +89,8 @@
 (clojure-test/defspec
   with-exit-identity
   10
-  (prop/for-all [a gen/any
-                 b gen/any]
+  (prop/for-all [a test-helpers/any-equal
+                 b test-helpers/any-equal]
                 (= (with-exit exit
                               (exit a)
                               b)
@@ -111,8 +111,8 @@
 (clojure-test/defspec
   with-exitv-identity
   10
-  (prop/for-all [as (gen/vector gen/any)
-                 b gen/any]
+  (prop/for-all [as (gen/vector test-helpers/any-equal)
+                 b test-helpers/any-equal]
                 (= (with-exitv exit
                                (->> as
                                     (map exit)
@@ -123,7 +123,7 @@
 (clojure-test/defspec
   on-identity
   10
-  (restart-for-all [as (gen/vector gen/any)]
+  (restart-for-all [as (gen/vector test-helpers/any-equal)]
                    (= (with-exitv exit
                                   (let [e (frp/event)]
                                     (frp/on exit e)
@@ -135,7 +135,7 @@
   []
   (gen/one-of [(gen/fmap (partial nodp.helpers/return
                                   (helpers/infer (frp/event)))
-                         gen/any)
+                         test-helpers/any-equal)
                (gen/return (frp/event))]))
 
 (defn conj-event
@@ -320,7 +320,7 @@
 (clojure-test/defspec
   event-mempty
   10
-  (restart-for-all [a gen/any]
+  (restart-for-all [a test-helpers/any-equal]
                    (= @(-> (frp/event)
                            helpers/infer
                            nodp.helpers/mempty)
@@ -329,9 +329,9 @@
 (def xform
   ;TODO use map to generate similar xforms
   (gen/one-of [(gen/fmap map
-                         (test-helpers/function gen/any))
+                         (test-helpers/function test-helpers/any-equal))
                (gen/fmap mapcat
-                         (test-helpers/function gen/any))
+                         (test-helpers/function test-helpers/any-equal))
                (gen/fmap filter
                          (test-helpers/function gen/boolean))
                (gen/fmap remove
@@ -342,9 +342,9 @@
   5
   (restart-for-all [input-event (event)
                     xf xform
-                    f (test-helpers/function gen/any)
-                    init gen/any
-                    as (gen/vector gen/any)]
+                    f (test-helpers/function test-helpers/any-equal)
+                    init test-helpers/any-equal
+                    as (gen/vector test-helpers/any-equal)]
                    (let [transduced-event (frp/transduce xf f init input-event)
                          earliest @input-event]
                      (frp/activate)
@@ -363,7 +363,7 @@
 (clojure-test/defspec
   behavior-return
   10
-  (restart-for-all [a gen/any]
+  (restart-for-all [a test-helpers/any-equal]
                    (= @(-> unit/unit
                            frp/behavior
                            helpers/infer
@@ -374,7 +374,7 @@
   (gen/let [[input-events fmapped-events] (events-tuple)
             as (->> input-events
                     count
-                    (gen/vector gen/any))]
+                    (gen/vector test-helpers/any-equal))]
            (gen/tuple (gen/return input-events)
                       (gen/return (doall (map frp/stepper
                                               as
@@ -410,9 +410,9 @@
   behavior->>=
   5
   (restart-for-all [e (event)
-                    f (test-helpers/function gen/any)
-                    as (gen/vector gen/any)
-                    a gen/any]
+                    f (test-helpers/function test-helpers/any-equal)
+                    as (gen/vector test-helpers/any-equal)
+                    a test-helpers/any-equal]
                    (let [outer-behavior (frp/stepper a e)
                          bound-behavior (nodp.helpers/>>= outer-behavior
                                                           (comp frp/behavior
