@@ -162,7 +162,7 @@
   ([n]
    (gen/vector probability n)))
 
-(defn events-call*
+(defn entities-call*
   [events-tuple-generator]
   (gen/let [[input-events fmapped-events] events-tuple-generator
             xs (->> input-events
@@ -197,7 +197,7 @@
         events))
 
 (def events-call
-  (comp events-call*
+  (comp entities-call*
         events-tuple))
 
 (defn make-iterate
@@ -380,6 +380,9 @@
                                               as
                                               fmapped-events))))))
 
+(def behaviors-call
+  (entities-call* events-behaviors))
+
 (clojure-test/defspec
   switcher-zero
   5
@@ -393,17 +396,16 @@
 (clojure-test/defspec
   switcher-positive
   5
-  (restart-for-all [[es bs] events-behaviors]
+  (restart-for-all [[bs call] behaviors-call]
                    (let [e (frp/event)
                          b (-> bs
                                first
                                (frp/switcher e))]
                      (frp/activate)
-                     ;TODO call some of es
                      (->> bs
                           rest
                           (run! e))
-                     (call-units es)
+                     (call)
                      (= @b @(last bs)))))
 
 (clojure-test/defspec
