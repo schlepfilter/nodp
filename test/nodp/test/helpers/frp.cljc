@@ -208,9 +208,6 @@
         (swap! state rest)
         result))))
 
-(def call-units
-  (partial run! (partial (helpers/flip helpers/funcall) unit/unit)))
-
 (defn contains-value?
   [coll x]
   (-> coll
