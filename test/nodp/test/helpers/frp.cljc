@@ -61,7 +61,9 @@
                      (= (tuple/snd @@e) (last as)))))
 
 (def probability
-  (gen/double* {:min 0 :max 1}))
+  (gen/double* {:max  1
+                :min  0
+                :NaN? false}))
 
 (clojure-test/defspec
   event-return
