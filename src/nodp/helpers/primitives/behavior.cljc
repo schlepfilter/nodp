@@ -52,7 +52,6 @@
                     (helpers/get-latest parent-behavior @helpers/network-state)
                     child-behavior
                     @helpers/network-state)))))
-        (helpers/set-latest @(f @ma))
         (helpers/add-edge ma)))))
 
 (defn switcher

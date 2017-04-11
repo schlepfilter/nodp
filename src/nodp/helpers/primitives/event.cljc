@@ -53,9 +53,6 @@
                          (helpers/set-latest a e)
                          (set-earliest a e)))
 
-(def call-functions
-  (helpers/flip (partial reduce (helpers/flip helpers/funcall))))
-
 (defn make-get-modifiers*
   [network]
   (comp (partial mapcat (:modifier network))
@@ -68,9 +65,9 @@
 
 (defn modify-behavior!
   [t network]
-  (call-functions (cons (partial s/setval* [:time :behavior] t)
-                        (get-behavior-modifiers network))
-                  network))
+  (helpers/call-functions (cons (partial s/setval* [:time :behavior] t)
+                                (get-behavior-modifiers network))
+                          network))
 
 (defn reachable-subgraph
   [g n]
@@ -87,7 +84,7 @@
 
 (defn modify-event!
   [occurrence e network]
-  (call-functions
+  (helpers/call-functions
     (concat [(partial s/setval* [:time :event] (tuple/fst occurrence))
              (set-earliest-latest (maybe/just occurrence) e)]
             (get-event-modifiers e network))
@@ -95,10 +92,10 @@
 
 (defn modify-network!
   [occurrence t e network]
-  (call-functions [(partial modify-behavior! (tuple/fst occurrence))
-                   (partial modify-event! occurrence e)
-                   (partial modify-behavior! t)]
-                  network))
+  (helpers/call-functions [(partial modify-behavior! (tuple/fst occurrence))
+                           (partial modify-event! occurrence e)
+                           (partial modify-behavior! t)]
+                          network))
 (def run-effects!
   (helpers/build run!
                  (helpers/curry 2 (helpers/flip helpers/funcall))
@@ -150,23 +147,12 @@
   (-repr [_]
     (str "#[event " id "]")))
 
-(helpers/defcurried call-modifier
-                    [e network]
-                    (call-functions ((:id e) (:modifier network))
-                                    network))
-
-(helpers/defcurried set-modifier-empty
-                    [e network]
-                    (s/setval [:modifier (:id e)] [] network))
-
 #?(:clj (defmacro event*
           [event-name & fs]
           `(helpers/get-entity
              ~event-name
              Event.
-             call-modifier
              ~@fs
-             set-modifier-empty
              (set-earliest-latest helpers/nothing))))
 
 (defn now?
@@ -230,12 +216,13 @@
                               (let [parent-event (->> network
                                                       (get-value ma)
                                                       f)]
-                                (call-functions ((juxt helpers/add-edge
-                                                       make-merge-sync
-                                                       delay-sync->>=)
-                                                  parent-event
-                                                  child-event*)
-                                                @helpers/network-state)))
+                                (helpers/call-functions
+                                  ((juxt helpers/add-edge
+                                         make-merge-sync
+                                         delay-sync->>=)
+                                    parent-event
+                                    child-event*)
+                                  @helpers/network-state)))
                           network)))
                     (helpers/add-edge ma))]
         ;TODO call modify-events! in event*
@@ -313,8 +300,8 @@
             (helpers/set-modifier
               (fn [network]
                 (if-then-else (partial now? transduction-event)
-                             (make-sync transduction-event child-event)
-                             network)))
+                              (make-sync transduction-event child-event)
+                              network)))
             (helpers/add-edge transduction-event))))
 
 (defn start

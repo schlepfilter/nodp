@@ -329,6 +329,18 @@
         (map (partial (flip list) entity-name)
              fs)))
 
+(def call-functions
+  (flip (partial reduce (flip funcall))))
+
+(defcurried call-modifier
+            [e network]
+            (call-functions ((:id e) (:modifier network))
+                            network))
+
+(defcurried set-modifier-empty
+            [e network]
+            (s/setval [:modifier (:id e)] [] network))
+
 #?(:clj (defmacro get-entity
           [entity-name constructor & fs]
           `(let [~entity-name (-> network-state
@@ -339,7 +351,10 @@
                                   ~constructor)]
              (reset! network-state
                      (~(comp-entity-functions entity-name
-                                              (cons `make-add-node fs))
+                                              (concat [`call-modifier]
+                                                      fs
+                                                      [`set-modifier-empty
+                                                       `make-add-node]))
                        @network-state))
              ~entity-name)))
 
