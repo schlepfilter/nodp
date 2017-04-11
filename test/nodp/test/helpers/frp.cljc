@@ -199,9 +199,8 @@
              (gen/return (fn []
                            (run! helpers/funcall calls)))
              (gen/return inner-events)
-             (gen/return
-               (helpers/>>= outer-event
-                            (make-iterate inner-events))))))
+             (gen/return (helpers/>>= outer-event
+                                      (make-iterate inner-events))))))
 
 (clojure-test/defspec
   event->>=
