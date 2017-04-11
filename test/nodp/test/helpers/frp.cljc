@@ -399,15 +399,17 @@
                                  (helpers/return
                                    (helpers/infer (frp/event))
                                    return-behavior))])
+            input-event-calls (gen/shuffle (map (fn [input-event]
+                                                  (fn []
+                                                    (input-event unit/unit)))
+                                                input-events))
             ;TODO interpose calling input-events and calling switching-event without changing the order of switched-behaviors with which to call switching-event
-            calls (gen/return (concat (map (fn [input-event]
-                                             (fn []
-                                               (input-event unit/unit)))
-                                           input-events)
-                                      (map (fn [switched-behavior]
-                                             (fn []
-                                               (switching-event switched-behavior)))
-                                           switched-behaviors)))]
+            calls (gen/return
+                    (concat input-event-calls
+                            (map (fn [switched-behavior]
+                                   (fn []
+                                     (switching-event switched-behavior)))
+                                 switched-behaviors)))]
            (gen/tuple (gen/return (fn []
                                     (run! helpers/funcall calls)))
                       (gen/return (frp/switcher first-behavior switching-event))
