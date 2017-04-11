@@ -82,4 +82,5 @@
                                      (helpers/add-edge (tuple/snd x)
                                                        child-behavior
                                                        network))))))
+    ;TODO call modifier for event
     child-behavior))
