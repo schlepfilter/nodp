@@ -155,6 +155,10 @@
                     (call-functions ((:id e) (:modifier network))
                                     network))
 
+(helpers/defcurried set-modifier-empty
+                    [e network]
+                    (s/setval [:modifier (:id e)] [] network))
+
 #?(:clj (defmacro event*
           [event-name & fs]
           `(helpers/get-entity
@@ -162,6 +166,7 @@
              Event.
              call-modifier
              ~@fs
+             set-modifier-empty
              (set-earliest-latest helpers/nothing))))
 
 (defn now?
