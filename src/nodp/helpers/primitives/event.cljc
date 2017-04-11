@@ -215,50 +215,29 @@
         deref
         helpers/get-latest))
 
-(helpers/defcurried modify->>=!
-                    [ma f child-event network]
-                    ;Testing with now? assumes times for events are strictly increasing.
-                    (if (now? ma network)
-                      (do (reset! helpers/network-state network)
-                          (let [parent-event (->> network
-                                                  (get-value ma)
-                                                  f)]
-                            (call-functions ((juxt helpers/add-edge
-                                                   make-merge-sync
-                                                   delay-sync->>=)
-                                              parent-event
-                                              child-event)
-                                            @helpers/network-state)))
-                      network))
-
-(helpers/defcurried modify-<>!
-                    [left-event right-event child-event network]
-                    (-> (cond (->> network
-                                   (helpers/get-latest left-event)
-                                   maybe/nothing?)
-                              right-event
-                              (->> network
-                                   (helpers/get-latest right-event)
-                                   maybe/nothing?)
-                              left-event
-                              (< (get-time-value left-event network)
-                                 (get-time-value right-event network))
-                              right-event
-                              :else
-                              left-event)
-                        (helpers/get-latest network)
-                        (set-earliest-latest child-event network)))
-
 (def context
   (helpers/reify-monad
     (fn [a]
       (event* _
               (set-earliest-latest (maybe/just (tuple/tuple (time/time 0) a)))))
     (fn [ma f]
-      (let [child-event (event* child-event*
-                                (helpers/set-modifier
-                                  (modify->>=! ma f child-event*))
-                                (helpers/add-edge ma))]
+      (let [child-event
+            (event* child-event*
+                    (helpers/set-modifier
+                      (fn [network]
+                        (if (now? ma network)
+                          (do (reset! helpers/network-state network)
+                              (let [parent-event (->> network
+                                                      (get-value ma)
+                                                      f)]
+                                (call-functions ((juxt helpers/add-edge
+                                                       make-merge-sync
+                                                       delay-sync->>=)
+                                                  parent-event
+                                                  child-event*)
+                                                @helpers/network-state)))
+                          network)))
+                    (helpers/add-edge ma))]
         ;TODO call modify-events! in event*
         ;The second argument of swap! "may be called
         ;multiple times, and thus should be free of side effects" (clojure.core).
@@ -274,7 +253,22 @@
     (-mappend [_ left-event right-event]
               (event* child-event
                       (helpers/set-modifier
-                        (modify-<>! left-event right-event child-event))
+                        (fn [network]
+                          (-> (cond (->> network
+                                         (helpers/get-latest left-event)
+                                         maybe/nothing?)
+                                    right-event
+                                    (->> network
+                                         (helpers/get-latest right-event)
+                                         maybe/nothing?)
+                                    left-event
+                                    (< (get-time-value left-event network)
+                                       (get-time-value right-event network))
+                                    right-event
+                                    :else
+                                    left-event)
+                              (helpers/get-latest network)
+                              (set-earliest-latest child-event network))))
                       (helpers/add-edge left-event)
                       (helpers/add-edge right-event)))
     p/Monoid
@@ -282,35 +276,6 @@
              (event* _))))
 
 (util/make-printable Event)
-
-(helpers/defcurried modify-transduce-transduction-event
-                    [step f parent-event transduction-event network]
-                    (if (now? parent-event network)
-                      (let [stepped (step helpers/nothing
-                                          (tuple/snd
-                                            @(helpers/get-latest parent-event
-                                                                 network)))]
-                        (maybe/maybe
-                          network
-                          stepped
-                          (fn [stepped-value]
-                            (helpers/set-latest
-                              (maybe/just
-                                (tuple/tuple
-                                  (:event (:time network))
-                                  (f (tuple/snd
-                                       @(helpers/get-latest transduction-event
-                                                            network))
-                                     stepped-value)))
-                              transduction-event
-                              network))))
-                      network))
-
-(helpers/defcurried modify-transduce-child-event
-                    [transduction-event child-event network]
-                    (if-then-else (partial now? transduction-event)
-                                  (make-sync transduction-event child-event)
-                                  network))
 
 (defn transduce
   [xform f init parent-event]
@@ -322,14 +287,34 @@
           transduction-event*
           (set-earliest-latest (maybe/just (tuple/tuple (time/time 0) init)))
           (helpers/set-modifier
-            (modify-transduce-transduction-event step
-                                                 f
-                                                 parent-event
-                                                 transduction-event*))
+            (fn [network]
+              (if (now? parent-event network)
+                (let [stepped (step helpers/nothing
+                                    (tuple/snd
+                                      @(helpers/get-latest parent-event
+                                                           network)))]
+                  (maybe/maybe
+                    network
+                    stepped
+                    (fn [stepped-value]
+                      (helpers/set-latest
+                        (maybe/just
+                          (tuple/tuple
+                            (:event (:time network))
+                            (f (tuple/snd
+                                 @(helpers/get-latest transduction-event*
+                                                      network))
+                               stepped-value)))
+                        transduction-event*
+                        network))))
+                network)))
           (helpers/add-edge parent-event))]
     (event* child-event
             (helpers/set-modifier
-              (modify-transduce-child-event transduction-event child-event))
+              (fn [network]
+                (if-then-else (partial now? transduction-event)
+                             (make-sync transduction-event child-event)
+                             network)))
             (helpers/add-edge transduction-event))))
 
 (defn start
