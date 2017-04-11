@@ -210,62 +210,6 @@
         (swap! state rest)
         result))))
 
-(defn contains-value?
-  [coll x]
-  (-> coll
-      set
-      (contains? x)))
-
-(defn contains-event-value?
-  [es e]
-  (contains-value? (map (comp tuple/snd
-                              deref
-                              deref) es)
-                   (tuple/snd @@e)))
-
-;TODO replace nonmember with member
-(clojure-test/defspec
-  event->>=-nonmember
-  5
-  (restart-for-all [[fmapped-events call] (events-call)]
-                   ;TODO generate event
-                   (let [outer-event (frp/event)
-                         bound-event (->> fmapped-events
-                                          make-iterate
-                                          (nodp.helpers/>>= outer-event))]
-                     (frp/activate)
-                     (dotimes [_ (-> fmapped-events
-                                     count
-                                     dec)]
-                       (outer-event unit/unit))
-                     (call)
-                     (or (maybe/nothing? @bound-event)
-                         (contains-event-value? (drop-last fmapped-events)
-                                                bound-event)))))
-
-(def get-time
-  (comp tuple/fst
-        deref
-        deref))
-
-(clojure-test/defspec
-  event->>=-delay
-  5
-  (restart-for-all [inner-events (events)]
-                   (let [outer-event (frp/event)
-                         bound-event (->> inner-events
-                                          make-iterate
-                                          (nodp.helpers/>>= outer-event))]
-                     (frp/activate)
-                     ;TODO interpose calling outer-event and calling input-events
-                     (dotimes [_ (-> inner-events
-                                     count
-                                     dec)]
-                       (outer-event unit/unit))
-                     ((last inner-events) unit/unit)
-                     (outer-event unit/unit)
-                     (= (get-time outer-event) (get-time bound-event)))))
-
 (defn all-nothing?
   [e es]
   (and (maybe/nothing? @e)
@@ -293,26 +237,6 @@
                  all-nothing?
                  left-biased?*))
 
-;TODO avoid blocking
-;(def call-units
-;  (partial run! (partial (helpers/flip helpers/funcall) unit/unit)))
-;
-;(clojure-test/defspec
-;  event->>=-left-bias
-;  5
-;  (restart-for-all [[input-events fmapped-events] (events-tuple)]
-;                   ;TODO generate event
-;                   (let [outer-event (frp/event)
-;                         bound-event (->> fmapped-events
-;                                          make-iterate
-;                                          (nodp.helpers/>>= outer-event))]
-;                     (frp/activate)
-;                     ;TODO interpose calling outer-event and calling input-events
-;                     (dotimes [_ (count fmapped-events)]
-;                       (outer-event unit/unit))
-;                     (call-units input-events)
-;                     (left-biased? bound-event fmapped-events))))
-
 (def >>=
   ;TODO refactor
   (gen/let [probabilities (gen/not-empty (gen/vector probability))
@@ -322,10 +246,11 @@
             inner-events (gen/return (doall (map nodp.helpers/<$>
                                                  fs
                                                  input-events)))
-            outer-event (gen/one-of [(gen/fmap (partial nodp.helpers/return
-                                                        (helpers/infer (frp/event)))
-                                               test-helpers/any-equal)
-                                     (gen/return (frp/event))])
+            outer-event (gen/one-of
+                          [(gen/fmap (partial nodp.helpers/return
+                                              (helpers/infer (frp/event)))
+                                     test-helpers/any-equal)
+                           (gen/return (frp/event))])
             as (gen/vector test-helpers/any-equal
                            (-> (count inner-events)
                                ((if (maybe/just? @outer-event)
