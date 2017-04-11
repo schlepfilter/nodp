@@ -415,7 +415,8 @@
                       (gen/return (frp/switcher first-behavior switching-event))
                       (gen/return (last (if (maybe/just? @switching-event)
                                           all-behaviors
-                                          (cons first-behavior switched-behaviors)))))))
+                                          (cons first-behavior
+                                                switched-behaviors)))))))
 
 (clojure-test/defspec
   switcher-last
