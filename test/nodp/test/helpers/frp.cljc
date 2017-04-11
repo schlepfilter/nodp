@@ -396,6 +396,7 @@
              :as all-behaviors] (gen/return (doall (map frp/stepper
                                                         as
                                                         fmapped-events)))
+            ;TODO randomize the simultaneity of input-events and switching-event
             switching-event (gen/one-of
                               [(gen/return (frp/event))
                                (gen/return
