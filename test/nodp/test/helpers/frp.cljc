@@ -240,7 +240,6 @@
                  left-biased?*))
 
 (def <>
-  ;TODO refactor
   (gen/let [probabilities (gen/vector probability 2)
             [input-events fmapped-events] (events-tuple probabilities)
             calls (gen/shuffle (map (fn [e]
