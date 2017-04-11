@@ -115,7 +115,7 @@
 
 (defn get-input
   []
-  (:input @helpers/network-state))
+  (:input-state @helpers/network-state))
 
 (defn queue
   [f]
@@ -328,12 +328,12 @@
 
 (defn start
   []
-  (reset! helpers/network-state {:active     false
-                                 :dependency {:event    (graph/digraph)
-                                              :behavior (graph/digraph)}
-                                 :input      (helpers/get-queue helpers/funcall)
-                                 :modifier   {}
-                                 :time       {:event (time/time 0)}}))
+  (reset! helpers/network-state {:active      false
+                                 :dependency  {:event    (graph/digraph)
+                                               :behavior (graph/digraph)}
+                                 :input-state (helpers/get-queue helpers/funcall)
+                                 :modifier    {}
+                                 :time        {:event (time/time 0)}}))
 
 (def restart
   ;TODO call stop
