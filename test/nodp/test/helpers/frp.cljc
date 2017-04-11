@@ -210,33 +210,6 @@
         (swap! state rest)
         result))))
 
-(defn all-nothing?
-  [e es]
-  (and (maybe/nothing? @e)
-       (not-any? maybe/just? (map deref es))))
-
-(def get-tuples
-  (comp maybe/cat-maybes
-        (partial map deref)))
-
-(defn left-biased?*
-  [e es]
-  (->> es
-       get-tuples
-       (filter (comp (partial = (apply (partial max-key deref)
-                                       (->> es
-                                            get-tuples
-                                            (map tuple/fst))))
-                     tuple/fst))
-       first
-       tuple/snd
-       (= (tuple/snd @@e))))
-
-(def left-biased?
-  (helpers/build or
-                 all-nothing?
-                 left-biased?*))
-
 (def >>=
   ;TODO refactor
   (gen/let [probabilities (gen/not-empty (gen/vector probability))
@@ -279,6 +252,33 @@
                    (call)
                    ;TODO test property
                    true))
+
+(defn all-nothing?
+  [e es]
+  (and (maybe/nothing? @e)
+       (not-any? maybe/just? (map deref es))))
+
+(def get-tuples
+  (comp maybe/cat-maybes
+        (partial map deref)))
+
+(defn left-biased?*
+  [e es]
+  (->> es
+       get-tuples
+       (filter (comp (partial = (apply (partial max-key deref)
+                                       (->> es
+                                            get-tuples
+                                            (map tuple/fst))))
+                     tuple/fst))
+       first
+       tuple/snd
+       (= (tuple/snd @@e))))
+
+(def left-biased?
+  (helpers/build or
+                 all-nothing?
+                 left-biased?*))
 
 (clojure-test/defspec
   event-<>
