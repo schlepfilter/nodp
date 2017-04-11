@@ -156,52 +156,6 @@
 (def get-events
   (partial reduce conj-event []))
 
-(defn probabilities
-  ([]
-   (-> probability
-       gen/vector
-       gen/not-empty))
-  ([n]
-   (gen/vector probability n)))
-
-(defn entities-call*
-  [events-tuple-generator]
-  (gen/let [[input-events fmapped-events] events-tuple-generator
-            xs (->> input-events
-                    count
-                    (gen/vector gen/boolean))]
-           (gen/tuple (gen/return fmapped-events)
-                      (gen/return (partial run!
-                                           helpers/funcall
-                                           (map (fn [e x]
-                                                  (fn []
-                                                    (if x
-                                                      (e unit/unit))))
-                                                input-events
-                                                xs))))))
-
-(defn events-tuple*
-  [events-generator]
-  (gen/let [es events-generator
-            fs (gen/vector (test-helpers/function test-helpers/any-equal)
-                           (count es))]
-           (gen/tuple (gen/return es)
-                      (gen/return (doall (map nodp.helpers/<$>
-                                              fs
-                                              es))))))
-
-(def events
-  (comp (partial gen/fmap get-events)
-        probabilities))
-
-(def events-tuple
-  (comp events-tuple*
-        events))
-
-(def events-call
-  (comp entities-call*
-        events-tuple))
-
 (defn make-iterate
   [coll]
   (let [state (atom coll)]
@@ -280,15 +234,32 @@
                  all-nothing?
                  left-biased?*))
 
+(def <>
+  ;TODO refactor
+  (gen/let [probabilities (gen/vector probability 2)
+            input-events (gen/return (get-events probabilities))
+            fs (gen/vector (test-helpers/function test-helpers/any-equal)
+                           (count input-events))
+            fmapped-events (gen/return (doall (map nodp.helpers/<$>
+                                                   fs
+                                                   input-events)))
+            calls (gen/shuffle (map (fn [e]
+                                      (fn []
+                                        (e unit/unit)))
+                                    input-events))]
+           (gen/tuple (gen/return (partial run!
+                                           helpers/funcall
+                                           calls))
+                      (gen/return (apply helpers/<> fmapped-events))
+                      (gen/return fmapped-events))))
+
 (clojure-test/defspec
   event-<>
   5
-  ;TODO refactor events-call
-  (restart-for-all [[fmapped-events call] (events-call 2)]
-                   (let [mappended-event (apply nodp.helpers/<> fmapped-events)]
-                     (frp/activate)
-                     (call)
-                     (left-biased? mappended-event fmapped-events))))
+  (restart-for-all [[call mappended-event fmapped-events] <>]
+                   (frp/activate)
+                   (call)
+                   (left-biased? mappended-event fmapped-events)))
 
 (clojure-test/defspec
   event-mempty
