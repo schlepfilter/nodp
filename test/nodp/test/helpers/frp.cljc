@@ -178,6 +178,7 @@
   ;TODO refactor
   ;TODO allow cases in which outer-event never occurs
   (gen/let [probabilities (gen/not-empty (gen/vector probability))
+            ;TODO randomize the simultaneity of inner-events and outer-event
             [input-events inner-events] (events-tuple probabilities)
             outer-event (gen/one-of
                           [(gen/fmap (partial nodp.helpers/return
