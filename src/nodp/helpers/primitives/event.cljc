@@ -150,12 +150,19 @@
   (-repr [_]
     (str "#[event " id "]")))
 
+(helpers/defcurried call-modifier
+                    [e network]
+                    (call-functions ((:id e) (:modifier network))
+                                    network))
+
 #?(:clj (defmacro event*
           [event-name & fs]
-          `(helpers/get-entity ~event-name
-                               Event.
-                               ~@fs
-                               (set-earliest-latest helpers/nothing))))
+          `(helpers/get-entity
+             ~event-name
+             Event.
+             call-modifier
+             ~@fs
+             (set-earliest-latest helpers/nothing))))
 
 (defn now?
   [e network]
@@ -248,9 +255,6 @@
                                   (modify->>=! ma f child-event*))
                                 (helpers/add-edge ma))]
         ;TODO call modify-events! in event*
-        (->> @helpers/network-state
-             (modify->>=! ma f child-event)
-             (reset! helpers/network-state))
         ;The second argument of swap! "may be called
         ;multiple times, and thus should be free of side effects" (clojure.core).
         ;The evaluation of the following code terminates in ClojureScript but doesn't seem to terminate in Clojure presumably because the second argument of swap! calls reset! on the same atom as swap!
@@ -267,8 +271,7 @@
                       (helpers/set-modifier
                         (modify-<>! left-event right-event child-event))
                       (helpers/add-edge left-event)
-                      (helpers/add-edge right-event)
-                      (modify-<>! left-event right-event)))
+                      (helpers/add-edge right-event)))
     p/Monoid
     (-mempty [_]
              (event* _))))
@@ -312,7 +315,6 @@
         transduction-event
         (event*
           transduction-event*
-          (modify-transduce-transduction-event step f parent-event)
           (set-earliest-latest (maybe/just (tuple/tuple (time/time 0) init)))
           (helpers/set-modifier
             (modify-transduce-transduction-event step
@@ -321,7 +323,6 @@
                                                  transduction-event*))
           (helpers/add-edge parent-event))]
     (event* child-event
-            (modify-transduce-child-event transduction-event)
             (helpers/set-modifier
               (modify-transduce-child-event transduction-event child-event))
             (helpers/add-edge transduction-event))))
