@@ -313,6 +313,48 @@
 ;                     (call-units input-events)
 ;                     (left-biased? bound-event fmapped-events))))
 
+(def >>=
+  ;TODO refactor
+  (gen/let [probabilities (gen/not-empty (gen/vector probability))
+            input-events (gen/return (get-events probabilities))
+            fs (gen/vector (test-helpers/function test-helpers/any-equal)
+                           (count input-events))
+            inner-events (gen/return (doall (map nodp.helpers/<$>
+                                                 fs
+                                                 input-events)))
+            outer-event (gen/one-of [(gen/fmap (partial nodp.helpers/return
+                                                        (helpers/infer (frp/event)))
+                                               test-helpers/any-equal)
+                                     (gen/return (frp/event))])
+            as (gen/vector test-helpers/any-equal
+                           (-> (count inner-events)
+                               ((if (maybe/just? @outer-event)
+                                  dec
+                                  identity))))
+            calls (gen/shuffle (concat (map (fn [a]
+                                              (fn []
+                                                (outer-event a))) as)
+                                       (map (fn [input-event]
+                                              (fn []
+                                                (input-event unit/unit)))
+                                            input-events)))]
+           (gen/tuple
+             (gen/return (fn []
+                           (run! helpers/funcall calls)))
+             (gen/return inner-events)
+             (gen/return
+               (helpers/>>= outer-event
+                            (make-iterate inner-events))))))
+
+(clojure-test/defspec
+  event->>=
+  5
+  (restart-for-all [[call inner-events bound-event] >>=]
+                   (frp/activate)
+                   (call)
+                   ;TODO test property
+                   true))
+
 (clojure-test/defspec
   event-<>
   5
