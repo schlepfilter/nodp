@@ -387,6 +387,7 @@
             as (->> input-events
                     count
                     (gen/vector test-helpers/any-equal))
+            ;TODO randomly create each behavior either by using time or stepper
             [first-behavior
              return-behavior
              & switched-behaviors
@@ -399,11 +400,12 @@
                                  (helpers/return
                                    (helpers/infer (frp/event))
                                    return-behavior))])
+            ;TODO randomize the number of times each input-event is called
             input-event-calls (gen/shuffle (map (fn [input-event]
                                                   (fn []
                                                     (input-event unit/unit)))
                                                 input-events))
-            ;TODO interpose calling input-events and calling switching-event without changing the order of switched-behaviors with which to call switching-event
+            ;TODO randomize the order of calling input-events and calling switching-event without changing the order of switched-behaviors with which to call switching-event
             calls (gen/return
                     (concat input-event-calls
                             (map (fn [switched-behavior]
