@@ -331,7 +331,10 @@
 
 #?(:clj (defmacro get-entity
           [entity-name constructor & fs]
-          `(let [~entity-name (-> (gensym)
+          `(let [~entity-name (-> network-state
+                                  (swap! (partial s/transform* :id inc))
+                                  :id
+                                  str
                                   keyword
                                   ~constructor)]
              (reset! network-state

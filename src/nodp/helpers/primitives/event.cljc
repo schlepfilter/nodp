@@ -332,6 +332,7 @@
                                  :dependency  {:event    (graph/digraph)
                                                :behavior (graph/digraph)}
                                  :input-state (helpers/get-queue helpers/funcall)
+                                 :id          0
                                  :modifier    {}
                                  :time        {:event (time/time 0)}}))
 
