@@ -164,15 +164,20 @@
         (swap! state rest)
         result))))
 
+(defn events-tuple
+  [probabilities]
+  (gen/let [input-events (gen/return (get-events probabilities))
+            fs (gen/vector (test-helpers/function test-helpers/any-equal)
+                           (count input-events))]
+           (gen/tuple (gen/return input-events)
+                      (gen/return (doall (map nodp.helpers/<$>
+                                              fs
+                                              input-events))))))
+
 (def >>=
   ;TODO refactor
   (gen/let [probabilities (gen/not-empty (gen/vector probability))
-            input-events (gen/return (get-events probabilities))
-            fs (gen/vector (test-helpers/function test-helpers/any-equal)
-                           (count input-events))
-            inner-events (gen/return (doall (map nodp.helpers/<$>
-                                                 fs
-                                                 input-events)))
+            [input-events inner-events] (events-tuple probabilities)
             outer-event (gen/one-of
                           [(gen/fmap (partial nodp.helpers/return
                                               (helpers/infer (frp/event)))
@@ -237,12 +242,7 @@
 (def <>
   ;TODO refactor
   (gen/let [probabilities (gen/vector probability 2)
-            input-events (gen/return (get-events probabilities))
-            fs (gen/vector (test-helpers/function test-helpers/any-equal)
-                           (count input-events))
-            fmapped-events (gen/return (doall (map nodp.helpers/<$>
-                                                   fs
-                                                   input-events)))
+            [input-events fmapped-events] (events-tuple probabilities)
             calls (gen/shuffle (map (fn [e]
                                       (fn []
                                         (e unit/unit)))
@@ -317,12 +317,7 @@
 (def switcher
   (gen/let [probabilities (gen/sized (comp (partial gen/vector probability 2)
                                            (partial + 2)))
-            input-events (gen/return (get-events probabilities))
-            fs (gen/vector (test-helpers/function test-helpers/any-equal)
-                           (count input-events))
-            fmapped-events (gen/return (doall (map nodp.helpers/<$>
-                                                   fs
-                                                   input-events)))
+            [input-events fmapped-events] (events-tuple probabilities)
             as (->> input-events
                     count
                     (gen/vector test-helpers/any-equal))
