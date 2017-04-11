@@ -379,8 +379,7 @@
 (def switcher
   (gen/let [probabilities (gen/sized (comp (partial gen/vector probability 2)
                                            (partial + 2)))
-            input-events (gen/fmap get-events
-                                   (gen/return probabilities))
+            input-events (gen/return (get-events probabilities))
             fs (gen/vector (test-helpers/function test-helpers/any-equal)
                            (count input-events))
             fmapped-events (gen/return (doall (map nodp.helpers/<$>
