@@ -426,7 +426,7 @@
 (clojure-test/defspec
   switcher-last
   5
-  (restart-for-all [[call switched-behavior last-behavior] (gen/no-shrink switcher)]
+  (restart-for-all [[call switched-behavior last-behavior] switcher]
                    (frp/activate)
                    (call)
                    (= @switched-behavior @last-behavior)))
