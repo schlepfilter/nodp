@@ -176,6 +176,7 @@
 
 (def >>=
   ;TODO refactor
+  ;TODO allow cases in which outer-event never occurs
   (gen/let [probabilities (gen/not-empty (gen/vector probability))
             [input-events inner-events] (events-tuple probabilities)
             outer-event (gen/one-of
