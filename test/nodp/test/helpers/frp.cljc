@@ -223,6 +223,7 @@
                               deref) es)
                    (tuple/snd @@e)))
 
+;TODO replace nonmember with member
 (clojure-test/defspec
   event->>=-nonmember
   5
@@ -315,6 +316,7 @@
 (clojure-test/defspec
   event-<>
   5
+  ;TODO refactor events-call
   (restart-for-all [[fmapped-events call] (events-call 2)]
                    (let [mappended-event (apply nodp.helpers/<> fmapped-events)]
                      (frp/activate)
