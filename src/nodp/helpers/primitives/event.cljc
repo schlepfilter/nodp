@@ -229,12 +229,8 @@
                                   @helpers/network-state)))
                           network)))
                     (helpers/add-edge ma))]
-        ;TODO call modify-events! in event*
         ;The second argument of swap! "may be called
         ;multiple times, and thus should be free of side effects" (clojure.core).
-        ;The evaluation of the following code terminates in ClojureScript but doesn't seem to terminate in Clojure presumably because the second argument of swap! calls reset! on the same atom as swap!
-        ;(event* child-event
-        ;        (modify->>=! ma f))
         ;The evaluation of the following code terminates in ClojureScript but doesn't seem to terminate in Clojure
         ;(let [state (atom 0)]
         ;  (swap! state
