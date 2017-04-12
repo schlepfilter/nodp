@@ -277,11 +277,14 @@
 (def <>
   (gen/let [probabilities (gen/vector probability 2)
             [input-events fmapped-events] (events-tuple probabilities)
-            ;TODO randomize the number of times each input-event is called
-            calls (gen/shuffle (map (fn [e]
-                                      (fn []
-                                        (e unit/unit)))
-                                    input-events))]
+            ns (gen/vector (gen/sized (partial gen/choose 0))
+                           (count input-events))
+            calls (gen/shuffle (mapcat (fn [n e]
+                                         (repeat n
+                                                 (fn []
+                                                   (e unit/unit))))
+                                       ns
+                                       input-events))]
            (gen/tuple (gen/return (partial run!
                                            helpers/funcall
                                            calls))
