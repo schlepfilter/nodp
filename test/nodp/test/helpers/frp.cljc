@@ -193,25 +193,35 @@
             calls (gen/shuffle (concat (map (fn [a]
                                               (fn []
                                                 (outer-event a))) as)
+                                       ;TODO randomize the number of times input-event is called
                                        (map (fn [input-event]
                                               (fn []
                                                 (input-event unit/unit)))
                                             input-events)))]
            (gen/tuple
-             (gen/return (fn []
-                           (run! helpers/funcall calls)))
+             (gen/return outer-event)
              (gen/return inner-events)
-             (gen/return (helpers/>>= outer-event
-                                      (make-iterate inner-events))))))
+             (gen/return (fn []
+                           (run! helpers/funcall (drop-last calls))))
+             (gen/return (last calls)))))
 
 (clojure-test/defspec
   event->>=
   5
-  (restart-for-all [[call inner-events bound-event] >>=]
+  (restart-for-all [[outer-event inner-events calls call] >>=]
                    (frp/activate)
-                   (call)
-                   ;TODO test property
-                   true))
+                   (let [bound-event (helpers/>>= outer-event
+                                                  (make-iterate inner-events))]
+                     (calls)
+                     (let [outer-latest @outer-event
+                           inner-latests (doall (map deref inner-events))
+                           bound-latest @bound-event]
+                       (call)
+                       (cond (and (= @outer-event outer-latest)
+                                  (= (map deref inner-events) inner-latests))
+                             (= @bound-event bound-latest)
+                             ;TODO test property exhausitively
+                             :else true)))))
 
 (defn all-nothing?
   [e es]
