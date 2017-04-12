@@ -335,7 +335,8 @@
                (gen/fmap (comp partition-all
                                inc)
                          gen/nat)
-               (gen/fmap replace (gen/map gen/any gen/any))]))
+               (gen/fmap replace (gen/map test-helpers/any-equal
+                                          test-helpers/any-equal))]))
 
 (def xform
   (gen/fmap (partial apply comp) (gen/not-empty (gen/vector xform*))))
