@@ -253,8 +253,7 @@
 
 (clojure-test/defspec
   event->>=
-  {:num-tests 5
-   :seed      1491968184930}
+  5
   (restart-for-all [[outer-event inner-events calls call] (gen/no-shrink >>=)]
                    (frp/activate)
                    (let [bound-event (helpers/>>= outer-event
@@ -317,28 +316,28 @@
                (gen/fmap remove
                          (test-helpers/function gen/boolean))]))
 
-;(clojure-test/defspec
-;  transduce-identity
-;  5
-;  (restart-for-all [input-event (event)
-;                    xf xform
-;                    f (test-helpers/function test-helpers/any-equal)
-;                    init test-helpers/any-equal
-;                    as (gen/vector test-helpers/any-equal)]
-;                   (let [transduced-event (frp/transduce xf f init input-event)
-;                         earliest @input-event]
-;                     (frp/activate)
-;                     (run! input-event as)
-;                     (->> (maybe/maybe as
-;                                       earliest
-;                                       (comp (partial (helpers/flip cons) as)
-;                                             tuple/snd))
-;                          (maybe/map-maybe (partial (xf (comp maybe/just
-;                                                              second
-;                                                              vector))
-;                                                    helpers/nothing))
-;                          (reduce f init)
-;                          (= (tuple/snd @@transduced-event))))))
+(clojure-test/defspec
+  transduce-identity
+  5
+  (restart-for-all [input-event (event)
+                    xf xform
+                    f (test-helpers/function test-helpers/any-equal)
+                    init test-helpers/any-equal
+                    as (gen/vector test-helpers/any-equal)]
+                   (let [transduced-event (frp/transduce xf f init input-event)
+                         earliest @input-event]
+                     (frp/activate)
+                     (run! input-event as)
+                     (->> (maybe/maybe as
+                                       earliest
+                                       (comp (partial (helpers/flip cons) as)
+                                             tuple/snd))
+                          (maybe/map-maybe (partial (xf (comp maybe/just
+                                                              second
+                                                              vector))
+                                                    helpers/nothing))
+                          (reduce f init)
+                          (= (tuple/snd @@transduced-event))))))
 
 (clojure-test/defspec
   behavior-return

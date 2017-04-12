@@ -187,13 +187,17 @@
 (helpers/defcurried
   delay-sync->>=
   [parent-event child-event network]
-  (maybe/maybe
-    network
-    (get-earliest parent-event network)
-    (comp (fn [a]
-            (set-earliest-latest a child-event network))
-          maybe/just
-          (partial nodp.helpers/<*> (tuple/tuple (:event (:time network)) identity)))))
+  (if (now? parent-event network)
+    (maybe/maybe
+      network
+      (get-earliest parent-event network)
+      (comp (fn [a]
+              (set-earliest-latest a child-event network))
+            maybe/just
+            (partial nodp.helpers/<*>
+                     (tuple/tuple (:event (:time network))
+                                  identity))))
+    network))
 
 (def get-time-value
   (comp deref
