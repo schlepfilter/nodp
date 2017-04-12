@@ -332,6 +332,9 @@
                (gen/fmap (comp take-nth
                                inc)
                          gen/nat)
+               (gen/fmap (comp partition-all
+                               inc)
+                         gen/nat)
                (gen/fmap replace (gen/map gen/any gen/any))]))
 
 (clojure-test/defspec
