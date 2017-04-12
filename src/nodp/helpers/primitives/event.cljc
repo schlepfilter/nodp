@@ -282,8 +282,8 @@
                                                            network)))]
                   (maybe/maybe
                     network
-                    stepped
-                    (fn [stepped-value]
+                    (unreduced stepped)
+                    (fn [unreduced-value]
                       (helpers/set-latest
                         (maybe/just
                           (tuple/tuple
@@ -291,7 +291,7 @@
                             (f (tuple/snd
                                  @(helpers/get-latest transduction-event*
                                                       network))
-                               stepped-value)))
+                               unreduced-value)))
                         transduction-event*
                         network))))
                 network)))
