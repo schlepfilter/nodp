@@ -323,6 +323,7 @@
                          (test-helpers/function gen/boolean))
                (gen/fmap take-while
                          (test-helpers/function gen/boolean))
+               (gen/fmap drop gen/int)
                (gen/fmap take gen/int)
                (gen/fmap (comp take-nth
                                inc) gen/nat)]))
