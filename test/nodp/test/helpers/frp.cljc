@@ -317,7 +317,9 @@
                (gen/fmap filter
                          (test-helpers/function gen/boolean))
                (gen/fmap remove
-                         (test-helpers/function gen/boolean))]))
+                         (test-helpers/function gen/boolean))
+               (gen/fmap take
+                         gen/int)]))
 
 (clojure-test/defspec
   transduce-identity
@@ -335,9 +337,10 @@
                                        earliest
                                        (comp (partial (helpers/flip cons) as)
                                              tuple/snd))
-                          (maybe/map-maybe (partial (xf (comp maybe/just
-                                                              second
-                                                              vector))
+                          (maybe/map-maybe (partial (comp unreduced
+                                                          (xf (comp maybe/just
+                                                                    second
+                                                                    vector)))
                                                     helpers/nothing))
                           (reduce f init)
                           (= (tuple/snd @@transduced-event))))))
