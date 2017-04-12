@@ -32,6 +32,9 @@
 
 (test/use-fixtures :once fixture)
 
+(def num-tests
+  10)
+
 (def restart
   (gen/fmap (fn [_]
               (frp/restart))
@@ -45,7 +48,7 @@
 
 (clojure-test/defspec
   call-inactive
-  10
+  num-tests
   (restart-for-all [as (gen/vector test-helpers/any-equal)]
                    (let [e (frp/event)]
                      (run! e as)
@@ -53,7 +56,7 @@
 
 (clojure-test/defspec
   call-active
-  10
+  num-tests
   (restart-for-all [as (gen/vector test-helpers/any-equal)]
                    (let [e (frp/event)]
                      (frp/activate)
@@ -67,7 +70,7 @@
 
 (clojure-test/defspec
   event-return
-  10
+  num-tests
   (restart-for-all [a test-helpers/any-equal]
                    (= @@(-> (frp/event)
                             helpers/infer
@@ -90,7 +93,7 @@
 
 (clojure-test/defspec
   with-exit-identity
-  10
+  num-tests
   (prop/for-all [a test-helpers/any-equal
                  b test-helpers/any-equal]
                 (= (with-exit exit
@@ -112,7 +115,7 @@
 
 (clojure-test/defspec
   with-exitv-identity
-  10
+  num-tests
   (prop/for-all [as (gen/vector test-helpers/any-equal)
                  b test-helpers/any-equal]
                 (= (with-exitv exit
@@ -124,7 +127,7 @@
 
 (clojure-test/defspec
   on-identity
-  10
+  num-tests
   (restart-for-all [as (gen/vector test-helpers/any-equal)]
                    (= (with-exitv exit
                                   (let [e (frp/event)]
@@ -253,7 +256,7 @@
 
 (clojure-test/defspec
   event->>=-positive
-  5
+  num-tests
   (restart-for-all [[outer-event inner-events calls call] >>=]
                    (frp/activate)
                    (let [bound-event (helpers/>>= outer-event
@@ -293,7 +296,7 @@
 
 (clojure-test/defspec
   event-<>
-  5
+  num-tests
   (restart-for-all [[call mappended-event fmapped-events] <>]
                    (frp/activate)
                    (call)
@@ -301,7 +304,7 @@
 
 (clojure-test/defspec
   event-mempty
-  10
+  num-tests
   (restart-for-all [a test-helpers/any-equal]
                    (= @(-> (frp/event)
                            helpers/infer
@@ -324,7 +327,7 @@
 
 (clojure-test/defspec
   transduce-identity
-  5
+  num-tests
   (restart-for-all [input-event (event)
                     xf xform
                     f (test-helpers/function test-helpers/any-equal)
@@ -348,7 +351,7 @@
 
 (clojure-test/defspec
   behavior-return
-  10
+  num-tests
   (restart-for-all [a test-helpers/any-equal]
                    (= @(-> unit/unit
                            frp/behavior
@@ -399,7 +402,7 @@
 
 (clojure-test/defspec
   switcher-last
-  5
+  num-tests
   (restart-for-all [[call switched-behavior last-behavior] switcher]
                    (frp/activate)
                    (call)
@@ -407,7 +410,7 @@
 
 (clojure-test/defspec
   behavior->>=
-  5
+  num-tests
   (restart-for-all [e (event)
                     f (test-helpers/function test-helpers/any-equal)
                     as (gen/vector test-helpers/any-equal)
