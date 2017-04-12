@@ -236,6 +236,11 @@
                  all-nothing?
                  left-biased?*))
 
+(defn right-most-earliest?
+  [bound-event inner-events]
+  (= (tuple/snd @(get-earliest (last inner-events)))
+     (tuple/snd @@bound-event)))
+
 (clojure-test/defspec
   event->>=
   5
@@ -251,14 +256,12 @@
                        (if (= (map deref inner-events) inner-latests)
                          (if (and (not= @outer-event outer-latest)
                                   (maybe/just? @(last inner-events)))
-                           (= (tuple/snd @(get-earliest (last inner-events)))
-                              (tuple/snd @@bound-event))
+                           (right-most-earliest? bound-event inner-events)
                            (= @bound-event bound-latest))
                          (if (and (not= @outer-event outer-latest)
                                   (= (map deref (drop-last inner-events))
                                      (drop-last inner-latests)))
-                           (= (tuple/snd @(get-earliest (last inner-events)))
-                              (tuple/snd @@bound-event))
+                           (right-most-earliest? bound-event inner-events)
                            (left-biased? bound-event inner-events)))))))
 
 (def <>
