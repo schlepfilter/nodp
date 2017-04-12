@@ -331,7 +331,9 @@
                gen/nat)
      (gen/fmap replace (gen/map test-helpers/any-equal
                                 test-helpers/any-equal))
-     (gen/fmap keep (test-helpers/function test-helpers/any-nilable-equal))]))
+     (gen/fmap keep (test-helpers/function test-helpers/any-nilable-equal))
+     (gen/fmap keep-indexed
+               (test-helpers/function test-helpers/any-nilable-equal))]))
 
 (def xform
   (gen/fmap (partial apply comp) (gen/not-empty (gen/vector xform*))))
