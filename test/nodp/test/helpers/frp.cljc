@@ -311,9 +311,8 @@
                            nodp.helpers/mempty)
                       helpers/nothing)))
 
-(def xform
+(def xform*
   ;TODO use map to generate similar xforms
-  ;TODO comp xforms
   (gen/one-of [(gen/fmap map
                          (test-helpers/function test-helpers/any-equal))
                (gen/fmap mapcat
@@ -337,6 +336,9 @@
                                inc)
                          gen/nat)
                (gen/fmap replace (gen/map gen/any gen/any))]))
+
+(def xform
+  (gen/fmap (partial apply comp) (gen/not-empty (gen/vector xform*))))
 
 (clojure-test/defspec
   transduce-identity
