@@ -178,29 +178,30 @@
              (gen/return (doall (map nodp.helpers/<$>
                                      fs
                                      input-events)))
-             (gen/return (count-left-duplicates (get-events probabilities))))))
+             (gen/return
+               (- ((if (maybe/just? @(first input-events))
+                     dec
+                     identity)
+                    (dec (count input-events)))
+                  (count-left-duplicates (get-events probabilities)))))))
 
 (def >>=
   ;TODO refactor
-  ;TODO allow cases in which outer-event never occurs
   (gen/let [probabilities (gen/sized (comp (partial gen/vector probability 2)
                                            (partial + 2)))
             [[input-event & input-events]
              [outer-event & inner-events]
              n] (events-tuple probabilities)
-            input-event-as (gen/vector test-helpers/any-equal
-                                       (-> inner-events
-                                           count
-                                           ((if (maybe/just? @outer-event)
-                                              dec
-                                              identity))
-                                           (- n)))
+            input-event-as (gen/vector test-helpers/any-equal n)
+            xs (gen/vector gen/boolean n)
             input-events-as (gen/vector test-helpers/any-equal
                                         (count input-events))
             calls (gen/shuffle
-                    (concat (map (fn [a]
+                    (concat (map (fn [x a]
                                    (fn []
-                                     (input-event a)))
+                                     (if x
+                                       (input-event a))))
+                                 xs
                                  input-event-as)
                             ;TODO randomize the number of times input-event is called
                             (map (fn [input-event* a]
