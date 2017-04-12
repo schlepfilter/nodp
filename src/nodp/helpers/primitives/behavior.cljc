@@ -6,7 +6,7 @@
             [nodp.helpers.tuple :as tuple]
             [nodp.helpers :as helpers])
   #?(:clj
-           (:import (clojure.lang IDeref))
+           (:import [clojure.lang IDeref])
      :cljs (:require-macros [nodp.helpers.primitives.behavior
                              :refer
                              [behavior*]])))

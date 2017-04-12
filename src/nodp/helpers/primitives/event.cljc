@@ -14,7 +14,7 @@
             [nodp.helpers.time :as time]
             [nodp.helpers.tuple :as tuple])
   #?(:clj
-           (:import (clojure.lang IDeref IFn))
+           (:import [clojure.lang IDeref IFn])
      :cljs (:require-macros [nodp.helpers.primitives.event :refer [event*]])))
 
 (defn get-new-time
