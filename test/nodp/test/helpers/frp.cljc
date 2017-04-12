@@ -328,7 +328,8 @@
                (gen/fmap drop gen/int)
                (gen/fmap take gen/int)
                (gen/fmap (comp take-nth
-                               inc) gen/nat)]))
+                               inc) gen/nat)
+               (gen/fmap replace (gen/map gen/any gen/any))]))
 
 (clojure-test/defspec
   transduce-identity
