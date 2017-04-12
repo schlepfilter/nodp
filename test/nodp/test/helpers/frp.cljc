@@ -188,22 +188,26 @@
             [[input-event & input-events]
              [outer-event & inner-events]
              n] (events-tuple probabilities)
+            input-event-as (gen/vector test-helpers/any-equal
+                                       (-> inner-events
+                                           count
+                                           ((if (maybe/just? @outer-event)
+                                              dec
+                                              identity))
+                                           (- n)))
+            input-events-as (gen/vector test-helpers/any-equal
+                                        (count input-events))
             calls (gen/shuffle
                     (concat (map (fn [a]
                                    (fn []
                                      (input-event a)))
-                                 (repeat (-> inner-events
-                                             count
-                                             ((if (maybe/just? @outer-event)
-                                                dec
-                                                identity))
-                                             (- n))
-                                         unit/unit))
+                                 input-event-as)
                             ;TODO randomize the number of times input-event is called
-                            (map (fn [input-event*]
+                            (map (fn [input-event* a]
                                    (fn []
-                                     (input-event* unit/unit)))
-                                 input-events)))]
+                                     (input-event* a)))
+                                 input-events
+                                 input-events-as)))]
            (gen/tuple
              (gen/return outer-event)
              (gen/return inner-events)
