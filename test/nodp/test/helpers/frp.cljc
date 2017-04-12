@@ -203,7 +203,6 @@
                                        (input-event a))))
                                  xs
                                  input-event-as)
-                            ;TODO randomize the number of times input-event is called
                             (map (fn [input-event* a]
                                    (fn []
                                      (input-event* a)))
