@@ -205,6 +205,10 @@
                            (run! helpers/funcall (drop-last calls))))
              (gen/return (last calls)))))
 
+(defn get-earliest
+  [e]
+  (event/get-earliest e @helpers/network-state))
+
 (clojure-test/defspec
   event->>=
   5
@@ -217,11 +221,14 @@
                            inner-latests (doall (map deref inner-events))
                            bound-latest @bound-event]
                        (call)
-                       (cond (and (= @outer-event outer-latest)
-                                  (= (map deref inner-events) inner-latests))
-                             (= @bound-event bound-latest)
-                             ;TODO test property exhausitively
-                             :else true)))))
+                       (if (= (map deref inner-events) inner-latests)
+                         (if (and (not= @outer-event outer-latest)
+                                  (maybe/just? @(last inner-events)))
+                           (= (tuple/snd @(get-earliest (last inner-events)))
+                              (tuple/snd @@bound-event))
+                           (= @bound-event bound-latest))
+                         ;TODO test property exhausitively
+                         true)))))
 
 (defn all-nothing?
   [e es]
