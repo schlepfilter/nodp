@@ -34,3 +34,6 @@
 
 (def any-equal
   (gen/recursive-gen gen/container-type simple-type-equal))
+
+(def any-nilable-equal
+  (gen/one-of [any-equal (gen/return nil)]))

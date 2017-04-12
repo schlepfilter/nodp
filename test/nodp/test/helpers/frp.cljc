@@ -313,30 +313,25 @@
 
 (def xform*
   ;TODO use map to generate similar xforms
-  (gen/one-of [(gen/fmap map
-                         (test-helpers/function test-helpers/any-equal))
-               (gen/fmap mapcat
-                         (test-helpers/function test-helpers/any-equal))
-               (gen/fmap partition-by
-                         (test-helpers/function test-helpers/any-equal))
-               (gen/fmap drop-while
-                         (test-helpers/function gen/boolean))
-               (gen/fmap filter
-                         (test-helpers/function gen/boolean))
-               (gen/fmap remove
-                         (test-helpers/function gen/boolean))
-               (gen/fmap take-while
-                         (test-helpers/function gen/boolean))
-               (gen/fmap drop gen/int)
-               (gen/fmap take gen/int)
-               (gen/fmap (comp take-nth
-                               inc)
-                         gen/nat)
-               (gen/fmap (comp partition-all
-                               inc)
-                         gen/nat)
-               (gen/fmap replace (gen/map test-helpers/any-equal
-                                          test-helpers/any-equal))]))
+  (gen/one-of
+    [(gen/fmap map (test-helpers/function test-helpers/any-equal))
+     (gen/fmap mapcat (test-helpers/function test-helpers/any-equal))
+     (gen/fmap partition-by (test-helpers/function test-helpers/any-equal))
+     (gen/fmap drop-while (test-helpers/function gen/boolean))
+     (gen/fmap filter (test-helpers/function gen/boolean))
+     (gen/fmap remove (test-helpers/function gen/boolean))
+     (gen/fmap take-while (test-helpers/function gen/boolean))
+     (gen/fmap drop gen/int)
+     (gen/fmap take gen/int)
+     (gen/fmap (comp take-nth
+                     inc)
+               gen/nat)
+     (gen/fmap (comp partition-all
+                     inc)
+               gen/nat)
+     (gen/fmap replace (gen/map test-helpers/any-equal
+                                test-helpers/any-equal))
+     (gen/fmap keep (test-helpers/function test-helpers/any-nilable-equal))]))
 
 (def xform
   (gen/fmap (partial apply comp) (gen/not-empty (gen/vector xform*))))
