@@ -252,9 +252,9 @@
      (tuple/snd @@bound-event)))
 
 (clojure-test/defspec
-  event->>=
+  event->>=-positive
   5
-  (restart-for-all [[outer-event inner-events calls call] (gen/no-shrink >>=)]
+  (restart-for-all [[outer-event inner-events calls call] >>=]
                    (frp/activate)
                    (let [bound-event (helpers/>>= outer-event
                                                   (make-iterate inner-events))]
