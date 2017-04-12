@@ -164,39 +164,43 @@
         (swap! state rest)
         result))))
 
+(defn count-left-duplicates
+  [coll]
+  (dec (count (filter (partial = (first coll)) coll))))
+
 (defn events-tuple
   [probabilities]
   (gen/let [input-events (gen/return (get-events probabilities))
             fs (gen/vector (test-helpers/function test-helpers/any-equal)
                            (count input-events))]
-           (gen/tuple (gen/return input-events)
-                      (gen/return (doall (map nodp.helpers/<$>
-                                              fs
-                                              input-events))))))
+           (gen/tuple
+             (gen/return input-events)
+             (gen/return (doall (map nodp.helpers/<$>
+                                     fs
+                                     input-events)))
+             (gen/return (count-left-duplicates (get-events probabilities))))))
 
 (def >>=
   ;TODO refactor
   ;TODO allow cases in which outer-event never occurs
-  (gen/let [probabilities (gen/not-empty (gen/vector probability))
-            ;TODO randomize the simultaneity of inner-events and outer-event
-            [input-events inner-events] (events-tuple probabilities)
-            outer-event (gen/one-of
-                          [(gen/fmap (partial nodp.helpers/return
-                                              (helpers/infer (frp/event)))
-                                     test-helpers/any-equal)
-                           (gen/return (frp/event))])
+  (gen/let [probabilities (gen/sized (comp (partial gen/vector probability 2)
+                                           (partial + 2)))
+            [[input-event & input-events]
+             [outer-event & inner-events]
+             n] (events-tuple probabilities)
             as (gen/vector test-helpers/any-equal
                            (-> (count inner-events)
                                ((if (maybe/just? @outer-event)
                                   dec
-                                  identity))))
+                                  identity))
+                               (- n)))
             calls (gen/shuffle (concat (map (fn [a]
                                               (fn []
-                                                (outer-event a))) as)
+                                                (input-event a))) as)
                                        ;TODO randomize the number of times input-event is called
-                                       (map (fn [input-event]
+                                       (map (fn [input-event*]
                                               (fn []
-                                                (input-event unit/unit)))
+                                                (input-event* unit/unit)))
                                             input-events)))]
            (gen/tuple
              (gen/return outer-event)
@@ -243,8 +247,9 @@
 
 (clojure-test/defspec
   event->>=
-  5
-  (restart-for-all [[outer-event inner-events calls call] >>=]
+  {:num-tests 5
+   :seed      1491968184930}
+  (restart-for-all [[outer-event inner-events calls call] (gen/no-shrink >>=)]
                    (frp/activate)
                    (let [bound-event (helpers/>>= outer-event
                                                   (make-iterate inner-events))]
@@ -306,28 +311,28 @@
                (gen/fmap remove
                          (test-helpers/function gen/boolean))]))
 
-(clojure-test/defspec
-  transduce-identity
-  5
-  (restart-for-all [input-event (event)
-                    xf xform
-                    f (test-helpers/function test-helpers/any-equal)
-                    init test-helpers/any-equal
-                    as (gen/vector test-helpers/any-equal)]
-                   (let [transduced-event (frp/transduce xf f init input-event)
-                         earliest @input-event]
-                     (frp/activate)
-                     (run! input-event as)
-                     (->> (maybe/maybe as
-                                       earliest
-                                       (comp (partial (helpers/flip cons) as)
-                                             tuple/snd))
-                          (maybe/map-maybe (partial (xf (comp maybe/just
-                                                              second
-                                                              vector))
-                                                    helpers/nothing))
-                          (reduce f init)
-                          (= (tuple/snd @@transduced-event))))))
+;(clojure-test/defspec
+;  transduce-identity
+;  5
+;  (restart-for-all [input-event (event)
+;                    xf xform
+;                    f (test-helpers/function test-helpers/any-equal)
+;                    init test-helpers/any-equal
+;                    as (gen/vector test-helpers/any-equal)]
+;                   (let [transduced-event (frp/transduce xf f init input-event)
+;                         earliest @input-event]
+;                     (frp/activate)
+;                     (run! input-event as)
+;                     (->> (maybe/maybe as
+;                                       earliest
+;                                       (comp (partial (helpers/flip cons) as)
+;                                             tuple/snd))
+;                          (maybe/map-maybe (partial (xf (comp maybe/just
+;                                                              second
+;                                                              vector))
+;                                                    helpers/nothing))
+;                          (reduce f init)
+;                          (= (tuple/snd @@transduced-event))))))
 
 (clojure-test/defspec
   behavior-return
