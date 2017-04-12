@@ -227,8 +227,13 @@
                            (= (tuple/snd @(get-earliest (last inner-events)))
                               (tuple/snd @@bound-event))
                            (= @bound-event bound-latest))
-                         ;TODO test property exhausitively
-                         true)))))
+                         (if (and (not= @outer-event outer-latest)
+                                  (= (map deref (drop-last inner-events))
+                                     (drop-last inner-latests)))
+                           (= (tuple/snd @(get-earliest (last inner-events)))
+                              (tuple/snd @@bound-event))
+                           ;TODO test property exhausitively
+                           true))))))
 
 (defn all-nothing?
   [e es]
