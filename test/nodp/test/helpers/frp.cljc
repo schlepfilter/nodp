@@ -209,32 +209,6 @@
   [e]
   (event/get-earliest e @helpers/network-state))
 
-(clojure-test/defspec
-  event->>=
-  5
-  (restart-for-all [[outer-event inner-events calls call] >>=]
-                   (frp/activate)
-                   (let [bound-event (helpers/>>= outer-event
-                                                  (make-iterate inner-events))]
-                     (calls)
-                     (let [outer-latest @outer-event
-                           inner-latests (doall (map deref inner-events))
-                           bound-latest @bound-event]
-                       (call)
-                       (if (= (map deref inner-events) inner-latests)
-                         (if (and (not= @outer-event outer-latest)
-                                  (maybe/just? @(last inner-events)))
-                           (= (tuple/snd @(get-earliest (last inner-events)))
-                              (tuple/snd @@bound-event))
-                           (= @bound-event bound-latest))
-                         (if (and (not= @outer-event outer-latest)
-                                  (= (map deref (drop-last inner-events))
-                                     (drop-last inner-latests)))
-                           (= (tuple/snd @(get-earliest (last inner-events)))
-                              (tuple/snd @@bound-event))
-                           ;TODO test property exhausitively
-                           true))))))
-
 (defn all-nothing?
   [e es]
   (and (maybe/nothing? @e)
@@ -261,6 +235,31 @@
   (helpers/build or
                  all-nothing?
                  left-biased?*))
+
+(clojure-test/defspec
+  event->>=
+  5
+  (restart-for-all [[outer-event inner-events calls call] >>=]
+                   (frp/activate)
+                   (let [bound-event (helpers/>>= outer-event
+                                                  (make-iterate inner-events))]
+                     (calls)
+                     (let [outer-latest @outer-event
+                           inner-latests (doall (map deref inner-events))
+                           bound-latest @bound-event]
+                       (call)
+                       (if (= (map deref inner-events) inner-latests)
+                         (if (and (not= @outer-event outer-latest)
+                                  (maybe/just? @(last inner-events)))
+                           (= (tuple/snd @(get-earliest (last inner-events)))
+                              (tuple/snd @@bound-event))
+                           (= @bound-event bound-latest))
+                         (if (and (not= @outer-event outer-latest)
+                                  (= (map deref (drop-last inner-events))
+                                     (drop-last inner-latests)))
+                           (= (tuple/snd @(get-earliest (last inner-events)))
+                              (tuple/snd @@bound-event))
+                           (left-biased? bound-event inner-events)))))))
 
 (def <>
   (gen/let [probabilities (gen/vector probability 2)
