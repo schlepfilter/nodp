@@ -318,8 +318,7 @@
                          (test-helpers/function gen/boolean))
                (gen/fmap remove
                          (test-helpers/function gen/boolean))
-               (gen/fmap take
-                         gen/int)]))
+               (gen/fmap take gen/int)]))
 
 (clojure-test/defspec
   transduce-identity
