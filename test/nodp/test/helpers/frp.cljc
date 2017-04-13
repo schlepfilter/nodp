@@ -327,13 +327,12 @@
                              inc)
                        gen/nat)
              (gen/fmap replace (gen/map test-helpers/any-equal
-                                        test-helpers/any-equal))
-             (gen/fmap keep (test-helpers/function test-helpers/any-nilable-equal))
-             (gen/fmap keep-indexed
-                       (test-helpers/function test-helpers/any-nilable-equal))]
+                                        test-helpers/any-equal))]
             (get-generators (test-helpers/function gen/boolean)
                             [drop-while filter remove take-while])
             (get-generators gen/int [drop take])
+            (get-generators (test-helpers/function test-helpers/any-nilable-equal)
+                            [keep keep-indexed])
             (get-generators (test-helpers/function test-helpers/any-equal)
                             [map map-indexed partition-by]))))
 
