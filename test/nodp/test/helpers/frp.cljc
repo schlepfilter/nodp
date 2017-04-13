@@ -199,23 +199,20 @@
             xs (gen/vector gen/boolean n)
             input-events-as (gen/vector test-helpers/any-equal
                                         (count input-events))
-            calls (gen/shuffle
-                    (concat (map (fn [x a]
-                                   (fn []
-                                     (if x
-                                       (input-event a))))
-                                 xs
-                                 input-event-as)
-                            (map (fn [input-event* a]
-                                   (fn []
-                                     (input-event* a)))
-                                 input-events
-                                 input-events-as)))]
+            calls (gen/shuffle (concat (map (fn [x a]
+                                              (fn []
+                                                (if x
+                                                  (input-event a))))
+                                            xs
+                                            input-event-as)
+                                       (map (fn [input-event* a]
+                                              (partial input-event* a))
+                                            input-events
+                                            input-events-as)))]
            (gen/tuple
              (gen/return outer-event)
              (gen/return inner-events)
-             (gen/return (fn []
-                           (run! helpers/funcall (drop-last calls))))
+             (gen/return (partial run! helpers/funcall (drop-last calls)))
              (gen/return (last calls)))))
 
 (defn get-earliest
