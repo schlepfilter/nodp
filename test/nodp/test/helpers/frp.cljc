@@ -346,10 +346,9 @@
                          earliest @input-event]
                      (frp/activate)
                      (run! input-event as)
-                     (->> (maybe/maybe as
-                                       earliest
-                                       (comp (partial (helpers/flip cons) as)
-                                             tuple/snd))
+                     (->> (comp (partial (helpers/flip cons) as)
+                                tuple/snd)
+                          (maybe/maybe as earliest)
                           (maybe/map-maybe (partial (comp unreduced
                                                           (xf (comp maybe/just
                                                                     second
