@@ -1,4 +1,10 @@
 \documentclass[fleqn]{amsart}
+\newcommand{\zeroarity}[1]{&\ \textit{#1*}\quad\text{-- where }\textit{#1*}\text{ is }(#1)}
+\newcommand{\positive}[1]{&\ \textit{#1}\ Int\quad\text{-- where }Int\text{ is positive}}
+\newcommand{\integer}[1]{&\ #1\ Int}
+\newcommand{\predicate}[2]{&\ \textit{#1}\ (#2 \rightarrow Boolean)}
+\newcommand{\nonnillable}[3]{&\ \textit{#1}\ (#2 \rightarrow #3)\quad\text{-- where }#3\text{ is not nil}}
+\newcommand{\any}[3]{&\ \textit{#1}\ (#2 \rightarrow #3)}
 \begin{document}
 \begin{align*}
   \textbf{type}\ E_a = [(\hat{T}, a)]\quad\text{-- for strictly increasing times}
@@ -10,7 +16,24 @@
   occs\ (>>= e\ f) = foldr\ merge\ []\circ map\ delayOccs\circ map\ (\lambda(\hat{t}_a, a) \rightarrow (\hat{t}_a , f\ a))\ (occs\ e)
 \end{align*}
 \begin{align*}
-  transduce :: xform \rightarrow (a \rightarrow b \rightarrow a) \rightarrow a \rightarrow E_b \rightarrow E_a
+  \mathbf{data}\ Xform\ a\ b\ c\ d\ e\ f\ g\ h\ i\ j\ k\ l\ m\ n =&\zeroarity{dedupe}\\
+  |\zeroarity{distinct}\\
+  |\positive{take-nth}\\
+  |\positive{partition-all}\\
+  |\integer{drop}\\
+  |\integer{take}\\
+  |&\ replace\ Map\ a\ b\\
+  |\predicate{drop-while}{c}\\
+  |\predicate{filter}{d}\\
+  |\predicate{remove}{e}\\
+  |\predicate{take-while}{f}\\
+  |\nonnillable{map-index}{g}{h}\\
+  |\nonnillable{partition-by}{i}{j}\\
+  |\any{keep}{k}{l}\
+  |\any{keep}{m}{n}
+\end{align*}
+\begin{align*}
+  transduce :: Xform \rightarrow (a \rightarrow b \rightarrow a) \rightarrow a \rightarrow E_b \rightarrow E_a
 \end{align*}
 \begin{align*}
   &occs\ (transduce\ xform\ f\ a\ e)\\
