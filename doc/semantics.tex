@@ -16,7 +16,7 @@
   occs\ (>>= e\ f) = foldr\ merge\ []\circ map\ delayOccs\circ map\ (\lambda(\hat{t}_a, a) \rightarrow (\hat{t}_a , f\ a))\ (occs\ e)
 \end{align*}
 \begin{align*}
-  \mathbf{data}\ Xform\ a\ b\ c\ d\ e\ f\ g\ h\ i\ j\ k\ l\ m\ n =&\zeroarity{dedupe}\\
+  \mathbf{data}\ Xform\ a\ b\ c\ d\ e\ f\ g\ h\ i\ j\ k\ l\ m\ n =\zeroarity{dedupe}\\
   |\zeroarity{distinct}\\
   |\positive{take-nth}\\
   |\positive{partition-all}\\
