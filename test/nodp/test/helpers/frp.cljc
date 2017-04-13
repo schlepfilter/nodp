@@ -250,7 +250,7 @@
      (tuple/snd @@bound-event)))
 
 (clojure-test/defspec
-  event->>=-positive
+  event->>=
   num-tests
   (restart-for-all [[outer-event inner-events calls call] >>=]
                    (frp/activate)
