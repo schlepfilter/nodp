@@ -311,18 +311,19 @@
                            nodp.helpers/mempty)
                       helpers/nothing)))
 
+(defn get-generators
+  [generator xforms**]
+  (map (partial (helpers/flip gen/fmap) generator) xforms**))
+
 (def xform*
   ;TODO use map to generate similar xforms
   (gen/one-of
     (concat [(gen/return (distinct))
              (gen/return (dedupe))
-
              (gen/fmap drop-while (test-helpers/function gen/boolean))
              (gen/fmap filter (test-helpers/function gen/boolean))
              (gen/fmap remove (test-helpers/function gen/boolean))
              (gen/fmap take-while (test-helpers/function gen/boolean))
-             (gen/fmap drop gen/int)
-             (gen/fmap take gen/int)
              (gen/fmap (comp take-nth
                              inc)
                        gen/nat)
@@ -334,9 +335,9 @@
              (gen/fmap keep (test-helpers/function test-helpers/any-nilable-equal))
              (gen/fmap keep-indexed
                        (test-helpers/function test-helpers/any-nilable-equal))]
-            (map (partial (helpers/flip gen/fmap)
-                          (test-helpers/function test-helpers/any-equal))
-                 [map map-indexed partition-by]))))
+            (get-generators gen/int [drop take])
+            (get-generators (test-helpers/function test-helpers/any-equal)
+                            [map map-indexed partition-by]))))
 
 (def xform
   (gen/fmap (partial apply comp) (gen/not-empty (gen/vector xform*))))
