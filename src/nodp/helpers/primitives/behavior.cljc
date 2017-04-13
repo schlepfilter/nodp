@@ -29,9 +29,7 @@
 
 #?(:clj (defmacro behavior*
           [event-name & fs]
-          `(helpers/get-entity ~event-name
-                               Behavior.
-                               ~@fs)))
+          `(helpers/get-entity ~event-name Behavior. ~@fs)))
 
 (util/make-printable Behavior)
 

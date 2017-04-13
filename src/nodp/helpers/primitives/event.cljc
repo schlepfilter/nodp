@@ -149,11 +149,10 @@
 
 #?(:clj (defmacro event*
           [event-name & fs]
-          `(helpers/get-entity
-             ~event-name
-             Event.
-             ~@fs
-             (set-earliest-latest helpers/nothing))))
+          `(helpers/get-entity ~event-name
+                               Event.
+                               ~@fs
+                               (set-earliest-latest helpers/nothing))))
 
 (defn now?
   [e network]
