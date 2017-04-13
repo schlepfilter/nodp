@@ -316,20 +316,20 @@
   (map (partial (helpers/flip gen/fmap) generator) xforms**))
 
 (def xform*
-  ;TODO use map to generate similar xforms
   (gen/one-of
-    (concat [(gen/return (distinct))
-             (gen/return (dedupe))
-             (gen/fmap replace (gen/map test-helpers/any-equal
-                                        test-helpers/any-equal))]
-            (get-generators (test-helpers/function gen/boolean)
-                            [drop-while filter remove take-while])
-            (get-generators gen/s-pos-int [take-nth partition-all])
-            (get-generators gen/int [drop take])
-            (get-generators (test-helpers/function test-helpers/any-nilable-equal)
-                            [keep keep-indexed])
-            (get-generators (test-helpers/function test-helpers/any-equal)
-                            [map map-indexed partition-by]))))
+    (concat
+      [(gen/return (distinct))
+       (gen/return (dedupe))
+       (gen/fmap replace (gen/map test-helpers/any-equal
+                                  test-helpers/any-equal))]
+      (get-generators (test-helpers/function gen/boolean)
+                      [drop-while filter remove take-while])
+      (get-generators gen/s-pos-int [take-nth partition-all])
+      (get-generators gen/int [drop take])
+      (get-generators (test-helpers/function test-helpers/any-nilable-equal)
+                      [keep keep-indexed])
+      (get-generators (test-helpers/function test-helpers/any-equal)
+                      [map map-indexed partition-by]))))
 
 (def xform
   (gen/fmap (partial apply comp) (gen/not-empty (gen/vector xform*))))
