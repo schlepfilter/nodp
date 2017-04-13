@@ -369,7 +369,7 @@
             as (->> input-events
                     count
                     (gen/vector test-helpers/any-equal))
-            ;TODO randomly create each behavior either by using time or stepper
+            ;TODO randomly create each behavior either by using return, time or stepper
             [first-behavior
              return-behavior
              & switched-behaviors
