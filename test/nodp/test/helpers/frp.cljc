@@ -178,9 +178,7 @@
                            (count input-events))]
            (gen/tuple
              (gen/return input-events)
-             (gen/return (doall (map nodp.helpers/<$>
-                                     fs
-                                     input-events)))
+             (gen/return (doall (map nodp.helpers/<$> fs input-events)))
              (gen/return
                (- ((if (maybe/just? @(first input-events))
                      dec
