@@ -131,7 +131,7 @@
   IFn
   (#?(:clj  invoke
       :cljs -invoke) [e a]
-    ;e stands for an event and a stands for any as in Push-Pull Functional Reactive Programming.
+    ;e stands for an event, and a stands for any as in Push-Pull Functional Reactive Programming.
     (if (:active @helpers/network-state)
       (-> (make-handle a e)
           queue)))

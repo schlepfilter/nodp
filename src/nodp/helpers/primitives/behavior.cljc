@@ -21,6 +21,7 @@
   IDeref
   (#?(:clj  deref
       :cljs -deref) [b]
+    ;b stands for a behavior as in Push-Pull Functional Reactive Programming.
     (helpers/get-latest b @helpers/network-state))
   p/Printable
   (-repr [_]
