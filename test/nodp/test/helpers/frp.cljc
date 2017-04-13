@@ -320,10 +320,6 @@
   (gen/one-of
     (concat [(gen/return (distinct))
              (gen/return (dedupe))
-             (gen/fmap drop-while (test-helpers/function gen/boolean))
-             (gen/fmap filter (test-helpers/function gen/boolean))
-             (gen/fmap remove (test-helpers/function gen/boolean))
-             (gen/fmap take-while (test-helpers/function gen/boolean))
              (gen/fmap (comp take-nth
                              inc)
                        gen/nat)
@@ -335,6 +331,8 @@
              (gen/fmap keep (test-helpers/function test-helpers/any-nilable-equal))
              (gen/fmap keep-indexed
                        (test-helpers/function test-helpers/any-nilable-equal))]
+            (get-generators (test-helpers/function gen/boolean)
+                            [drop-while filter remove take-while])
             (get-generators gen/int [drop take])
             (get-generators (test-helpers/function test-helpers/any-equal)
                             [map map-indexed partition-by]))))
