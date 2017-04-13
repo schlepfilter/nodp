@@ -315,6 +315,7 @@
   ;TODO use map to generate similar xforms
   (gen/one-of
     [(gen/return (distinct))
+     (gen/return (dedupe))
      (gen/fmap map (test-helpers/function test-helpers/any-equal))
      (gen/fmap map-indexed (test-helpers/function test-helpers/any-equal))
      (gen/fmap mapcat (test-helpers/function test-helpers/any-equal))
