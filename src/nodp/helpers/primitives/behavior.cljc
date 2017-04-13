@@ -78,7 +78,8 @@
                       (maybe/maybe network
                                    (helpers/get-latest parent-event network)
                                    (fn [x]
-                                     (helpers/add-edge (tuple/snd x)
-                                                       child-behavior
-                                                       network))))))
+                                     (-> x
+                                         tuple/snd
+                                         (helpers/add-edge child-behavior
+                                                           network)))))))
     child-behavior))
