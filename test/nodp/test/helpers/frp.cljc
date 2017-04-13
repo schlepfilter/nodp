@@ -273,6 +273,7 @@
                            (left-biased? bound-event inner-events)))))))
 
 (def <>
+  ;TODO refactor
   (gen/let [probabilities (gen/vector probability 2)
             [input-events fmapped-events] (events-tuple probabilities)
             ns (gen/vector (gen/sized (partial gen/choose 0))
@@ -332,6 +333,7 @@
 (clojure-test/defspec
   transduce-identity
   num-tests
+  ;TODO refactor
   (restart-for-all [input-event (event)
                     xf xform
                     f (test-helpers/function test-helpers/any-equal)
@@ -414,6 +416,7 @@
 (clojure-test/defspec
   behavior->>=
   num-tests
+  ;TODO refactor
   (restart-for-all [e (event)
                     f (test-helpers/function test-helpers/any-equal)
                     as (gen/vector test-helpers/any-equal)
