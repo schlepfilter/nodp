@@ -460,4 +460,5 @@
   behavior->>=-identity
   num-tests
   (restart-for-all [[b f] behavior->>=]
+                   (frp/activate)
                    (= @(helpers/>>= b f) @(f @b))))
