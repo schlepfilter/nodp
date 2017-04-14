@@ -147,7 +147,7 @@
   ;=> (0.8163040448517938 0.8830449199816961)
   (gen/let [a test-helpers/any-equal]
            (gen/one-of [(gen/return (frp/event))
-                        (gen/return (nodp.helpers/return
+                        (gen/return (nodp.helpers/pure
                                       (helpers/infer (frp/event))
                                       a))])))
 
@@ -404,7 +404,7 @@
             switching-event (gen/one-of
                               [(gen/return (frp/event))
                                (gen/return
-                                 (helpers/return
+                                 (helpers/pure
                                    (helpers/infer (frp/event))
                                    return-behavior))])
             ;TODO randomize the number of times each input-event is called
