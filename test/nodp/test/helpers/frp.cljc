@@ -451,17 +451,21 @@
                  (gen/return (constantly (frp/stepper inner-any
                                                       fmapped-inner-event)))
                  (gen/return (constantly frp/time))])
-            [input-outer-anys
-             input-inner-anys]
-            (gen/vector (gen/vector test-helpers/any-equal) 2)
-            calls (gen/shuffle (concat (map (fn [x]
+            [input-outer-boolean-anys
+             input-inner-boolean-anys]
+            (gen/vector (gen/vector (gen/tuple gen/boolean
+                                               test-helpers/any-equal))
+                        2)
+            calls (gen/shuffle (concat (map (fn [[boolean a]]
                                               (fn []
-                                                (input-outer-event x)))
-                                            input-outer-anys)
-                                       (map (fn [x]
+                                                (if boolean
+                                                  (input-outer-event a))))
+                                            input-outer-boolean-anys)
+                                       (map (fn [[boolean a]]
                                               (fn []
-                                                (input-inner-event x)))
-                                            input-inner-anys)))]
+                                                (if boolean
+                                                  (input-inner-event a))))
+                                            input-inner-boolean-anys)))]
            (gen/tuple (gen/return outer-behavior)
                       (gen/return f)
                       (gen/return (partial run! helpers/funcall calls)))))
