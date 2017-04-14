@@ -12,13 +12,13 @@
           (alter-var-root #'time
                           (fn [_*]
                             (behavior/time*))))
-        behavior/restart))
-
-(def activate
-  behavior/activate)
+        event/restart))
 
 (def transduce
   event/transduce)
+
+(def activate
+  event/activate)
 
 (def switcher
   behavior/switcher)
