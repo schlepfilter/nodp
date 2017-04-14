@@ -11,8 +11,8 @@
   (comp (fn [_]
           (alter-var-root #'time
                           (fn [_*]
-                            (behavior/time*))))
-        event/restart))
+                            behavior/time)))
+        behavior/restart))
 
 (def transduce
   event/transduce)

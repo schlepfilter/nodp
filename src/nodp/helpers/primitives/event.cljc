@@ -303,20 +303,6 @@
                               network)))
             (helpers/add-edge transduction-event))))
 
-(defn start
-  []
-  (reset! helpers/network-state {:active      false
-                                 :dependency  {:event    (graph/digraph)
-                                               :behavior (graph/digraph)}
-                                 :input-state (helpers/get-queue helpers/funcall)
-                                 :id          0
-                                 :modifier    {}
-                                 :time        {:event (time/time 0)}}))
-
-(def restart
-  ;TODO call stop
-  start)
-
 (def activate
   (juxt (partial swap! helpers/network-state (partial s/setval* :active true))
         time/start

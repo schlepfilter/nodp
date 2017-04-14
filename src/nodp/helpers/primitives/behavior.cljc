@@ -61,6 +61,25 @@
   []
   (behavior* _*))
 
+(declare time)
+
+(defn start
+  []
+  (reset! helpers/network-state {:active      false
+                                 :dependency  {:event    (graph/digraph)
+                                               :behavior (graph/digraph)}
+                                 :input-state (helpers/get-queue helpers/funcall)
+                                 :id          0
+                                 :modifier    {}
+                                 :time        {:event (time/time 0)}})
+  (alter-var-root #'time
+                  (fn [_]
+                    (behavior* _*))))
+
+(def restart
+  ;TODO call stop
+  start)
+
 (defn switcher
   [parent-behavior parent-event]
   (let [child-behavior (behavior*
