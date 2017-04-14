@@ -452,14 +452,24 @@
                                                       fmapped-inner-event)))
                  (gen/return (constantly frp/time))])
             input-outer-anys (gen/vector test-helpers/any-equal)
-            input-inner-anys (gen/vector test-helpers/any-equal)]
+            input-inner-anys (gen/vector test-helpers/any-equal)
+            calls (gen/shuffle (concat (map (fn [x]
+                                              (fn []
+                                                (input-outer-event x)))
+                                            input-outer-anys)
+                                       (map (fn [x]
+                                              (fn []
+                                                (input-inner-event x)))
+                                            input-inner-anys)))]
            (gen/tuple (gen/return outer-behavior)
-                      (gen/return f))))
+                      (gen/return f)
+                      (gen/return (partial run! helpers/funcall calls)))))
 
 (clojure-test/defspec
   behavior->>=-identity
   num-tests
-  (restart-for-all [[outer-behavior f] behavior->>=]
+  (restart-for-all [[outer-behavior f call] behavior->>=]
                    (let [bound-behavior (helpers/>>= outer-behavior f)]
                      (frp/activate)
+                     (call)
                      (= @bound-behavior @(f @outer-behavior)))))
