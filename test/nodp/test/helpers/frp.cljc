@@ -137,8 +137,7 @@
                                     (run! e as)))
                       as)))
 
-(defn event
-  []
+(def event
   (gen/one-of [(gen/fmap (fn [_]
                            (frp/event))
                          (gen/return unit/unit))
@@ -158,7 +157,7 @@
        (if (= 1.0 probability*)
          0)
        (nth (conj coll
-                  (test-helpers/generate (event) {:seed (hash probability*)})))
+                  (test-helpers/generate event {:seed (hash probability*)})))
        (conj coll)))
 
 (def get-events
@@ -339,7 +338,7 @@
   transduce-identity
   num-tests
   ;TODO refactor
-  (restart-for-all [input-event (event)
+  (restart-for-all [input-event event
                     xf xform
                     f (test-helpers/function test-helpers/any-equal)
                     init test-helpers/any-equal
@@ -422,7 +421,7 @@
   behavior->>=
   num-tests
   ;TODO refactor
-  (restart-for-all [e (event)
+  (restart-for-all [e event
                     f (test-helpers/function test-helpers/any-equal)
                     as (gen/vector test-helpers/any-equal)
                     a test-helpers/any-equal]
