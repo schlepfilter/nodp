@@ -204,9 +204,9 @@
             xs (gen/vector gen/boolean n)
             input-events-as (gen/vector test-helpers/any-equal
                                         (count input-events))
-            calls (gen/shuffle (concat (map (fn [x a]
+            calls (gen/shuffle (concat (map (fn [boolean a]
                                               (fn []
-                                                (if x
+                                                (if boolean
                                                   (input-event a))))
                                             xs
                                             input-event-as)
