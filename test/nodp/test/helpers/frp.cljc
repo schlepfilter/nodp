@@ -443,7 +443,7 @@
                     f (test-helpers/function test-helpers/any-equal)
                     as (gen/vector test-helpers/any-equal)
                     a test-helpers/any-equal]
-                   ;TODO randomly create outer-behavior either by using pure, time or stepper
+                   ;TODO randomly create outer-behavior and inner-behaviors by using pure, time or stepper
                    (let [outer-behavior (frp/stepper a e)
                          bound-behavior (nodp.helpers/>>= outer-behavior
                                                           (comp frp/behavior
