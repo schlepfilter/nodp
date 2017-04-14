@@ -27,10 +27,11 @@
 
 (defn fixture
   [f]
+  (reset! helpers/network-state nil)
   (with-redefs [event/queue helpers/funcall]
     (f)))
 
-(test/use-fixtures :once fixture)
+(test/use-fixtures :each fixture)
 
 (def num-tests
   10)
@@ -138,10 +139,14 @@
 
 (defn event
   []
-  (gen/one-of [(gen/fmap (partial nodp.helpers/return
-                                  (helpers/infer (frp/event)))
-                         test-helpers/any-equal)
-               (gen/return (frp/event))]))
+  (gen/one-of [(gen/fmap (fn [_]
+                           (frp/event))
+                         (gen/return unit/unit))
+               (gen/fmap (fn [a]
+                           (nodp.helpers/return
+                             (helpers/infer (frp/event))
+                             a))
+                         test-helpers/any-equal)]))
 
 (defn conj-event
   [coll probability*]
