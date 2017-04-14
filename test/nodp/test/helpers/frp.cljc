@@ -204,17 +204,21 @@
                                        (gen/tuple gen/boolean
                                                   test-helpers/any-equal)
                                        n)
-            input-events-anys (gen/vector test-helpers/any-equal
-                                          (count input-events))
+            input-events-boolean-anys (gen/vector
+                                        (gen/tuple gen/boolean
+                                                   test-helpers/any-equal)
+                                        (count input-events))
             calls (gen/shuffle (concat (map (fn [[boolean a]]
                                               (fn []
                                                 (if boolean
                                                   (input-event a))))
                                             input-event-boolean-anys)
-                                       (map (fn [input-event* a]
-                                              (partial input-event* a))
-                                            input-events
-                                            input-events-anys)))]
+                                       (map (fn [[boolean a] input-event*]
+                                              (fn []
+                                                (if boolean
+                                                  (input-event* a))))
+                                            input-events-boolean-anys
+                                            input-events)))]
            (gen/tuple
              (gen/return outer-event)
              (gen/return inner-events)
