@@ -225,7 +225,6 @@
          x2 m2]
         (return (x1 x2))))
 
-
 #?(:clj (defmacro reify-monad
           [pure mbind & more]
           `(reify
