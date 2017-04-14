@@ -1,8 +1,12 @@
 (ns nodp.helpers.primitives.behavior
+  (:refer-clojure :exclude [time])
   (:require [cats.monad.maybe :as maybe]
             [cats.protocols :as p]
             [cats.util :as util]
+            [com.rpl.specter :as s]
+            [loom.graph :as graph]
             [nodp.helpers.primitives.event :as event]
+            [nodp.helpers.time :as time]
             [nodp.helpers.tuple :as tuple]
             [nodp.helpers :as helpers])
   #?(:clj
@@ -82,3 +86,28 @@
                                          (helpers/add-edge child-behavior
                                                            network)))))))
     child-behavior))
+
+(declare time)
+
+(defn start
+  []
+  (reset! helpers/network-state {:active      false
+                                 :dependency  {:event    (graph/digraph)
+                                               :behavior (graph/digraph)}
+                                 :input-state (helpers/get-queue helpers/funcall)
+                                 :id          0
+                                 :modifier    {}
+                                 :time        {:event (time/time 0)}})
+  (alter-var-root #'time (fn [_]
+                           (behavior* _))))
+
+(def restart
+  ;TODO call stop
+  start)
+
+(def activate
+  (juxt (partial swap! helpers/network-state (partial s/setval* :active true))
+        time/start
+        (fn []
+          ;switcher's behavior-valued event may be a unit event
+          (reset! helpers/network-state (event/modify-behavior! (time/now) @helpers/network-state)))))

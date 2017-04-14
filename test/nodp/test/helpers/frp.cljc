@@ -375,10 +375,15 @@
 (clojure-test/defspec
   time-increasing
   num-tests
-  (restart-for-all [e event]
-                   (frp/activate)
-                   (e unit/unit)
-                   true))
+  (restart-for-all [e event
+                    units (gen/vector (gen/return unit/unit))]
+                   (let [b frp/time
+                         _ ((helpers/lift-a 2 (constantly unit/unit))
+                             b
+                             (frp/stepper unit/unit e))]
+                     (frp/activate)
+                     (run! e units)
+                     true)))
 
 (def switcher
   (gen/let [probabilities (gen/sized (comp (partial gen/vector probability 2)

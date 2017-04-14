@@ -1,18 +1,21 @@
 (ns nodp.helpers.frp
-  (:refer-clojure :exclude [stepper transduce])
+  (:refer-clojure :exclude [stepper time transduce])
   (:require [nodp.helpers.io :as io]
             [nodp.helpers.primitives.behavior :as behavior]
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.derived.behavior :as derived-behavior]))
 
 (def restart
-  event/restart)
+  behavior/restart)
 
 (def activate
-  event/activate)
+  behavior/activate)
 
 (def transduce
   event/transduce)
+
+(def time
+  behavior/time)
 
 (def switcher
   behavior/switcher)
