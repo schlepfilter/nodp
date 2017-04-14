@@ -382,7 +382,9 @@
                              (frp/stepper unit/unit e))]
                      (frp/activate)
                      (run! e units)
-                     true)))
+                     (let [t @frp/time]
+                       (e unit/unit)
+                       (<= @t @@frp/time)))))
 
 (def switcher
   (gen/let [probabilities (gen/sized (comp (partial gen/vector probability 2)
