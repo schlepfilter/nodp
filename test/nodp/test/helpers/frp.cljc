@@ -198,9 +198,8 @@
   ;TODO refactor
   (gen/let [probabilities (gen/sized (comp (partial gen/vector probability 2)
                                            (partial + 2)))
-            [[input-event & input-events]
-             [outer-event & inner-events]
-             n] (events-tuple probabilities)
+            [[input-event & input-events] [outer-event & inner-events] n]
+            (events-tuple probabilities)
             input-event-as (gen/vector test-helpers/any-equal n)
             xs (gen/vector gen/boolean n)
             input-events-as (gen/vector test-helpers/any-equal
