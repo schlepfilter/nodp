@@ -375,14 +375,12 @@
 (clojure-test/defspec
   time-increasing
   num-tests
-  (restart-for-all [e event
-                    units (gen/vector (gen/return unit/unit))]
+  (restart-for-all [units (gen/vector (gen/return unit/unit))]
                    (frp/restart)
-                   (let [b frp/time
-                         ;_ ((helpers/lift-a 2 (constantly unit/unit))
-                         ;    b
-                         ;    (frp/stepper unit/unit e))
-                         ]
+                   (let [e (frp/event)
+                         _ ((helpers/lift-a 2 (constantly unit/unit))
+                             frp/time
+                             (frp/stepper unit/unit e))]
                      (frp/activate)
                      (run! e units)
                      true)))
