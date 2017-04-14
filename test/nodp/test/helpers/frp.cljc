@@ -194,7 +194,7 @@
                     (dec (count input-events)))
                   (count-left-duplicates (get-events probabilities)))))))
 
-(def >>=
+(def event->>=
   ;TODO refactor
   (gen/let [probabilities (gen/sized (comp (partial gen/vector probability 2)
                                            (partial + 2)))
@@ -258,9 +258,9 @@
      (tuple/snd @@bound-event)))
 
 (clojure-test/defspec
-  event->>=
+  event->>=-identity
   num-tests
-  (restart-for-all [[outer-event inner-events calls call] >>=]
+  (restart-for-all [[outer-event inner-events calls call] event->>=]
                    (frp/activate)
                    (let [bound-event (helpers/>>= outer-event
                                                   (make-iterate inner-events))]
