@@ -15,7 +15,8 @@
             [clojure.test :as test]
             [clojurewerkz.money.amounts :as ma]
             [clojurewerkz.money.currencies :as mc]
-            [potemkin :as potemkin]]))
+            [potemkin :as potemkin]])
+            [nodp.helpers.unit :as unit])
   #?(:cljs (:require-macros [cljs.core.async.macros :as async]
              [nodp.helpers :refer [build case-eval casep defcurried mlet]])))
 
@@ -98,8 +99,7 @@
                                      .getRequiredArity
                                      maybe/just)
                                  (fn [_]
-                                   (-> nothing
-                                       exc/success)))
+                                   (exc/success unit/unit)))
              m/join))
 
        (def get-non-variadic-arities
