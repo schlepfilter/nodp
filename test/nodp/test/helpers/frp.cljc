@@ -375,7 +375,9 @@
 (clojure-test/defspec
   time-increasing
   num-tests
-  (restart-for-all []
+  (restart-for-all [e event]
+                   (frp/activate)
+                   (e unit/unit)
                    true))
 
 (def switcher
