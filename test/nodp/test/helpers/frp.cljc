@@ -434,19 +434,30 @@
                    (call)
                    (= @switched-behavior @last-behavior)))
 
+(def behavior->>=
+  ;TODO refactor
+  (gen/let [probabilities (gen/vector probability 2)
+            [[input-outer-event input-inner-event]
+             [fmapped-outer-event fmapped-inner-event]]
+            (events-tuple probabilities)
+            outer-any test-helpers/any-equal
+            outer-behavior (gen/one-of
+                             [(gen/return (frp/stepper outer-any
+                                                       fmapped-outer-event))
+                              (gen/return frp/time)])
+            inner-any test-helpers/any-equal
+            f (gen/one-of
+                [(gen/return frp/behavior)
+                 (gen/return (constantly (frp/stepper inner-any
+                                                      fmapped-inner-event)))
+                 (gen/return (constantly frp/time))])
+            input-outer-anys (gen/vector test-helpers/any-equal)
+            input-inner-anys (gen/vector test-helpers/any-equal)]
+           (gen/tuple (gen/return outer-behavior)
+                      (gen/return f))))
+
 (clojure-test/defspec
   behavior->>=-identity
   num-tests
-  ;TODO refactor
-  (restart-for-all [e event
-                    f (test-helpers/function test-helpers/any-equal)
-                    as (gen/vector test-helpers/any-equal)
-                    a test-helpers/any-equal]
-                   ;TODO randomly create outer-behavior and inner-behaviors either by using time or stepper
-                   (let [outer-behavior (frp/stepper a e)
-                         bound-behavior (nodp.helpers/>>= outer-behavior
-                                                          (comp frp/behavior
-                                                                f))]
-                     (frp/activate)
-                     (run! e as)
-                     (= @bound-behavior (f @outer-behavior)))))
+  (restart-for-all [[b f] behavior->>=]
+                   (= @(helpers/>>= b f) @(f @b))))
