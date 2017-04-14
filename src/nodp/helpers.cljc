@@ -46,9 +46,6 @@
     ([x y & more]
      (apply f y x more))))
 
-(def nothing
-  (maybe/nothing))
-
 #?(:clj
    (do (defn gensymize
          ;This function works around java.lang.ExceptionInInitializerError
@@ -243,6 +240,9 @@
              (~'-mbind [_# ma# f#]
                (~mbind ma# f#))
              ~@more)))
+
+(def nothing
+  (maybe/nothing))
 
 (defn maybe*
   [expr]
