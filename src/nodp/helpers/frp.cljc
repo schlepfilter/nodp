@@ -9,9 +9,8 @@
 
 (def restart
   (comp (fn [_]
-          (alter-var-root #'time
-                          (fn [_*]
-                            behavior/time)))
+          (def time
+            behavior/time))
         behavior/restart))
 
 (def transduce

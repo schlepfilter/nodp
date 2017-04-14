@@ -73,15 +73,14 @@
                                  :modifier    {}
                                  :time        {:event    (time/time 0)
                                                :behavior (time/time 0)}})
-  (alter-var-root #'time
-                  (fn [_]
-                    (behavior* b
-                               (helpers/set-modifier
-                                 (fn [network]
-                                   (helpers/set-latest
-                                     (:behavior (:time network))
-                                     b
-                                     network)))))))
+  (def time
+    (behavior* b
+               (helpers/set-modifier
+                 (fn [network]
+                   (helpers/set-latest
+                     (:behavior (:time network))
+                     b
+                     network))))))
 
 (def restart
   ;TODO call stop
