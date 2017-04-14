@@ -377,10 +377,12 @@
   num-tests
   (restart-for-all [e event
                     units (gen/vector (gen/return unit/unit))]
+                   (frp/restart)
                    (let [b frp/time
-                         _ ((helpers/lift-a 2 (constantly unit/unit))
-                             b
-                             (frp/stepper unit/unit e))]
+                         ;_ ((helpers/lift-a 2 (constantly unit/unit))
+                         ;    b
+                         ;    (frp/stepper unit/unit e))
+                         ]
                      (frp/activate)
                      (run! e units)
                      true)))

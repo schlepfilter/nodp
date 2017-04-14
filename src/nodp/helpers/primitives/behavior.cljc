@@ -57,6 +57,10 @@
                     @helpers/network-state)))))
         (helpers/add-edge ma)))))
 
+(defn time*
+  []
+  (behavior* _*))
+
 (defn switcher
   [parent-behavior parent-event]
   (let [child-behavior (behavior*
@@ -87,8 +91,6 @@
                                                            network)))))))
     child-behavior))
 
-(declare time)
-
 (defn start
   []
   (reset! helpers/network-state {:active      false
@@ -97,10 +99,7 @@
                                  :input-state (helpers/get-queue helpers/funcall)
                                  :id          0
                                  :modifier    {}
-                                 :time        {:event (time/time 0)}})
-  (alter-var-root #'time
-                  (fn [_]
-                    (behavior* _))))
+                                 :time        {:event (time/time 0)}}))
 
 (def restart
   ;TODO call stop

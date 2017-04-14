@@ -5,17 +5,20 @@
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.derived.behavior :as derived-behavior]))
 
+(declare time)
+
 (def restart
-  behavior/restart)
+  (comp (fn [_]
+          (alter-var-root #'time
+                          (fn [_*]
+                            (behavior/time*))))
+        behavior/restart))
 
 (def activate
   behavior/activate)
 
 (def transduce
   event/transduce)
-
-(def time
-  behavior/time)
 
 (def switcher
   behavior/switcher)
