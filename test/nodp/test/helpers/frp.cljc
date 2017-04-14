@@ -459,6 +459,7 @@
 (clojure-test/defspec
   behavior->>=-identity
   num-tests
-  (restart-for-all [[b f] behavior->>=]
-                   (frp/activate)
-                   (= @(helpers/>>= b f) @(f @b))))
+  (restart-for-all [[outer-behavior f] behavior->>=]
+                   (let [bound-behavior (helpers/>>= outer-behavior f)]
+                     (frp/activate)
+                     (= @bound-behavior @(f @outer-behavior)))))
