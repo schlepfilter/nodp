@@ -372,6 +372,12 @@
                            (nodp.helpers/return a))
                       a)))
 
+(clojure-test/defspec
+  time-increasing
+  num-tests
+  (restart-for-all []
+                   true))
+
 (def switcher
   (gen/let [probabilities (gen/sized (comp (partial gen/vector probability 2)
                                            (partial + 2)))
