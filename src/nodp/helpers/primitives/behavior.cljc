@@ -98,8 +98,9 @@
                                  :id          0
                                  :modifier    {}
                                  :time        {:event (time/time 0)}})
-  (alter-var-root #'time (fn [_]
-                           (behavior* _))))
+  (alter-var-root #'time
+                  (fn [_]
+                    (behavior* _))))
 
 (def restart
   ;TODO call stop
