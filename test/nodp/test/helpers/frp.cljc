@@ -436,7 +436,7 @@
                    (= @switched-behavior @last-behavior)))
 
 (clojure-test/defspec
-  behavior->>=
+  behavior->>=-identity
   num-tests
   ;TODO refactor
   (restart-for-all [e event
