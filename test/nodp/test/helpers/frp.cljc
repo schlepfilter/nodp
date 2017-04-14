@@ -376,7 +376,6 @@
   time-increasing
   num-tests
   (restart-for-all [units (gen/vector (gen/return unit/unit))]
-                   (frp/restart)
                    (let [e (frp/event)
                          _ ((helpers/lift-a 2 (constantly unit/unit))
                              frp/time
