@@ -451,8 +451,9 @@
                  (gen/return (constantly (frp/stepper inner-any
                                                       fmapped-inner-event)))
                  (gen/return (constantly frp/time))])
-            input-outer-anys (gen/vector test-helpers/any-equal)
-            input-inner-anys (gen/vector test-helpers/any-equal)
+            [input-outer-anys
+             input-inner-anys]
+            (gen/vector (gen/vector test-helpers/any-equal) 2)
             calls (gen/shuffle (concat (map (fn [x]
                                               (fn []
                                                 (input-outer-event x)))
