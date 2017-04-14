@@ -200,20 +200,20 @@
                                            (partial + 2)))
             [[input-event & input-events] [outer-event & inner-events] n]
             (events-tuple probabilities)
-            input-event-as (gen/vector test-helpers/any-equal n)
+            input-event-anys (gen/vector test-helpers/any-equal n)
             xs (gen/vector gen/boolean n)
-            input-events-as (gen/vector test-helpers/any-equal
+            input-events-anys (gen/vector test-helpers/any-equal
                                         (count input-events))
             calls (gen/shuffle (concat (map (fn [boolean a]
                                               (fn []
                                                 (if boolean
                                                   (input-event a))))
                                             xs
-                                            input-event-as)
+                                            input-event-anys)
                                        (map (fn [input-event* a]
                                               (partial input-event* a))
                                             input-events
-                                            input-events-as)))]
+                                            input-events-anys)))]
            (gen/tuple
              (gen/return outer-event)
              (gen/return inner-events)
