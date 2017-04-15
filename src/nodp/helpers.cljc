@@ -340,6 +340,8 @@
                      (~(comp-entity-functions entity-name
                                               (concat [`modify-entity!]
                                                       fs
+                                                      ;set-modifier-empty can be removed.
+                                                      ;set-modifier-empty is called to avoid nil.
                                                       [`set-modifier-empty
                                                        `make-add-node]))
                        @network-state))
