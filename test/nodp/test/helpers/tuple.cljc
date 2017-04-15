@@ -1,6 +1,5 @@
 (ns nodp.test.helpers.tuple
   (:require [cats.builtin]
-            [cats.core :as m]
             [cats.monad.maybe :as maybe]
     ;clojure.test.check is required to avoid the following warning.
     ;Figwheel: Watching build - test
@@ -82,6 +81,6 @@
                       g (comp (partial tuple/tuple (last monoids))
                               g*)
                       ma (tuple/tuple (first monoids) a)]
-                  (= (m/->= ma f g)
-                     (nodp.helpers/>>= ma (comp (partial m/=<< g)
+                  (= (nodp.helpers/->= ma f g)
+                     (nodp.helpers/>>= ma (comp (partial nodp.helpers/=<< g)
                                                 f))))))

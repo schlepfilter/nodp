@@ -199,6 +199,12 @@
   (with-redefs [cats.context/infer infer]
     (apply m/>>= more)))
 
+;TODO remove this function after cats.context is fixed
+(defn =<<
+  [& more]
+  (with-redefs [cats.context/infer infer]
+    (apply m/=<< more)))
+
 ;TODO remove this macro after cats.context is fixed
 #?(:clj (defmacro lift-a
           [& more]
@@ -216,6 +222,12 @@
           [& more]
           `(with-redefs [cats.context/infer infer]
              (m/mlet ~@more))))
+
+;TODO remove this macro after cats.context is fixed
+#?(:clj (defmacro ->=
+          [& more]
+          `(with-redefs [cats.context/infer infer]
+             (m/->= ~@more))))
 
 (defn ap
   [m1 m2]

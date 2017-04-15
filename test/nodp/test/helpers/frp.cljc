@@ -33,7 +33,8 @@
 (test/use-fixtures :each fixture)
 
 (def num-tests
-  10)
+  #?(:clj  10
+     :cljs 2))
 
 (def restart
   (gen/fmap (fn [_]
