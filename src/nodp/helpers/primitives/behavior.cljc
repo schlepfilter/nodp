@@ -47,14 +47,20 @@
         child-behavior
         (helpers/set-modifier
           (fn [network]
-            (do (reset! helpers/network-state network)
-                (let [parent-behavior (->> network
-                                           (helpers/get-latest ma)
-                                           f)]
-                  (helpers/set-latest
-                    (helpers/get-latest parent-behavior @helpers/network-state)
-                    child-behavior
-                    @helpers/network-state)))))
+            (do
+              (reset! helpers/network-state network)
+              (let [parent-behavior (->> network
+                                         (helpers/get-latest ma)
+                                         f)]
+                (reset!
+                  helpers/network-state
+                  (helpers/call-functions
+                    ((:id parent-behavior) (:modifier @helpers/network-state))
+                    @helpers/network-state))
+                (helpers/set-latest
+                  (helpers/get-latest parent-behavior @helpers/network-state)
+                  child-behavior
+                  @helpers/network-state)))))
         (helpers/add-edge ma)))))
 
 (declare time)
