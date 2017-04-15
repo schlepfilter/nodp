@@ -56,6 +56,10 @@
   [b network]
   (helpers/call-functions (get-parent-ancestor-modifiers b network) network))
 
+(defn effect-swap!
+  [a f]
+  (reset! a (f @a)))
+
 (def context
   (helpers/reify-monad
     (fn [a]
@@ -70,12 +74,12 @@
                 (let [parent-behavior (->> network
                                            (helpers/get-latest ma)
                                            f)]
-                  (reset! helpers/network-state
-                          (modify-parent-ancestor! parent-behavior
-                                                   @helpers/network-state))
-                  (reset! helpers/network-state
-                          (helpers/modify-entity! parent-behavior
-                                                  @helpers/network-state))
+                  (effect-swap! helpers/network-state
+                                (partial modify-parent-ancestor!
+                                         parent-behavior))
+                  (effect-swap! helpers/network-state
+                                (partial helpers/modify-entity!
+                                         parent-behavior))
                   (helpers/set-latest
                     (helpers/get-latest parent-behavior @helpers/network-state)
                     child-behavior
