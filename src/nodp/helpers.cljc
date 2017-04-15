@@ -397,10 +397,9 @@
 
 (defn effect-swap-entity!
   [entity]
-  (effect-swap! network-state (partial modify-parent-ancestor!
-                                       entity))
-  (effect-swap! network-state (partial modify-entity!
-                                       entity)))
+  (run! (fn [f]
+          (effect-swap! network-state (partial f entity)))
+        [modify-parent-ancestor! modify-entity!]))
 
 #?(:clj
    (do (defmacro defpfmethod
