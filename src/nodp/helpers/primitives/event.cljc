@@ -219,6 +219,7 @@
                               (let [parent-event (->> network
                                                       (get-value ma)
                                                       f)]
+                                ;TODO ensure parent-event is up-to-date
                                 (helpers/call-functions
                                   ((juxt helpers/add-edge
                                          make-merge-sync
