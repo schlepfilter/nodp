@@ -332,13 +332,13 @@
   (flip (partial reduce (flip funcall))))
 
 (defcurried call-modifier
-            [e network]
-            (call-functions ((:id e) (:modifier network))
+            [entity network]
+            (call-functions ((:id entity) (:modifier network))
                             network))
 
 (defcurried set-modifier-empty
-            [e network]
-            (s/setval [:modifier (:id e)] [] network))
+            [entity network]
+            (s/setval [:modifier (:id entity)] [] network))
 
 #?(:clj (defmacro get-entity
           [entity-name constructor & fs]
