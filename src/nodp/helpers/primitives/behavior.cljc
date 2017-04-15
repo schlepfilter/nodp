@@ -57,10 +57,6 @@
                     @helpers/network-state)))))
         (helpers/add-edge ma)))))
 
-(defn time*
-  []
-  (behavior* _*))
-
 (declare time)
 
 (defn start
