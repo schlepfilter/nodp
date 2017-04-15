@@ -3,7 +3,6 @@
   (:require [cats.monad.maybe :as maybe]
             [cats.protocols :as p]
             [cats.util :as util]
-            [loom.alg :as alg]
             [loom.graph :as graph]
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.time :as time]

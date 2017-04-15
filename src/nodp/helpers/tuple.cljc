@@ -1,6 +1,5 @@
 (ns nodp.helpers.tuple
-  (:require [cats.core :as m]
-            [cats.protocols :as p]
+  (:require [cats.protocols :as p]
             [cats.util :as util]
             [nodp.helpers :as helpers]))
 

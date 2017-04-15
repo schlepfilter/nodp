@@ -1,7 +1,6 @@
 (ns nodp.helpers.derived.behavior
   (:refer-clojure :exclude [stepper])
   (:require [cats.context :as ctx]
-            [cats.core :as m]
             [nodp.helpers.primitives.behavior :as behavior]))
 
 (defn behavior

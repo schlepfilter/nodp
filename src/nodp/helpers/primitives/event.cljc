@@ -1,7 +1,6 @@
 (ns nodp.helpers.primitives.event
   (:refer-clojure :exclude [transduce])
   (:require [cats.builtin]
-            [cats.core :as m]
             [cats.monad.maybe :as maybe]
             [cats.protocols :as p]
             [cats.util :as util]
@@ -9,7 +8,6 @@
                 :cljs cljs.core.async) :as async]
             [com.rpl.specter :as s]
             [loom.alg :as alg]
-            [loom.graph :as graph]
             [nodp.helpers :as helpers]
             [nodp.helpers.time :as time]
             [nodp.helpers.tuple :as tuple])

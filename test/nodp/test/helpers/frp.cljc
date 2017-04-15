@@ -5,7 +5,6 @@
              :include-macros true]
             [clojure.test.check.generators :as gen]
             [clojure.test.check.properties :as prop :include-macros true]
-            [cats.core :as m]
             [cats.monad.maybe :as maybe]
             [cats.protocols :as p]
             [#?(:clj  clojure.core.async
