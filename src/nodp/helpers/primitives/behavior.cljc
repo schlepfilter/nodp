@@ -3,7 +3,7 @@
   (:require [cats.monad.maybe :as maybe]
             [cats.protocols :as p]
             [cats.util :as util]
-            [com.rpl.specter :as s]
+            [loom.alg :as alg]
             [loom.graph :as graph]
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.time :as time]
@@ -37,6 +37,29 @@
 
 (util/make-printable Behavior)
 
+(defn get-parent-ancestor-modifier
+  [b network]
+  (mapcat (:modifier network)
+          (alg/topsort
+            (graph/transpose
+              (graph/remove-nodes
+                (event/reachable-subgraph
+                  (graph/transpose (:behavior (:dependency network)))
+                  (:id b))
+                (:id b))))))
+
+(defn modify-parent-ancestor!
+  [b network]
+  (helpers/call-functions
+    (get-parent-ancestor-modifier b network)
+    network))
+
+(defn modify-parent!
+  [b network]
+  (helpers/call-functions
+    ((:id b) (:modifier network))
+    network))
+
 (def context
   (helpers/reify-monad
     (fn [a]
@@ -51,11 +74,12 @@
                 (let [parent-behavior (->> network
                                            (helpers/get-latest ma)
                                            f)]
-                  ;TODO ensure that parent-behavior is up-to-date
                   (reset! helpers/network-state
-                          (helpers/add-edge parent-behavior
-                                            child-behavior
-                                            @helpers/network-state))
+                          (modify-parent-ancestor! parent-behavior
+                                                   @helpers/network-state))
+                  (reset! helpers/network-state
+                          (modify-parent! parent-behavior
+                                          @helpers/network-state))
                   (helpers/set-latest
                     (helpers/get-latest parent-behavior @helpers/network-state)
                     child-behavior
