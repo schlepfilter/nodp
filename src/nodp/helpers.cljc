@@ -371,23 +371,23 @@
        (graph/subgraph g)))
 
 (defn get-ancestor-subgraph
-  [b network]
+  [entity network]
   (-> network
       :dependency
-      ((get-keyword b))
+      ((get-keyword entity))
       graph/transpose
-      (get-reachable-subgraph (:id b))
-      (graph/remove-nodes (:id b))
+      (get-reachable-subgraph (:id entity))
+      (graph/remove-nodes (:id entity))
       graph/transpose))
 
 (defn get-parent-ancestor-modifiers
-  [b network]
+  [entity network]
   (mapcat (:modifier network)
-          (alg/topsort (get-ancestor-subgraph b network))))
+          (alg/topsort (get-ancestor-subgraph entity network))))
 
 (defn modify-parent-ancestor!
-  [b network]
-  (call-functions (get-parent-ancestor-modifiers b network) network))
+  [entity network]
+  (call-functions (get-parent-ancestor-modifiers entity network) network))
 
 (defn effect-swap!
   [a f]
