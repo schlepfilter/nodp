@@ -37,29 +37,6 @@
 
 (util/make-printable Behavior)
 
-(defn get-ancestor-subgraph
-  [b network]
-  (-> network
-      :dependency
-      :behavior
-      graph/transpose
-      (event/get-reachable-subgraph (:id b))
-      (graph/remove-nodes (:id b))
-      graph/transpose))
-
-(defn get-parent-ancestor-modifiers
-  [b network]
-  (mapcat (:modifier network)
-          (alg/topsort (get-ancestor-subgraph b network))))
-
-(defn modify-parent-ancestor!
-  [b network]
-  (helpers/call-functions (get-parent-ancestor-modifiers b network) network))
-
-(defn effect-swap!
-  [a f]
-  (reset! a (f @a)))
-
 (def context
   (helpers/reify-monad
     (fn [a]
@@ -74,12 +51,7 @@
                 (let [parent-behavior (->> network
                                            (helpers/get-latest ma)
                                            f)]
-                  (effect-swap! helpers/network-state
-                                (partial modify-parent-ancestor!
-                                         parent-behavior))
-                  (effect-swap! helpers/network-state
-                                (partial helpers/modify-entity!
-                                         parent-behavior))
+                  (helpers/effect-swap-entity! parent-behavior)
                   (helpers/set-latest
                     (helpers/get-latest parent-behavior @helpers/network-state)
                     child-behavior

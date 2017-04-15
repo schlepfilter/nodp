@@ -69,17 +69,11 @@
                                 (get-behavior-modifiers network))
                           network))
 
-(defn get-reachable-subgraph
-  [g n]
-  (->> n
-       (alg/bf-traverse g)
-       (graph/subgraph g)))
-
 (defn get-event-modifiers
   [e network]
   (->> e
        :id
-       (get-reachable-subgraph (:event (:dependency network)))
+       (helpers/get-reachable-subgraph (:event (:dependency network)))
        ((make-get-modifiers* network))))
 
 (defn modify-event!
@@ -219,7 +213,7 @@
                               (let [parent-event (->> network
                                                       (get-value ma)
                                                       f)]
-                                ;TODO ensure parent-event is up-to-date
+                                (helpers/effect-swap-entity! parent-event)
                                 (helpers/call-functions
                                   ((juxt helpers/add-edge
                                          make-merge-sync

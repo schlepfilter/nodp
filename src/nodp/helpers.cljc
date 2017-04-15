@@ -10,6 +10,7 @@
             [#?(:clj  clojure.core.async
                 :cljs cljs.core.async) :as async]
             [com.rpl.specter :as s]
+            [loom.alg :as alg]
             [loom.graph :as graph]
     #?@(:clj [
             [clojure.test :as test]
@@ -331,10 +332,46 @@
 (def call-functions
   (flip (partial reduce (flip funcall))))
 
+(defn get-reachable-subgraph
+  [g n]
+  (->> n
+       (alg/bf-traverse g)
+       (graph/subgraph g)))
+
+(defn get-ancestor-subgraph
+  [b network]
+  (-> network
+      :dependency
+      ((get-keyword b))
+      graph/transpose
+      (get-reachable-subgraph (:id b))
+      (graph/remove-nodes (:id b))
+      graph/transpose))
+
+(defn get-parent-ancestor-modifiers
+  [b network]
+  (mapcat (:modifier network)
+          (alg/topsort (get-ancestor-subgraph b network))))
+
+(defn modify-parent-ancestor!
+  [b network]
+  (call-functions (get-parent-ancestor-modifiers b network) network))
+
+(defn effect-swap!
+  [a f]
+  (reset! a (f @a)))
+
 (defcurried modify-entity!
             [entity network]
             (call-functions ((:id entity) (:modifier network))
                             network))
+
+(defn effect-swap-entity!
+  [entity]
+  (effect-swap! network-state (partial modify-parent-ancestor!
+                                       entity))
+  (effect-swap! network-state (partial modify-entity!
+                                       entity)))
 
 (defcurried set-modifier-empty
             [entity network]
