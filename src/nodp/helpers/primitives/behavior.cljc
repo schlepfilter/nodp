@@ -37,7 +37,7 @@
 
 (util/make-printable Behavior)
 
-(defn get-parent-ancestor-modifier
+(defn get-parent-ancestor-modifiers
   [b network]
   (mapcat (:modifier network)
           (alg/topsort
@@ -50,7 +50,7 @@
 
 (defn modify-parent-ancestor!
   [b network]
-  (helpers/call-functions (get-parent-ancestor-modifier b network)
+  (helpers/call-functions (get-parent-ancestor-modifiers b network)
                           network))
 
 (def context
