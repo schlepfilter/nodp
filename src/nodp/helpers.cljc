@@ -331,7 +331,7 @@
 (def call-functions
   (flip (partial reduce (flip funcall))))
 
-(defcurried call-modifier
+(defcurried modify-entity!
             [entity network]
             (call-functions ((:id entity) (:modifier network))
                             network))
@@ -350,7 +350,7 @@
                                   ~constructor)]
              (reset! network-state
                      (~(comp-entity-functions entity-name
-                                              (concat [`call-modifier]
+                                              (concat [`modify-entity!]
                                                       fs
                                                       [`set-modifier-empty
                                                        `make-add-node]))

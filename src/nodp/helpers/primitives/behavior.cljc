@@ -50,15 +50,8 @@
 
 (defn modify-parent-ancestor!
   [b network]
-  (helpers/call-functions
-    (get-parent-ancestor-modifier b network)
-    network))
-
-(defn modify-parent!
-  [b network]
-  (helpers/call-functions
-    ((:id b) (:modifier network))
-    network))
+  (helpers/call-functions (get-parent-ancestor-modifier b network)
+                          network))
 
 (def context
   (helpers/reify-monad
@@ -78,8 +71,8 @@
                           (modify-parent-ancestor! parent-behavior
                                                    @helpers/network-state))
                   (reset! helpers/network-state
-                          (modify-parent! parent-behavior
-                                          @helpers/network-state))
+                          (helpers/modify-entity! parent-behavior
+                                                  @helpers/network-state))
                   (helpers/set-latest
                     (helpers/get-latest parent-behavior @helpers/network-state)
                     child-behavior

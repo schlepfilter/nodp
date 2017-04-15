@@ -12,7 +12,7 @@
   (->> (nodp.helpers/mempty)
        (ctx/with-context event/context)))
 
-(defmulti call-modifier (comp helpers/get-keyword
+(defmulti modify-entity! (comp helpers/get-keyword
                               second
                               vector))
 
@@ -23,7 +23,7 @@
                                                (fn ~bindings
                                                  ~@body)))))
 
-(defcurriedmethod call-modifier :event
+(defcurriedmethod modify-entity! :event
                   [f e network]
                   (if (event/now? e network)
                     (f (event/get-value e network))))
@@ -32,4 +32,4 @@
   (comp (partial swap! helpers/network-state)
         ((m/curry s/setval*) [:effects s/END])
         vector
-        call-modifier))
+        modify-entity!))
