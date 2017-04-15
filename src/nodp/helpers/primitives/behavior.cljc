@@ -50,13 +50,11 @@
 (defn get-parent-ancestor-modifiers
   [b network]
   (mapcat (:modifier network)
-          (alg/topsort
-            (get-ancestor-subgraph b network))))
+          (alg/topsort (get-ancestor-subgraph b network))))
 
 (defn modify-parent-ancestor!
   [b network]
-  (helpers/call-functions (get-parent-ancestor-modifiers b network)
-                          network))
+  (helpers/call-functions (get-parent-ancestor-modifiers b network) network))
 
 (def context
   (helpers/reify-monad
