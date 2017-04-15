@@ -69,7 +69,7 @@
                                 (get-behavior-modifiers network))
                           network))
 
-(defn reachable-subgraph
+(defn get-reachable-subgraph
   [g n]
   (->> n
        (alg/bf-traverse g)
@@ -79,7 +79,7 @@
   [e network]
   (->> e
        :id
-       (reachable-subgraph (:event (:dependency network)))
+       (get-reachable-subgraph (:event (:dependency network)))
        ((make-get-modifiers* network))))
 
 (defn modify-event!

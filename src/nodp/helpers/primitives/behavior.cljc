@@ -43,7 +43,7 @@
           (alg/topsort
             (graph/transpose
               (graph/remove-nodes
-                (event/reachable-subgraph
+                (event/get-reachable-subgraph
                   (graph/transpose (:behavior (:dependency network)))
                   (:id b))
                 (:id b))))))
