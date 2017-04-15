@@ -51,6 +51,7 @@
                 (let [parent-behavior (->> network
                                            (helpers/get-latest ma)
                                            f)]
+                  ;TODO refactor
                   (reset! helpers/network-state
                           (helpers/add-edge parent-behavior
                                             child-behavior
