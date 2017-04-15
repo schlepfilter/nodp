@@ -310,6 +310,41 @@
          (comp (flip graph/add-nodes)
                :id)))
 
+(defn comp-entity-functions
+  [entity-name fs]
+  (cons `comp
+        (map (partial (flip list) entity-name)
+             fs)))
+
+(def call-functions
+  (flip (partial reduce (flip funcall))))
+
+(defcurried modify-entity!
+            [entity network]
+            (call-functions ((:id entity) (:modifier network))
+                            network))
+
+(defcurried set-modifier-empty
+            [entity network]
+            (s/setval [:modifier (:id entity)] [] network))
+
+#?(:clj (defmacro get-entity
+          [entity-name constructor & fs]
+          `(let [~entity-name (-> network-state
+                                  (swap! (partial s/transform* :id inc))
+                                  :id
+                                  str
+                                  keyword
+                                  ~constructor)]
+             (reset! network-state
+                     (~(comp-entity-functions entity-name
+                                              (concat [`modify-entity!]
+                                                      fs
+                                                      [`set-modifier-empty
+                                                       `make-add-node]))
+                       @network-state))
+             ~entity-name)))
+
 (defcurried add-edge
             [parent child network]
             (s/transform
@@ -323,14 +358,11 @@
                       [f]
                       network))
 
-(defn comp-entity-functions
-  [entity-name fs]
-  (cons `comp
-        (map (partial (flip list) entity-name)
-             fs)))
-
-(def call-functions
-  (flip (partial reduce (flip funcall))))
+(defcurried set-latest
+            ;The order of a and entity is consistent with the parameters of primitives.
+            ;entity stands for an event or behavior.
+            [a entity network]
+            (s/setval [:latest (:id entity)] a network))
 
 (defn get-reachable-subgraph
   [g n]
@@ -361,44 +393,12 @@
   [a f]
   (reset! a (f @a)))
 
-(defcurried modify-entity!
-            [entity network]
-            (call-functions ((:id entity) (:modifier network))
-                            network))
-
 (defn effect-swap-entity!
   [entity]
   (effect-swap! network-state (partial modify-parent-ancestor!
                                        entity))
   (effect-swap! network-state (partial modify-entity!
                                        entity)))
-
-(defcurried set-modifier-empty
-            [entity network]
-            (s/setval [:modifier (:id entity)] [] network))
-
-#?(:clj (defmacro get-entity
-          [entity-name constructor & fs]
-          `(let [~entity-name (-> network-state
-                                  (swap! (partial s/transform* :id inc))
-                                  :id
-                                  str
-                                  keyword
-                                  ~constructor)]
-             (reset! network-state
-                     (~(comp-entity-functions entity-name
-                                              (concat [`modify-entity!]
-                                                      fs
-                                                      [`set-modifier-empty
-                                                       `make-add-node]))
-                       @network-state))
-             ~entity-name)))
-
-(defcurried set-latest
-            ;The order of a and entity is consistent with the parameters of primitives.
-            ;entity stands for an event or behavior.
-            [a entity network]
-            (s/setval [:latest (:id entity)] a network))
 
 #?(:clj
    (do (defmacro defpfmethod
