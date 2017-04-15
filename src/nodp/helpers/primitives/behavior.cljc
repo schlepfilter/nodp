@@ -39,12 +39,13 @@
 
 (defn get-ancestor-subgraph
   [b network]
-  (graph/transpose
-    (graph/remove-nodes
-      (event/get-reachable-subgraph
-        (graph/transpose (:behavior (:dependency network)))
-        (:id b))
-      (:id b))))
+  (-> network
+      :dependency
+      :behavior
+      graph/transpose
+      (event/get-reachable-subgraph (:id b))
+      (graph/remove-nodes (:id b))
+      graph/transpose))
 
 (defn get-parent-ancestor-modifiers
   [b network]
