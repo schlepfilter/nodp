@@ -37,16 +37,20 @@
 
 (util/make-printable Behavior)
 
+(defn get-ancestor-subgraph
+  [b network]
+  (graph/transpose
+    (graph/remove-nodes
+      (event/get-reachable-subgraph
+        (graph/transpose (:behavior (:dependency network)))
+        (:id b))
+      (:id b))))
+
 (defn get-parent-ancestor-modifiers
   [b network]
   (mapcat (:modifier network)
           (alg/topsort
-            (graph/transpose
-              (graph/remove-nodes
-                (event/get-reachable-subgraph
-                  (graph/transpose (:behavior (:dependency network)))
-                  (:id b))
-                (:id b))))))
+            (get-ancestor-subgraph b network))))
 
 (defn modify-parent-ancestor!
   [b network]
