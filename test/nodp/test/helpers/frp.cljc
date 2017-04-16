@@ -456,24 +456,24 @@
                  (gen/return (constantly (frp/stepper inner-any
                                                       fmapped-inner-event)))
                  (gen/return (constantly frp/time))])
-            [input-outer-boolean-anys
-             input-inner-boolean-anys]
-            (gen/vector (gen/vector (gen/tuple gen/boolean
-                                               test-helpers/any-equal))
-                        2)
-            calls (gen/shuffle (concat (map (fn [[boolean a]]
+            [input-outer-anys input-inner-anys]
+            (gen/vector (gen/vector test-helpers/any-equal) 2)
+            calls (gen/shuffle (concat (map (fn [a]
                                               (fn []
-                                                (if boolean
-                                                  (input-outer-event a))))
-                                            input-outer-boolean-anys)
-                                       (map (fn [[boolean a]]
+                                                (input-outer-event a)))
+                                            input-outer-anys)
+                                       (map (fn [a]
                                               (fn []
-                                                (if boolean
-                                                  (input-inner-event a))))
-                                            input-inner-boolean-anys)))]
+                                                (input-inner-event a)))
+                                            input-inner-anys)))
+            invocations (gen/vector gen/boolean (count calls))]
            (gen/tuple (gen/return outer-behavior)
                       (gen/return f)
-                      (gen/return (partial run! helpers/funcall calls)))))
+                      (gen/return (partial doall (map (fn [invocation call]
+                                                        (if invocation
+                                                          (call)))
+                                                      invocations
+                                                      calls))))))
 
 (clojure-test/defspec
   behavior->>=-identity
