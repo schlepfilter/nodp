@@ -200,29 +200,28 @@
                                            (partial + 2)))
             [[input-event & input-events] [outer-event & inner-events] n]
             (events-tuple probabilities)
-            input-event-boolean-anys (gen/vector
-                                       (gen/tuple gen/boolean
-                                                  test-helpers/any-equal)
-                                       n)
-            input-events-boolean-anys (gen/vector
-                                        (gen/tuple gen/boolean
-                                                   test-helpers/any-equal)
-                                        (count input-events))
-            calls (gen/shuffle (concat (map (fn [[boolean a]]
+            input-event-anys (gen/vector test-helpers/any-equal
+                                         n)
+            input-events-anys (gen/vector test-helpers/any-equal
+                                          (count input-events))
+            calls (gen/shuffle (concat (map (fn [a]
                                               (fn []
-                                                (if boolean
-                                                  (input-event a))))
-                                            input-event-boolean-anys)
-                                       (map (fn [[boolean a] input-event*]
+                                                (input-event a)))
+                                            input-event-anys)
+                                       (map (fn [a input-event*]
                                               (fn []
-                                                (if boolean
-                                                  (input-event* a))))
-                                            input-events-boolean-anys
-                                            input-events)))]
+                                                (input-event* a)))
+                                            input-events-anys
+                                            input-events)))
+            invocations (gen/vector gen/boolean (count calls))]
            (gen/tuple
              (gen/return outer-event)
              (gen/return inner-events)
-             (gen/return (partial run! helpers/funcall (drop-last calls)))
+             (gen/return (partial doall (map (fn [invocation call]
+                                               (if invocation
+                                                 (call)))
+                                             invocations
+                                             (drop-last calls))))
              (gen/return (last calls)))))
 
 (defn get-earliest
