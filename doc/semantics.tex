@@ -10,7 +10,7 @@
   \textbf{type}\ E_a = [(\hat{T}, a)]\quad\text{-- for strictly increasing times}
 \end{align*}
 \begin{align*}
-  >>= :: E_a \rightarrow f \rightarrow E_a
+  >>= :: Event\ a \rightarrow f \rightarrow Event\ a
 \end{align*}
 \begin{align*}
   occs\ (>>= e\ f) = foldr\ merge\ []\circ map\ delayOccs\circ map\ (\lambda(\hat{t}_a, a) \rightarrow (\hat{t}_a , f\ a))\ (occs\ e)
@@ -33,14 +33,14 @@
   |\any{keep-indexed}{m}{n}
 \end{align*}
 \begin{align*}
-  transduce :: Xform \rightarrow (a \rightarrow b \rightarrow a) \rightarrow a \rightarrow E_b \rightarrow E_a
+  transduce :: Xform \rightarrow (a \rightarrow b \rightarrow a) \rightarrow a \rightarrow Event\ b \rightarrow Event\ a
 \end{align*}
 \begin{align*}
   &occs\ (transduce\ xform\ f\ a\ e)\\
   &\quad= scanl\ (liftA2\ f)\ a\ (mapMaybe\ (unreduced\ .\ (xform\ (\lambda\_\ x\rightarrow just\ x))\ nothing)\ (occs\ e))
 \end{align*}
 \begin{align*}
-  >>= :: B_a \rightarrow f \rightarrow B_a
+  >>= :: Behavior\ a \rightarrow f \rightarrow Behavior\ b
 \end{align*}
 \begin{align*}
   at\ (>>= b\ f) =\lambda t \rightarrow f\ (b\ `at` \ t)\ `at` \ t
