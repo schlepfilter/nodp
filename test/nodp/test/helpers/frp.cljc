@@ -389,6 +389,7 @@
                        (<= @t @@frp/time)))))
 
 (def switcher
+  ;TODO refactor
   (gen/let [probabilities (gen/sized (comp (partial gen/vector probability 3)
                                            (partial + 3)))
             [[input-event & input-events]
