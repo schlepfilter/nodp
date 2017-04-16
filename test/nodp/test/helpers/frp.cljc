@@ -338,7 +338,10 @@
                       [map map-indexed partition-by]))))
 
 (def xform
-  (gen/fmap (partial apply comp) (gen/not-empty (gen/vector xform*))))
+  (->> xform*
+       gen/vector
+       gen/not-empty
+       (gen/fmap (partial apply comp))))
 
 (clojure-test/defspec
   transduce-identity
