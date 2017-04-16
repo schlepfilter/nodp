@@ -214,15 +214,14 @@
                                             input-events-anys
                                             input-events)))
             invocations (gen/vector gen/boolean (count calls))]
-           (gen/tuple
-             (gen/return outer-event)
-             (gen/return inner-events)
-             (gen/return (partial doall (map (fn [invocation call]
-                                               (if invocation
-                                                 (call)))
-                                             invocations
-                                             (drop-last calls))))
-             (gen/return (last calls)))))
+           (gen/tuple (gen/return outer-event)
+                      (gen/return inner-events)
+                      (gen/return (partial doall (map (fn [invocation call]
+                                                        (if invocation
+                                                          (call)))
+                                                      invocations
+                                                      (drop-last calls))))
+                      (gen/return (last calls)))))
 
 (defn get-earliest
   [e]
