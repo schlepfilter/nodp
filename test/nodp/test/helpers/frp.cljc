@@ -389,53 +389,67 @@
                        (<= @t @@frp/time)))))
 
 (def switcher
-  (gen/let [probabilities (gen/sized (comp (partial gen/vector probability 2)
-                                           (partial + 2)))
-            [input-events fmapped-events] (events-tuple probabilities)
-            as (->> input-events
-                    count
-                    (gen/vector test-helpers/any-equal))
-            ;TODO randomly create each behavior either by using time or stepper
-            [first-behavior
-             return-behavior
-             & switched-behaviors
-             :as all-behaviors] (gen/return (doall (map frp/stepper
-                                                        as
-                                                        fmapped-events)))
-            ;TODO randomize the simultaneity of input-events and switching-event
-            switching-event (gen/one-of
-                              [(gen/return (frp/event))
-                               (gen/return
-                                 (helpers/pure
-                                   (helpers/infer (frp/event))
-                                   return-behavior))])
-            ;TODO randomize the number of times each input-event is called
-            input-event-calls (gen/shuffle (map (fn [input-event]
-                                                  (fn []
-                                                    (input-event unit/unit)))
-                                                input-events))
-            ;TODO randomize the order of calling input-events and calling switching-event without changing the order of switched-behaviors with which to call switching-event
-            calls (gen/return
-                    (concat input-event-calls
-                            (map (fn [switched-behavior]
-                                   (fn []
-                                     (switching-event switched-behavior)))
-                                 switched-behaviors)))]
-           (gen/tuple (gen/return (fn []
-                                    (run! helpers/funcall calls)))
-                      (gen/return (frp/switcher first-behavior switching-event))
-                      (gen/return (last (if (maybe/just? @switching-event)
-                                          all-behaviors
-                                          (cons first-behavior
-                                                switched-behaviors)))))))
+  (gen/let [probabilities (gen/sized (comp (partial gen/vector probability 3)
+                                           (partial + 3)))
+            [[input-event & input-events]
+             [fmapped-switching-event fmapped-outer-event & fmapped-inner-events]
+             n]
+            (events-tuple probabilities)
+            [stepper-outer-any input-outer-any]
+            (gen/vector test-helpers/any-equal 2)
+            outer-behavior
+            (gen/one-of [(gen/return (frp/stepper stepper-outer-any
+                                                  fmapped-outer-event))
+                         (gen/return frp/time)])
+            stepper-inner-anys (gen/vector test-helpers/any-equal
+                                           (count fmapped-inner-events))
+            steps (gen/vector gen/boolean (count fmapped-inner-events))
+            inner-behaviors
+            (gen/return
+              (doall
+                (map (fn [step stepping-inner-any fmapped-inner-event]
+                       (if step
+                         (frp/stepper stepping-inner-any
+                                      fmapped-inner-event)
+                         frp/time))
+                     steps
+                     stepper-inner-anys
+                     fmapped-inner-events)))
+            switching-event
+            (gen/return (helpers/<$>
+                          (make-iterate inner-behaviors)
+                          fmapped-switching-event))
+            input-event-anys (gen/vector test-helpers/any-equal
+                                         n)
+            input-events-anys (gen/vector test-helpers/any-equal
+                                          (count input-events))
+            calls (gen/shuffle (concat (map (fn [a]
+                                              (fn []
+                                                (input-event a)))
+                                            input-event-anys)
+                                       (map (fn [a input-event*]
+                                              (fn []
+                                                (input-event* a)))
+                                            input-events-anys
+                                            input-events)))
+            invocations (gen/vector gen/boolean (count calls))]
+           (gen/tuple (gen/return outer-behavior)
+                      (gen/return switching-event)
+                      (gen/return (frp/switcher outer-behavior
+                                                switching-event))
+                      (gen/return (partial doall (map (fn [invocation call]
+                                                        (if invocation
+                                                          (call)))
+                                                      invocations
+                                                      (drop-last calls)))))))
 
 (clojure-test/defspec
-  switcher-last
+  switcher-identity
   num-tests
-  (restart-for-all [[call switched-behavior last-behavior] switcher]
-                   (frp/activate)
-                   (call)
-                   (= @switched-behavior @last-behavior)))
+  (restart-for-all [[outer-behavior e switched-behavior call] (gen/no-shrink switcher)]
+                   (if (maybe/nothing? @e)
+                     (= @switched-behavior @outer-behavior)
+                     (= @switched-behavior @(tuple/snd @@e)))))
 
 (def behavior->>=
   ;TODO refactor
