@@ -27,6 +27,7 @@
                              (+ (* (+ current-latest past-latest)
                                    (- @current-time @past-time))
                                 integration)
+                             ;TODO handle the case in which (< @lower-limit @current-time)
                              :else integration))
                      t
                      b))

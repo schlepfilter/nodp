@@ -503,6 +503,7 @@
 
 (def calculus
   (gen/let [e event]
+           ;TODO generate a stepped behavior
            (gen/one-of [(gen/return (helpers/<$> deref frp/time))])))
 
 (clojure-test/defspec
@@ -521,6 +522,7 @@
   (restart-for-all [original-behavior calculus]
                    (let [derivative-behavior
                          (->> original-behavior
+                              ;TODO test cases in which time passed to integral is greater than 0
                               (frp/integral (time/time 0))
                               frp/derivative)]
                      (frp/activate)
