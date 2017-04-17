@@ -137,8 +137,10 @@
                  (fn [network]
                    ;TODO handle the case t is between past-behavior's time and current time
                    (cond
-                     (= @(helpers/get-latest time network)
-                        @t)
+                     (maybe/maybe false
+                                  t
+                                  (comp (partial = @(helpers/get-latest time network))
+                                        deref))
                      (helpers/set-latest
                        (maybe/just 0)
                        integration-behavior*
@@ -150,7 +152,7 @@
                           (tuple/snd (helpers/get-latest past-behavior network))
                           (helpers/get-latest time network)
                           (get-time past-behavior network)
-                          t
+                          @t
                           (helpers/get-latest integration-behavior* network))
                        integration-behavior*
                        network)
