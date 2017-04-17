@@ -136,6 +136,7 @@
                (helpers/set-modifier
                  (fn [network]
                    ;TODO set integration to 0 when the time is t
+                   ;TODO handle the case t is between past-behavior's time and current time
                    (if (< @(get-time past-behavior network)
                           @(helpers/get-latest time network))
                      (helpers/set-latest
