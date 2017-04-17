@@ -13,3 +13,9 @@
   [a e]
   (behavior/switcher (behavior a)
                      (nodp.helpers/<$> behavior e)))
+
+(defn integral
+  [t b])
+
+(defn derivative
+  [b])

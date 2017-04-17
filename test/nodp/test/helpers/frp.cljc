@@ -500,3 +500,15 @@
                      (frp/activate)
                      (call)
                      (= @bound-behavior @(get-behavior @outer-behavior)))))
+
+(clojure-test/defspec
+  fundamental-theorem
+  num-tests
+  (restart-for-all [original-behavior (gen/one-of [(gen/return frp/time)])]
+                   (let [derivative-behavior
+                         (->> original-behavior
+                              (frp/integral
+                                (time/time Double/POSITIVE_INFINITY))
+                              frp/derivative)]
+                     (frp/activate)
+                     true)))

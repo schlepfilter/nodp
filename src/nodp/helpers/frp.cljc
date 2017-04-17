@@ -28,6 +28,12 @@
 (def stepper
   derived-behavior/stepper)
 
+(def integral
+  derived-behavior/integral)
+
+(def derivative
+  derived-behavior/derivative)
+
 (def event
   io/event)
 
