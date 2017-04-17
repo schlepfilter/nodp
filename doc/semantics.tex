@@ -1,4 +1,5 @@
 \documentclass[fleqn]{amsart}
+\usepackage[margin={0.5in}]{geometry}
 \newcommand{\zeroarity}[1]{&\ \textit{#1*}\quad\text{-- where }\textit{#1*}\text{ is }(#1)}
 \newcommand{\positive}[1]{&\ \textit{#1}\ Int\quad\text{-- where }Int\text{ is positive}}
 \newcommand{\integer}[1]{&\ #1\ Int}
@@ -44,5 +45,13 @@
 \end{align*}
 \begin{align*}
   at\ (>>= b\ f) =\lambda t \rightarrow f\ (b\ `at` \ t)\ `at` \ t
+\end{align*}
+\begin{align*}
+  calculus :: Real\ a\Rightarrow (a \rightarrow a \rightarrow Time \rightarrow Time \rightarrow Time \rightarrow a \rightarrow a) \rightarrow Time \rightarrow Behavior\ a\rightarrow Behavior\ a
+\end{align*}
+\begin{align*}
+  \forall\epsilon\exists\delta\forall t(&\epsilon > 0\\
+  \wedge& t > 0\\
+  \wedge& (0 < t - a < \delta \implies(at\ (calculus\ f\ \hat{t}\ b))\ t - f\ ((at\ b)\ t)\ ((at\ b)\ (t - a))\ t\ (t - a)\ \hat{t}\ (at\ (calculus\ f \ \hat{t}\ b))))
 \end{align*}
 \end{document}
