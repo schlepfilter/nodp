@@ -529,4 +529,4 @@
                                              (maybe/maybe 0 x identity)))
                               frp/derivative)]
                      (frp/activate)
-                     (= @original-behavior @derivative-behavior))))
+                     (= @original-behavior @@derivative-behavior))))

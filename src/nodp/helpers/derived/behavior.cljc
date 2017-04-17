@@ -38,7 +38,7 @@
 (defn derivative
   [b]
   (behavior/calculus (fn [current-latest past-latest current-time past-time & _]
-                       (/ (- current-latest past-latest)
-                          (- @current-time @past-time)))
+                       (maybe/just (/ (- current-latest past-latest)
+                                      (- @current-time @past-time))))
                      (time/time 0)
                      b))
