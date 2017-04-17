@@ -15,7 +15,20 @@
                      (nodp.helpers/<$> behavior e)))
 
 (defn integral
-  [t b])
+  [t b]
+  (behavior/calculus (fn [current-latest
+                          past-latest
+                          current-time
+                          past-time
+                          lower-limit
+                          integration]
+                       (cond (<= @lower-limit @past-time)
+                             (+ (* (+ current-latest past-latest)
+                                   (- @current-time @past-time))
+                                integration)
+                             :else integration))
+                     t
+                     b))
 
 (defn derivative
   [b])

@@ -111,3 +111,37 @@
                                          (helpers/add-edge child-behavior
                                                            network)))))))
     child-behavior))
+
+(defn calculus
+  [f t current-behavior]
+  (let [past-behavior
+        (behavior* past-behavior*
+                   (helpers/set-modifier
+                     (fn [network]
+                       (helpers/set-latest
+                         (tuple/tuple (helpers/get-latest time network)
+                                      (helpers/get-latest current-behavior
+                                                          network))
+                         past-behavior*
+                         network)))
+                   (helpers/set-latest (tuple/tuple (time/time 0) 0)))]
+    (behavior* integration-behavior*
+               (helpers/set-modifier
+                 (fn [network]
+                   (helpers/set-latest
+                     (f (helpers/get-latest current-behavior network)
+                        (tuple/snd (helpers/get-latest past-behavior network))
+                        (helpers/get-latest time network)
+                        (->> network
+                             (helpers/get-latest past-behavior)
+                             tuple/fst)
+                        t
+                        (helpers/get-latest integration-behavior* network))
+                     current-behavior
+                     network)))
+               (helpers/set-latest 0)
+               (helpers/add-edge current-behavior)
+               (helpers/curry (fn [integration-behavior** network]
+                                (helpers/add-edge integration-behavior**
+                                                  past-behavior
+                                                  network))))))

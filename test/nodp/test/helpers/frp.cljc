@@ -501,23 +501,27 @@
                      (call)
                      (= @bound-behavior @(get-behavior @outer-behavior)))))
 
+(def calculus
+  (gen/let [e event]
+           (gen/one-of [(gen/return (helpers/<$> deref frp/time))])))
+
 (clojure-test/defspec
   integral-zero
   num-tests
-  (restart-for-all [original-behavior (gen/one-of [(gen/return frp/time)])]
-                   (let [integral-behavior (frp/integral (time/time 0)
-                                                         original-behavior)]
-                     (frp/activate)
-                     true)))
+  (restart-for-all
+    [original-behavior calculus]
+    (let [integral-behavior (frp/integral (time/time Double/POSITIVE_INFINITY)
+                                          original-behavior)]
+      (frp/activate)
+      (= @integral-behavior 0))))
 
 (clojure-test/defspec
   fundamental-theorem
   num-tests
-  (restart-for-all [original-behavior (gen/one-of [(gen/return frp/time)])]
+  (restart-for-all [original-behavior calculus]
                    (let [derivative-behavior
                          (->> original-behavior
-                              (frp/integral
-                                (time/time Double/POSITIVE_INFINITY))
+                              (frp/integral (time/time 0))
                               frp/derivative)]
                      (frp/activate)
                      true)))
