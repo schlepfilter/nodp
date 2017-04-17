@@ -502,6 +502,15 @@
                      (= @bound-behavior @(get-behavior @outer-behavior)))))
 
 (clojure-test/defspec
+  integral-zero
+  num-tests
+  (restart-for-all [original-behavior (gen/one-of [(gen/return frp/time)])]
+                   (let [integral-behavior (frp/integral (time/time 0)
+                                                         original-behavior)]
+                     (frp/activate)
+                     true)))
+
+(clojure-test/defspec
   fundamental-theorem
   num-tests
   (restart-for-all [original-behavior (gen/one-of [(gen/return frp/time)])]
