@@ -118,6 +118,8 @@
 
 (defn calculus
   [f t current-behavior]
+  ;TODO refactor
+  ;TODO allow current-behavior's latest to be maybe
   (let [past-behavior
         (behavior* past-behavior*
                    (helpers/set-modifier
@@ -133,6 +135,7 @@
     (behavior* integration-behavior*
                (helpers/set-modifier
                  (fn [network]
+                   ;TODO set integration to 0 when the time is t
                    (if (< @(get-time past-behavior network)
                           @(helpers/get-latest time network))
                      (helpers/set-latest

@@ -525,6 +525,7 @@
                          (->> original-behavior
                               ;TODO test cases in which time passed to integral is greater than 0
                               (frp/integral (time/time 0))
+                              ;TODO don't call <$>
                               (helpers/<$> (fn [x]
                                              (maybe/maybe 0 x identity)))
                               frp/derivative)]
