@@ -147,7 +147,7 @@
                      network)))
                (helpers/set-latest helpers/nothing)
                (helpers/add-edge current-behavior)
-               (helpers/curry (fn [integration-behavior** network]
-                                (helpers/add-edge integration-behavior**
-                                                  past-behavior
-                                                  network))))))
+               (helpers/curry 2 (fn [integration-behavior** network]
+                                  (helpers/add-edge integration-behavior**
+                                                    past-behavior
+                                                    network))))))
