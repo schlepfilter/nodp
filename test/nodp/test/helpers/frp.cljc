@@ -508,14 +508,14 @@
            (gen/one-of [(gen/return (helpers/<$> deref frp/time))])))
 
 (clojure-test/defspec
-  integral-zero
+  integral-nothing
   num-tests
   (restart-for-all
     [original-behavior calculus]
     (let [integral-behavior (frp/integral (time/time Double/POSITIVE_INFINITY)
                                           original-behavior)]
       (frp/activate)
-      (= @integral-behavior 0))))
+      (= @integral-behavior helpers/nothing))))
 
 (clojure-test/defspec
   fundamental-theorem
@@ -525,6 +525,8 @@
                          (->> original-behavior
                               ;TODO test cases in which time passed to integral is greater than 0
                               (frp/integral (time/time 0))
+                              (helpers/<$> (fn [x]
+                                             (maybe/maybe 0 x identity)))
                               frp/derivative)]
                      (frp/activate)
                      (= @original-behavior @derivative-behavior))))

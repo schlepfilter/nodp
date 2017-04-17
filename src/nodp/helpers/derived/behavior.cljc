@@ -1,6 +1,7 @@
 (ns nodp.helpers.derived.behavior
   (:refer-clojure :exclude [stepper])
   (:require [cats.context :as ctx]
+            [cats.monad.maybe :as maybe]
             [nodp.helpers.time :as time]
             [nodp.helpers.primitives.behavior :as behavior]))
 
@@ -24,9 +25,11 @@
                           lower-limit
                           integration]
                        (cond (<= @lower-limit @past-time)
-                             (+ (* (+ current-latest past-latest)
-                                   (- @current-time @past-time))
-                                integration)
+                             (maybe/just (+ (* (+ current-latest past-latest)
+                                               (- @current-time @past-time))
+                                            (maybe/maybe 0
+                                                         integration
+                                                         identity)))
                              ;TODO handle the case in which (< @lower-limit @current-time)
                              :else integration))
                      t

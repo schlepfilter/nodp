@@ -128,7 +128,8 @@
                                                           network))
                          past-behavior*
                          network)))
-                   (helpers/set-latest (tuple/tuple (time/time 0) 0)))]
+                   (helpers/set-latest (tuple/tuple (time/time 0)
+                                                    helpers/nothing)))]
     (behavior* integration-behavior*
                (helpers/set-modifier
                  (fn [network]
@@ -144,7 +145,7 @@
                        integration-behavior*
                        network)
                      network)))
-               (helpers/set-latest 0)
+               (helpers/set-latest helpers/nothing)
                (helpers/add-edge current-behavior)
                (helpers/curry (fn [integration-behavior** network]
                                 (helpers/add-edge integration-behavior**
