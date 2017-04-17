@@ -135,10 +135,16 @@
     (behavior* integration-behavior*
                (helpers/set-modifier
                  (fn [network]
-                   ;TODO set integration to 0 when the time is t
                    ;TODO handle the case t is between past-behavior's time and current time
-                   (if (< @(get-time past-behavior network)
-                          @(helpers/get-latest time network))
+                   (cond
+                     (= @(helpers/get-latest time network)
+                        @t)
+                     (helpers/set-latest
+                       (maybe/just 0)
+                       integration-behavior*
+                       network)
+                     (< @(get-time past-behavior network)
+                        @(helpers/get-latest time network))
                      (helpers/set-latest
                        (f (helpers/get-latest current-behavior network)
                           (tuple/snd (helpers/get-latest past-behavior network))
@@ -148,7 +154,7 @@
                           (helpers/get-latest integration-behavior* network))
                        integration-behavior*
                        network)
-                     network)))
+                     :else network)))
                (helpers/set-latest helpers/nothing)
                (helpers/add-edge current-behavior)
                (helpers/curry 2 (fn [integration-behavior** network]
