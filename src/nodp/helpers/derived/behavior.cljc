@@ -1,6 +1,7 @@
 (ns nodp.helpers.derived.behavior
   (:refer-clojure :exclude [stepper])
   (:require [cats.context :as ctx]
+            [nodp.helpers.time :as time]
             [nodp.helpers.primitives.behavior :as behavior]))
 
 (defn behavior
@@ -31,4 +32,9 @@
                      b))
 
 (defn derivative
-  [b])
+  [b]
+  (behavior/calculus (fn [current-latest past-latest current-time past-time & _]
+                       (/ (- current-latest past-latest)
+                          (- @current-time @past-time)))
+                     (time/time 0)
+                     b))

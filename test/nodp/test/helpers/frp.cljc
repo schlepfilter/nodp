@@ -524,4 +524,4 @@
                               (frp/integral (time/time 0))
                               frp/derivative)]
                      (frp/activate)
-                     true)))
+                     (= @original-behavior @derivative-behavior))))
