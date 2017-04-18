@@ -1,7 +1,35 @@
 (ns nodp.test.helpers
   (:require [clojure.test.check.generators :as gen]
             [clojure.test.check.random :as random]
-            [clojure.test.check.rose-tree :as rose]))
+            [clojure.test.check.rose-tree :as rose]
+            [clojure.test.check.properties :as prop]
+            [nodp.helpers.unit :as unit]
+            [nodp.helpers.frp :as frp]
+            [nodp.helpers :as helpers]
+            [nodp.helpers.primitives.event :as event]
+            ))
+
+(defn fixture
+  [f]
+  (reset! helpers/network-state nil)
+  (with-redefs [event/queue helpers/funcall]
+    (f)))
+
+(def num-tests
+  #?(:clj  10
+     :cljs 2))
+
+(def restart
+  (gen/fmap (fn [_]
+              (frp/restart))
+            (gen/return unit/unit)))
+
+#?(:clj (defmacro restart-for-all
+          [bindings & body]
+          ;TODO generate times and redefine get-new-time
+          `(prop/for-all ~(concat `[_# restart]
+                                  bindings)
+                         ~@body)))
 
 (defn generate
   ([generator {:keys [seed size]

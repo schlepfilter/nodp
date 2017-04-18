@@ -1,72 +1,43 @@
 (ns nodp.test.helpers.primitives.event
-  (:require [clojure.test.check]
+  (:require [cats.monad.maybe :as maybe]
+            [clojure.test.check]
             [clojure.test.check.clojure-test
              :as clojure-test
              :include-macros true]
             [clojure.test.check.generators :as gen]
             [clojure.test.check.properties :as prop :include-macros true]
-            [cats.monad.maybe :as maybe]
-            [cats.protocols :as p]
             [#?(:clj  clojure.core.async
                 :cljs cljs.core.async) :as async]
             [#?(:clj  clojure.test
                 :cljs cljs.test) :as test :include-macros true]
             [nodp.helpers :as helpers]
-            [nodp.helpers.frp :as frp]
             [nodp.helpers.primitives.event :as event]
+            [nodp.helpers.frp :as frp]
             [nodp.helpers.time :as time]
             [nodp.helpers.tuple :as tuple]
             [nodp.helpers.unit :as unit]
-            [nodp.test.helpers :as test-helpers]
-    #?(:clj
-            [riddley.walk :as walk]))
-  #?(:cljs (:require-macros
-             [nodp.test.helpers.primitives.event :refer [restart-for-all
-                                                         with-exit
-                                                         with-exitv]])))
+            [nodp.test.helpers :as test-helpers :include-macros true]))
 
 ;TODO split tests into multiple namespaces
 
-(defn fixture
-  [f]
-  (reset! helpers/network-state nil)
-  (with-redefs [event/queue helpers/funcall]
-    (f)))
-
-(test/use-fixtures :each fixture)
-
-(def num-tests
-  #?(:clj  10
-     :cljs 2))
-
-(def restart
-  (gen/fmap (fn [_]
-              (frp/restart))
-            (gen/return unit/unit)))
-
-#?(:clj (defmacro restart-for-all
-          [bindings & body]
-          ;TODO generate times and redefine get-new-time
-          `(prop/for-all ~(concat `[_# restart]
-                                  bindings)
-                         ~@body)))
+(test/use-fixtures :each test-helpers/fixture)
 
 (clojure-test/defspec
   call-inactive
-  num-tests
-  (restart-for-all [as (gen/vector test-helpers/any-equal)]
-                   (let [e (frp/event)]
-                     (run! e as)
-                     (maybe/nothing? @e))))
+  test-helpers/num-tests
+  (test-helpers/restart-for-all [as (gen/vector test-helpers/any-equal)]
+                                (let [e (frp/event)]
+                                  (run! e as)
+                                  (maybe/nothing? @e))))
 
 (clojure-test/defspec
   call-active
-  num-tests
-  (restart-for-all [as (gen/vector test-helpers/any-equal)]
-                   (let [e (frp/event)]
-                     (frp/activate)
-                     (run! e as)
-                     (= (tuple/snd @@e) (last as)))))
+  test-helpers/num-tests
+  (test-helpers/restart-for-all [as (gen/vector test-helpers/any-equal)]
+                                (let [e (frp/event)]
+                                  (frp/activate)
+                                  (run! e as)
+                                  (= (tuple/snd @@e) (last as)))))
 
 (def probability
   (gen/double* {:max  1
@@ -75,72 +46,14 @@
 
 (clojure-test/defspec
   event-return
-  num-tests
-  (restart-for-all [a test-helpers/any-equal]
-                   (= @@(-> (frp/event)
-                            helpers/infer
-                            (nodp.helpers/return a))
-                      (-> 0
-                          time/time
-                          (tuple/tuple a)))))
-
-#?(:clj (defmacro with-exit
-          [exit-name & body]
-          (potemkin/unify-gensyms
-            `(let [exit-state## (atom helpers/nothing)]
-               ~(walk/walk-exprs
-                  (partial = exit-name)
-                  (fn [_#]
-                    `(comp (partial reset! exit-state##)
-                           maybe/just))
-                  (cons `do body))
-               @@exit-state##))))
-
-(clojure-test/defspec
-  with-exit-identity
-  num-tests
-  (prop/for-all [a test-helpers/any-equal
-                 b test-helpers/any-equal]
-                (= (with-exit exit
-                              (exit a)
-                              b)
-                   a)))
-
-#?(:clj (defmacro with-exitv
-          [exit-name & body]
-          (potemkin/unify-gensyms
-            `(let [exits-state## (atom [])]
-               ~(walk/walk-exprs
-                  (partial = exit-name)
-                  (fn [_#]
-                    `(comp (partial swap! exits-state##)
-                           (helpers/curry 2 (helpers/flip conj))))
-                  (cons `do body))
-               @exits-state##))))
-
-(clojure-test/defspec
-  with-exitv-identity
-  num-tests
-  (prop/for-all [as (gen/vector test-helpers/any-equal)
-                 b test-helpers/any-equal]
-                (= (with-exitv exit
-                               (->> as
-                                    (map exit)
-                                    doall)
-                               b)
-                   as)))
-
-(clojure-test/defspec
-  on-identity
-  num-tests
-  (restart-for-all [as (gen/vector test-helpers/any-equal)]
-                   (= (with-exitv exit
-                                  (let [e (frp/event)]
-                                    (frp/on exit e)
-                                    (frp/activate)
-                                    (run! e as)))
-                      as)))
-
+  test-helpers/num-tests
+  (test-helpers/restart-for-all [a test-helpers/any-equal]
+                                (= @@(-> (frp/event)
+                                         helpers/infer
+                                         (nodp.helpers/return a))
+                                   (-> 0
+                                       time/time
+                                       (tuple/tuple a)))))
 (def event
   ;gen/fmap ensures a new event is returned
   ;(gen/sample (gen/return (rand)) 2)
@@ -265,26 +178,27 @@
 
 (clojure-test/defspec
   event->>=-identity
-  num-tests
-  (restart-for-all [[outer-event inner-events calls call] event->>=]
-                   (frp/activate)
-                   (let [bound-event (helpers/>>= outer-event
-                                                  (make-iterate inner-events))]
-                     (calls)
-                     (let [outer-latest @outer-event
-                           inner-latests (doall (map deref inner-events))
-                           bound-latest @bound-event]
-                       (call)
-                       (if (= (map deref inner-events) inner-latests)
-                         (if (and (not= @outer-event outer-latest)
-                                  (maybe/just? @(last inner-events)))
-                           (right-most-earliest? bound-event inner-events)
-                           (= @bound-event bound-latest))
-                         (if (and (not= @outer-event outer-latest)
-                                  (= (map deref (drop-last inner-events))
-                                     (drop-last inner-latests)))
-                           (right-most-earliest? bound-event inner-events)
-                           (left-biased? bound-event inner-events)))))))
+  test-helpers/num-tests
+  (test-helpers/restart-for-all
+    [[outer-event inner-events calls call] event->>=]
+    (frp/activate)
+    (let [bound-event (helpers/>>= outer-event
+                                   (make-iterate inner-events))]
+      (calls)
+      (let [outer-latest @outer-event
+            inner-latests (doall (map deref inner-events))
+            bound-latest @bound-event]
+        (call)
+        (if (= (map deref inner-events) inner-latests)
+          (if (and (not= @outer-event outer-latest)
+                   (maybe/just? @(last inner-events)))
+            (right-most-earliest? bound-event inner-events)
+            (= @bound-event bound-latest))
+          (if (and (not= @outer-event outer-latest)
+                   (= (map deref (drop-last inner-events))
+                      (drop-last inner-latests)))
+            (right-most-earliest? bound-event inner-events)
+            (left-biased? bound-event inner-events)))))))
 
 (def <>
   ;TODO refactor
@@ -306,20 +220,20 @@
 
 (clojure-test/defspec
   event-<>
-  num-tests
-  (restart-for-all [[call mappended-event fmapped-events] <>]
-                   (frp/activate)
-                   (call)
-                   (left-biased? mappended-event fmapped-events)))
+  test-helpers/num-tests
+  (test-helpers/restart-for-all [[call mappended-event fmapped-events] <>]
+                                (frp/activate)
+                                (call)
+                                (left-biased? mappended-event fmapped-events)))
 
 (clojure-test/defspec
   event-mempty
-  num-tests
-  (restart-for-all [a test-helpers/any-equal]
-                   (= @(-> (frp/event)
-                           helpers/infer
-                           nodp.helpers/mempty)
-                      helpers/nothing)))
+  test-helpers/num-tests
+  (test-helpers/restart-for-all [a test-helpers/any-equal]
+                                (= @(-> (frp/event)
+                                        helpers/infer
+                                        nodp.helpers/mempty)
+                                   helpers/nothing)))
 
 (defn get-generators
   [generator xforms**]
@@ -349,51 +263,53 @@
 
 (clojure-test/defspec
   transduce-identity
-  num-tests
+  test-helpers/num-tests
   ;TODO refactor
-  (restart-for-all [input-event event
-                    xf xform
-                    f (test-helpers/function test-helpers/any-equal)
-                    init test-helpers/any-equal
-                    as (gen/vector test-helpers/any-equal)]
-                   (let [transduced-event (frp/transduce xf f init input-event)
-                         earliest @input-event]
-                     (frp/activate)
-                     (run! input-event as)
-                     (->> (comp (partial (helpers/flip cons) as)
-                                tuple/snd)
-                          (maybe/maybe as earliest)
-                          (maybe/map-maybe (partial (comp unreduced
-                                                          (xf (comp maybe/just
-                                                                    second
-                                                                    vector)))
-                                                    helpers/nothing))
-                          (reduce f init)
-                          (= (tuple/snd @@transduced-event))))))
+  (test-helpers/restart-for-all
+    [input-event event
+     xf xform
+     f (test-helpers/function test-helpers/any-equal)
+     init test-helpers/any-equal
+     as (gen/vector test-helpers/any-equal)]
+    (let [transduced-event (frp/transduce xf f init input-event)
+          earliest @input-event]
+      (frp/activate)
+      (run! input-event as)
+      (->> (comp (partial (helpers/flip cons) as)
+                 tuple/snd)
+           (maybe/maybe as earliest)
+           (maybe/map-maybe (partial (comp unreduced
+                                           (xf (comp maybe/just
+                                                     second
+                                                     vector)))
+                                     helpers/nothing))
+           (reduce f init)
+           (= (tuple/snd @@transduced-event))))))
 
 (clojure-test/defspec
   behavior-return
-  num-tests
-  (restart-for-all [a test-helpers/any-equal]
-                   (= @(-> unit/unit
-                           frp/behavior
-                           helpers/infer
-                           (nodp.helpers/return a))
-                      a)))
+  test-helpers/num-tests
+  (test-helpers/restart-for-all [a test-helpers/any-equal]
+                                (= @(-> unit/unit
+                                        frp/behavior
+                                        helpers/infer
+                                        (nodp.helpers/return a))
+                                   a)))
 
 (clojure-test/defspec
   time-increasing
-  num-tests
-  (restart-for-all [units (gen/vector (gen/return unit/unit))]
-                   (let [e (frp/event)
-                         _ ((helpers/lift-a 2 (constantly unit/unit))
-                             frp/time
-                             (frp/stepper unit/unit e))]
-                     (frp/activate)
-                     (run! e units)
-                     (let [t @frp/time]
-                       (e unit/unit)
-                       (<= @t @@frp/time)))))
+  test-helpers/num-tests
+  (test-helpers/restart-for-all
+    [units (gen/vector (gen/return unit/unit))]
+    (let [e (frp/event)
+          _ ((helpers/lift-a 2 (constantly unit/unit))
+              frp/time
+              (frp/stepper unit/unit e))]
+      (frp/activate)
+      (run! e units)
+      (let [t @frp/time]
+        (e unit/unit)
+        (<= @t @@frp/time)))))
 
 (def switcher
   ;TODO refactor
@@ -453,11 +369,12 @@
 
 (clojure-test/defspec
   switcher-identity
-  num-tests
-  (restart-for-all [[outer-behavior e switched-behavior call] (gen/no-shrink switcher)]
-                   (if (maybe/nothing? @e)
-                     (= @switched-behavior @outer-behavior)
-                     (= @switched-behavior @(tuple/snd @@e)))))
+  test-helpers/num-tests
+  (test-helpers/restart-for-all
+    [[outer-behavior e switched-behavior call] (gen/no-shrink switcher)]
+    (if (maybe/nothing? @e)
+      (= @switched-behavior @outer-behavior)
+      (= @switched-behavior @(tuple/snd @@e)))))
 
 (def behavior->>=
   ;TODO refactor
@@ -497,13 +414,14 @@
 
 (clojure-test/defspec
   behavior->>=-identity
-  num-tests
-  (restart-for-all [[outer-behavior get-behavior call] behavior->>=]
-                   (let [bound-behavior (helpers/>>= outer-behavior
-                                                     get-behavior)]
-                     (frp/activate)
-                     (call)
-                     (= @bound-behavior @(get-behavior @outer-behavior)))))
+  test-helpers/num-tests
+  (test-helpers/restart-for-all
+    [[outer-behavior get-behavior call] behavior->>=]
+    (let [bound-behavior (helpers/>>= outer-behavior
+                                      get-behavior)]
+      (frp/activate)
+      (call)
+      (= @bound-behavior @(get-behavior @outer-behavior)))))
 
 (def fundamental-theorem
   (gen/let [coefficients (gen/not-empty (gen/vector gen/double))]
@@ -512,8 +430,8 @@
 
 (clojure-test/defspec
   first-theorem
-  num-tests
-  (restart-for-all
+  test-helpers/num-tests
+  (test-helpers/restart-for-all
     [original-behavior fundamental-theorem
      lower-limit-value (gen/double* {:min 0})
      n gen/pos-int]
@@ -540,13 +458,14 @@
 
 (clojure-test/defspec
   second-theorem
-  num-tests
-  (restart-for-all [original-behavior fundamental-theorem]
-                   (let [derivative-behavior (->> original-behavior
-                                                  (frp/integral (time/time 0))
-                                                  (helpers/<$> deref)
-                                                  frp/derivative)]
-                     (frp/activate)
-                     (= @original-behavior @@derivative-behavior))))
+  test-helpers/num-tests
+  (test-helpers/restart-for-all
+    [original-behavior fundamental-theorem]
+    (let [derivative-behavior (->> original-behavior
+                                   (frp/integral (time/time 0))
+                                   (helpers/<$> deref)
+                                   frp/derivative)]
+      (frp/activate)
+      (= @original-behavior @@derivative-behavior))))
 
 ;TODO test integral and derivative with linear functions of time
