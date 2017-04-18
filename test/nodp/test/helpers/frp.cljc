@@ -504,7 +504,6 @@
 
 (def calculus
   (gen/let [e event]
-           ;TODO generate a stepped behavior
            ;TODO generate algebraic operations to perform on the behavior
            (gen/one-of [(gen/return (helpers/<$> deref frp/time))])))
 
