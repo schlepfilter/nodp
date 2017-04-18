@@ -159,13 +159,21 @@
                   (maybe/just 0)
                   integration-behavior*
                   network)
-                (< @@lower-limit-maybe @(helpers/get-latest time network))
-                ;TODO handle the case t is between past-behavior's time and current time
+                (and (< @@lower-limit-maybe @(helpers/get-latest time network))
+                     (< @(get-time past-behavior network)
+                        @(helpers/get-latest time network)))
                 (helpers/set-latest
                   (f (helpers/get-latest current-behavior network)
-                     (tuple/snd (helpers/get-latest past-behavior network))
+                     (+ (tuple/snd (helpers/get-latest past-behavior network))
+                        (/ (* (- (helpers/get-latest current-behavior network)
+                                 (tuple/snd (helpers/get-latest past-behavior
+                                                                network)))
+                              (- @@lower-limit-maybe @(get-time past-behavior
+                                                                network)))
+                           (- @(helpers/get-latest time network)
+                              @(get-time past-behavior network))))
                      (helpers/get-latest time network)
-                     (get-time past-behavior network)
+                     @lower-limit-maybe
                      (helpers/get-latest integration-behavior* network))
                   integration-behavior*
                   network)
