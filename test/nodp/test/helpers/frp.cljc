@@ -24,6 +24,8 @@
                                                            with-exit
                                                            with-exitv]])))
 
+;TODO split tests into multiple namespaces
+
 (defn fixture
   [f]
   (reset! helpers/network-state nil)
@@ -545,3 +547,5 @@
                                                   frp/derivative)]
                      (frp/activate)
                      (= @original-behavior @@derivative-behavior))))
+
+;TODO test integral and derivative with linear functions of time
