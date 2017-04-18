@@ -48,7 +48,9 @@
                                                     3)
                                            (partial + 3)))
             [[input-event & input-events]
-             [fmapped-switching-event fmapped-outer-event & fmapped-inner-events]
+             [fmapped-switching-event
+              fmapped-outer-event
+              & fmapped-inner-events]
              n]
             (test-helpers/events-tuple probabilities)
             [stepper-outer-any input-outer-any]
