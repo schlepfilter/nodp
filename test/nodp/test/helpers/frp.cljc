@@ -502,7 +502,7 @@
                      (call)
                      (= @bound-behavior @(get-behavior @outer-behavior)))))
 
-(def calculus
+(def behavior
   (gen/let [e event]
            ;TODO generate algebraic operations to perform on the behavior
            (gen/one-of [(gen/return (helpers/<$> deref frp/time))])))
@@ -511,7 +511,7 @@
   first-theorem
   num-tests
   (restart-for-all
-    [original-behavior calculus
+    [original-behavior behavior
      lower-limit-value (gen/double* {:min 0})]
     (let [integral-behavior ((helpers/lift-a 2
                                              (fn [x y]
@@ -535,7 +535,7 @@
 (clojure-test/defspec
   second-theorem
   num-tests
-  (restart-for-all [original-behavior calculus]
+  (restart-for-all [original-behavior behavior]
                    (let [derivative-behavior (->> original-behavior
                                                   (frp/integral (time/time 0))
                                                   (helpers/<$> deref)
