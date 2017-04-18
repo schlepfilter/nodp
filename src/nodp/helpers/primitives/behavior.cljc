@@ -154,9 +154,7 @@
                      (tuple/snd (helpers/get-latest past-behavior network))
                      (helpers/get-latest time network)
                      (get-time past-behavior network)
-                     (maybe/maybe unit/unit
-                                  lower-limit-maybe
-                                  identity)
+                     lower-limit-maybe
                      (helpers/get-latest integration-behavior* network))
                   integration-behavior*
                   network)

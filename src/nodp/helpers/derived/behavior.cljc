@@ -22,9 +22,9 @@
                           past-latest
                           current-time
                           past-time
-                          lower-limit
+                          lower-limit-maybe
                           integration]
-                       (cond (<= @lower-limit @past-time)
+                       (cond (<= @@lower-limit-maybe @past-time)
                              (maybe/just (+ (* (+ current-latest past-latest)
                                                (- @current-time @past-time))
                                             (maybe/maybe 0
