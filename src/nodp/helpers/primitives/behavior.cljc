@@ -137,7 +137,6 @@
       integration-behavior*
       (helpers/set-modifier
         (fn [network]
-          ;TODO handle the case t is between past-behavior's time and current time
           (cond (and (maybe/maybe true
                                   lower-limit-maybe
                                   (comp (partial >
@@ -161,6 +160,7 @@
                   integration-behavior*
                   network)
                 (< @@lower-limit-maybe @(helpers/get-latest time network))
+                ;TODO handle the case t is between past-behavior's time and current time
                 (helpers/set-latest
                   (f (helpers/get-latest current-behavior network)
                      (tuple/snd (helpers/get-latest past-behavior network))
