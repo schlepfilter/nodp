@@ -521,7 +521,7 @@
           (< x @@frp/time)))))
 
 (clojure-test/defspec
-  fundamental-theorem
+  second-theorem
   num-tests
   (restart-for-all [original-behavior calculus]
                    (let [derivative-behavior (->> original-behavior
