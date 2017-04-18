@@ -525,11 +525,7 @@
                    (let [derivative-behavior (->> original-behavior
                                                   ;TODO test cases in which time passed to integral is greater than 0
                                                   (frp/integral (time/time 0))
-                                                  (helpers/<$>
-                                                    (fn [x]
-                                                      (maybe/maybe 0
-                                                                   x
-                                                                   identity)))
+                                                  (helpers/<$> deref)
                                                   frp/derivative)]
                      (frp/activate)
                      ;TODO handle cases in which @derivative-behavior is nothing
