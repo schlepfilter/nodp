@@ -140,7 +140,9 @@
                    (cond
                      (maybe/maybe false
                                   t
-                                  (comp (partial = @(helpers/get-latest time network))
+                                  (comp (partial =
+                                                 @(helpers/get-latest time
+                                                                      network))
                                         deref))
                      (helpers/set-latest
                        (maybe/just 0)
