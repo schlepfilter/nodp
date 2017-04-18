@@ -22,22 +22,18 @@
                           past-latest
                           current-time
                           past-time
-                          lower-limit-maybe
                           integration]
-                       (cond (<= @@lower-limit-maybe @past-time)
-                             (maybe/just (+ (* (+ current-latest past-latest)
-                                               (- @current-time @past-time))
-                                            (maybe/maybe 0
-                                                         integration
-                                                         identity)))
-                             ;TODO handle cases in which (< @@lower-limit-maybe @current-time)
-                             :else integration))
+                       (maybe/just (+ (* (+ current-latest past-latest)
+                                         (- @current-time @past-time))
+                                      (maybe/maybe 0
+                                                   integration
+                                                   identity))))
                      (maybe/just t)
                      b))
 
 (defn derivative
   [b]
-  (behavior/calculus (fn [current-latest past-latest current-time past-time & _]
+  (behavior/calculus (fn [current-latest past-latest current-time past-time _]
                        (maybe/just (/ (- current-latest past-latest)
                                       (- @current-time @past-time))))
                      helpers/nothing

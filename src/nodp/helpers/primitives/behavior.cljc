@@ -138,23 +138,34 @@
       (helpers/set-modifier
         (fn [network]
           ;TODO handle the case t is between past-behavior's time and current time
-          (cond (maybe/maybe false
-                             lower-limit-maybe
-                             (comp (partial = @(helpers/get-latest time
-                                                                   network))
-                                   deref))
-                (helpers/set-latest
-                  (maybe/just 0)
-                  integration-behavior*
-                  network)
-                (< @(get-time past-behavior network)
-                   @(helpers/get-latest time network))
+          (cond (and (maybe/maybe true
+                                  lower-limit-maybe
+                                  (comp (partial >
+                                                 @(get-time past-behavior
+                                                            network))
+                                        deref))
+                     (< @(get-time past-behavior network)
+                        @(helpers/get-latest time network)))
                 (helpers/set-latest
                   (f (helpers/get-latest current-behavior network)
                      (tuple/snd (helpers/get-latest past-behavior network))
                      (helpers/get-latest time network)
                      (get-time past-behavior network)
-                     lower-limit-maybe
+                     (helpers/get-latest integration-behavior* network))
+                  integration-behavior*
+                  network)
+                (maybe/nothing? lower-limit-maybe) network
+                (= @(helpers/get-latest time network) @@lower-limit-maybe)
+                (helpers/set-latest
+                  (maybe/just 0)
+                  integration-behavior*
+                  network)
+                (< @@lower-limit-maybe @(helpers/get-latest time network))
+                (helpers/set-latest
+                  (f (helpers/get-latest current-behavior network)
+                     (tuple/snd (helpers/get-latest past-behavior network))
+                     (helpers/get-latest time network)
+                     (get-time past-behavior network)
                      (helpers/get-latest integration-behavior* network))
                   integration-behavior*
                   network)

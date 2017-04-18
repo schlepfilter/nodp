@@ -534,7 +534,7 @@
 (clojure-test/defspec
   second-theorem
   num-tests
-  (restart-for-all [original-behavior calculus]
+  (restart-for-all [original-behavior (gen/no-shrink calculus)]
                    (let [derivative-behavior (->> original-behavior
                                                   (frp/integral (time/time 0))
                                                   (helpers/<$> deref)
