@@ -508,19 +508,6 @@
            ;TODO generate algebraic operations to perform on the behavior
            (gen/one-of [(gen/return (helpers/<$> deref frp/time))])))
 
-;TODO replace integral-nothing with first-theorem
-(clojure-test/defspec
-  integral-nothing
-  num-tests
-  (restart-for-all
-    [original-behavior calculus
-     x (gen/double* {:min 0})]
-    (let [integral-behavior (frp/integral (time/time x) original-behavior)]
-      (frp/activate)
-      (or (= @integral-behavior helpers/nothing)
-          (= @@integral-behavior 0)
-          (< x @@frp/time)))))
-
 (clojure-test/defspec
   first-theorem
   num-tests
