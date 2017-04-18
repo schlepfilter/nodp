@@ -133,38 +133,37 @@
                          network)))
                    (helpers/set-latest (tuple/tuple (time/time 0)
                                                     helpers/nothing)))]
-    (behavior* integration-behavior*
-               (helpers/set-modifier
-                 (fn [network]
-                   ;TODO handle the case t is between past-behavior's time and current time
-                   (cond
-                     (maybe/maybe false
+    (behavior*
+      integration-behavior*
+      (helpers/set-modifier
+        (fn [network]
+          ;TODO handle the case t is between past-behavior's time and current time
+          (cond (maybe/maybe false
+                             t
+                             (comp (partial = @(helpers/get-latest time
+                                                                   network))
+                                   deref))
+                (helpers/set-latest
+                  (maybe/just 0)
+                  integration-behavior*
+                  network)
+                (< @(get-time past-behavior network)
+                   @(helpers/get-latest time network))
+                (helpers/set-latest
+                  (f (helpers/get-latest current-behavior network)
+                     (tuple/snd (helpers/get-latest past-behavior network))
+                     (helpers/get-latest time network)
+                     (get-time past-behavior network)
+                     (maybe/maybe unit/unit
                                   t
-                                  (comp (partial =
-                                                 @(helpers/get-latest time
-                                                                      network))
-                                        deref))
-                     (helpers/set-latest
-                       (maybe/just 0)
-                       integration-behavior*
-                       network)
-                     (< @(get-time past-behavior network)
-                        @(helpers/get-latest time network))
-                     (helpers/set-latest
-                       (f (helpers/get-latest current-behavior network)
-                          (tuple/snd (helpers/get-latest past-behavior network))
-                          (helpers/get-latest time network)
-                          (get-time past-behavior network)
-                          (maybe/maybe unit/unit
-                                       t
-                                       identity)
-                          (helpers/get-latest integration-behavior* network))
-                       integration-behavior*
-                       network)
-                     :else network)))
-               (helpers/set-latest helpers/nothing)
-               (helpers/add-edge current-behavior)
-               (helpers/curry 2 (fn [integration-behavior** network]
-                                  (helpers/add-edge integration-behavior**
-                                                    past-behavior
-                                                    network))))))
+                                  identity)
+                     (helpers/get-latest integration-behavior* network))
+                  integration-behavior*
+                  network)
+                :else network)))
+      (helpers/set-latest helpers/nothing)
+      (helpers/add-edge current-behavior)
+      (helpers/curry 2 (fn [integration-behavior** network]
+                         (helpers/add-edge integration-behavior**
+                                           past-behavior
+                                           network))))))
