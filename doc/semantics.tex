@@ -47,8 +47,7 @@
   at\ (>>= b\ f) =\lambda t \rightarrow f\ (b\ `at` \ t)\ `at` \ t
 \end{align*}
 \begin{align*}
-  calculus :: Real\ a\Rightarrow& (a \rightarrow a \rightarrow Time \rightarrow Time \rightarrow a \rightarrow a)\\
-  \rightarrow& Maybe\ Time \rightarrow Behavior\ a\rightarrow Behavior\ Maybe\ a
+  calculus :: Real\ a\Rightarrow (a \rightarrow a \rightarrow Time \rightarrow Time \rightarrow a \rightarrow a) \rightarrow Maybe\ Time \rightarrow Behavior\ a\rightarrow Behavior\ Maybe\ a
 \end{align*}
 \begin{align*}
   \forall\epsilon\exists\delta\forall t(&\epsilon > 0\\
