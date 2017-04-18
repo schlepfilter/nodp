@@ -530,4 +530,5 @@
                                                                 identity)))
                               frp/derivative)]
                      (frp/activate)
+                     ;TODO handle cases in which @derivative-behavior is nothing
                      (= @original-behavior @@derivative-behavior))))
