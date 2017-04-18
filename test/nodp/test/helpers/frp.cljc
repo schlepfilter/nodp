@@ -505,7 +505,7 @@
                      (= @bound-behavior @(get-behavior @outer-behavior)))))
 
 (def behavior
-  (gen/let [e event]
+  (gen/let [coefficients (gen/not-empty (gen/vector gen/double))]
            ;TODO generate algebraic operations to perform on the behavior
            (gen/return (helpers/<$> deref frp/time))))
 
