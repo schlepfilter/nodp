@@ -543,10 +543,3 @@
                                                   frp/derivative)]
                      (frp/activate)
                      (= @original-behavior @@derivative-behavior))))
-
-;TODO test cases in which time passed to integral is greater than 0
-
-(frp/restart)
-
-((helpers/lift-a 2 -) helpers/nothing (maybe/just 0))
-
