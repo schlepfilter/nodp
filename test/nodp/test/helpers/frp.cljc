@@ -512,11 +512,13 @@
   integral-nothing
   num-tests
   (restart-for-all
-    [original-behavior calculus]
-    (let [integral-behavior (frp/integral (time/time Double/POSITIVE_INFINITY)
+    [original-behavior calculus
+     x (gen/double* {:min 0})]
+    (let [integral-behavior (frp/integral (time/time x)
                                           original-behavior)]
       (frp/activate)
-      (= @integral-behavior helpers/nothing))))
+      (or (<= x @@frp/time)
+          (= @integral-behavior helpers/nothing)))))
 
 (clojure-test/defspec
   fundamental-theorem
