@@ -519,11 +519,17 @@
                                                (with-redefs [cats.context/infer helpers/infer]
                                                  ((helpers/lift-a 2 -) x y))))
                               (frp/integral (time/time 0) original-behavior)
-                              (frp/integral (time/time x) original-behavior))]
+                              (frp/integral (time/time x) original-behavior))
+          e (frp/event)]
       (frp/activate)
-      (or (= @integral-behavior helpers/nothing)
-          (= @@integral-behavior 0)
-          (< x @@frp/time)))))
+      (let [latest @integral-behavior]
+        (e unit/unit)
+        (cond (< @@frp/time x)
+              (= @integral-behavior helpers/nothing)
+              (= @@frp/time x)
+              (= @@integral-behavior 0)
+              :else
+              true)))))
 
 (clojure-test/defspec
   second-theorem
