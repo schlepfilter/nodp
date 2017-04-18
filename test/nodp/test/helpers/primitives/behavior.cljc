@@ -75,8 +75,7 @@
             (gen/return (helpers/<$>
                           (test-helpers/make-iterate inner-behaviors)
                           fmapped-switching-event))
-            input-event-anys (gen/vector test-helpers/any-equal
-                                         n)
+            input-event-anys (gen/vector test-helpers/any-equal n)
             input-events-anys (gen/vector test-helpers/any-equal
                                           (count input-events))
             calls (gen/shuffle (concat (map (fn [a]
@@ -149,8 +148,7 @@
   test-helpers/num-tests
   (test-helpers/restart-for-all
     [[outer-behavior get-behavior call] behavior->>=]
-    (let [bound-behavior (helpers/>>= outer-behavior
-                                      get-behavior)]
+    (let [bound-behavior (helpers/>>= outer-behavior get-behavior)]
       (frp/activate)
       (call)
       (= @bound-behavior @(get-behavior @outer-behavior)))))
