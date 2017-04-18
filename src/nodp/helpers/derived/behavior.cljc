@@ -30,7 +30,7 @@
                                             (maybe/maybe 0
                                                          integration
                                                          identity)))
-                             ;TODO handle cases in which (< @lower-limit @current-time)
+                             ;TODO handle cases in which (< @@lower-limit-maybe @current-time)
                              :else integration))
                      (maybe/just t)
                      b))
