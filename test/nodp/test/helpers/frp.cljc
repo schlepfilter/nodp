@@ -516,7 +516,8 @@
      x (gen/no-shrink (gen/double* {:min 0}))]
     (let [integral-behavior ((helpers/lift-a 2
                                              (fn [x y]
-                                               (with-redefs [cats.context/infer helpers/infer]
+                                               (with-redefs [cats.context/infer
+                                                             helpers/infer]
                                                  ((helpers/lift-a 2 -) x y))))
                               (frp/integral (time/time 0) original-behavior)
                               (frp/integral (time/time x) original-behavior))
