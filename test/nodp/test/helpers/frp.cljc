@@ -508,6 +508,7 @@
            ;TODO generate algebraic operations to perform on the behavior
            (gen/one-of [(gen/return (helpers/<$> deref frp/time))])))
 
+;TODO replace integral-nothing with first-theorem
 (clojure-test/defspec
   integral-nothing
   num-tests
