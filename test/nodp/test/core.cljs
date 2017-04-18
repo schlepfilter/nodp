@@ -1,6 +1,6 @@
 (ns ^:figwheel-always nodp.test.core
   (:require [cljs.test :refer-macros [run-all-tests]]
-            [nodp.test.helpers.frp]
+            [nodp.test.helpers.primitives.event]
             [nodp.test.helpers.tuple]))
 
 (enable-console-print!)

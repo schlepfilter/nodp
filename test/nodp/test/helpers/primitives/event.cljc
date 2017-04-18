@@ -1,4 +1,4 @@
-(ns nodp.test.helpers.frp
+(ns nodp.test.helpers.primitives.event
   (:require [clojure.test.check]
             [clojure.test.check.clojure-test
              :as clojure-test
@@ -20,9 +20,10 @@
             [nodp.test.helpers :as test-helpers]
     #?(:clj
             [riddley.walk :as walk]))
-  #?(:cljs (:require-macros [nodp.test.helpers.frp :refer [restart-for-all
-                                                           with-exit
-                                                           with-exitv]])))
+  #?(:cljs (:require-macros
+             [nodp.test.helpers.primitives.event :refer [restart-for-all
+                                                         with-exit
+                                                         with-exitv]])))
 
 ;TODO split tests into multiple namespaces
 
