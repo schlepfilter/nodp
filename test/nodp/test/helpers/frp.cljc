@@ -513,7 +513,7 @@
   (restart-for-all
     [original-behavior behavior
      lower-limit-value (gen/double* {:min 0})
-     n gen/nat]
+     n gen/pos-int]
     (let [integral-behavior ((helpers/lift-a 2
                                              (fn [x y]
                                                ;TODO remove with-redefs after cats.context is fixed
