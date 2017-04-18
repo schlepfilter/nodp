@@ -512,8 +512,8 @@
   first-theorem
   num-tests
   (restart-for-all
-    [original-behavior calculus
-     x (gen/double* {:min 0})]
+    [original-behavior (gen/no-shrink calculus)
+     x (gen/no-shrink (gen/double* {:min 0}))]
     (let [integral-behavior ((helpers/lift-a 2
                                              (fn [x y]
                                                (with-redefs [cats.context/infer helpers/infer]
@@ -522,6 +522,7 @@
                               (frp/integral (time/time x) original-behavior))
           e (frp/event)]
       (frp/activate)
+      (e unit/unit)
       (let [latest @integral-behavior]
         (e unit/unit)
         (cond (< @@frp/time x)
@@ -529,7 +530,8 @@
               (= @@frp/time x)
               (= @@integral-behavior 0)
               :else
-              true)))))
+              (or (maybe/nothing? latest)
+                  (= latest @integral-behavior)))))))
 
 (clojure-test/defspec
   second-theorem
