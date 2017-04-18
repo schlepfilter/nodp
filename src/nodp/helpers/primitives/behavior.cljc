@@ -7,6 +7,7 @@
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.time :as time]
             [nodp.helpers.tuple :as tuple]
+            [nodp.helpers.unit :as unit]
             [nodp.helpers :as helpers])
   #?(:clj
            (:import [clojure.lang IDeref])
@@ -152,7 +153,9 @@
                           (tuple/snd (helpers/get-latest past-behavior network))
                           (helpers/get-latest time network)
                           (get-time past-behavior network)
-                          @t
+                          (maybe/maybe unit/unit
+                                       t
+                                       identity)
                           (helpers/get-latest integration-behavior* network))
                        integration-behavior*
                        network)
