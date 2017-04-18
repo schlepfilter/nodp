@@ -522,6 +522,23 @@
           (< x @@frp/time)))))
 
 (clojure-test/defspec
+  first-theorem
+  num-tests
+  (restart-for-all
+    [original-behavior calculus
+     x (gen/double* {:min 0})]
+    (let [integral-behavior ((helpers/lift-a 2
+                                             (fn [x y]
+                                               (with-redefs [cats.context/infer helpers/infer]
+                                                 ((helpers/lift-a 2 -) x y))))
+                              (frp/integral (time/time 0) original-behavior)
+                              (frp/integral (time/time x) original-behavior))]
+      (frp/activate)
+      (or (= @integral-behavior helpers/nothing)
+          (= @@integral-behavior 0)
+          (< x @@frp/time)))))
+
+(clojure-test/defspec
   second-theorem
   num-tests
   (restart-for-all [original-behavior calculus]
@@ -533,3 +550,8 @@
                      (= @original-behavior @@derivative-behavior))))
 
 ;TODO test cases in which time passed to integral is greater than 0
+
+(frp/restart)
+
+((helpers/lift-a 2 -) helpers/nothing (maybe/just 0))
+
