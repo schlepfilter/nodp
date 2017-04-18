@@ -513,21 +513,23 @@
   num-tests
   (restart-for-all
     [original-behavior calculus
-     x (gen/double* {:min 0})]
+     lower-limit-value (gen/double* {:min 0})]
     (let [integral-behavior ((helpers/lift-a 2
                                              (fn [x y]
                                                (with-redefs [cats.context/infer
                                                              helpers/infer]
                                                  ((helpers/lift-a 2 -) x y))))
                               (frp/integral (time/time 0) original-behavior)
-                              (frp/integral (time/time x) original-behavior))
+                              (frp/integral (time/time lower-limit-value)
+                                            original-behavior))
           e (frp/event)]
       (frp/activate)
       (e unit/unit)
       (let [latest @integral-behavior]
         (e unit/unit)
-        (cond (< @@frp/time x) (= @integral-behavior helpers/nothing)
-              (= @@frp/time x) (= @@integral-behavior 0)
+        (cond (< @@frp/time lower-limit-value)
+              (= @integral-behavior helpers/nothing)
+              (= @@frp/time lower-limit-value) (= @@integral-behavior 0)
               :else (or (maybe/nothing? latest)
                         (= latest @integral-behavior)))))))
 
