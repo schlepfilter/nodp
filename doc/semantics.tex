@@ -47,13 +47,12 @@
   at\ (>>= b\ f) =\lambda t \rightarrow f\ (b\ `at` \ t)\ `at` \ t
 \end{align*}
 \begin{align*}
-  %TODO remove Maybe\ Time
-  calculus :: Real\ a\Rightarrow& (a \rightarrow a \rightarrow Time \rightarrow Time \rightarrow Maybe\ Time \rightarrow a \rightarrow a)\\
+  calculus :: Real\ a\Rightarrow& (a \rightarrow a \rightarrow Time \rightarrow Time \rightarrow a \rightarrow a)\\
   \rightarrow& Maybe\ Time \rightarrow Behavior\ a\rightarrow Behavior\ Maybe\ a
 \end{align*}
 \begin{align*}
   \forall\epsilon\exists\delta\forall t(&\epsilon > 0\\
   \wedge& t > 0\\
-  \wedge& (0 < t - a < \delta \implies(at\ (calculus\ f\ x\ b))\ t - f\ ((at\ b)\ t)\ ((at\ b)\ (t - a))\ t\ (t - a)\ x\ (at\ (calculus\ f \ x\ b))))
+  \wedge& (0 < t - a < \delta \implies(at\ (calculus\ f\ x\ b))\ t - f\ ((at\ b)\ t)\ ((at\ b)\ (t - a))\ t\ (t - a)\ (at\ (calculus\ f \ x\ b))))
 \end{align*}
 \end{document}
