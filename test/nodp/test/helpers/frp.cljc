@@ -517,8 +517,8 @@
     (let [integral-behavior (frp/integral (time/time x)
                                           original-behavior)]
       (frp/activate)
-      (or (<= x @@frp/time)
-          (= @integral-behavior helpers/nothing)))))
+      (or (= @integral-behavior helpers/nothing)
+          (<= x @@frp/time)))))
 
 (clojure-test/defspec
   fundamental-theorem
