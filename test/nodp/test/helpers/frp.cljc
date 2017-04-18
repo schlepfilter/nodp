@@ -514,8 +514,7 @@
   (restart-for-all
     [original-behavior calculus
      x (gen/double* {:min 0})]
-    (let [integral-behavior (frp/integral (time/time x)
-                                          original-behavior)]
+    (let [integral-behavior (frp/integral (time/time x) original-behavior)]
       (frp/activate)
       (or (= @integral-behavior helpers/nothing)
           (<= x @@frp/time)))))
