@@ -512,7 +512,8 @@
   num-tests
   (restart-for-all
     [original-behavior behavior
-     lower-limit-value (gen/double* {:min 0})]
+     lower-limit-value (gen/double* {:min 0})
+     n gen/nat]
     (let [integral-behavior ((helpers/lift-a 2
                                              (fn [x y]
                                                (with-redefs [cats.context/infer
@@ -523,7 +524,8 @@
                                             original-behavior))
           e (frp/event)]
       (frp/activate)
-      (e unit/unit)
+      (dotimes [_ n]
+        (e unit/unit))
       (let [latest @integral-behavior]
         (e unit/unit)
         (cond (< @@frp/time lower-limit-value)
