@@ -516,6 +516,7 @@
      n gen/nat]
     (let [integral-behavior ((helpers/lift-a 2
                                              (fn [x y]
+                                               ;TODO remove with-redefs after cats.context is fixed
                                                (with-redefs [cats.context/infer
                                                              helpers/infer]
                                                  ((helpers/lift-a 2 -) x y))))
