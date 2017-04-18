@@ -526,13 +526,10 @@
       (e unit/unit)
       (let [latest @integral-behavior]
         (e unit/unit)
-        (cond (< @@frp/time x)
-              (= @integral-behavior helpers/nothing)
-              (= @@frp/time x)
-              (= @@integral-behavior 0)
-              :else
-              (or (maybe/nothing? latest)
-                  (= latest @integral-behavior)))))))
+        (cond (< @@frp/time x) (= @integral-behavior helpers/nothing)
+              (= @@frp/time x) (= @@integral-behavior 0)
+              :else (or (maybe/nothing? latest)
+                        (= latest @integral-behavior)))))))
 
 (clojure-test/defspec
   second-theorem
