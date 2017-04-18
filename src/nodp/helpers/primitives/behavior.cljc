@@ -118,7 +118,7 @@
         helpers/get-latest))
 
 (defn calculus
-  [f t current-behavior]
+  [f lower-limit-maybe current-behavior]
   ;TODO refactor
   ;TODO allow current-behavior's latest to be maybe
   (let [past-behavior
@@ -139,7 +139,7 @@
         (fn [network]
           ;TODO handle the case t is between past-behavior's time and current time
           (cond (maybe/maybe false
-                             t
+                             lower-limit-maybe
                              (comp (partial = @(helpers/get-latest time
                                                                    network))
                                    deref))
@@ -155,7 +155,7 @@
                      (helpers/get-latest time network)
                      (get-time past-behavior network)
                      (maybe/maybe unit/unit
-                                  t
+                                  lower-limit-maybe
                                   identity)
                      (helpers/get-latest integration-behavior* network))
                   integration-behavior*
