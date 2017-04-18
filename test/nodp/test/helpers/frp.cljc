@@ -43,6 +43,7 @@
 
 #?(:clj (defmacro restart-for-all
           [bindings & body]
+          ;TODO generate times and redefine get-new-time
           `(prop/for-all ~(concat `[_# restart]
                                   bindings)
                          ~@body)))
