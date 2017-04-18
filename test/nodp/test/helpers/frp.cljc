@@ -505,7 +505,7 @@
 (def behavior
   (gen/let [e event]
            ;TODO generate algebraic operations to perform on the behavior
-           (gen/one-of [(gen/return (helpers/<$> deref frp/time))])))
+           (gen/return (helpers/<$> deref frp/time))))
 
 (clojure-test/defspec
   first-theorem
