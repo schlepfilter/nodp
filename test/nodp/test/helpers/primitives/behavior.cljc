@@ -169,6 +169,7 @@
              coefficients))
 
 (def polynomial
+  ;TODO generate t to a negative power
   (gen/let [coefficients (gen/vector gen/ratio)]
            (partial get-polynomial coefficients)))
 
