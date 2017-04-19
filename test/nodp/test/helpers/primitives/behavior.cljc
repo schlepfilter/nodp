@@ -167,8 +167,13 @@
   (gen/let [coefficients (gen/vector gen/ratio)]
            (partial get-polynomial coefficients)))
 
+(def exponential
+  (gen/let [base gen/ratio]
+           (fn [exponent]
+             (numeric-tower/expt base exponent))))
+
 (def continuous-behavior
-  (gen/let [f polynomial]
+  (gen/let [f (gen/one-of [polynomial exponential])]
            ;TODO generate algebraic operations to perform on the behavior
            (gen/return (helpers/<$> (comp f
                                           deref)
