@@ -5,7 +5,6 @@
              :as clojure-test
              :include-macros true]
             [clojure.test.check.generators :as gen]
-            [clojure.test.check.properties :as prop :include-macros true]
             [#?(:clj  clojure.core.async
                 :cljs cljs.core.async) :as async]
             [#?(:clj  clojure.test
