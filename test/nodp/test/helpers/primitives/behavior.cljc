@@ -58,9 +58,9 @@
             [stepper-outer-any input-outer-any]
             (gen/vector test-helpers/any-equal 2)
             outer-behavior
-            (gen/one-of [(gen/return (frp/stepper stepper-outer-any
-                                                  fmapped-outer-event))
-                         (gen/return frp/time)])
+            (gen/elements [(frp/stepper stepper-outer-any
+                                        fmapped-outer-event)
+                           frp/time])
             stepper-inner-anys (gen/vector test-helpers/any-equal
                                            (count fmapped-inner-events))
             steps (gen/vector gen/boolean (count fmapped-inner-events))
@@ -118,16 +118,14 @@
              [fmapped-outer-event fmapped-inner-event]]
             (test-helpers/events-tuple probabilities)
             outer-any test-helpers/any-equal
-            outer-behavior (gen/one-of
-                             [(gen/return (frp/stepper outer-any
-                                                       fmapped-outer-event))
-                              (gen/return frp/time)])
+            outer-behavior (gen/elements [(frp/stepper outer-any
+                                                       fmapped-outer-event)
+                                          frp/time])
             inner-any test-helpers/any-equal
-            f (gen/one-of
-                [(gen/return frp/behavior)
-                 (gen/return (constantly (frp/stepper inner-any
-                                                      fmapped-inner-event)))
-                 (gen/return (constantly frp/time))])
+            f (gen/elements [frp/behavior
+                             (constantly (frp/stepper inner-any
+                                                      fmapped-inner-event))
+                             (constantly frp/time)])
             [input-outer-anys input-inner-anys]
             (gen/vector (gen/vector test-helpers/any-equal) 2)
             calls (gen/shuffle (concat (map (fn [a]
