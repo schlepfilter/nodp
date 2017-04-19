@@ -174,9 +174,8 @@
            (partial get-polynomial coefficients)))
 
 (def exponential
-  (gen/let [base gen/ratio]
-           (fn [exponent]
-             (expt base exponent))))
+  (gen/let [base gen/s-pos-int]
+           (partial expt (/ base))))
 
 (def continuous-behavior
   (gen/let [f (gen/one-of [polynomial exponential])]
