@@ -156,13 +156,6 @@
       (call)
       (= @bound-behavior @(get-behavior @outer-behavior)))))
 
-(def big-decimal
-  (gen/fmap (fn [x]
-              (BigDecimal. x))
-            (gen/double* {:NaN? false
-                          :min  -100.0
-                          :max  100.0})))
-
 (defn get-polynomial
   [coefficients x]
   (reduce-kv (fn [init k v]
@@ -171,7 +164,7 @@
              coefficients))
 
 (def polynomial
-  (gen/let [coefficients (gen/vector big-decimal)]
+  (gen/let [coefficients (gen/vector gen/ratio)]
            (partial get-polynomial coefficients)))
 
 (def continuous
@@ -186,8 +179,7 @@
   test-helpers/num-tests
   (test-helpers/restart-for-all
     [original-behavior continuous
-     lower-limit-value (gen/double* {:NaN? false
-                                     :min  0})
+     lower-limit-value (gen/fmap numeric-tower/abs gen/ratio)
      n gen/pos-int]
     (let [integral-behavior ((helpers/lift-a 2
                                              (fn [x y]
