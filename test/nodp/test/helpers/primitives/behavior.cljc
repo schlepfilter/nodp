@@ -177,7 +177,8 @@
 (def continuous
   (gen/let [polynomial* polynomial]
            ;TODO generate algebraic operations to perform on the behavior
-           (gen/return (helpers/<$> (comp polynomial* deref)
+           (gen/return (helpers/<$> (comp polynomial*
+                                          deref)
                                     frp/time))))
 
 (clojure-test/defspec
