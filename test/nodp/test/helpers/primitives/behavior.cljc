@@ -157,10 +157,14 @@
       (call)
       (= @bound-behavior @(get-behavior @outer-behavior)))))
 
+(def expt
+  #?(:clj  numeric-tower/expt
+     :cljs js/Math.pow))
+
 (defn get-polynomial
   [coefficients x]
   (reduce-kv (fn [init k v]
-               (+ init (* v (numeric-tower/expt x k))))
+               (+ init (* v (expt x k))))
              0
              coefficients))
 
@@ -171,7 +175,7 @@
 (def exponential
   (gen/let [base gen/ratio]
            (fn [exponent]
-             (numeric-tower/expt base exponent))))
+             (expt base exponent))))
 
 (def continuous-behavior
   (gen/let [f (gen/one-of [polynomial exponential])]
@@ -185,7 +189,8 @@
   test-helpers/num-tests
   (test-helpers/restart-for-all
     [original-behavior continuous-behavior
-     lower-limit-value (gen/fmap numeric-tower/abs gen/ratio)
+     lower-limit-value (gen/fmap #?(:clj  numeric-tower/abs
+                                    :cljs js/Math.abs) gen/ratio)
      n gen/pos-int]
     (let [integral-behavior ((helpers/lift-a 2
                                              (fn [x y]
@@ -208,16 +213,16 @@
               :else (or (maybe/nothing? latest)
                         (= latest @integral-behavior)))))))
 
-(clojure-test/defspec
-  second-theorem
-  test-helpers/num-tests
-  (test-helpers/restart-for-all
-    [original-behavior (gen/fmap frp/behavior gen/ratio)]
-    (let [derivative-behavior (->> original-behavior
-                                   (frp/integral (time/time 0))
-                                   (helpers/<$> deref)
-                                   frp/derivative)]
-      (frp/activate)
-      (= @original-behavior @@derivative-behavior))))
+#?(:clj (clojure-test/defspec
+          second-theorem
+          test-helpers/num-tests
+          (test-helpers/restart-for-all
+            [original-behavior (gen/fmap frp/behavior gen/ratio)]
+            (let [derivative-behavior (->> original-behavior
+                                           (frp/integral (time/time 0))
+                                           (helpers/<$> deref)
+                                           frp/derivative)]
+              (frp/activate)
+              (= @original-behavior @@derivative-behavior)))))
 
 ;TODO test integral and derivative with linear functions of time
