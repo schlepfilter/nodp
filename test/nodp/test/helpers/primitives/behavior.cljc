@@ -188,6 +188,7 @@
   test-helpers/num-tests
   (test-helpers/restart-for-all
     [original-behavior continuous-behavior
+     integration-method (gen/elements [:trapezoid])
      lower-limit-value (gen/fmap #?(:clj  numeric-tower/abs
                                     :cljs js/Math.abs) gen/ratio)
      n gen/pos-int]
@@ -197,8 +198,11 @@
                                                (with-redefs [cats.context/infer
                                                              helpers/infer]
                                                  ((helpers/lift-a 2 -) x y))))
-                              (frp/integral (time/time 0) original-behavior)
-                              (frp/integral (time/time lower-limit-value)
+                              (frp/integral integration-method
+                                            (time/time 0)
+                                            original-behavior)
+                              (frp/integral integration-method
+                                            (time/time lower-limit-value)
                                             original-behavior))
           e (frp/event)]
       (frp/activate)
@@ -218,7 +222,9 @@
           (test-helpers/restart-for-all
             [original-behavior (gen/fmap frp/behavior gen/ratio)]
             (let [derivative-behavior (->> original-behavior
-                                           (frp/integral (time/time 0))
+                                           (frp/integral
+                                             :trapezoid
+                                             (time/time 0))
                                            (helpers/<$> deref)
                                            frp/derivative)]
               (frp/activate)

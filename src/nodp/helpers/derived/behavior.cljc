@@ -17,20 +17,22 @@
                      (nodp.helpers/<$> behavior e)))
 
 (defn integral
-  [t b]
-  (behavior/calculus (fn [current-latest
-                          past-latest
-                          current-time
-                          past-time
-                          integration]
-                       (maybe/just (+ (/ (* (+ current-latest past-latest)
-                                            (- @current-time @past-time))
-                                         2)
-                                      (maybe/maybe 0
-                                                   integration
-                                                   identity))))
-                     (maybe/just t)
-                     b))
+  [k t b]
+  (behavior/calculus
+    (fn [current-latest
+         past-latest
+         current-time
+         past-time
+         integration]
+      (case k
+        :trapezoid (maybe/just (+ (/ (* (+ current-latest past-latest)
+                                        (- @current-time @past-time))
+                                     2)
+                                  (maybe/maybe 0
+                                               integration
+                                               identity)))))
+    (maybe/just t)
+    b))
 
 (defn derivative
   [b]
