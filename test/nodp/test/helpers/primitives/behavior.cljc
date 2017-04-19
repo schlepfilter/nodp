@@ -162,6 +162,17 @@
             (gen/double* {:NaN? false
                           :infinite? false})))
 
+(defn get-polynomial
+  [coefficients x]
+  (reduce-kv (fn [init k v]
+               (+ init (* v (numeric-tower/expt x k))))
+             0M
+             coefficients))
+
+(def polynomial
+  (gen/let [coefficients (gen/not-empty (gen/vector big-decimal))]
+           (partial get-polynomial coefficients)))
+
 (def fundamental-theorem
   (gen/let [coefficients (gen/not-empty (gen/vector gen/double))]
            ;TODO generate algebraic operations to perform on the behavior
