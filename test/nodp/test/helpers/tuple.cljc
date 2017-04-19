@@ -18,9 +18,9 @@
 (defn maybe
   [generator]
   (gen/bind generator
-            (fn [a]
-              (gen/elements [helpers/nothing
-                             (maybe/just a)]))))
+            (comp gen/elements
+                  (partial vector helpers/nothing)
+                  maybe/just)))
 
 (def scalar-monoids
   [gen/string
