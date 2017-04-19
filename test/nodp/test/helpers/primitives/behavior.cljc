@@ -105,7 +105,7 @@
   switcher-identity
   test-helpers/num-tests
   (test-helpers/restart-for-all
-    [[outer-behavior e switched-behavior call] (gen/no-shrink switcher)]
+    [[outer-behavior e switched-behavior call] switcher]
     (if (maybe/nothing? @e)
       (= @switched-behavior @outer-behavior)
       (= @switched-behavior @(tuple/snd @@e)))))
