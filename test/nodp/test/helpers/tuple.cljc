@@ -15,12 +15,11 @@
             [nodp.helpers.unit :as unit]
             [nodp.test.helpers :as test-helpers]))
 
-(defn maybe
-  [generator]
-  (gen/bind generator
-            (comp gen/elements
-                  (partial vector helpers/nothing)
-                  maybe/just)))
+(def maybe
+  (partial (helpers/flip gen/bind)
+           (comp gen/elements
+                 (partial vector helpers/nothing)
+                 maybe/just)))
 
 (def scalar-monoids
   [gen/string
