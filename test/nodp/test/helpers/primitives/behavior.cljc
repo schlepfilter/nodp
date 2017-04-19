@@ -1,5 +1,6 @@
 (ns nodp.test.helpers.primitives.behavior
   (:require [cats.monad.maybe :as maybe]
+            [clojure.math.numeric-tower :as numeric-tower]
             [clojure.test.check]
             [clojure.test.check.clojure-test
              :as clojure-test
@@ -154,6 +155,12 @@
       (frp/activate)
       (call)
       (= @bound-behavior @(get-behavior @outer-behavior)))))
+
+(def big-decimal
+  (gen/fmap (fn [x]
+              (BigDecimal. x))
+            (gen/double* {:NaN? false
+                          :infinite? false})))
 
 (def fundamental-theorem
   (gen/let [coefficients (gen/not-empty (gen/vector gen/double))]
