@@ -23,6 +23,7 @@
                           current-time
                           past-time
                           integration]
+                       ;TODO divide by 2
                        (maybe/just (+ (* (+ current-latest past-latest)
                                          (- @current-time @past-time))
                                       (maybe/maybe 0
