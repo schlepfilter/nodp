@@ -1,11 +1,12 @@
 (ns nodp.test.helpers.primitives.behavior
   (:require [cats.monad.maybe :as maybe]
-            [clojure.math.numeric-tower :as numeric-tower]
             [clojure.test.check]
             [clojure.test.check.clojure-test
              :as clojure-test
              :include-macros true]
             [clojure.test.check.generators :as gen]
+    #?(:clj
+            [clojure.math.numeric-tower :as numeric-tower])
             [#?(:clj  clojure.test
                 :cljs cljs.test) :as test :include-macros true]
             [nodp.helpers :as helpers]
