@@ -167,7 +167,7 @@
   (gen/let [coefficients (gen/vector gen/ratio)]
            (partial get-polynomial coefficients)))
 
-(def continuous
+(def continuous-behavior
   (gen/let [polynomial* polynomial]
            ;TODO generate algebraic operations to perform on the behavior
            (gen/return (helpers/<$> (comp polynomial*
@@ -178,7 +178,7 @@
   first-theorem
   test-helpers/num-tests
   (test-helpers/restart-for-all
-    [original-behavior continuous
+    [original-behavior continuous-behavior
      lower-limit-value (gen/fmap numeric-tower/abs gen/ratio)
      n gen/pos-int]
     (let [integral-behavior ((helpers/lift-a 2
