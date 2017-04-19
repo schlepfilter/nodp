@@ -165,7 +165,8 @@
   test-helpers/num-tests
   (test-helpers/restart-for-all
     [original-behavior fundamental-theorem
-     lower-limit-value (gen/double* {:min 0})
+     lower-limit-value (gen/double* {:NaN? false
+                                     :min  0})
      n gen/pos-int]
     (let [integral-behavior ((helpers/lift-a 2
                                              (fn [x y]
