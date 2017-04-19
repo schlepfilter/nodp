@@ -160,29 +160,31 @@
   (gen/fmap (fn [x]
               (BigDecimal. x))
             (gen/double* {:NaN? false
-                          :infinite? false})))
+                          :min  -100.0
+                          :max  100.0})))
 
 (defn get-polynomial
   [coefficients x]
   (reduce-kv (fn [init k v]
                (+ init (* v (numeric-tower/expt x k))))
-             0M
+             0
              coefficients))
 
 (def polynomial
-  (gen/let [coefficients (gen/not-empty (gen/vector big-decimal))]
+  (gen/let [coefficients (gen/vector big-decimal)]
            (partial get-polynomial coefficients)))
 
-(def fundamental-theorem
-  (gen/let [coefficients (gen/not-empty (gen/vector gen/double))]
+(def continuous
+  (gen/let [polynomial* polynomial]
            ;TODO generate algebraic operations to perform on the behavior
-           (gen/return (helpers/<$> deref frp/time))))
+           (gen/return (helpers/<$> (comp polynomial* deref)
+                                    frp/time))))
 
 (clojure-test/defspec
   first-theorem
   test-helpers/num-tests
   (test-helpers/restart-for-all
-    [original-behavior fundamental-theorem
+    [original-behavior continuous
      lower-limit-value (gen/double* {:NaN? false
                                      :min  0})
      n gen/pos-int]
@@ -211,7 +213,7 @@
   second-theorem
   test-helpers/num-tests
   (test-helpers/restart-for-all
-    [original-behavior fundamental-theorem]
+    [original-behavior (gen/fmap frp/behavior gen/ratio)]
     (let [derivative-behavior (->> original-behavior
                                    (frp/integral (time/time 0))
                                    (helpers/<$> deref)
