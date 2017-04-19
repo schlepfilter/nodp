@@ -168,9 +168,9 @@
            (partial get-polynomial coefficients)))
 
 (def continuous-behavior
-  (gen/let [polynomial* polynomial]
+  (gen/let [f polynomial]
            ;TODO generate algebraic operations to perform on the behavior
-           (gen/return (helpers/<$> (comp polynomial*
+           (gen/return (helpers/<$> (comp f
                                           deref)
                                     frp/time))))
 
