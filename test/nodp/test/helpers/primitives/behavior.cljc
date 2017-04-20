@@ -182,6 +182,7 @@
 (def calculus
   (gen/let [k (gen/elements [:current-latest :current-time :past-time])
             lower-limit-number gen/nat
+            ;TODO generate a behavior with stepper
             original-behavior continuous-behavior
             number-of-occurrences gen/nat]
            (let [e (frp/event)
