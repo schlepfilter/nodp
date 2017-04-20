@@ -199,6 +199,7 @@
            (let [calculus-behavior
                  (frp/calculus
                    (case k
+                     ;TODO test past-latests and integration
                      :current-latest (fn [current-latest & _]
                                        (maybe/just current-latest))
                      :current-time (fn [_ _ current-time & _]
