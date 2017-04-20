@@ -24,6 +24,13 @@
   (test-helpers/behavior test-helpers/polynomial
                          (test-helpers/exponential rational-base)))
 
+(def advance
+  (gen/let [n gen/pos-int]
+           (let [e (frp/event)]
+             (fn []
+               (dotimes [_ n]
+                 (e unit/unit))))))
+
 (clojure-test/defspec
   first-theorem
   test-helpers/num-tests
@@ -33,7 +40,7 @@
      lower-limit-value (gen/no-shrink (gen/fmap #?(:clj  numeric-tower/abs
                                                    :cljs js/Math.abs)
                                                 gen/ratio))
-     n gen/pos-int]
+     advance* advance]
     (let [integral-behavior ((helpers/lift-a 2
                                              (fn [x y]
                                                ;TODO remove with-redefs after cats.context is fixed
@@ -48,8 +55,7 @@
                                             original-behavior))
           e (frp/event)]
       (frp/activate)
-      (dotimes [_ n]
-        (e unit/unit))
+      (advance*)
       (let [latest @integral-behavior]
         (e unit/unit)
         (cond (< @@frp/time lower-limit-value)
@@ -75,7 +81,8 @@
          derivative-linear
          test-helpers/num-tests
          (test-helpers/restart-for-all
-           [[_ coefficient :as coefficients] (gen/vector gen/ratio 2)]
+           [[_ coefficient :as coefficients] (gen/vector gen/ratio 2)
+            advance* advance]
            (let [linear-behavior (helpers/<$>
                                    (comp (partial test-helpers/get-polynomial
                                                   coefficients)
@@ -83,4 +90,5 @@
                                    frp/time)
                  derivative-behavior (frp/derivative linear-behavior)]
              (frp/activate)
+             (advance*)
              (= coefficient @@derivative-behavior))))))
