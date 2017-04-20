@@ -22,6 +22,9 @@
 (def switcher
   behavior/switcher)
 
+(def calculus
+  behavior/calculus)
+
 (def behavior
   derived-behavior/behavior)
 

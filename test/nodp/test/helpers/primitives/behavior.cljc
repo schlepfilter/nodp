@@ -182,6 +182,24 @@
                                     frp/time))))
 
 (clojure-test/defspec
+  current-time
+  test-helpers/num-tests
+  (test-helpers/restart-for-all
+    [lower-limit-number (gen/no-shrink gen/nat)
+     original-behavior (gen/no-shrink continuous-behavior)]
+    (let [current-time-behavior (frp/calculus (fn [_ _ current-time & _]
+                                                (maybe/just @current-time))
+                                              (-> lower-limit-number
+                                                  time/time
+                                                  maybe/just)
+                                              original-behavior)]
+      (frp/activate)
+      (or (maybe/nothing? @current-time-behavior)
+          (and (= @@frp/time lower-limit-number)
+               (= @@current-time-behavior 0))
+          (= @@current-time-behavior @@frp/time)))))
+
+(clojure-test/defspec
   first-theorem
   test-helpers/num-tests
   (test-helpers/restart-for-all
