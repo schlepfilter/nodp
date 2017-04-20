@@ -166,6 +166,7 @@
                                                      original-behavior)]
              (gen/return [lower-limit-number
                           (fn []
+                            (frp/activate)
                             (dotimes [_ number-of-occurrences]
                               (e unit/unit)))
                           current-time-behavior
@@ -179,7 +180,6 @@
     [[lower-limit-number call current-time-behavior original-behavior]
      (calculus (fn [current-latest & _]
                  (maybe/just current-latest)))]
-    (frp/activate)
     (call)
     (helpers/casep
       @@frp/time
@@ -195,7 +195,6 @@
     [[lower-limit-number call current-time-behavior]
      (calculus (fn [_ _ current-time & _]
                  (maybe/just @current-time)))]
-    (frp/activate)
     (call)
     (helpers/casep
       @@frp/time
@@ -211,7 +210,6 @@
     [[lower-limit-number call current-time-behavior]
      (calculus (fn [_ _ _ past-time _]
                  (maybe/just @past-time)))]
-    (frp/activate)
     (call)
     (helpers/casep
       @@frp/time
