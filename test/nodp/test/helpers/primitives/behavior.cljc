@@ -174,7 +174,6 @@
 
 (def continuous-behavior
   ;TODO generate a polynomial with negative exponents
-  ;TODo generate a exponential with a base of double type
   (test-helpers/behavior test-helpers/polynomial
                          (test-helpers/exponential real-base)
                          logarithmic
@@ -183,7 +182,6 @@
 (def calculus
   (gen/let [k (gen/elements [:current-latest :current-time :past-time])
             lower-limit-number gen/nat
-            ;TODO generate logalithmic and trigonometric functions
             original-behavior continuous-behavior
             number-of-occurrences gen/nat]
            (let [e (frp/event)
