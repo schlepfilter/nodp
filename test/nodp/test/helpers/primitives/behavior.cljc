@@ -191,6 +191,5 @@
   calculus-identity
   test-helpers/num-tests
   (test-helpers/restart-for-all
-    ;TODO refactor
     [calculus* calculus]
     (calculus*)))
