@@ -154,65 +154,59 @@
       (= @bound-behavior @(get-behavior @outer-behavior)))))
 
 (defn calculus
-  [f]
+  [k]
   (gen/let [lower-limit-number gen/nat
             original-behavior test-helpers/continuous-behavior
             number-of-occurrences gen/nat]
            (let [e (frp/event)
-                 current-time-behavior (frp/calculus f
-                                                     (-> lower-limit-number
-                                                         time/time
-                                                         maybe/just)
-                                                     original-behavior)]
-             (gen/return [lower-limit-number
-                          (fn []
-                            (frp/activate)
-                            (dotimes [_ number-of-occurrences]
-                              (e unit/unit)))
-                          current-time-behavior
-                          original-behavior]))))
+                 calculus-behavior
+                 (frp/calculus
+                   (case k
+                     :current-latest (fn [current-latest & _]
+                                       (maybe/just current-latest))
+                     :current-time (fn [_ _ current-time & _]
+                                     (maybe/just @current-time))
+                     :past-time (fn [_ _ _ past-time _]
+                                  (maybe/just @past-time)))
+                   (-> lower-limit-number
+                       time/time
+                       maybe/just)
+                   original-behavior)]
+             (gen/return
+               (fn []
+                 (frp/activate)
+                 (dotimes [_ number-of-occurrences]
+                   (e unit/unit))
+                 (helpers/casep
+                   @@frp/time (partial > lower-limit-number)
+                   (maybe/nothing? @calculus-behavior)
+                   (partial = lower-limit-number)
+                   (= @@calculus-behavior 0)
+                   (case k
+                     :current-latest (= @@calculus-behavior @original-behavior)
+                     :current-time (= @@calculus-behavior @@frp/time)
+                     :past-time (< @@calculus-behavior @@frp/time))))))))
 
 (clojure-test/defspec
   calculus-current-latest
   test-helpers/num-tests
   (test-helpers/restart-for-all
     ;TODO refactor
-    [[lower-limit-number call current-latest-behavior original-behavior]
-     (calculus (fn [current-latest & _]
-                 (maybe/just current-latest)))]
-    (call)
-    (helpers/casep
-      @@frp/time
-      (partial > lower-limit-number) (maybe/nothing? @current-latest-behavior)
-      (partial = lower-limit-number) (= @@current-latest-behavior 0)
-      (= @@current-latest-behavior @original-behavior))))
+    [call-test (calculus :current-latest)]
+    (call-test)))
 
 (clojure-test/defspec
   calculus-current-time
   test-helpers/num-tests
   (test-helpers/restart-for-all
     ;TODO refactor
-    [[lower-limit-number call current-time-behavior]
-     (calculus (fn [_ _ current-time & _]
-                 (maybe/just @current-time)))]
-    (call)
-    (helpers/casep
-      @@frp/time
-      (partial > lower-limit-number) (maybe/nothing? @current-time-behavior)
-      (partial = lower-limit-number) (= @@current-time-behavior 0)
-      (= @@current-time-behavior @@frp/time))))
+    [call-test (calculus :current-time)]
+    (call-test)))
 
 (clojure-test/defspec
   calculus-past-time
   test-helpers/num-tests
   (test-helpers/restart-for-all
     ;TODO refactor
-    [[lower-limit-number call past-time-behavior]
-     (calculus (fn [_ _ _ past-time _]
-                 (maybe/just @past-time)))]
-    (call)
-    (helpers/casep
-      @@frp/time
-      (partial > lower-limit-number) (maybe/nothing? @past-time-behavior)
-      (partial = lower-limit-number) (= @@past-time-behavior 0)
-      (< @@past-time-behavior @@frp/time))))
+    [call-test (calculus :past-time)]
+    (call-test)))
