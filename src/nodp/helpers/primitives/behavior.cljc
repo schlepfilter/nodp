@@ -126,7 +126,7 @@
                    (helpers/set-modifier
                      (fn [network]
                        (helpers/set-latest
-                         (tuple/tuple (helpers/get-latest time network)
+                         (tuple/tuple (:behavior (:time network))
                                       (helpers/get-latest current-behavior
                                                           network))
                          past-behavior*
@@ -144,24 +144,24 @@
                                                             network))
                                         deref))
                      (< @(get-time past-behavior network)
-                        @(helpers/get-latest time network)))
+                        @(:behavior (:time network))))
                 (helpers/set-latest
                   (f (helpers/get-latest current-behavior network)
                      (tuple/snd (helpers/get-latest past-behavior network))
-                     (helpers/get-latest time network)
+                     (:behavior (:time network))
                      (get-time past-behavior network)
                      (helpers/get-latest integration-behavior* network))
                   integration-behavior*
                   network)
                 (maybe/nothing? lower-limit-maybe) network
-                (= @(helpers/get-latest time network) @@lower-limit-maybe)
+                (= @(:behavior (:time network)) @@lower-limit-maybe)
                 (helpers/set-latest
                   (maybe/just 0)
                   integration-behavior*
                   network)
-                (and (< @@lower-limit-maybe @(helpers/get-latest time network))
+                (and (< @@lower-limit-maybe @(:behavior (:time network)))
                      (< @(get-time past-behavior network)
-                        @(helpers/get-latest time network)))
+                        @(:behavior (:time network))))
                 (helpers/set-latest
                   (f (helpers/get-latest current-behavior network)
                      (+ (tuple/snd (helpers/get-latest past-behavior network))
@@ -170,9 +170,9 @@
                                                                 network)))
                               (- @@lower-limit-maybe @(get-time past-behavior
                                                                 network)))
-                           (- @(helpers/get-latest time network)
+                           (- @(:behavior (:time network))
                               @(get-time past-behavior network))))
-                     (helpers/get-latest time network)
+                     (:behavior (:time network))
                      @lower-limit-maybe
                      (helpers/get-latest integration-behavior* network))
                   integration-behavior*
