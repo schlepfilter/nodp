@@ -64,33 +64,32 @@
               :else (or (maybe/nothing? latest)
                         (= latest @integral-behavior)))))))
 
-#?(:clj
-   (do (clojure-test/defspec
-         integral-constant
-         test-helpers/num-tests
-         (test-helpers/restart-for-all
-           [constant-behavior (gen/fmap frp/behavior gen/ratio)
-            advance* advance]
-           (let [integral-behavior (frp/integral :trapezoid
-                                                 (time/time 0)
-                                                 constant-behavior)]
-             (frp/activate)
-             (advance*)
-             (= @@integral-behavior
-                (* @constant-behavior @@frp/time)))))
+(clojure-test/defspec
+  integral-constant
+  test-helpers/num-tests
+  (test-helpers/restart-for-all
+    [constant-behavior (gen/fmap frp/behavior gen/ratio)
+     advance* advance]
+    (let [integral-behavior (frp/integral :trapezoid
+                                          (time/time 0)
+                                          constant-behavior)]
+      (frp/activate)
+      (advance*)
+      (= @@integral-behavior
+         (* @constant-behavior @@frp/time)))))
 
-       (clojure-test/defspec
-         derivative-linear
-         test-helpers/num-tests
-         (test-helpers/restart-for-all
-           [[_ coefficient :as coefficients] (gen/vector gen/ratio 2)
-            advance* advance]
-           (let [linear-behavior (helpers/<$>
-                                   (comp (partial test-helpers/get-polynomial
-                                                  coefficients)
-                                         deref)
-                                   frp/time)
-                 derivative-behavior (frp/derivative linear-behavior)]
-             (frp/activate)
-             (advance*)
-             (= coefficient @@derivative-behavior))))))
+(clojure-test/defspec
+  derivative-linear
+  test-helpers/num-tests
+  (test-helpers/restart-for-all
+    [[_ coefficient :as coefficients] (gen/vector gen/ratio 2)
+     advance* advance]
+    (let [linear-behavior (helpers/<$>
+                            (comp (partial test-helpers/get-polynomial
+                                           coefficients)
+                                  deref)
+                            frp/time)
+          derivative-behavior (frp/derivative linear-behavior)]
+      (frp/activate)
+      (advance*)
+      (= coefficient @@derivative-behavior))))
