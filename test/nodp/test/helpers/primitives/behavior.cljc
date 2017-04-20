@@ -192,5 +192,5 @@
   test-helpers/num-tests
   (test-helpers/restart-for-all
     ;TODO refactor
-    [call-test calculus]
-    (call-test)))
+    [calculus* calculus]
+    (calculus*)))
