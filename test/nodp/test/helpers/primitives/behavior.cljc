@@ -153,9 +153,9 @@
       (call)
       (= @bound-behavior @(get-behavior @outer-behavior)))))
 
-(defn calculus
-  [k]
-  (gen/let [lower-limit-number gen/nat
+(def calculus
+  (gen/let [k (gen/elements [:current-latest :current-time :past-time])
+            lower-limit-number gen/nat
             original-behavior test-helpers/continuous-behavior
             number-of-occurrences gen/nat]
            (let [e (frp/event)
@@ -188,25 +188,9 @@
                      :past-time (< @@calculus-behavior @@frp/time))))))))
 
 (clojure-test/defspec
-  calculus-current-latest
+  calculus-identity
   test-helpers/num-tests
   (test-helpers/restart-for-all
     ;TODO refactor
-    [call-test (calculus :current-latest)]
-    (call-test)))
-
-(clojure-test/defspec
-  calculus-current-time
-  test-helpers/num-tests
-  (test-helpers/restart-for-all
-    ;TODO refactor
-    [call-test (calculus :current-time)]
-    (call-test)))
-
-(clojure-test/defspec
-  calculus-past-time
-  test-helpers/num-tests
-  (test-helpers/restart-for-all
-    ;TODO refactor
-    [call-test (calculus :past-time)]
+    [call-test calculus]
     (call-test)))
