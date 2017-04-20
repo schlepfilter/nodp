@@ -184,9 +184,12 @@
                              :infinite? false})
                gen/ratio]))
 
+(def pos-rational
+  (gen/such-that (complement neg?) rational))
+
 (def calculus
   (gen/let [k (gen/elements [:current-latest :current-time :past-time])
-            lower-limit-number gen/nat
+            lower-limit-number pos-rational
             x rational
             e (gen/return (frp/event))
             ;TODO call e with rationals
