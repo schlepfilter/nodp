@@ -143,7 +143,7 @@
            (partial get-polynomial coefficients)))
 
 (def exponential
-  (gen/let [base gen/s-pos-int]
+  (gen/let [base (gen/one-of [gen/s-pos-int gen/s-neg-int])]
            (partial expt (/ base))))
 
 (def behavior

@@ -165,6 +165,8 @@
                     inc)))
 
 (def continuous-behavior
+  ;TODO generate a polynomial with negative exponents
+  ;TODo generate a exponential with a base of double type
   (test-helpers/behavior test-helpers/polynomial
                          test-helpers/exponential
                          logarithmic
