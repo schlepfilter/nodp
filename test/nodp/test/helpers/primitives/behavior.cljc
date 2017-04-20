@@ -179,11 +179,18 @@
                          logarithmic
                          real-trigonometric))
 
+(def rational
+  (gen/one-of [(gen/double* {:NaN?      false
+                             :infinite? false})
+               gen/ratio]))
+
 (def calculus
   (gen/let [k (gen/elements [:current-latest :current-time :past-time])
             lower-limit-number gen/nat
-            ;TODO generate a behavior with stepper
-            original-behavior continuous-behavior
+            x rational
+            e (gen/return (frp/event))
+            original-behavior (gen/one-of [continuous-behavior
+                                           (gen/return (frp/stepper x e))])
             number-of-occurrences gen/nat]
            (let [e (frp/event)
                  calculus-behavior
