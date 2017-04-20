@@ -141,7 +141,8 @@
 (def <>
   ;TODO refactor
   (gen/let [probabilities (gen/vector test-helpers/probability 2)
-            [input-events fmapped-events] (test-helpers/events-tuple probabilities)
+            [input-events fmapped-events]
+            (test-helpers/events-tuple probabilities)
             ns (gen/vector (gen/sized (partial gen/choose 0))
                            (count input-events))
             calls (gen/shuffle (mapcat (fn [n e]
