@@ -162,7 +162,7 @@
      original-behavior test-helpers/continuous-behavior
      number-of-occurrences gen/nat]
     (let [e (frp/event)
-          current-time-behavior (frp/calculus (fn [current-latest _ _ & _]
+          current-time-behavior (frp/calculus (fn [current-latest & _]
                                                 (maybe/just current-latest))
                                               (-> lower-limit-number
                                                   time/time
