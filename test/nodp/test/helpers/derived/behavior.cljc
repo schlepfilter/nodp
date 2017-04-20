@@ -22,7 +22,7 @@
   test-helpers/num-tests
   (test-helpers/restart-for-all
     [original-behavior test-helpers/continuous-behavior
-     integration-method (gen/elements [:left :trapezoid])
+     integration-method (gen/elements [:left :right :trapezoid])
      lower-limit-value (gen/fmap #?(:clj  numeric-tower/abs
                                     :cljs js/Math.abs) gen/ratio)
      n gen/pos-int]

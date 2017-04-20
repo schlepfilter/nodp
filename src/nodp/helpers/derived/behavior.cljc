@@ -31,6 +31,8 @@
       (maybe/just (+ (case k
                        :left (* past-latest
                                 (get-delta-number current-time past-time))
+                       :right (* current-latest
+                                 (get-delta-number current-time past-time))
                        :trapezoid (/ (* (+ current-latest past-latest)
                                         (get-delta-number current-time
                                                           past-time))
