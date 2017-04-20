@@ -171,10 +171,11 @@
       (frp/activate)
       (dotimes [_ number-of-occurrences]
         (e unit/unit))
-      (or (maybe/nothing? @current-time-behavior)
-          (and (= @@frp/time lower-limit-number)
-               (= @@current-time-behavior 0))
-          (= @@current-time-behavior @original-behavior)))))
+      (helpers/casep
+        @@frp/time
+        (partial > lower-limit-number) (maybe/nothing? @current-time-behavior)
+        (partial = lower-limit-number) (= @@current-time-behavior 0)
+        (= @@current-time-behavior @original-behavior)))))
 
 (clojure-test/defspec
   calculus-current-time
