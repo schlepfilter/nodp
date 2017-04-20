@@ -208,21 +208,13 @@
   test-helpers/num-tests
   (test-helpers/restart-for-all
     ;TODO refactor
-    [lower-limit-number gen/nat
-     original-behavior test-helpers/continuous-behavior
-     number-of-occurrences gen/nat]
-    (let [e (frp/event)
-          current-time-behavior (frp/calculus (fn [_ _ _ past-time & _]
-                                                (maybe/just @past-time))
-                                              (-> lower-limit-number
-                                                  time/time
-                                                  maybe/just)
-                                              original-behavior)]
-      (frp/activate)
-      (dotimes [_ number-of-occurrences]
-        (e unit/unit))
-      (helpers/casep
-        @@frp/time
-        (partial > lower-limit-number) (maybe/nothing? @current-time-behavior)
-        (partial = lower-limit-number) (= @@current-time-behavior 0)
-        (< @@current-time-behavior @@frp/time)))))
+    [[lower-limit-number call current-time-behavior]
+     (calculus (fn [_ _ _ past-time _]
+                 (maybe/just @past-time)))]
+    (frp/activate)
+    (call)
+    (helpers/casep
+      @@frp/time
+      (partial > lower-limit-number) (maybe/nothing? @current-time-behavior)
+      (partial = lower-limit-number) (= @@current-time-behavior 0)
+      (< @@current-time-behavior @@frp/time))))
