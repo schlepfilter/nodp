@@ -28,19 +28,16 @@
          current-time
          past-time
          integration]
-      (case k
-        :left (maybe/just (+ (* past-latest
+      (maybe/just (+ (case k
+                       :left (* past-latest
                                 (get-delta-number current-time past-time))
-                             (maybe/maybe 0
-                                          integration
-                                          identity)))
-        :trapezoid (maybe/just (+ (/ (* (+ current-latest past-latest)
+                       :trapezoid (/ (* (+ current-latest past-latest)
                                         (get-delta-number current-time
                                                           past-time))
-                                     2)
-                                  (maybe/maybe 0
-                                               integration
-                                               identity)))))
+                                     2))
+                     (maybe/maybe 0
+                                  integration
+                                  identity))))
     (maybe/just t)
     b))
 
