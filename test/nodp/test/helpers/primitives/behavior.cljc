@@ -186,14 +186,18 @@
   test-helpers/num-tests
   (test-helpers/restart-for-all
     [lower-limit-number gen/nat
-     original-behavior continuous-behavior]
+     original-behavior continuous-behavior
+     number-of-occurrences gen/nat]
     (let [current-time-behavior (frp/calculus (fn [_ _ current-time & _]
                                                 (maybe/just @current-time))
                                               (-> lower-limit-number
                                                   time/time
                                                   maybe/just)
-                                              original-behavior)]
+                                              original-behavior)
+          e (frp/event)]
       (frp/activate)
+      (dotimes [_ number-of-occurrences]
+        (e unit/unit))
       (or (maybe/nothing? @current-time-behavior)
           (and (= @@frp/time lower-limit-number)
                (= @@current-time-behavior 0))
