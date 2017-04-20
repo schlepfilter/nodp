@@ -25,6 +25,11 @@
          past-time
          integration]
       (case k
+        :left (maybe/just (+ (* past-latest
+                                (- @current-time @past-time))
+                             (maybe/maybe 0
+                                          integration
+                                          identity)))
         :trapezoid (maybe/just (+ (/ (* (+ current-latest past-latest)
                                         (- @current-time @past-time))
                                      2)
