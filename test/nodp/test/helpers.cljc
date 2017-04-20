@@ -154,3 +154,10 @@
                                 frp/time)))
         gen/one-of
         vector))
+
+(def advance
+  (gen/let [n gen/pos-int]
+           (let [e (frp/event)]
+             (fn []
+               (dotimes [_ n]
+                 (e unit/unit))))))

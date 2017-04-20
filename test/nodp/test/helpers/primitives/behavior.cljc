@@ -195,9 +195,8 @@
             ;TODO call e with rationals
             original-behavior (gen/one-of [continuous-behavior
                                            (gen/return (frp/stepper x e))])
-            number-of-occurrences gen/nat]
-           (let [e (frp/event)
-                 calculus-behavior
+            advance* test-helpers/advance]
+           (let [calculus-behavior
                  (frp/calculus
                    (case k
                      :current-latest (fn [current-latest & _]
@@ -213,8 +212,7 @@
              (gen/return
                (fn []
                  (frp/activate)
-                 (dotimes [_ number-of-occurrences]
-                   (e unit/unit))
+                 (advance*)
                  (helpers/casep
                    @@frp/time (partial > lower-limit-number)
                    (maybe/nothing? @calculus-behavior)
