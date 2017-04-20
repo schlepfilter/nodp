@@ -23,11 +23,7 @@
 (defn integral
   [k t b]
   (behavior/calculus
-    (fn [current-latest
-         past-latest
-         current-time
-         past-time
-         integration]
+    (fn [current-latest past-latest current-time past-time integration]
       (maybe/just (+ (case k
                        :left (* past-latest
                                 (get-delta-number current-time past-time))
