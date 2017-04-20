@@ -160,13 +160,13 @@
     [lower-limit-number gen/nat
      original-behavior test-helpers/continuous-behavior
      number-of-occurrences gen/nat]
-    (let [current-time-behavior (frp/calculus (fn [_ _ current-time & _]
+    (let [e (frp/event)
+          current-time-behavior (frp/calculus (fn [_ _ current-time & _]
                                                 (maybe/just @current-time))
                                               (-> lower-limit-number
                                                   time/time
                                                   maybe/just)
-                                              original-behavior)
-          e (frp/event)]
+                                              original-behavior)]
       (frp/activate)
       (dotimes [_ number-of-occurrences]
         (e unit/unit))
