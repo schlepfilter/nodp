@@ -154,6 +154,28 @@
       (= @bound-behavior @(get-behavior @outer-behavior)))))
 
 (clojure-test/defspec
+  current-latest
+  test-helpers/num-tests
+  (test-helpers/restart-for-all
+    [lower-limit-number gen/nat
+     original-behavior test-helpers/continuous-behavior
+     number-of-occurrences gen/nat]
+    (let [e (frp/event)
+          current-time-behavior (frp/calculus (fn [current-latest* _ _ & _]
+                                                (maybe/just current-latest*))
+                                              (-> lower-limit-number
+                                                  time/time
+                                                  maybe/just)
+                                              original-behavior)]
+      (frp/activate)
+      (dotimes [_ number-of-occurrences]
+        (e unit/unit))
+      (or (maybe/nothing? @current-time-behavior)
+          (and (= @@frp/time lower-limit-number)
+               (= @@current-time-behavior 0))
+          (= @@current-time-behavior @original-behavior)))))
+
+(clojure-test/defspec
   current-time
   test-helpers/num-tests
   (test-helpers/restart-for-all
