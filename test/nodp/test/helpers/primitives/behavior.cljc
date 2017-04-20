@@ -189,6 +189,7 @@
             lower-limit-number gen/nat
             x rational
             e (gen/return (frp/event))
+            ;TODO call e with rationals
             original-behavior (gen/one-of [continuous-behavior
                                            (gen/return (frp/stepper x e))])
             number-of-occurrences gen/nat]
