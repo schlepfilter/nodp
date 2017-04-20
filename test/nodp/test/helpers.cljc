@@ -4,6 +4,8 @@
             [clojure.test.check.properties :as prop]
             [clojure.test.check.random :as random]
             [clojure.test.check.rose-tree :as rose]
+    #?(:clj
+            [clojure.math.numeric-tower :as numeric-tower])
             [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.primitives.event :as event]
@@ -124,3 +126,29 @@
       (let [result (first @state)]
         (swap! state rest)
         result))))
+
+(def expt
+  #?(:clj  numeric-tower/expt
+     :cljs js/Math.pow))
+
+(defn get-polynomial
+  [coefficients x]
+  (reduce-kv (fn [init k v]
+               (+ init (* v (expt x k))))
+             0
+             coefficients))
+
+(def polynomial
+  (gen/let [coefficients (gen/vector gen/ratio)]
+           (partial get-polynomial coefficients)))
+
+(def exponential
+  (gen/let [base gen/s-pos-int]
+           (partial expt (/ base))))
+
+(def continuous-behavior
+  (gen/let [f (gen/one-of [polynomial exponential])]
+           ;TODO generate algebraic operations to perform on the behavior
+           (gen/return (helpers/<$> (comp f
+                                          deref)
+                                    frp/time))))

@@ -5,8 +5,6 @@
              :as clojure-test
              :include-macros true]
             [clojure.test.check.generators :as gen]
-    #?(:clj
-            [clojure.math.numeric-tower :as numeric-tower])
             [#?(:clj  clojure.test
                 :cljs cljs.test) :as test :include-macros true]
             [nodp.helpers :as helpers]
@@ -155,38 +153,12 @@
       (call)
       (= @bound-behavior @(get-behavior @outer-behavior)))))
 
-(def expt
-  #?(:clj  numeric-tower/expt
-     :cljs js/Math.pow))
-
-(defn get-polynomial
-  [coefficients x]
-  (reduce-kv (fn [init k v]
-               (+ init (* v (expt x k))))
-             0
-             coefficients))
-
-(def polynomial
-  (gen/let [coefficients (gen/vector gen/ratio)]
-           (partial get-polynomial coefficients)))
-
-(def exponential
-  (gen/let [base gen/s-pos-int]
-           (partial expt (/ base))))
-
-(def continuous-behavior
-  (gen/let [f (gen/one-of [polynomial exponential])]
-           ;TODO generate algebraic operations to perform on the behavior
-           (gen/return (helpers/<$> (comp f
-                                          deref)
-                                    frp/time))))
-
 (clojure-test/defspec
   current-time
   test-helpers/num-tests
   (test-helpers/restart-for-all
     [lower-limit-number gen/nat
-     original-behavior continuous-behavior
+     original-behavior test-helpers/continuous-behavior
      number-of-occurrences gen/nat]
     (let [current-time-behavior (frp/calculus (fn [_ _ current-time & _]
                                                 (maybe/just @current-time))
@@ -202,52 +174,3 @@
           (and (= @@frp/time lower-limit-number)
                (= @@current-time-behavior 0))
           (= @@current-time-behavior @@frp/time)))))
-
-(clojure-test/defspec
-  first-theorem
-  test-helpers/num-tests
-  (test-helpers/restart-for-all
-    [original-behavior continuous-behavior
-     integration-method (gen/elements [:trapezoid])
-     lower-limit-value (gen/fmap #?(:clj  numeric-tower/abs
-                                    :cljs js/Math.abs) gen/ratio)
-     n gen/pos-int]
-    (let [integral-behavior ((helpers/lift-a 2
-                                             (fn [x y]
-                                               ;TODO remove with-redefs after cats.context is fixed
-                                               (with-redefs [cats.context/infer
-                                                             helpers/infer]
-                                                 ((helpers/lift-a 2 -) x y))))
-                              (frp/integral integration-method
-                                            (time/time 0)
-                                            original-behavior)
-                              (frp/integral integration-method
-                                            (time/time lower-limit-value)
-                                            original-behavior))
-          e (frp/event)]
-      (frp/activate)
-      (dotimes [_ n]
-        (e unit/unit))
-      (let [latest @integral-behavior]
-        (e unit/unit)
-        (cond (< @@frp/time lower-limit-value)
-              (= @integral-behavior helpers/nothing)
-              (= @@frp/time lower-limit-value) (= @@integral-behavior 0)
-              :else (or (maybe/nothing? latest)
-                        (= latest @integral-behavior)))))))
-
-#?(:clj (clojure-test/defspec
-          second-theorem
-          test-helpers/num-tests
-          (test-helpers/restart-for-all
-            [original-behavior (gen/fmap frp/behavior gen/ratio)]
-            (let [derivative-behavior (->> original-behavior
-                                           (frp/integral
-                                             :trapezoid
-                                             (time/time 0))
-                                           (helpers/<$> deref)
-                                           frp/derivative)]
-              (frp/activate)
-              (= @original-behavior @@derivative-behavior)))))
-
-;TODO test integral and derivative with linear functions of time
