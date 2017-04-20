@@ -155,12 +155,20 @@
       (call)
       (= @bound-behavior @(get-behavior @outer-behavior)))))
 
+(def real-trigonometric
+  (gen/elements #?(:clj  [incanter/sin incanter/cos incanter/atan]
+                   :cljs [js/Math.sin js/Math.cos js/Math.atan])))
+
+(def logarithmic
+  (gen/return (comp #?(:clj  incanter/log
+                       :cljs js/Math.log)
+                    inc)))
+
 (def continuous-behavior
   (test-helpers/behavior test-helpers/polynomial
                          test-helpers/exponential
-                         (gen/return (comp #?(:clj  incanter/log
-                                              :cljs js/Math.log)
-                                           inc))))
+                         logarithmic
+                         real-trigonometric))
 
 (def calculus
   (gen/let [k (gen/elements [:current-latest :current-time :past-time])
