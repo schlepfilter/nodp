@@ -17,12 +17,12 @@
 
 (test/use-fixtures :each test-helpers/fixture)
 
-(def rational-exponential
-  (gen/let [base (gen/one-of [gen/s-pos-int gen/s-neg-int])]
-           (partial test-helpers/expt (/ base))))
+(def rational-base
+  (gen/one-of [gen/s-pos-int gen/s-neg-int]))
 
 (def rational-continuous-behavior
-  (test-helpers/behavior test-helpers/polynomial rational-exponential))
+  (test-helpers/behavior test-helpers/polynomial
+                         (test-helpers/exponential rational-base)))
 
 (clojure-test/defspec
   first-theorem

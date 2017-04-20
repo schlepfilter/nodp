@@ -142,6 +142,10 @@
   (gen/let [coefficients (gen/vector gen/ratio)]
            (partial get-polynomial coefficients)))
 
+(def exponential
+  (partial gen/fmap
+           (comp (helpers/curry 2 expt) /)))
+
 (def behavior
   (comp (partial gen/fmap
                  (fn [f]
