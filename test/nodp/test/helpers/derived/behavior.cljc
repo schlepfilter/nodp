@@ -18,8 +18,7 @@
 (test/use-fixtures :each test-helpers/fixture)
 
 (def rational-continuous-behavior
-  (test-helpers/behavior (gen/one-of [test-helpers/polynomial
-                                      test-helpers/exponential])))
+  (test-helpers/behavior test-helpers/polynomial test-helpers/exponential))
 
 (clojure-test/defspec
   first-theorem

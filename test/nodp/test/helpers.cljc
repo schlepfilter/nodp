@@ -147,8 +147,10 @@
            (partial expt (/ base))))
 
 (def behavior
-  (partial gen/fmap
-           (fn [f]
-             (helpers/<$> (comp f
-                                deref)
-                          frp/time))))
+  (comp (partial gen/fmap
+                 (fn [f]
+                   (helpers/<$> (comp f
+                                      deref)
+                                frp/time)))
+        gen/one-of
+        vector))
