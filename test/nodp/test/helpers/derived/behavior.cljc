@@ -31,7 +31,8 @@
     [original-behavior (gen/no-shrink rational-continuous-behavior)
      integration-method (gen/no-shrink (gen/elements [:left :right :trapezoid]))
      lower-limit-value (gen/no-shrink (gen/fmap #?(:clj  numeric-tower/abs
-                                                   :cljs js/Math.abs) gen/ratio))
+                                                   :cljs js/Math.abs)
+                                                gen/ratio))
      n gen/pos-int]
     (let [integral-behavior ((helpers/lift-a 2
                                              (fn [x y]
