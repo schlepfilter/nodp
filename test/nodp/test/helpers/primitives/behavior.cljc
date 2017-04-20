@@ -164,11 +164,20 @@
                        :cljs js/Math.log)
                     inc)))
 
+(def exponential
+  (gen/let [base (gen/one-of [(gen/double* {:NaN?      false
+                                            :infinite? false
+                                            :max       -1})
+                              (gen/double* {:NaN?      false
+                                            :infinite? false
+                                            :min       1})])]
+           (partial test-helpers/expt (/ base))))
+
 (def continuous-behavior
   ;TODO generate a polynomial with negative exponents
   ;TODo generate a exponential with a base of double type
   (test-helpers/behavior test-helpers/polynomial
-                         test-helpers/exponential
+                         exponential
                          logarithmic
                          real-trigonometric))
 

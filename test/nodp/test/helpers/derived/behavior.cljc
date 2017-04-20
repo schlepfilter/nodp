@@ -17,17 +17,21 @@
 
 (test/use-fixtures :each test-helpers/fixture)
 
+(def rational-exponential
+  (gen/let [base (gen/one-of [gen/s-pos-int gen/s-neg-int])]
+           (partial test-helpers/expt (/ base))))
+
 (def rational-continuous-behavior
-  (test-helpers/behavior test-helpers/polynomial test-helpers/exponential))
+  (test-helpers/behavior test-helpers/polynomial rational-exponential))
 
 (clojure-test/defspec
   first-theorem
   test-helpers/num-tests
   (test-helpers/restart-for-all
-    [original-behavior rational-continuous-behavior
-     integration-method (gen/elements [:left :right :trapezoid])
-     lower-limit-value (gen/fmap #?(:clj  numeric-tower/abs
-                                    :cljs js/Math.abs) gen/ratio)
+    [original-behavior (gen/no-shrink rational-continuous-behavior)
+     integration-method (gen/no-shrink (gen/elements [:left :right :trapezoid]))
+     lower-limit-value (gen/no-shrink (gen/fmap #?(:clj  numeric-tower/abs
+                                                   :cljs js/Math.abs) gen/ratio))
      n gen/pos-int]
     (let [integral-behavior ((helpers/lift-a 2
                                              (fn [x y]
