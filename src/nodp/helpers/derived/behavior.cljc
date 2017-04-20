@@ -16,6 +16,10 @@
   (behavior/switcher (behavior a)
                      (nodp.helpers/<$> behavior e)))
 
+(defn get-delta-number
+  [current-time past-time]
+  (- @current-time @past-time))
+
 (defn integral
   [k t b]
   (behavior/calculus
@@ -26,12 +30,13 @@
          integration]
       (case k
         :left (maybe/just (+ (* past-latest
-                                (- @current-time @past-time))
+                                (get-delta-number current-time past-time))
                              (maybe/maybe 0
                                           integration
                                           identity)))
         :trapezoid (maybe/just (+ (/ (* (+ current-latest past-latest)
-                                        (- @current-time @past-time))
+                                        (get-delta-number current-time
+                                                          past-time))
                                      2)
                                   (maybe/maybe 0
                                                integration
