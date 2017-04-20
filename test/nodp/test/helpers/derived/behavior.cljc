@@ -56,9 +56,8 @@
           (test-helpers/restart-for-all
             [original-behavior (gen/fmap frp/behavior gen/ratio)]
             (let [derivative-behavior (->> original-behavior
-                                           (frp/integral
-                                             :trapezoid
-                                             (time/time 0))
+                                           (frp/integral :trapezoid
+                                                         (time/time 0))
                                            (helpers/<$> deref)
                                            frp/derivative)]
               (frp/activate)
