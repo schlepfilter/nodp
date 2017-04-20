@@ -177,15 +177,15 @@
   test-helpers/num-tests
   (test-helpers/restart-for-all
     ;TODO refactor
-    [[lower-limit-number call current-time-behavior original-behavior]
+    [[lower-limit-number call current-latest-behavior original-behavior]
      (calculus (fn [current-latest & _]
                  (maybe/just current-latest)))]
     (call)
     (helpers/casep
       @@frp/time
-      (partial > lower-limit-number) (maybe/nothing? @current-time-behavior)
-      (partial = lower-limit-number) (= @@current-time-behavior 0)
-      (= @@current-time-behavior @original-behavior))))
+      (partial > lower-limit-number) (maybe/nothing? @current-latest-behavior)
+      (partial = lower-limit-number) (= @@current-latest-behavior 0)
+      (= @@current-latest-behavior @original-behavior))))
 
 (clojure-test/defspec
   calculus-current-time
@@ -207,12 +207,12 @@
   test-helpers/num-tests
   (test-helpers/restart-for-all
     ;TODO refactor
-    [[lower-limit-number call current-time-behavior]
+    [[lower-limit-number call past-time-behavior]
      (calculus (fn [_ _ _ past-time _]
                  (maybe/just @past-time)))]
     (call)
     (helpers/casep
       @@frp/time
-      (partial > lower-limit-number) (maybe/nothing? @current-time-behavior)
-      (partial = lower-limit-number) (= @@current-time-behavior 0)
-      (< @@current-time-behavior @@frp/time))))
+      (partial > lower-limit-number) (maybe/nothing? @past-time-behavior)
+      (partial = lower-limit-number) (= @@past-time-behavior 0)
+      (< @@past-time-behavior @@frp/time))))
