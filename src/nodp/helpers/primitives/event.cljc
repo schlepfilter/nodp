@@ -302,4 +302,5 @@
         time/start
         (fn []
           ;switcher's behavior-valued event may be a unit event
-          (reset! helpers/network-state (modify-behavior! (time/now) @helpers/network-state)))))
+          (reset! helpers/network-state
+                  (modify-behavior! (time/now) @helpers/network-state)))))
