@@ -120,7 +120,6 @@
 (defn calculus
   [f lower-limit-maybe current-behavior]
   ;TODO refactor
-  ;TODO allow current-behavior's latest to be maybe
   (let [past-behavior
         (behavior* past-behavior*
                    (helpers/set-modifier
