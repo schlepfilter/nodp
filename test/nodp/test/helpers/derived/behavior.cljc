@@ -35,11 +35,11 @@
   first-theorem
   test-helpers/num-tests
   (test-helpers/restart-for-all
-    [original-behavior (gen/no-shrink rational-continuous-behavior)
-     integration-method (gen/no-shrink (gen/elements [:left :right :trapezoid]))
-     lower-limit-value (gen/no-shrink (gen/fmap #?(:clj  numeric-tower/abs
-                                                   :cljs js/Math.abs)
-                                                gen/ratio))
+    [original-behavior rational-continuous-behavior
+     integration-method (gen/elements [:left :right :trapezoid])
+     lower-limit-value (gen/fmap #?(:clj  numeric-tower/abs
+                                    :cljs js/Math.abs)
+                                 gen/ratio)
      advance* advance]
     (let [integral-behavior ((helpers/lift-a 2
                                              (fn [x y]
