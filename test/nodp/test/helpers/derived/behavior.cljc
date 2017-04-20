@@ -58,17 +58,29 @@
               :else (or (maybe/nothing? latest)
                         (= latest @integral-behavior)))))))
 
-#?(:clj (clojure-test/defspec
-          second-theorem
-          test-helpers/num-tests
-          (test-helpers/restart-for-all
-            [original-behavior (gen/fmap frp/behavior gen/ratio)]
-            (let [derivative-behavior (->> original-behavior
-                                           (frp/integral :trapezoid
-                                                         (time/time 0))
-                                           (helpers/<$> deref)
-                                           frp/derivative)]
-              (frp/activate)
-              (= @original-behavior @@derivative-behavior)))))
+#?(:clj
+   (do (clojure-test/defspec
+         integral-constant
+         test-helpers/num-tests
+         (test-helpers/restart-for-all
+           [constant-behavior (gen/fmap frp/behavior gen/ratio)]
+           (let [integral-behavior (frp/integral :trapezoid
+                                                 (time/time 0)
+                                                 constant-behavior)]
+             (frp/activate)
+             (= @@integral-behavior
+                (* @constant-behavior @@frp/time)))))
 
-;TODO test integral and derivative with linear functions of time
+       (clojure-test/defspec
+         derivative-linear
+         test-helpers/num-tests
+         (test-helpers/restart-for-all
+           [[_ coefficient :as coefficients] (gen/vector gen/ratio 2)]
+           (let [linear-behavior (helpers/<$>
+                                   (comp (partial test-helpers/get-polynomial
+                                                  coefficients)
+                                         deref)
+                                   frp/time)
+                 derivative-behavior (frp/derivative linear-behavior)]
+             (frp/activate)
+             (= coefficient @@derivative-behavior))))))
