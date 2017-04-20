@@ -69,11 +69,13 @@
          integral-constant
          test-helpers/num-tests
          (test-helpers/restart-for-all
-           [constant-behavior (gen/fmap frp/behavior gen/ratio)]
+           [constant-behavior (gen/fmap frp/behavior gen/ratio)
+            advance* advance]
            (let [integral-behavior (frp/integral :trapezoid
                                                  (time/time 0)
                                                  constant-behavior)]
              (frp/activate)
+             (advance*)
              (= @@integral-behavior
                 (* @constant-behavior @@frp/time)))))
 
