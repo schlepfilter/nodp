@@ -185,8 +185,8 @@
   current-time
   test-helpers/num-tests
   (test-helpers/restart-for-all
-    [lower-limit-number (gen/no-shrink gen/nat)
-     original-behavior (gen/no-shrink continuous-behavior)]
+    [lower-limit-number gen/nat
+     original-behavior continuous-behavior]
     (let [current-time-behavior (frp/calculus (fn [_ _ current-time & _]
                                                 (maybe/just @current-time))
                                               (-> lower-limit-number
