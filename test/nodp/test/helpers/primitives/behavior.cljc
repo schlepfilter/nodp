@@ -157,6 +157,7 @@
   calculus-current-latest
   test-helpers/num-tests
   (test-helpers/restart-for-all
+    ;TODO refactor
     [lower-limit-number gen/nat
      original-behavior test-helpers/continuous-behavior
      number-of-occurrences gen/nat]
@@ -179,6 +180,7 @@
   calculus-current-time
   test-helpers/num-tests
   (test-helpers/restart-for-all
+    ;TODO refactor
     [lower-limit-number gen/nat
      original-behavior test-helpers/continuous-behavior
      number-of-occurrences gen/nat]
