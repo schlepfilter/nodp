@@ -7,6 +7,8 @@
             [clojure.test.check.generators :as gen]
             [#?(:clj  clojure.test
                 :cljs cljs.test) :as test :include-macros true]
+    #?(:clj
+            [incanter.core :as incanter])
             [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.time :as time]
@@ -156,7 +158,8 @@
 (def continuous-behavior
   (test-helpers/behavior test-helpers/polynomial
                          test-helpers/exponential
-                         (gen/return (comp incanter.core/log
+                         (gen/return (comp #?(:clj  incanter/log
+                                              :cljs js/Math.log)
                                            inc))))
 
 (def calculus
