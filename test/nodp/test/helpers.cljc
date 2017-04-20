@@ -146,9 +146,9 @@
   (gen/let [base gen/s-pos-int]
            (partial expt (/ base))))
 
-(def continuous-behavior
-  (gen/let [f (gen/one-of [polynomial exponential])]
-           ;TODO generate algebraic operations to perform on the behavior
-           (gen/return (helpers/<$> (comp f
-                                          deref)
-                                    frp/time))))
+(def behavior
+  (partial gen/fmap
+           (fn [f]
+             (helpers/<$> (comp f
+                                deref)
+                          frp/time))))

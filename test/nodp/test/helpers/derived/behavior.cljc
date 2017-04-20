@@ -17,11 +17,15 @@
 
 (test/use-fixtures :each test-helpers/fixture)
 
+(def rational-continuous-behavior
+  (test-helpers/behavior (gen/one-of [test-helpers/polynomial
+                                      test-helpers/exponential])))
+
 (clojure-test/defspec
   first-theorem
   test-helpers/num-tests
   (test-helpers/restart-for-all
-    [original-behavior test-helpers/continuous-behavior
+    [original-behavior rational-continuous-behavior
      integration-method (gen/elements [:left :right :trapezoid])
      lower-limit-value (gen/fmap #?(:clj  numeric-tower/abs
                                     :cljs js/Math.abs) gen/ratio)

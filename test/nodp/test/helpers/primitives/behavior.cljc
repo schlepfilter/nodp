@@ -153,11 +153,17 @@
       (call)
       (= @bound-behavior @(get-behavior @outer-behavior)))))
 
+(def continuous-behavior
+  (test-helpers/behavior (gen/one-of [test-helpers/polynomial
+                                      test-helpers/exponential
+                                      (gen/return (comp incanter.core/log
+                                                        inc))])))
+
 (def calculus
   (gen/let [k (gen/elements [:current-latest :current-time :past-time])
             lower-limit-number gen/nat
             ;TODO generate logalithmic and trigonometric functions
-            original-behavior test-helpers/continuous-behavior
+            original-behavior continuous-behavior
             number-of-occurrences gen/nat]
            (let [e (frp/event)
                  calculus-behavior
