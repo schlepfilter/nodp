@@ -61,14 +61,15 @@
 
 (defn start
   []
-  (reset! helpers/network-state {:active      false
-                                 :dependency  {:event    (graph/digraph)
-                                               :behavior (graph/digraph)}
-                                 :input-state (helpers/get-queue helpers/funcall)
-                                 :id          0
-                                 :modifier    {}
-                                 :time        {:event    (time/time 0)
-                                               :behavior (time/time 0)}})
+  (reset! helpers/network-state
+          {:active      false
+           :dependency  {:event    (graph/digraph)
+                         :behavior (graph/digraph)}
+           :input-state (helpers/get-queue helpers/funcall)
+           :id          0
+           :modifier    {}
+           :time        {:event    (time/time 0)
+                         :behavior (time/time 0)}})
   (def time
     (behavior* b
                (helpers/set-modifier
