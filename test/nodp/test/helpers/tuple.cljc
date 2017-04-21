@@ -47,7 +47,7 @@
 
 (clojure-test/defspec
   monad-right-identity-law
-  10
+  test-helpers/num-tests
   (prop/for-all [a test-helpers/any-equal
                  mempty* mempty]
                 (= (nodp.helpers/>>= (tuple/tuple mempty* a) nodp.helpers/return)
@@ -55,7 +55,7 @@
 
 (clojure-test/defspec
   monad-left-identity-law
-  10
+  test-helpers/num-tests
   (prop/for-all [a test-helpers/any-equal
                  f* (test-helpers/function test-helpers/any-equal)
                  monoid* monoid]
@@ -70,7 +70,7 @@
 
 (clojure-test/defspec
   monad-associativity-law
-  10
+  test-helpers/num-tests
   (prop/for-all [a test-helpers/any-equal
                  monoids (scalar-monoid-vector 3)
                  f* (test-helpers/function test-helpers/any-equal)
