@@ -4,7 +4,8 @@
             [nodp.test.helpers.io]
             [nodp.test.helpers.primitives.behavior]
             [nodp.test.helpers.primitives.event]
-            [nodp.test.helpers.tuple]))
+            [nodp.test.helpers.tuple]
+            [nodp.test.helpers.window]))
 
 (enable-console-print!)
 

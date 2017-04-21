@@ -59,6 +59,9 @@
 
 (declare time)
 
+(def defs
+  (atom []))
+
 (defn start
   []
   (reset! helpers/network-state
@@ -78,7 +81,8 @@
                    (helpers/set-latest
                      (:behavior (:time network))
                      b
-                     network))))))
+                     network)))))
+  (run! helpers/funcall @defs))
 
 (def restart
   ;TODO call stop
