@@ -172,9 +172,15 @@
                              :infinite? false
                              :min       1})]))
 
+(def formal-laurent
+  (gen/let [offset (gen/sized (comp gen/return -))
+            coefficients (gen/vector gen/ratio)]
+           (comp (partial test-helpers/get-polynomial offset coefficients)
+                 inc)))
+
 (def continuous-behavior
   ;TODO generate a polynomial with negative exponents
-  (test-helpers/behavior test-helpers/polynomial
+  (test-helpers/behavior formal-laurent
                          (test-helpers/exponential real-base)
                          logarithmic
                          real-trigonometric))

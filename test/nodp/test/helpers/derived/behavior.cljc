@@ -79,6 +79,7 @@
      advance* test-helpers/advance]
     (let [linear-behavior (helpers/<$>
                             (comp (partial test-helpers/get-polynomial
+                                           0
                                            coefficients)
                                   deref)
                             frp/time)

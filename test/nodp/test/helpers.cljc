@@ -132,16 +132,16 @@
      :cljs js/Math.pow))
 
 (defn get-polynomial
-  [coefficients x]
+  [offset coefficients x]
   (reduce-kv (fn [init k v]
                ;+' is used instead of + to avoid integer overflow
-               (+' init (*' v (expt x k))))
+               (+' init (*' v (expt x (+ offset k)))))
              0
              coefficients))
 
 (def polynomial
   (gen/let [coefficients (gen/vector gen/ratio)]
-           (partial get-polynomial coefficients)))
+           (partial get-polynomial 0 coefficients)))
 
 (def exponential
   (partial gen/fmap
