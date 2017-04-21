@@ -196,7 +196,7 @@
          (mapv (fn [x]
                  `(fn []
                     (def ~x
-                      (behavior* b#))))
+                      (behavior* _#))))
                symbols))
 
        (defmacro make-get-synchronizers
