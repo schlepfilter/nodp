@@ -62,7 +62,7 @@
                           :dependency)))
 
 (def registry
-  (atom {:defs []
+  (atom {:defs          []
          :synchronizers []}))
 
 (defn modify-behavior!
