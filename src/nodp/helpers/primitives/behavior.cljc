@@ -33,8 +33,8 @@
     (str "#[behavior " id "]")))
 
 #?(:clj (defmacro behavior*
-          [event-name & fs]
-          `(helpers/get-entity ~event-name Behavior. ~@fs)))
+          [behavior-name & fs]
+          `(helpers/get-entity ~behavior-name Behavior. ~@fs)))
 
 (util/make-printable Behavior)
 
