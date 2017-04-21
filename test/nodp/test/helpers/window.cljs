@@ -16,5 +16,5 @@
   (test-helpers/restart-for-all [advance test-helpers/advance]
                                 (frp/activate)
                                 (advance)
-                                (= @window/inner-height js/window.innerHeight)
-                                (= @window/inner-width js/window.innerWidth)))
+                                (= @window/inner-height js/innerHeight)
+                                (= @window/inner-width js/innerWidth)))

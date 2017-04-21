@@ -19,7 +19,7 @@
                                              (helpers/set-latest
                                                ~(->> x
                                                      cuerdas/camel
-                                                     (str "js/window.")
+                                                     (str "js/")
                                                      symbol)
                                                b#))))))
                 symbols)))
