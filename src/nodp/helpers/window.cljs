@@ -5,4 +5,4 @@
 
 (declare inner-width)
 
-(behavior/set-defs! inner-height inner-width)
+(behavior/set-defs! "window" inner-height inner-width)

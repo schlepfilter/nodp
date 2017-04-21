@@ -193,7 +193,7 @@
 
 #?(:clj
    (do (defmacro get-defs
-         [symbols]
+         [javascript-namespace symbols]
          (mapv (fn [x]
                  `(fn []
                     (def ~x
@@ -202,13 +202,13 @@
                                    (helpers/set-latest
                                      ~(->> x
                                            cuerdas/camel
-                                           (str "js/")
+                                           (str "js/" javascript-namespace ".")
                                            symbol)
                                      b#))))))
                symbols))
 
        (defmacro set-defs!
-         [& symbols]
-         `(->> (get-defs ~symbols)
+         [javascript-namespace & symbols]
+         `(->> (get-defs ~javascript-namespace ~symbols)
                (partial s/setval* s/END)
                (swap! defs)))))
