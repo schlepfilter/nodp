@@ -81,8 +81,9 @@
                      (:behavior (:time network))
                      b
                      network)))))
-  (run! helpers/funcall (:defs @event/registry))
-  (run! helpers/funcall (:synchronizers @event/registry)))
+  (run! helpers/funcall (flatten ((juxt :defs
+                                        :synchronizers)
+                                   @event/registry))))
 
 (def restart
   ;TODO call stop
