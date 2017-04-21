@@ -6,7 +6,8 @@
             [clj-time.coerce :as c]
             [clj-time.core :as t]]
         :cljs [[cljs-time.coerce :as c]
-               [cljs-time.core :as t]]))
+               [cljs-time.core :as t]])
+            [nodp.helpers :as helpers])
   #?(:clj
      (:import (clojure.lang IDeref))))
 
@@ -21,7 +22,10 @@
         (Time. (max @x* @y*)))
       p/Monoid
       (-mempty [_]
-        (Time. 0))))
+        (Time. 0))
+      p/Functor
+      (-fmap [_ f fa]
+        (Time. (f @fa)))))
   IDeref
   (#?(:clj  deref
       :cljs -deref) [_]
@@ -60,3 +64,8 @@
   (-> (now-long)
       (- @epoch-state)
       time))
+
+(defn to-real-time
+  [t]
+  (helpers/<$> (partial + @epoch-state)
+               t))
