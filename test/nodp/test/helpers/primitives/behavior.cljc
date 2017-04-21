@@ -179,22 +179,17 @@
                          logarithmic
                          real-trigonometric))
 
-(def rational
-  (gen/one-of [(gen/double* {:NaN?      false
-                             :infinite? false})
-               gen/ratio]))
-
 (def pos-rational
-  (gen/such-that (complement neg?) rational))
+  (gen/such-that (complement neg?) gen/ratio))
 
 (def calculus
   (gen/let [k (gen/elements [:current-latest :current-time :past-time])
             lower-limit-number pos-rational
-            x rational
+            x gen/ratio
             e (gen/return (frp/event))
-            ;TODO call e with rationals
             original-behavior (gen/one-of [continuous-behavior
                                            (gen/return (frp/stepper x e))])
+            xs (gen/vector gen/ratio)
             advance* test-helpers/advance]
            (let [calculus-behavior
                  (frp/calculus
@@ -213,6 +208,7 @@
              (gen/return
                (fn []
                  (frp/activate)
+                 (run! (partial helpers/funcall e) xs)
                  (advance*)
                  (helpers/casep
                    @@frp/time (partial > lower-limit-number)
