@@ -179,8 +179,8 @@
                  inc)))
 
 (def continuous-behavior
-  ;TODO generate a polynomial with negative exponents
-  (test-helpers/behavior formal-laurent
+  (test-helpers/behavior test-helpers/polynomial
+                         formal-laurent
                          (test-helpers/exponential real-base)
                          logarithmic
                          real-trigonometric))
