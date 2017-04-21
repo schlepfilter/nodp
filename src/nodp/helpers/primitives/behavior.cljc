@@ -3,6 +3,7 @@
   (:require [cats.monad.maybe :as maybe]
             [cats.protocols :as p]
             [cats.util :as util]
+            [cuerdas.core :as cuerdas]
             [loom.graph :as graph]
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.time :as time]
@@ -188,3 +189,18 @@
                          (helpers/add-edge integration-behavior**
                                            past-behavior
                                            network))))))
+
+#?(:clj (defmacro get-defs
+          [& symbols]
+          (mapv (fn [x]
+                  `(fn []
+                     (def ~x
+                       (behavior* b#
+                         (helpers/set-modifier
+                           (helpers/set-latest
+                             ~(->> x
+                                   cuerdas/camel
+                                   (str "js/")
+                                   symbol)
+                             b#))))))
+                symbols)))
