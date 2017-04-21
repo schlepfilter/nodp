@@ -215,6 +215,7 @@
        (defmacro set-registry!
          [javascript-namespace & symbols]
          `(swap! event/registry
+                 ;TODO refactor
                  (comp (partial s/setval*
                                 [:synchronizers s/END]
                                 (make-get-synchronizers ~javascript-namespace
