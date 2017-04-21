@@ -18,28 +18,6 @@
 
 (test/use-fixtures :each test-helpers/fixture)
 
-#?(:clj (defmacro with-exit
-          [exit-name & body]
-          (potemkin/unify-gensyms
-            `(let [exit-state## (atom helpers/nothing)]
-               ~(walk/walk-exprs
-                  (partial = exit-name)
-                  (fn [_#]
-                    `(comp (partial reset! exit-state##)
-                           maybe/just))
-                  (cons `do body))
-               @@exit-state##))))
-
-(clojure-test/defspec
-  with-exit-identity
-  test-helpers/num-tests
-  (prop/for-all [a test-helpers/any-equal
-                 b test-helpers/any-equal]
-                (= (with-exit exit
-                              (exit a)
-                              b)
-                   a)))
-
 #?(:clj (defmacro with-exitv
           [exit-name & body]
           (potemkin/unify-gensyms
@@ -74,3 +52,17 @@
                                                  (frp/activate)
                                                  (run! e as)))
                                    as)))
+
+#?(:clj (defmacro with-exit
+          [exit-name & body]
+          `(last (with-exitv ~exit-name ~@body))))
+
+(clojure-test/defspec
+  with-exit-identity
+  test-helpers/num-tests
+  (prop/for-all [a test-helpers/any-equal
+                 b test-helpers/any-equal]
+                (= (with-exit exit
+                              (exit a)
+                              b)
+                   a)))
