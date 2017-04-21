@@ -3,6 +3,7 @@
   (:require [cats.monad.maybe :as maybe]
             [cats.protocols :as p]
             [cats.util :as util]
+            [com.rpl.specter :as s]
             [cuerdas.core :as cuerdas]
             [loom.graph :as graph]
             [nodp.helpers.primitives.event :as event]
@@ -190,17 +191,24 @@
                                            past-behavior
                                            network))))))
 
-#?(:clj (defmacro get-defs
-          [& symbols]
-          (mapv (fn [x]
-                  `(fn []
-                     (def ~x
-                       (behavior* b#
-                         (helpers/set-modifier
-                           (helpers/set-latest
-                             ~(->> x
-                                   cuerdas/camel
-                                   (str "js/")
-                                   symbol)
-                             b#))))))
-                symbols)))
+#?(:clj
+   (do (defmacro get-defs
+         [symbols]
+         (mapv (fn [x]
+                 `(fn []
+                    (def ~x
+                      (behavior* b#
+                                 (helpers/set-modifier
+                                   (helpers/set-latest
+                                     ~(->> x
+                                           cuerdas/camel
+                                           (str "js/")
+                                           symbol)
+                                     b#))))))
+               symbols))
+
+       (defmacro set-defs!
+         [& symbols]
+         `(->> (get-defs ~symbols)
+               (partial s/setval* s/END)
+               (swap! defs)))))
