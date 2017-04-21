@@ -83,7 +83,7 @@
                      network)))))
   (run! helpers/funcall (flatten ((juxt :defs
                                         :synchronizers)
-                                   @event/registry))))
+                                   @helpers/registry))))
 
 (def restart
   ;TODO call stop
@@ -214,7 +214,7 @@
 
        (defmacro set-registry!
          [javascript-namespace & symbols]
-         `(swap! event/registry
+         `(swap! helpers/registry
                  ;TODO refactor
                  (comp (partial s/setval*
                                 [:synchronizers s/END]

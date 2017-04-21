@@ -277,6 +277,10 @@
 (def comp-just
   (partial comp maybe/just))
 
+(def registry
+  (atom {:defs          []
+         :synchronizers []}))
+
 (def network-state
   (atom {}))
 

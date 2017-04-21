@@ -61,15 +61,11 @@
                     (comp :behavior
                           :dependency)))
 
-(def registry
-  (atom {:defs          []
-         :synchronizers []}))
-
 (defn modify-behavior!
   [t network]
   (helpers/call-functions (concat [(partial s/setval* [:time :behavior] t)]
                                   ;TODO modify JavaScript properties
-                                  (:synchronizers @registry)
+                                  (:synchronizers @helpers/registry)
                                   (get-behavior-modifiers network))
                           network))
 
