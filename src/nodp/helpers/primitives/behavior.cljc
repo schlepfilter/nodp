@@ -61,6 +61,7 @@
 
 (declare time)
 
+;TODO rename defs as registry
 (def defs
   (atom []))
 
