@@ -197,12 +197,12 @@
          (mapv (fn [x]
                  `(fn []
                     (def ~x
-                      ;TODO don't set modifier
                       (behavior* b#
                                  (helpers/set-modifier
                                    (helpers/set-latest
                                      ~(->> x
                                            cuerdas/camel
+                                           ;TODO get latest from network-state
                                            (str "js/" javascript-namespace ".")
                                            symbol)
                                      b#))))))
