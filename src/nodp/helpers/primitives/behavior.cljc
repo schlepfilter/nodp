@@ -81,7 +81,8 @@
                      (:behavior (:time network))
                      b
                      network)))))
-  (run! helpers/funcall (:defs @event/registry)))
+  (run! helpers/funcall (:defs @event/registry))
+  (run! helpers/funcall (:synchronizers @event/registry)))
 
 (def restart
   ;TODO call stop
@@ -190,23 +191,33 @@
 
 #?(:clj
    (do (defmacro make-get-defs
-         [javascript-namespace symbols]
+         [symbols]
          (mapv (fn [x]
                  `(fn []
                     (def ~x
-                      (behavior* b#
-                                 (helpers/set-modifier
-                                   (helpers/set-latest
-                                     ~(->> x
-                                           cuerdas/camel
-                                           ;TODO get latest from network-state
-                                           (str "js/" javascript-namespace ".")
-                                           symbol)
-                                     b#))))))
+                      (behavior* b#))))
+               symbols))
+
+       (defmacro make-get-synchronizers
+         [javascript-namespace symbols]
+         (mapv (fn [x]
+                 `(fn [network#]
+                    (helpers/set-latest
+                      ~(->> x
+                            cuerdas/camel
+                            (str "js/" javascript-namespace ".")
+                            symbol)
+                      ~x
+                      network#)))
                symbols))
 
        (defmacro set-registry!
          [javascript-namespace & symbols]
-         `(->> (make-get-defs ~javascript-namespace ~symbols)
-               (partial s/setval* [:defs s/END])
-               (swap! event/registry)))))
+         `(swap! event/registry
+                 (comp (partial s/setval*
+                                [:synchronizers s/END]
+                                (make-get-synchronizers ~javascript-namespace
+                                                        ~symbols))
+                       (partial s/setval*
+                                [:defs s/END]
+                                (make-get-defs ~symbols)))))))
