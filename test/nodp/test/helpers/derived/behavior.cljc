@@ -24,44 +24,44 @@
   (test-helpers/behavior test-helpers/polynomial
                          (test-helpers/exponential rational-base)))
 
-(clojure-test/defspec
-  first-theorem
-  test-helpers/num-tests
-  (test-helpers/restart-for-all
-    [original-behavior rational-continuous-behavior
-     integration-method (gen/elements [:left :right :trapezoid])
-     lower-limit-value (gen/fmap #?(:clj  numeric-tower/abs
-                                    :cljs js/Math.abs)
-                                 gen/ratio)
-     advance* test-helpers/advance]
-    (let [integral-behavior ((helpers/lift-a 2
-                                             (fn [x y]
-                                               ;TODO remove with-redefs after cats.context is fixed
-                                               (with-redefs [cats.context/infer
-                                                             helpers/infer]
-                                                 ((helpers/lift-a 2 -) x y))))
-                              (frp/integral integration-method
-                                            (time/time 0)
-                                            original-behavior)
-                              (frp/integral integration-method
-                                            (time/time lower-limit-value)
-                                            original-behavior))
-          e (frp/event)]
-      (frp/activate)
-      (advance*)
-      (let [latest @integral-behavior]
-        (e unit/unit)
-        (cond (< @@frp/time lower-limit-value)
-              (= @integral-behavior helpers/nothing)
-              (= @@frp/time lower-limit-value) (= @@integral-behavior 0)
-              :else (or (maybe/nothing? latest)
-                        (= latest @integral-behavior)))))))
-
 #?(:clj
    ;ClojureScript currently only supports integer and floating point literals that map to JavaScript primitives
    ;Ratio, BigDecimal, and BigInteger literals are currently not supported
    ;https://github.com/clojure/clojurescript/wiki/Differences-from-Clojure
    (do (clojure-test/defspec
+         first-theorem
+         test-helpers/num-tests
+         (test-helpers/restart-for-all
+           [original-behavior rational-continuous-behavior
+            integration-method (gen/elements [:left :right :trapezoid])
+            lower-limit-value (gen/fmap #?(:clj  numeric-tower/abs
+                                           :cljs js/Math.abs)
+                                        gen/ratio)
+            advance* test-helpers/advance]
+           (let [integral-behavior ((helpers/lift-a 2
+                                                    (fn [x y]
+                                                      ;TODO remove with-redefs after cats.context is fixed
+                                                      (with-redefs [cats.context/infer
+                                                                    helpers/infer]
+                                                        ((helpers/lift-a 2 -) x y))))
+                                     (frp/integral integration-method
+                                                   (time/time 0)
+                                                   original-behavior)
+                                     (frp/integral integration-method
+                                                   (time/time lower-limit-value)
+                                                   original-behavior))
+                 e (frp/event)]
+             (frp/activate)
+             (advance*)
+             (let [latest @integral-behavior]
+               (e unit/unit)
+               (cond (< @@frp/time lower-limit-value)
+                     (= @integral-behavior helpers/nothing)
+                     (= @@frp/time lower-limit-value) (= @@integral-behavior 0)
+                     :else (or (maybe/nothing? latest)
+                               (= latest @integral-behavior)))))))
+
+       (clojure-test/defspec
          integral-constant
          test-helpers/num-tests
          (test-helpers/restart-for-all
