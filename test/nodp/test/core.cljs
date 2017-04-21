@@ -5,7 +5,7 @@
             [nodp.test.helpers.primitives.behavior]
             [nodp.test.helpers.primitives.event]
             [nodp.test.helpers.tuple]
-            [nodp.test.helpers.window]))
+            [nodp.test.helpers.browser]))
 
 (enable-console-print!)
 
