@@ -134,7 +134,8 @@
 (defn get-polynomial
   [coefficients x]
   (reduce-kv (fn [init k v]
-               (+ init (* v (expt x k))))
+               ;+' is used instead of + to avoid integer overflow
+               (+' init (*' v (expt x k))))
              0
              coefficients))
 
