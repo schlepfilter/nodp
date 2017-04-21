@@ -70,6 +70,7 @@
            :modifier    {}
            :time        {:event    (time/time 0)
                          :behavior (time/time 0)}})
+  ;TODO define behaviors like time in an extensible manner
   (def time
     (behavior* b
                (helpers/set-modifier
