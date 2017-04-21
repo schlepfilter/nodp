@@ -135,7 +135,9 @@
   [offset coefficients x]
   (reduce-kv (fn [init k v]
                ;+' is used instead of + to avoid integer overflow
-               (+' init (*' v (expt x (+ offset k)))))
+               (#?(:clj  +'
+                   :cljs +) init (#?(:clj  *'
+                                     :cljs *) v (expt x (+ offset k)))))
              0
              coefficients))
 
