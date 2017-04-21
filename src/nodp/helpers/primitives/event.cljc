@@ -64,6 +64,7 @@
 (defn modify-behavior!
   [t network]
   (helpers/call-functions (cons (partial s/setval* [:time :behavior] t)
+                                ;TODO modify JavaScript properties
                                 (get-behavior-modifiers network))
                           network))
 
