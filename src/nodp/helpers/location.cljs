@@ -3,4 +3,4 @@
 
 (declare pathname)
 
-(behavior/set-defs! "location" pathname)
+(behavior/set-registry! "location" pathname)

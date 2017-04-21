@@ -61,10 +61,6 @@
 
 (declare time)
 
-;TODO rename defs as registry
-(def defs
-  (atom []))
-
 (defn start
   []
   (reset! helpers/network-state
@@ -85,7 +81,7 @@
                      (:behavior (:time network))
                      b
                      network)))))
-  (run! helpers/funcall @defs))
+  (run! helpers/funcall (:defs @event/registry)))
 
 (def restart
   ;TODO call stop
@@ -209,8 +205,8 @@
                                      b#))))))
                symbols))
 
-       (defmacro set-defs!
+       (defmacro set-registry!
          [javascript-namespace & symbols]
          `(->> (make-get-defs ~javascript-namespace ~symbols)
-               (partial s/setval* s/END)
-               (swap! defs)))))
+               (partial s/setval* [:defs s/END])
+               (swap! event/registry)))))
