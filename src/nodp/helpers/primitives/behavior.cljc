@@ -197,6 +197,7 @@
          (mapv (fn [x]
                  `(fn []
                     (def ~x
+                      ;TODO don't set modifier
                       (behavior* b#
                                  (helpers/set-modifier
                                    (helpers/set-latest
