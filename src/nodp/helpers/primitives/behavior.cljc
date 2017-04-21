@@ -193,7 +193,7 @@
                                            network))))))
 
 #?(:clj
-   (do (defmacro get-defs
+   (do (defmacro make-get-defs
          [javascript-namespace symbols]
          (mapv (fn [x]
                  `(fn []
@@ -211,6 +211,6 @@
 
        (defmacro set-defs!
          [javascript-namespace & symbols]
-         `(->> (get-defs ~javascript-namespace ~symbols)
+         `(->> (make-get-defs ~javascript-namespace ~symbols)
                (partial s/setval* s/END)
                (swap! defs)))))
