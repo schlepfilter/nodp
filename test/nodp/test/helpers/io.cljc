@@ -48,8 +48,8 @@
   event-on-identity
   test-helpers/num-tests
   (test-helpers/restart-for-all
-    [e (gen/no-shrink test-helpers/event)
-     as (gen/no-shrink (gen/vector test-helpers/any-equal))]
+    [e test-helpers/event
+     as (gen/vector test-helpers/any-equal)]
     (let [occurrence-values (maybe/maybe as
                                          @e
                                          (fn [x]
