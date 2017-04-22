@@ -300,7 +300,8 @@
 
 (def activate
   (juxt (partial swap! helpers/network-state (partial s/setval* :active true))
-        ;TODO run-effects!
+        (fn []
+          (run-effects! @helpers/network-state))
         time/start
         (fn []
           ;switcher's behavior-valued event may be a unit event

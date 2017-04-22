@@ -8,8 +8,10 @@
              :include-macros true]
             [#?(:clj  clojure.test
                 :cljs cljs.test) :as test :include-macros true]
+            [com.rpl.specter :as s]
             [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]
+            [nodp.helpers.tuple :as tuple]
             [nodp.test.helpers :as test-helpers :include-macros true]
     #?(:clj
             [riddley.walk :as walk]))
@@ -45,14 +47,20 @@
 (clojure-test/defspec
   event-on-identity
   test-helpers/num-tests
-  ;TODO generate event with return
-  (test-helpers/restart-for-all [as (gen/vector test-helpers/any-equal)]
-                                (= (with-exitv exit
-                                               (let [e (frp/event)]
-                                                 (frp/on exit e)
-                                                 (frp/activate)
-                                                 (run! e as)))
-                                   as)))
+  (test-helpers/restart-for-all
+    [e (gen/no-shrink test-helpers/event)
+     as (gen/no-shrink (gen/vector test-helpers/any-equal))]
+    (let [occurrence-values (maybe/maybe as
+                                         @e
+                                         (fn [x]
+                                           (s/setval s/BEGINNING
+                                                     (vector (tuple/snd x))
+                                                     as)))]
+      (= (with-exitv exit
+                     (frp/on exit e)
+                     (frp/activate)
+                     (run! e as))
+         occurrence-values))))
 
 #?(:clj (defmacro with-exit
           [exit-name & body]
