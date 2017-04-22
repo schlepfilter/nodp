@@ -84,10 +84,9 @@
     network))
 
 (defn modify-network!
-  [occurrence t e network]
+  [occurrence e network]
   (helpers/call-functions [(partial modify-behavior! (tuple/fst occurrence))
-                           (partial modify-event! occurrence e)
-                           (partial modify-behavior! t)]
+                           (partial modify-event! occurrence e)]
                           network))
 (def run-effects!
   (helpers/build run!
@@ -99,8 +98,13 @@
   (fn []
     (let [[past current] (get-times)]
       (->> @helpers/network-state
-           (modify-network! (tuple/tuple past a) current e)
+           (modify-network! (tuple/tuple past a) e)
            (reset! helpers/network-state))
+      (run-effects! @helpers/network-state)
+      (->> @helpers/network-state
+           (modify-behavior! current)
+           (reset! helpers/network-state))
+      (swap! helpers/network-state (partial s/setval* [:time :event] current))
       (run-effects! @helpers/network-state))))
 
 (defn get-input
