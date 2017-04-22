@@ -63,7 +63,7 @@
 
 (defn modify-behavior!
   [t network]
-  (helpers/call-functions (concat [(partial s/setval* [:time :behavior] t)]
+  (helpers/call-functions (concat [(partial s/setval* :time t)]
                                   (:synchronizers @helpers/registry)
                                   (get-behavior-modifiers network))
                           network))
@@ -78,7 +78,7 @@
 (defn modify-event!
   [occurrence e network]
   (helpers/call-functions
-    (concat [(partial s/setval* [:time :event] (tuple/fst occurrence))
+    (concat [(partial s/setval* :time (tuple/fst occurrence))
              (set-earliest-latest (maybe/just occurrence) e)]
             (get-event-modifiers e network))
     network))
@@ -104,7 +104,6 @@
       (->> @helpers/network-state
            (modify-behavior! current)
            (reset! helpers/network-state))
-      (swap! helpers/network-state (partial s/setval* [:time :event] current))
       (run-effects! @helpers/network-state))))
 
 (defn get-input
@@ -155,7 +154,7 @@
   [e network]
   (maybe/maybe false
                (helpers/get-latest e network)
-               (comp (partial = (:event (:time network)))
+               (comp (partial = (:time network))
                      tuple/fst)))
 
 (def get-value
@@ -191,7 +190,7 @@
               (set-earliest-latest a child-event network))
             maybe/just
             (partial nodp.helpers/<*>
-                     (tuple/tuple (:event (:time network))
+                     (tuple/tuple (:time network)
                                   identity))))
     network))
 
@@ -285,7 +284,7 @@
                       (helpers/set-latest
                         (maybe/just
                           (tuple/tuple
-                            (:event (:time network))
+                            (:time network)
                             (f (tuple/snd
                                  @(helpers/get-latest transduction-event*
                                                       network))
