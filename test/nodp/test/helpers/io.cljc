@@ -43,7 +43,7 @@
                    as)))
 
 (clojure-test/defspec
-  on-identity
+  event-on-identity
   test-helpers/num-tests
   (test-helpers/restart-for-all [as (gen/vector test-helpers/any-equal)]
                                 (= (with-exitv exit
