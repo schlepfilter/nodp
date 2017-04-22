@@ -206,6 +206,7 @@
       (event* _
               (set-earliest-latest (maybe/just (tuple/tuple (time/time 0) a)))))
     (fn [ma f]
+      ;TODO fix >>=
       (let [child-event
             (event* child-event*
                     (helpers/set-modifier
