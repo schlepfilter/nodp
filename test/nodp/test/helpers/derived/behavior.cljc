@@ -24,18 +24,19 @@
   (test-helpers/behavior test-helpers/polynomial
                          (test-helpers/exponential rational-base)))
 
+;TODO remove this reader conditional if Ratio gets supported in ClojureScript
+;
+;ClojureScript currently only supports integer and floating point literals that map to JavaScript primitives
+;Ratio, BigDecimal, and BigInteger literals are currently not supported
+;https://github.com/clojure/clojurescript/wiki/Differences-from-Clojure
 #?(:clj
-   ;ClojureScript currently only supports integer and floating point literals that map to JavaScript primitives
-   ;Ratio, BigDecimal, and BigInteger literals are currently not supported
-   ;https://github.com/clojure/clojurescript/wiki/Differences-from-Clojure
    (do (clojure-test/defspec
          first-theorem
          test-helpers/num-tests
          (test-helpers/restart-for-all
            [original-behavior rational-continuous-behavior
             integration-method (gen/elements [:left :right :trapezoid])
-            lower-limit-value (gen/fmap #?(:clj  numeric-tower/abs
-                                           :cljs js/Math.abs)
+            lower-limit-value (gen/fmap numeric-tower/abs
                                         gen/ratio)
             advance* test-helpers/advance]
            (let [integral-behavior ((helpers/lift-a 2
