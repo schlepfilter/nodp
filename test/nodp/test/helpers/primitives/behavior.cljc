@@ -8,6 +8,8 @@
             [#?(:clj  clojure.test
                 :cljs cljs.test) :as test :include-macros true]
     #?(:clj
+            [clojure.math.numeric-tower :as numeric-tower])
+    #?(:clj
             [incanter.core :as incanter])
             [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]
@@ -186,7 +188,9 @@
                          real-trigonometric))
 
 (def pos-rational
-  (gen/such-that (complement neg?) gen/ratio))
+  (gen/fmap #?(:clj  numeric-tower/abs
+               :cljs js/Math.abs)
+            gen/ratio))
 
 (def calculus
   (gen/let [k (gen/elements [:current-latest :current-time :past-time])
