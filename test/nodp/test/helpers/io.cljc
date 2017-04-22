@@ -45,6 +45,7 @@
 (clojure-test/defspec
   event-on-identity
   test-helpers/num-tests
+  ;TODO generate event with return
   (test-helpers/restart-for-all [as (gen/vector test-helpers/any-equal)]
                                 (= (with-exitv exit
                                                (let [e (frp/event)]

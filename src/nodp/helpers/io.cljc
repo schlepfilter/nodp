@@ -28,6 +28,7 @@
                   (if (event/now? e network)
                     (f (event/get-value e network))))
 
+;TODO define on as a multimethod
 (def on
   (comp (partial swap! helpers/network-state)
         ((m/curry s/setval*) [:effects s/END])
