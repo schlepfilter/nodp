@@ -183,15 +183,14 @@
   delay-sync->>=
   [parent-event child-event network]
   (if (now? parent-event network)
-    (maybe/maybe
-      network
-      (get-earliest parent-event network)
-      (comp (fn [a]
-              (set-earliest-latest a child-event network))
-            maybe/just
-            (partial nodp.helpers/<*>
-                     (tuple/tuple (:time network)
-                                  identity))))
+    (maybe/maybe network
+                 (get-earliest parent-event network)
+                 (comp (fn [a]
+                         (set-earliest-latest a child-event network))
+                       maybe/just
+                       (partial nodp.helpers/<*>
+                                (tuple/tuple (:time network)
+                                             identity))))
     network))
 
 (def get-time-value
