@@ -36,8 +36,7 @@
          (test-helpers/restart-for-all
            [original-behavior rational-continuous-behavior
             integration-method (gen/elements [:left :right :trapezoid])
-            lower-limit-value (gen/fmap numeric-tower/abs
-                                        gen/ratio)
+            lower-limit-value (gen/fmap numeric-tower/abs gen/ratio)
             advance* test-helpers/advance]
            (let [integral-behavior ((helpers/lift-a 2
                                                     (fn [x y]
