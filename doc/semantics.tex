@@ -62,4 +62,9 @@
   &\mathbf{instance_{sem}}\ Entity\ (Event\ a)\ \mathbf{where}\\
   &\quad occs\ \$\ on\ f\ e = map\ (fmap\ f)\ \$\ occs\ e
 \end{align*}
+\begin{align*}
+  &\mathbf{instance_{sem}}\ Entity\ (Behavior\ a)\ \mathbf{where}\\
+  &\quad occs\ \$\ on\ f\ b = map\ ((fmap\ f)\ .\ dedupe)\ \$\ (occs\ e)\oplus((t\rightarrow (t, (at\ b)\ t))\ \langle\$\rangle\ [time\ \$\ n * internal])\\
+  &\qquad\text{-- where }b = a\ stepper\ e\ \wedge\ n\geq 0\wedge interval > 0
+\end{align*}
 \end{document}
