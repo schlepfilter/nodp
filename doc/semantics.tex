@@ -14,7 +14,7 @@
   >>= :: Event\ a \rightarrow f \rightarrow Event\ a
 \end{align*}
 \begin{align*}
-  occs\ (>>= e\ f) = foldr\ merge\ []\circ map\ delayOccs\circ map\ (\lambda(\hat{t}_a, a) \rightarrow (\hat{t}_a , f\ a))\ (occs\ e)
+  occs\ (>>= e\ f) = foldr\ merge\ []\circ map\ delayOccs\circ map\ (\lambda(\hat{t}_a, a) \rightarrow (\hat{t}_a , f\ a))\ \$ \ occs\ e
 \end{align*}
 \begin{align*}
   \mathbf{data}\ Xform\ a\ b\ c\ d\ e\ f\ g\ h\ i\ j\ k\ l\ m\ n =\zeroarity{dedupe}\\
@@ -38,7 +38,7 @@
 \end{align*}
 \begin{align*}
   &occs\ (transduce\ xform\ f\ a\ e)\\
-  &\quad= scanl\ (liftA2\ f)\ a\ (mapMaybe\ (unreduced\ .\ (xform\ (\lambda\_\ x\rightarrow just\ x))\ nothing)\ (occs\ e))
+  &\quad= scanl\ (liftA2\ f)\ a\ \$\ mapMaybe\ (unreduced\ .\ (xform\ (\lambda\_\ x\rightarrow just\ x))\ nothing)\ \$\ occs\ e
 \end{align*}
 \begin{align*}
   >>= :: Behavior\ a \rightarrow f \rightarrow Behavior\ b
@@ -52,6 +52,6 @@
 \begin{align*}
   \forall\epsilon\exists\delta\forall t(&\epsilon > 0\\
   \wedge& t > 0\\
-  \wedge& (0 < t - a < \delta \implies(at\ (calculus\ f\ x\ b))\ t - f\ ((at\ b)\ t)\ ((at\ b)\ (t - a))\ t\ (t - a)\ (at\ (calculus\ f \ x\ b))))
+  \wedge& (0 < t - a < \delta \implies(at\ (calculus\ f\ x\ b))\ t - f\ ((at\ b)\ t)\ ((at\ b)\ (t - a))\ t\ (t - a)\ \$\ at\ \$\ calculus\ f \ x\ b))
 \end{align*}
 \end{document}
