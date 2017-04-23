@@ -119,9 +119,9 @@
   test-helpers/num-tests
   (test-helpers/restart-for-all
     [[outer-event inner-events calls call] event->>=]
-    (frp/activate)
     (let [bound-event (helpers/>>= outer-event
                                    (test-helpers/make-iterate inner-events))]
+      (frp/activate)
       (calls)
       (let [outer-latest @outer-event
             inner-latests (doall (map deref inner-events))
