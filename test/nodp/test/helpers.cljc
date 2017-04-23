@@ -100,25 +100,15 @@
 (def get-events
   (partial reduce conj-event []))
 
-(defn count-left-duplicates
-  [coll]
-  (dec (count (filter (partial = (first coll)) coll))))
-
 (defn events-tuple
   [probabilities]
   (gen/let [input-events (gen/return (get-events probabilities))
             fs (gen/vector (function any-equal)
                            (count input-events))]
+
            (gen/tuple
              (gen/return input-events)
-             (gen/return (doall (map nodp.helpers/<$> fs input-events)))
-             ;TODO avoid returning a negative number
-             (gen/return
-               (- ((if (maybe/just? @(first input-events))
-                     dec
-                     identity)
-                    (dec (count input-events)))
-                  (count-left-duplicates (get-events probabilities)))))))
+             (gen/return (doall (map nodp.helpers/<$> fs input-events))))))
 
 (defn make-iterate
   [coll]

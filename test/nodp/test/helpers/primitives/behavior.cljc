@@ -54,8 +54,7 @@
             [[input-event & input-events]
              [fmapped-switching-event
               fmapped-outer-event
-              & fmapped-inner-events]
-             n]
+              & fmapped-inner-events]]
             (test-helpers/events-tuple probabilities)
             [stepper-outer-any input-outer-any]
             (gen/vector test-helpers/any-equal 2)
@@ -81,7 +80,7 @@
             (gen/return (helpers/<$>
                           (test-helpers/make-iterate inner-behaviors)
                           fmapped-switching-event))
-            input-event-anys (gen/vector test-helpers/any-equal n)
+            input-event-anys (gen/vector test-helpers/any-equal)
             input-events-anys (gen/vector test-helpers/any-equal
                                           (count input-events))
             calls (gen/shuffle (concat (map (fn [a]
