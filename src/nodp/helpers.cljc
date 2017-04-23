@@ -278,7 +278,7 @@
   (partial comp maybe/just))
 
 (def registry
-  (atom {:defs          []
+  (atom {:defs         []
          :synchronizes []}))
 
 (def network-state
