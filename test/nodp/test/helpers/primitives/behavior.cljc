@@ -6,11 +6,11 @@
              :include-macros true]
             [clojure.test.check.generators :as gen]
             [clojure.test.check.properties :as prop :include-macros true]
-    [#?(:clj  clojure.test
+            [#?(:clj  clojure.test
                 :cljs cljs.test) :as test :include-macros true]
     #?(:clj
             [clojure.math.numeric-tower :as numeric-tower])
-            #?(:clj
+    #?(:clj
             [incanter.core :as incanter])
             [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]

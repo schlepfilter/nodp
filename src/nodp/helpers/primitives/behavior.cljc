@@ -3,12 +3,13 @@
   (:require [cats.monad.maybe :as maybe]
             [cats.protocols :as protocols]
             [cats.util :as util]
-            [chime :as chime]
-            [clj-time.core :as t]
-            [clj-time.periodic :as p]
             [com.rpl.specter :as s]
             [cuerdas.core :as cuerdas]
             [loom.graph :as graph]
+    #?@(:clj [
+            [chime :as chime]
+            [clj-time.core :as t]
+            [clj-time.periodic :as p]])
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.time :as time]
             [nodp.helpers.tuple :as tuple]
@@ -65,9 +66,9 @@
 
 (declare time)
 
-(defn get-periods
-  [rate]
-  (rest (p/periodic-seq (t/now) (t/millis rate))))
+#?(:clj (defn get-periods
+          [rate]
+          (rest (p/periodic-seq (t/now) (t/millis rate)))))
 
 (defn handle
   [t]
@@ -89,7 +90,8 @@
                            ;TODO move nop to helpers
                            (constantly unit/unit)
                            ;TODO remove take 2
-                           (chime/chime-at (take 2 (get-periods rate)) handle))
+                           #?(:clj  (chime/chime-at (take 2 (get-periods rate)) handle)
+                              :cljs (js/setInterval handle rate)))
             :dependency  {:event    (graph/digraph)
                           :behavior (graph/digraph)}
             :id          0
