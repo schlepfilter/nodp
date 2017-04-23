@@ -5,11 +5,12 @@
              :as clojure-test
              :include-macros true]
             [clojure.test.check.generators :as gen]
-            [#?(:clj  clojure.test
+            [clojure.test.check.properties :as prop :include-macros true]
+    [#?(:clj  clojure.test
                 :cljs cljs.test) :as test :include-macros true]
     #?(:clj
             [clojure.math.numeric-tower :as numeric-tower])
-    #?(:clj
+            #?(:clj
             [incanter.core :as incanter])
             [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]
@@ -235,3 +236,13 @@
   (test-helpers/restart-for-all
     [calculus* calculus]
     (calculus*)))
+
+#?(:clj (clojure-test/defspec
+          sample
+          test-helpers/num-tests
+          (prop/for-all []
+                        (frp/restart 1)
+                        (frp/activate)
+                        (let [t @frp/time]
+                          (Thread/sleep 10)
+                          (not= @frp/time t)))))

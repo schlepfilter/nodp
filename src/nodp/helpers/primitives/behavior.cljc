@@ -62,26 +62,28 @@
 (declare time)
 
 (defn start
-  []
-  (reset! helpers/network-state
-          {:active      false
-           :dependency  {:event    (graph/digraph)
-                         :behavior (graph/digraph)}
-           :input-state (helpers/get-queue helpers/funcall)
-           :id          0
-           :modifier    {}
-           :time        (time/time 0)})
-  (def time
-    (behavior* b
-               (helpers/append-modifier
-                 (fn [network]
-                   (helpers/set-latest
-                     (:time network)
-                     b
-                     network)))))
-  (run! helpers/funcall (flatten ((juxt :defs
-                                        :synchronizers)
-                                   @helpers/registry))))
+  ([]
+   (start Double/POSITIVE_INFINITY))
+  ([rate]
+   (reset! helpers/network-state
+           {:active      false
+            :dependency  {:event    (graph/digraph)
+                          :behavior (graph/digraph)}
+            :input-state (helpers/get-queue helpers/funcall)
+            :id          0
+            :modifier    {}
+            :time        (time/time 0)})
+   (def time
+     (behavior* b
+                (helpers/append-modifier
+                  (fn [network]
+                    (helpers/set-latest
+                      (:time network)
+                      b
+                      network)))))
+   (run! helpers/funcall (flatten ((juxt :defs
+                                         :synchronizers)
+                                    @helpers/registry)))))
 
 (def restart
   ;TODO call stop
