@@ -337,12 +337,12 @@
 
 (defcurried modify-entity!
             [entity network]
-            (call-functions ((:id entity) (:modifier network))
+            (call-functions ((:id entity) (:modify network))
                             network))
 
-(defcurried set-modifier-empty
+(defcurried set-modify-empty
             [entity network]
-            (s/setval [:modifier (:id entity)] [] network))
+            (s/setval [:modify (:id entity)] [] network))
 
 #?(:clj (defmacro get-entity
           [entity-name constructor & fs]
@@ -356,9 +356,9 @@
                      (~(comp-entity-functions entity-name
                                               (concat [`modify-entity!]
                                                       fs
-                                                      ;set-modifier-empty can be removed.
-                                                      ;set-modifier-empty is called to avoid nil.
-                                                      [`set-modifier-empty
+                                                      ;set-modify-empty can be removed.
+                                                      ;set-modify-empty is called to avoid nil.
+                                                      [`set-modify-empty
                                                        `make-add-node]))
                        @network-state))
              ~entity-name)))
@@ -370,17 +370,17 @@
               (partial (flip graph/add-edges) (map :id [parent child]))
               network))
 
-(defcurried append-modifier
+(defcurried append-modify
             [f entity network]
-            (s/setval [:modifier (:id entity) s/END]
+            (s/setval [:modify (:id entity) s/END]
                       [f]
                       network))
 
-(defcurried insert-modifier
+(defcurried insert-modify
             [f entity network]
-            (s/setval [:modifier (:id entity) s/END]
-                      [f (last ((:id entity) (:modifier network)))]
-                      (s/transform [:modifier (:id entity)] drop-last network)))
+            (s/setval [:modify (:id entity) s/END]
+                      [f (last ((:id entity) (:modify network)))]
+                      (s/transform [:modify (:id entity)] drop-last network)))
 
 (defcurried set-latest
             ;The order of a and entity is consistent with the parameters of primitives.
@@ -406,7 +406,7 @@
 
 (defn get-parent-ancestor-modifies
   [entity network]
-  (mapcat (:modifier network)
+  (mapcat (:modify network)
           (alg/topsort (get-ancestor-subgraph entity network))))
 
 (defn modify-parent-ancestor!

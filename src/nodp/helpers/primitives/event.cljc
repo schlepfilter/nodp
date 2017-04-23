@@ -53,7 +53,7 @@
 
 (defn make-get-modifies*
   [network]
-  (comp (partial mapcat (:modifier network))
+  (comp (partial mapcat (:modify network))
         alg/topsort))
 
 (def get-behavior-modifies
@@ -171,7 +171,7 @@
 
 (defn make-merge-sync
   [parent-event child-event]
-  (helpers/insert-modifier
+  (helpers/insert-modify
     (partial if-then-else
              (helpers/build and
                             (partial now? parent-event)
@@ -208,7 +208,7 @@
       ;TODO fix >>=
       (let [child-event
             (event* child-event*
-                    (helpers/append-modifier
+                    (helpers/append-modify
                       (fn [network]
                         (if (now? ma network)
                           (do (reset! helpers/network-state network)
@@ -236,7 +236,7 @@
     p/Semigroup
     (-mappend [_ left-event right-event]
               (event* child-event
-                      (helpers/append-modifier
+                      (helpers/append-modify
                         (fn [network]
                           (-> (cond (->> network
                                          (helpers/get-latest left-event)
@@ -270,7 +270,7 @@
         (event*
           transduction-event*
           (set-earliest-latest (maybe/just (tuple/tuple (time/time 0) init)))
-          (helpers/append-modifier
+          (helpers/append-modify
             (fn [network]
               (if (now? parent-event network)
                 (let [stepped (step helpers/nothing
@@ -294,7 +294,7 @@
                 network)))
           (helpers/add-edge parent-event))]
     (event* child-event
-            (helpers/append-modifier
+            (helpers/append-modify
               (fn [network]
                 (if-then-else (partial now? transduction-event)
                               (make-sync transduction-event child-event)

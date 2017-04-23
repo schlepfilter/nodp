@@ -46,7 +46,7 @@
     (fn [ma f]
       (behavior*
         child-behavior
-        (helpers/append-modifier
+        (helpers/append-modify
           (fn [network]
             (do (reset! helpers/network-state network)
                 (let [parent-behavior (->> network
@@ -72,11 +72,11 @@
                           :behavior (graph/digraph)}
             :id          0
             :input-state (helpers/get-queue helpers/funcall)
-            :modifier    {}
+            :modify    {}
             :time        (time/time 0)})
    (def time
      (behavior* b
-                (helpers/append-modifier
+                (helpers/append-modify
                   (fn [network]
                     (helpers/set-latest
                       (:time network)
@@ -96,7 +96,7 @@
                          child-behavior*
                          (helpers/add-edge parent-behavior)
                          (helpers/set-latest @parent-behavior)
-                         (helpers/append-modifier
+                         (helpers/append-modify
                            (fn [network]
                              (helpers/set-latest
                                (helpers/get-latest
@@ -109,7 +109,7 @@
                                network))))]
     (event/event* _
                   (helpers/add-edge parent-event)
-                  (helpers/append-modifier
+                  (helpers/append-modify
                     (fn [network]
                       (maybe/maybe network
                                    (helpers/get-latest parent-event network)
@@ -129,7 +129,7 @@
   ;TODO refactor
   (let [past-behavior
         (behavior* past-behavior*
-                   (helpers/append-modifier
+                   (helpers/append-modify
                      (fn [network]
                        (helpers/set-latest
                          (tuple/tuple (:time network)
@@ -141,7 +141,7 @@
                                                     helpers/nothing)))]
     (behavior*
       integration-behavior*
-      (helpers/append-modifier
+      (helpers/append-modify
         (fn [network]
           (cond (and (maybe/maybe true
                                   lower-limit-maybe
