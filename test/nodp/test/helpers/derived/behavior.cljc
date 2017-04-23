@@ -38,18 +38,21 @@
             integration-method (gen/elements [:left :right :trapezoid])
             lower-limit-value (gen/fmap numeric-tower/abs gen/ratio)
             advance* test-helpers/advance]
-           (let [integral-behavior ((helpers/lift-a 2
+           (let [minuend-behavior (frp/integral integration-method
+                                                (time/time 0)
+                                                original-behavior)
+                 subtrahend-behavior (frp/integral integration-method
+                                                   (time/time lower-limit-value)
+                                                   original-behavior)
+                 integral-behavior ((helpers/lift-a 2
                                                     (fn [x y]
                                                       ;TODO remove with-redefs after cats.context is fixed
                                                       (with-redefs [cats.context/infer
                                                                     helpers/infer]
                                                         ((helpers/lift-a 2 -) x y))))
-                                     (frp/integral integration-method
-                                                   (time/time 0)
-                                                   original-behavior)
-                                     (frp/integral integration-method
-                                                   (time/time lower-limit-value)
-                                                   original-behavior))
+
+                                     minuend-behavior
+                                     subtrahend-behavior)
                  e (frp/event)]
              (frp/activate)
              (advance*)
@@ -57,9 +60,10 @@
                (e unit/unit)
                (cond (< @@frp/time lower-limit-value)
                      (= @integral-behavior helpers/nothing)
-                     (= @@frp/time lower-limit-value) (= @@integral-behavior 0)
-                     :else (or (maybe/nothing? latest)
-                               (= latest @integral-behavior)))))))
+                     (= @@frp/time lower-limit-value)
+                     (and (= @integral-behavior @minuend-behavior)
+                          (= @@subtrahend-behavior 0))
+                     :else (= latest @integral-behavior))))))
 
        (clojure-test/defspec
          integral-constant
