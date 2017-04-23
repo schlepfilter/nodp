@@ -53,7 +53,7 @@
                                                     test-helpers/probability
                                                     3)
                                            (partial + 3)))
-            [input-event & _ :as input-events]
+            [input-event & inner-input-events :as input-events]
             (gen/return (test-helpers/get-events probabilities))
             ;TODO generalize gen/uuid
             fs (gen/vector (test-helpers/function gen/uuid)
@@ -63,12 +63,18 @@
                                             dec
                                             identity)
                                            (dec (count input-events))))
-            calls (gen/shuffle (concat (map (fn [a]
-                                              (fn []
-                                                (input-event a)))
-                                            input-event-anys)
-                                       ;TODO fire inner-input-events that don't occur simultaneously with input-event
-                                       ))]
+            calls (gen/shuffle
+                    (concat (map (fn [a]
+                                   (fn []
+                                     (input-event a)))
+                                 input-event-anys)
+                            (map (fn [inner-input-event as]
+                                   (fn []
+                                     (if (maybe/nothing? @inner-input-event)
+                                       (run! inner-input-event as))))
+                                 inner-input-events
+                                 (gen/vector (gen/vector test-helpers/any-equal)
+                                             (count inner-input-events)))))]
            (gen/tuple (gen/return (doall (map nodp.helpers/<$>
                                               fs
                                               input-events)))
