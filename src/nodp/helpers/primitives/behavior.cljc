@@ -63,7 +63,8 @@
 
 (defn start
   ([]
-   (start Double/POSITIVE_INFINITY))
+   (start #?(:clj  Double/POSITIVE_INFINITY
+             :cljs js/Number.POSITIVE_INFINITY)))
   ([rate]
    (reset! helpers/network-state
            {:active      false
@@ -219,7 +220,7 @@
                  (comp (partial s/setval*
                                 [:synchronizes s/END]
                                 (make-get-synchronizes ~javascript-namespace
-                                                        ~symbols))
+                                                       ~symbols))
                        (partial s/setval*
                                 [:defs s/END]
                                 (make-get-defs ~symbols)))))))
