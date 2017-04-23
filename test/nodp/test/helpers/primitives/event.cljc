@@ -97,10 +97,7 @@
   [e es]
   (->> es
        get-tuples
-       (filter (comp (partial = (apply (partial max-key deref)
-                                       (->> es
-                                            get-tuples
-                                            (map tuple/fst))))
+       (filter (comp (partial = (tuple/fst @@e))
                      tuple/fst))
        first
        tuple/snd
