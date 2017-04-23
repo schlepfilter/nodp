@@ -49,36 +49,37 @@
 
 (def event->>=
   ;TODO refactor
-  (gen/let [probabilities (gen/not-empty (gen/vector test-helpers/probability))
-            input-events (gen/return (test-helpers/get-events probabilities))
-            fs (gen/vector (test-helpers/function test-helpers/any-equal)
-                           (count input-events))
-            ;TODO randomize the simultaneity of input-events and input-event
-            input-event test-helpers/event
-            f (test-helpers/function gen/uuid)
-            input-event-anys (gen/vector gen/uuid
-                                         ((if (maybe/just? @input-event)
-                                            dec
-                                            identity)
-                                           (count input-events)))
-            input-events-anys (gen/vector test-helpers/any-equal
-                                          (count input-events))
+  (gen/let [probabilities (gen/sized (comp (partial gen/vector
+                                                    test-helpers/probability
+                                                    3)
+                                           (partial + 3)))
+            [input-event & inner-input-events :as all-input-events]
+            (gen/return (test-helpers/get-events probabilities))
+            fs (gen/vector (test-helpers/function gen/uuid)
+                           (count all-input-events))
+            input-event-anys (gen/vector
+                               gen/uuid
+                               ((if (maybe/just? @input-event)
+                                  dec
+                                  identity)
+                                 (count inner-input-events)))
             calls (gen/shuffle (concat (map (fn [a]
                                               (fn []
                                                 (input-event a)))
                                             input-event-anys)
-                                       (map (fn [a input-event*]
-                                              (fn []
-                                                (input-event* a)))
-                                            input-events-anys
-                                            input-events)))]
-           (gen/tuple (gen/return (helpers/<$> f input-event))
+                                       ;TODO fire inner-input-events that don't occur simultaneously with input-event
+                                       ))]
+           (gen/tuple (gen/return (helpers/<$> (first fs) input-event))
                       (gen/return (doall (map nodp.helpers/<$>
-                                              fs
-                                              input-events)))
+                                              (rest fs)
+                                              inner-input-events)))
                       (gen/return (partial doall (map helpers/funcall
                                                       (drop-last calls))))
-                      (gen/return (last calls)))))
+                      (gen/return (last calls))
+                      (gen/return ((if (maybe/just? @input-event)
+                                     inc
+                                     identity)
+                                    (count input-event-anys))))))
 
 (defn get-earliest
   [e]
@@ -117,7 +118,7 @@
   event->>=-identity
   test-helpers/num-tests
   (test-helpers/restart-for-all
-    [[outer-event inner-events calls call] event->>=]
+    [[outer-event inner-events calls call n] event->>=]
     (let [bound-event (helpers/>>= outer-event
                                    (test-helpers/make-iterate inner-events))]
       (frp/activate)
@@ -129,13 +130,13 @@
         (if (= (map deref inner-events) inner-latests)
           (if (and (not= @outer-event outer-latest)
                    (maybe/just? @(last inner-events)))
-            (right-most-earliest? bound-event inner-events)
+            (right-most-earliest? bound-event (take n inner-events))
             (= @bound-event bound-latest))
           (if (and (not= @outer-event outer-latest)
                    (= (map deref (drop-last inner-events))
                       (drop-last inner-latests)))
-            (right-most-earliest? bound-event inner-events)
-            (left-biased? bound-event inner-events)))))))
+            (right-most-earliest? bound-event (take n inner-events))
+            (left-biased? bound-event (take n inner-events))))))))
 
 (def <>
   ;TODO refactor
