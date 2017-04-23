@@ -23,7 +23,7 @@
     <orderEntry type="library" name="Leiningen: bouncycastle/bcprov-jdk14:138" level="project" />
     <orderEntry type="library" name="Leiningen: clatrix:0.3.0" level="project" />
     <orderEntry type="library" name="Leiningen: clj-stacktrace:0.2.8" level="project" />
-    <orderEntry type="library" name="Leiningen: clj-time:0.7.0" level="project" />
+    <orderEntry type="library" name="Leiningen: clj-time:0.11.0" level="project" />
     <orderEntry type="library" name="Leiningen: clj-tuple:0.2.2" level="project" />
     <orderEntry type="library" name="Leiningen: cljs-log:0.2.1" level="project" />
     <orderEntry type="library" name="Leiningen: clojure-complete:0.2.4" level="project" />
@@ -82,7 +82,8 @@
     <orderEntry type="library" name="Leiningen: incanter:1.5.7" level="project" />
     <orderEntry type="library" name="Leiningen: inflections:0.12.2" level="project" />
     <orderEntry type="library" name="Leiningen: io.reactivex/rxjava:1.2.3" level="project" />
-    <orderEntry type="library" name="Leiningen: joda-time:2.3" level="project" />
+    <orderEntry type="library" name="Leiningen: jarohen/chime:0.2.0" level="project" />
+    <orderEntry type="library" name="Leiningen: joda-time:2.8.2" level="project" />
     <orderEntry type="library" name="Leiningen: junit:4.8.2" level="project" />
     <orderEntry type="library" name="Leiningen: mvxcvi/arrangement:1.0.0" level="project" />
     <orderEntry type="library" name="Leiningen: mvxcvi/puget:1.0.0" level="project" />

@@ -69,8 +69,8 @@
            {:active      false
             :dependency  {:event    (graph/digraph)
                           :behavior (graph/digraph)}
-            :input-state (helpers/get-queue helpers/funcall)
             :id          0
+            :input-state (helpers/get-queue helpers/funcall)
             :modifier    {}
             :time        (time/time 0)})
    (def time
