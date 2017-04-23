@@ -70,7 +70,8 @@
                                  input-event-anys)
                             (map (fn [inner-input-event as]
                                    (fn []
-                                     (if (maybe/nothing? @inner-input-event)
+                                     (if (not= inner-input-event
+                                               outer-input-event)
                                        (run! inner-input-event as))))
                                  inner-input-events
                                  (gen/vector (gen/vector test-helpers/any-equal)
