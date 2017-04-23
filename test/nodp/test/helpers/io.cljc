@@ -75,3 +75,23 @@
                               (exit a)
                               b)
                    a)))
+
+(clojure-test/defspec
+  behavior-on-identity
+  test-helpers/num-tests
+  (test-helpers/restart-for-all [e test-helpers/event
+                                 as (-> test-helpers/any-equal
+                                        gen/vector
+                                        gen/not-empty)]
+                                (let [b (frp/stepper (first as) e)
+                                      occurrence-values (maybe/maybe as
+                                                                     @e
+                                                                     (fn [x]
+                                                                       (s/setval s/BEGINNING
+                                                                                 (vector (tuple/snd x))
+                                                                                 as)))]
+                                  (= (with-exit exit
+                                                (frp/on exit b)
+                                                (frp/activate)
+                                                (run! e (rest occurrence-values)))
+                                     (last occurrence-values)))))
