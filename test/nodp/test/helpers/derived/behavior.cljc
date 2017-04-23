@@ -61,9 +61,11 @@
                (cond (< @@frp/time lower-limit-value)
                      (= @integral-behavior helpers/nothing)
                      (= @@frp/time lower-limit-value)
-                     (and (= @integral-behavior @minuend-behavior)
+                     (and (= latest helpers/nothing)
+                          (= @integral-behavior @minuend-behavior)
                           (= @@subtrahend-behavior 0))
-                     :else (= latest @integral-behavior))))))
+                     :else (or (= latest helpers/nothing)
+                               (= latest @integral-behavior)))))))
 
        (clojure-test/defspec
          integral-constant
