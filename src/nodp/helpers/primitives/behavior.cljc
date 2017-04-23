@@ -46,7 +46,7 @@
     (fn [ma f]
       (behavior*
         child-behavior
-        (helpers/set-modifier
+        (helpers/append-modifier
           (fn [network]
             (do (reset! helpers/network-state network)
                 (let [parent-behavior (->> network
@@ -73,7 +73,7 @@
            :time        (time/time 0)})
   (def time
     (behavior* b
-               (helpers/set-modifier
+               (helpers/append-modifier
                  (fn [network]
                    (helpers/set-latest
                      (:time network)
@@ -93,7 +93,7 @@
                          child-behavior*
                          (helpers/add-edge parent-behavior)
                          (helpers/set-latest @parent-behavior)
-                         (helpers/set-modifier
+                         (helpers/append-modifier
                            (fn [network]
                              (helpers/set-latest
                                (helpers/get-latest
@@ -106,7 +106,7 @@
                                network))))]
     (event/event* _
                   (helpers/add-edge parent-event)
-                  (helpers/set-modifier
+                  (helpers/append-modifier
                     (fn [network]
                       (maybe/maybe network
                                    (helpers/get-latest parent-event network)
@@ -126,7 +126,7 @@
   ;TODO refactor
   (let [past-behavior
         (behavior* past-behavior*
-                   (helpers/set-modifier
+                   (helpers/append-modifier
                      (fn [network]
                        (helpers/set-latest
                          (tuple/tuple (:time network)
@@ -138,7 +138,7 @@
                                                     helpers/nothing)))]
     (behavior*
       integration-behavior*
-      (helpers/set-modifier
+      (helpers/append-modifier
         (fn [network]
           (cond (and (maybe/maybe true
                                   lower-limit-maybe

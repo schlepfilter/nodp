@@ -370,8 +370,7 @@
               (partial (flip graph/add-edges) (map :id [parent child]))
               network))
 
-;TODO rename set-modifier as append-modifier
-(defcurried set-modifier
+(defcurried append-modifier
             [f entity network]
             (s/setval [:modifier (:id entity) s/END]
                       [f]

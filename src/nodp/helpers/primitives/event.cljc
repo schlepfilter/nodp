@@ -208,7 +208,7 @@
       ;TODO fix >>=
       (let [child-event
             (event* child-event*
-                    (helpers/set-modifier
+                    (helpers/append-modifier
                       (fn [network]
                         (if (now? ma network)
                           (do (reset! helpers/network-state network)
@@ -236,7 +236,7 @@
     p/Semigroup
     (-mappend [_ left-event right-event]
               (event* child-event
-                      (helpers/set-modifier
+                      (helpers/append-modifier
                         (fn [network]
                           (-> (cond (->> network
                                          (helpers/get-latest left-event)
@@ -270,7 +270,7 @@
         (event*
           transduction-event*
           (set-earliest-latest (maybe/just (tuple/tuple (time/time 0) init)))
-          (helpers/set-modifier
+          (helpers/append-modifier
             (fn [network]
               (if (now? parent-event network)
                 (let [stepped (step helpers/nothing
@@ -294,7 +294,7 @@
                 network)))
           (helpers/add-edge parent-event))]
     (event* child-event
-            (helpers/set-modifier
+            (helpers/append-modifier
               (fn [network]
                 (if-then-else (partial now? transduction-event)
                               (make-sync transduction-event child-event)
