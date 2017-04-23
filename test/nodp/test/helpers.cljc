@@ -122,10 +122,10 @@
 (defn make-iterate
   [coll]
   (let [state (atom coll)]
-    (fn [& _]
-      (let [result (first @state)]
-        (swap! state rest)
-        result))))
+    (memoize (fn [& _]
+               (let [result (first @state)]
+                 (swap! state rest)
+                 result)))))
 
 (def expt
   #?(:clj  numeric-tower/expt
