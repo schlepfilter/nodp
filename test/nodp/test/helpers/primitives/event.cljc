@@ -55,6 +55,7 @@
                                            (partial + 3)))
             [input-event & _ :as input-events]
             (gen/return (test-helpers/get-events probabilities))
+            ;TODO generalize gen/uuid
             fs (gen/vector (test-helpers/function gen/uuid)
                            (count input-events))
             input-event-anys (gen/vector gen/uuid
