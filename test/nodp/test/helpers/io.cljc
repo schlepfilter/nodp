@@ -44,18 +44,22 @@
                                b)
                    as)))
 
+(defn get-occurrence-values
+  [e as]
+  (maybe/maybe as
+               @e
+               (fn [x]
+                 (s/setval s/BEGINNING
+                           (vector (tuple/snd x))
+                           as))))
+
 (clojure-test/defspec
   event-on-identity
   test-helpers/num-tests
   (test-helpers/restart-for-all
     [e test-helpers/event
      as (gen/vector test-helpers/any-equal)]
-    (let [occurrence-values (maybe/maybe as
-                                         @e
-                                         (fn [x]
-                                           (s/setval s/BEGINNING
-                                                     (vector (tuple/snd x))
-                                                     as)))]
+    (let [occurrence-values (get-occurrence-values e as)]
       (= (with-exitv exit
                      (frp/on exit e)
                      (frp/activate)
@@ -79,19 +83,15 @@
 (clojure-test/defspec
   behavior-on-identity
   test-helpers/num-tests
-  (test-helpers/restart-for-all [e test-helpers/event
-                                 as (-> test-helpers/any-equal
-                                        gen/vector
-                                        gen/not-empty)]
-                                (let [b (frp/stepper (first as) e)
-                                      occurrence-values (maybe/maybe as
-                                                                     @e
-                                                                     (fn [x]
-                                                                       (s/setval s/BEGINNING
-                                                                                 (vector (tuple/snd x))
-                                                                                 as)))]
-                                  (= (with-exit exit
-                                                (frp/on exit b)
-                                                (frp/activate)
-                                                (run! e (rest occurrence-values)))
-                                     (last occurrence-values)))))
+  (test-helpers/restart-for-all
+    [e test-helpers/event
+     as (-> test-helpers/any-equal
+            gen/vector
+            gen/not-empty)]
+    (let [b (frp/stepper (first as) e)
+          occurrence-values (get-occurrence-values e as)]
+      (= (with-exit exit
+                    (frp/on exit b)
+                    (frp/activate)
+                    (run! e (rest occurrence-values)))
+         (last occurrence-values)))))
