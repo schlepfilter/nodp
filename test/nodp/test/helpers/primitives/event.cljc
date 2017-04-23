@@ -55,13 +55,12 @@
                            (count input-events))
             ;TODO randomize the simultaneity of input-events and input-event
             input-event test-helpers/event
-            f (test-helpers/function test-helpers/any-equal)
-            input-event-anys (gen/vector
-                               test-helpers/any-equal
-                               ((if (maybe/just? @input-event)
-                                  dec
-                                  identity)
-                                 (count input-events)))
+            f (test-helpers/function gen/uuid)
+            input-event-anys (gen/vector gen/uuid
+                                         ((if (maybe/just? @input-event)
+                                            dec
+                                            identity)
+                                           (count input-events)))
             input-events-anys (gen/vector test-helpers/any-equal
                                           (count input-events))
             calls (gen/shuffle (concat (map (fn [a]

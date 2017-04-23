@@ -114,10 +114,10 @@
   [coll]
   (let [state (atom coll)]
     ;TODO memoize
-    (fn [& _]
-      (let [result (first @state)]
-        (swap! state rest)
-        result))))
+    (memoize (fn [& _]
+               (let [result (first @state)]
+                 (swap! state rest)
+                 result)))))
 
 (def expt
   #?(:clj  numeric-tower/expt
