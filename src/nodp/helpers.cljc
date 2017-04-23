@@ -279,7 +279,7 @@
 
 (def registry
   (atom {:defs          []
-         :synchronizers []}))
+         :synchronizes []}))
 
 (def network-state
   (atom {}))
@@ -404,14 +404,14 @@
       (graph/remove-nodes (:id entity))
       graph/transpose))
 
-(defn get-parent-ancestor-modifiers
+(defn get-parent-ancestor-modifies
   [entity network]
   (mapcat (:modifier network)
           (alg/topsort (get-ancestor-subgraph entity network))))
 
 (defn modify-parent-ancestor!
   [entity network]
-  (call-functions (get-parent-ancestor-modifiers entity network) network))
+  (call-functions (get-parent-ancestor-modifies entity network) network))
 
 (defn effect-swap!
   [a f]

@@ -82,7 +82,7 @@
                       b
                       network)))))
    (run! helpers/funcall (flatten ((juxt :defs
-                                         :synchronizers)
+                                         :synchronizes)
                                     @helpers/registry)))))
 
 (def restart
@@ -199,7 +199,7 @@
                       (behavior* _#))))
                symbols))
 
-       (defmacro make-get-synchronizers
+       (defmacro make-get-synchronizes
          [javascript-namespace symbols]
          (mapv (fn [x]
                  `(fn [network#]
@@ -217,8 +217,8 @@
          `(swap! helpers/registry
                  ;TODO refactor
                  (comp (partial s/setval*
-                                [:synchronizers s/END]
-                                (make-get-synchronizers ~javascript-namespace
+                                [:synchronizes s/END]
+                                (make-get-synchronizes ~javascript-namespace
                                                         ~symbols))
                        (partial s/setval*
                                 [:defs s/END]

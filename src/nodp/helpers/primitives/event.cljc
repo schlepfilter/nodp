@@ -51,36 +51,36 @@
                          (helpers/set-latest a e)
                          (set-earliest a e)))
 
-(defn make-get-modifiers*
+(defn make-get-modifies*
   [network]
   (comp (partial mapcat (:modifier network))
         alg/topsort))
 
-(def get-behavior-modifiers
-  (nodp.helpers/<*> make-get-modifiers*
+(def get-behavior-modifies
+  (nodp.helpers/<*> make-get-modifies*
                     (comp :behavior
                           :dependency)))
 
 (defn modify-behavior!
   [t network]
   (helpers/call-functions (concat [(partial s/setval* :time t)]
-                                  (:synchronizers @helpers/registry)
-                                  (get-behavior-modifiers network))
+                                  (:synchronizes @helpers/registry)
+                                  (get-behavior-modifies network))
                           network))
 
-(defn get-event-modifiers
+(defn get-event-modifies
   [e network]
   (->> e
        :id
        (helpers/get-reachable-subgraph (:event (:dependency network)))
-       ((make-get-modifiers* network))))
+       ((make-get-modifies* network))))
 
 (defn modify-event!
   [occurrence e network]
   (helpers/call-functions
     (concat [(partial s/setval* :time (tuple/fst occurrence))
              (set-earliest-latest (maybe/just occurrence) e)]
-            (get-event-modifiers e network))
+            (get-event-modifies e network))
     network))
 
 (defn modify-network!
