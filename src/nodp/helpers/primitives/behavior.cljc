@@ -88,10 +88,8 @@
                                         :cljs js/Number.POSITIVE_INFINITY))
                            ;TODO move nop to helpers
                            (constantly unit/unit)
-                           (chime/chime-at
-                             ;TODO remove take 2
-                             (take 2 (get-periods rate))
-                             handle))
+                           ;TODO remove take 2
+                           (chime/chime-at (take 2 (get-periods rate)) handle))
             :dependency  {:event    (graph/digraph)
                           :behavior (graph/digraph)}
             :id          0
