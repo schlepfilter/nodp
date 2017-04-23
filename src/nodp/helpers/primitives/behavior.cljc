@@ -1,14 +1,18 @@
 (ns nodp.helpers.primitives.behavior
   (:refer-clojure :exclude [time])
   (:require [cats.monad.maybe :as maybe]
-            [cats.protocols :as p]
+            [cats.protocols :as protocols]
             [cats.util :as util]
+            [chime :as chime]
+            [clj-time.core :as t]
+            [clj-time.periodic :as p]
             [com.rpl.specter :as s]
             [cuerdas.core :as cuerdas]
             [loom.graph :as graph]
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.time :as time]
             [nodp.helpers.tuple :as tuple]
+            [nodp.helpers.unit :as unit]
             [nodp.helpers :as helpers])
   #?(:clj
            (:import [clojure.lang IDeref])
@@ -20,7 +24,7 @@
 
 (defrecord Behavior
   [id]
-  p/Contextual
+  protocols/Contextual
   (-get-context [_]
     context)
   IDeref
@@ -28,7 +32,7 @@
       :cljs -deref) [b]
     ;b stands for a behavior as in Push-Pull Functional Reactive Programming.
     (helpers/get-latest b @helpers/network-state))
-  p/Printable
+  protocols/Printable
   (-repr [_]
     (str "#[behavior " id "]")))
 
@@ -61,6 +65,18 @@
 
 (declare time)
 
+(defn get-periods
+  [rate]
+  (rest (p/periodic-seq (t/now) (t/millis rate))))
+
+(defn handle
+  [t]
+  (if (:active @helpers/network-state)
+    (event/queue
+      (fn []
+        (reset! helpers/network-state
+                (event/modify-behavior! t @helpers/network-state))))))
+
 (defn start
   ([]
    (start #?(:clj  Double/POSITIVE_INFINITY
@@ -68,11 +84,19 @@
   ([rate]
    (reset! helpers/network-state
            {:active      false
+            :cancel      (if (= rate #?(:clj  Double/POSITIVE_INFINITY
+                                        :cljs js/Number.POSITIVE_INFINITY))
+                           ;TODO move nop to helpers
+                           (constantly unit/unit)
+                           (chime/chime-at
+                             ;TODO remove take 2
+                             (take 2 (get-periods rate))
+                             handle))
             :dependency  {:event    (graph/digraph)
                           :behavior (graph/digraph)}
             :id          0
             :input-state (helpers/get-queue helpers/funcall)
-            :modify    {}
+            :modify      {}
             :time        (time/time 0)})
    (def time
      (behavior* b
@@ -86,9 +110,15 @@
                                          :synchronizes)
                                     @helpers/registry)))))
 
-(def restart
-  ;TODO call stop
-  start)
+(defn stop
+  []
+  (if-let [cancel (:cancel @helpers/network-state)]
+    (cancel)))
+
+(defn restart
+  [& more]
+  (stop)
+  (apply start more))
 
 (defn switcher
   [parent-behavior parent-event]
