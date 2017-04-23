@@ -57,12 +57,11 @@
             (gen/return (test-helpers/get-events probabilities))
             fs (gen/vector (test-helpers/function gen/uuid)
                            (count all-input-events))
-            input-event-anys (gen/vector
-                               gen/uuid
-                               ((if (maybe/just? @input-event)
-                                  dec
-                                  identity)
-                                 (count inner-input-events)))
+            input-event-anys (gen/vector gen/uuid
+                                         ((if (maybe/just? @input-event)
+                                            dec
+                                            identity)
+                                           (count inner-input-events)))
             calls (gen/shuffle (concat (map (fn [a]
                                               (fn []
                                                 (input-event a)))
