@@ -370,11 +370,18 @@
               (partial (flip graph/add-edges) (map :id [parent child]))
               network))
 
+;TODO rename set-modifier as append-modifier
 (defcurried set-modifier
             [f entity network]
             (s/setval [:modifier (:id entity) s/END]
                       [f]
                       network))
+
+(defcurried insert-modifier
+            [f entity network]
+            (s/setval [:modifier (:id entity) s/END]
+                      [f (last ((:id entity) (:modifier network)))]
+                      (s/transform [:modifier (:id entity)] drop-last network)))
 
 (defcurried set-latest
             ;The order of a and entity is consistent with the parameters of primitives.

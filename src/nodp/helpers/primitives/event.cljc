@@ -171,7 +171,7 @@
 
 (defn make-merge-sync
   [parent-event child-event]
-  (helpers/set-modifier
+  (helpers/insert-modifier
     (partial if-then-else
              (helpers/build and
                             (partial now? parent-event)
@@ -182,7 +182,7 @@
 (helpers/defcurried
   delay-sync->>=
   [parent-event child-event network]
-  (if (now? parent-event network)
+  (if-not (now? child-event network)
     (maybe/maybe network
                  (get-earliest parent-event network)
                  (comp (fn [a]
