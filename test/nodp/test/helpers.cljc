@@ -113,6 +113,7 @@
 (defn make-iterate
   [coll]
   (let [state (atom coll)]
+    ;TODO memoize
     (fn [& _]
       (let [result (first @state)]
         (swap! state rest)

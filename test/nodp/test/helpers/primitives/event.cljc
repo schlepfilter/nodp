@@ -53,6 +53,7 @@
             input-events (gen/return (test-helpers/get-events probabilities))
             fs (gen/vector (test-helpers/function test-helpers/any-equal)
                            (count input-events))
+            ;TODO randomize the simultaneity of input-events and input-event
             input-event test-helpers/event
             f (test-helpers/function test-helpers/any-equal)
             input-event-anys (gen/vector
