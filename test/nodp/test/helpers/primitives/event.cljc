@@ -53,20 +53,20 @@
                                                     test-helpers/probability
                                                     3)
                                            (partial + 3)))
-            [input-event & inner-input-events :as input-events]
+            [outer-input-event & inner-input-events :as input-events]
             (gen/return (test-helpers/get-events probabilities))
             ;TODO generalize gen/uuid
             fs (gen/vector (test-helpers/function gen/uuid)
                            (count input-events))
             input-event-anys (gen/vector gen/uuid
-                                         ((if (maybe/just? @input-event)
+                                         ((if (maybe/just? @outer-input-event)
                                             dec
                                             identity)
                                            (dec (count input-events))))
             calls (gen/shuffle
                     (concat (map (fn [a]
                                    (fn []
-                                     (input-event a)))
+                                     (outer-input-event a)))
                                  input-event-anys)
                             (map (fn [inner-input-event as]
                                    (fn []
@@ -81,7 +81,7 @@
                       (gen/return (partial doall (map helpers/funcall
                                                       (drop-last calls))))
                       (gen/return (last calls))
-                      (gen/return ((if (maybe/just? @input-event)
+                      (gen/return ((if (maybe/just? @outer-input-event)
                                      inc
                                      identity)
                                     (count input-event-anys))))))
