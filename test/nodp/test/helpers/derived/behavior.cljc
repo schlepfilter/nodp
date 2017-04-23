@@ -1,6 +1,5 @@
 (ns nodp.test.helpers.derived.behavior
-  (:require [cats.monad.maybe :as maybe]
-            [clojure.test.check]
+  (:require [clojure.test.check]
             [clojure.test.check.clojure-test
              :as clojure-test
              :include-macros true]
