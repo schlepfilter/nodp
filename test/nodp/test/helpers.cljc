@@ -112,6 +112,7 @@
            (gen/tuple
              (gen/return input-events)
              (gen/return (doall (map nodp.helpers/<$> fs input-events)))
+             ;TODO avoid returning a negative number
              (gen/return
                (- ((if (maybe/just? @(first input-events))
                      dec
