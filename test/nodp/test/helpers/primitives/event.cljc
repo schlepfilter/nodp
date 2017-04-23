@@ -53,25 +53,24 @@
                                                     test-helpers/probability
                                                     3)
                                            (partial + 3)))
-            [input-event & inner-input-events :as all-input-events]
+            [input-event & _ :as input-events]
             (gen/return (test-helpers/get-events probabilities))
             fs (gen/vector (test-helpers/function gen/uuid)
-                           (count all-input-events))
+                           (count input-events))
             input-event-anys (gen/vector gen/uuid
                                          ((if (maybe/just? @input-event)
                                             dec
                                             identity)
-                                           (count inner-input-events)))
+                                           (dec (count input-events))))
             calls (gen/shuffle (concat (map (fn [a]
                                               (fn []
                                                 (input-event a)))
                                             input-event-anys)
                                        ;TODO fire inner-input-events that don't occur simultaneously with input-event
                                        ))]
-           (gen/tuple (gen/return (helpers/<$> (first fs) input-event))
-                      (gen/return (doall (map nodp.helpers/<$>
-                                              (rest fs)
-                                              inner-input-events)))
+           (gen/tuple (gen/return (doall (map nodp.helpers/<$>
+                                              fs
+                                              input-events)))
                       (gen/return (partial doall (map helpers/funcall
                                                       (drop-last calls))))
                       (gen/return (last calls))
@@ -117,7 +116,7 @@
   event->>=-identity
   test-helpers/num-tests
   (test-helpers/restart-for-all
-    [[outer-event inner-events calls call n] event->>=]
+    [[[outer-event & inner-events] calls call n] event->>=]
     (let [bound-event (helpers/>>= outer-event
                                    (test-helpers/make-iterate inner-events))]
       (frp/activate)
