@@ -49,14 +49,18 @@
 
 (def event->>=
   ;TODO refactor
-  (gen/let [probabilities (gen/sized (comp (partial gen/vector
-                                                    test-helpers/probability
-                                                    2)
-                                           (partial + 2)))
-            [[input-event & input-events] [outer-event & inner-events] n]
-            (test-helpers/events-tuple probabilities)
-            input-event-anys (gen/vector test-helpers/any-equal
-                                         n)
+  (gen/let [probabilities (gen/not-empty (gen/vector test-helpers/probability))
+            input-events (gen/return (test-helpers/get-events probabilities))
+            fs (gen/vector (test-helpers/function test-helpers/any-equal)
+                           (count input-events))
+            input-event test-helpers/event
+            f (test-helpers/function test-helpers/any-equal)
+            input-event-anys (gen/vector
+                               test-helpers/any-equal
+                               ((if (maybe/just? @input-event)
+                                  dec
+                                  identity)
+                                 (count input-events)))
             input-events-anys (gen/vector test-helpers/any-equal
                                           (count input-events))
             calls (gen/shuffle (concat (map (fn [a]
@@ -67,14 +71,12 @@
                                               (fn []
                                                 (input-event* a)))
                                             input-events-anys
-                                            input-events)))
-            invocations (gen/vector gen/boolean (count calls))]
-           (gen/tuple (gen/return outer-event)
-                      (gen/return inner-events)
-                      (gen/return (partial doall (map (fn [invocation call]
-                                                        (if invocation
-                                                          (call)))
-                                                      invocations
+                                            input-events)))]
+           (gen/tuple (gen/return (helpers/<$> f input-event))
+                      (gen/return (doall (map nodp.helpers/<$>
+                                              fs
+                                              input-events)))
+                      (gen/return (partial doall (map helpers/funcall
                                                       (drop-last calls))))
                       (gen/return (last calls)))))
 
