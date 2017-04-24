@@ -18,6 +18,7 @@
 
 (def invoke
   (gen/let [a test-helpers/any-equal]
+           ;TODO randomize the function that may be lifted to include functions that won't be lifted
            (= @(frp/lifting ((fn [& _]
                                a)
                               ;TODO randomize the numbers and values of behaviors and constants
