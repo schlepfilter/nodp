@@ -71,12 +71,12 @@
           (rest (p/periodic-seq (t/now) (t/millis rate)))))
 
 (defn handle
-  [t]
+  [_]
   (if (:active @helpers/network-state)
     (event/queue
       (fn []
         (reset! helpers/network-state
-                (event/modify-behavior! t @helpers/network-state))))))
+                (event/modify-behavior! (time/now) @helpers/network-state))))))
 
 (defn start
   ([]
