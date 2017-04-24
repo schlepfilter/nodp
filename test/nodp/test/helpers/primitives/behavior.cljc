@@ -249,4 +249,5 @@
                 #?(:clj  (let [t @frp/time]
                            (Thread/sleep 100)
                            (not= @frp/time t))
+                   ;TODO test inequality after cljs.test supports asynchronous tests
                    :cljs true)))
