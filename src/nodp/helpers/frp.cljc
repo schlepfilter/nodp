@@ -3,7 +3,9 @@
   (:require [nodp.helpers.io :as io]
             [nodp.helpers.primitives.behavior :as behavior]
             [nodp.helpers.primitives.event :as event]
-            [nodp.helpers.derived.behavior :as derived-behavior]))
+            [nodp.helpers.derived.behavior
+             :as derived-behavior
+             :include-macros true]))
 
 (declare time)
 
@@ -24,6 +26,10 @@
 
 (def calculus
   behavior/calculus)
+
+#?(:clj (defmacro lifting
+          [expr]
+          `(derived-behavior/lifting ~expr)))
 
 (def behavior
   derived-behavior/behavior)

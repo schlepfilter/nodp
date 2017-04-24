@@ -16,6 +16,19 @@
 
 (test/use-fixtures :each test-helpers/fixture)
 
+(def invoke
+  (gen/let [a test-helpers/any-equal]
+           (= @(frp/lifting ((fn [& _]
+                               a)
+                              (frp/behavior unit/unit)))
+              a)))
+
+(clojure-test/defspec
+  lifting-invoke
+  test-helpers/num-tests
+  (test-helpers/restart-for-all [invoke* invoke]
+                                invoke*))
+
 (def rational-base
   (gen/one-of [gen/s-pos-int gen/s-neg-int]))
 

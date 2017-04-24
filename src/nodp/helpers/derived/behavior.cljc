@@ -11,6 +11,10 @@
        nodp.helpers/pure
        (ctx/with-context behavior/context)))
 
+#?(:clj (defmacro lifting
+          [[f & more]]
+          `((helpers/lift-a ~(count more) ~f) ~@more)))
+
 (defn stepper
   [a e]
   (behavior/switcher (behavior a)
