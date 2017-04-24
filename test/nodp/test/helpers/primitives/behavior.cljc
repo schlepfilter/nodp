@@ -241,8 +241,11 @@
           sample
           test-helpers/num-tests
           (prop/for-all []
-                        (frp/restart 1)
+                        ;TODO change 10 to 1 after chime is fixed
+                        ;(frp/restart 1) produces an error
+                        ;java.lang.IllegalArgumentException: No implementation of method: :before? of protocol: #'clj-time.core/DateTimeProtocol found for class: nil
+                        (frp/restart 10)
                         (frp/activate)
                         (let [t @frp/time]
-                          (Thread/sleep 10)
+                          (Thread/sleep 100)
                           (not= @frp/time t)))))
