@@ -269,7 +269,11 @@
         transduction-event
         (event*
           transduction-event*
-          (set-earliest-latest (maybe/just (tuple/tuple (time/time 0) init)))
+          (-> 0
+              time/time
+              (tuple/tuple init)
+              maybe/just
+              set-earliest-latest)
           (helpers/append-modify
             (fn [network]
               (if (now? parent-event network)
