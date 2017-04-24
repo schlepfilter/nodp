@@ -91,7 +91,8 @@
                            (constantly unit/unit)
                            ;TODO remove take 2
                            #?(:clj  (chime/chime-at (take 2 (get-periods rate)) handle)
-                              :cljs (js/setInterval handle rate)))
+                              :cljs (->> (js/setInterval handle rate)
+                                         (partial js/clearInterval))))
             :dependency  {:event    (graph/digraph)
                           :behavior (graph/digraph)}
             :id          0
