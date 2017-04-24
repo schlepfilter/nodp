@@ -20,6 +20,7 @@
   (gen/let [a test-helpers/any-equal]
            (= @(frp/lifting ((fn [& _]
                                a)
+                              ;TODO randomize the numbers and values of behaviors and constants
                               (frp/behavior unit/unit)))
               a)))
 

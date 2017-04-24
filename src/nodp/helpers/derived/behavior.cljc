@@ -13,6 +13,8 @@
 
 #?(:clj (defmacro lifting
           [[f & more]]
+          ;TODO handle cases in which more contains constants
+          ;TODO handle cases in which f won't be lifted
           `((helpers/lift-a ~(count more) ~f) ~@more)))
 
 (defn stepper
