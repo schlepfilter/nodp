@@ -234,4 +234,3 @@
                                      helpers/nothing))
            (reduce f init)
            (= (tuple/snd @@transduced-event))))))
-
