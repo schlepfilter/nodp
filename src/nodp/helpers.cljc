@@ -282,6 +282,7 @@
          :synchronizes []}))
 
 (def network-state
+  ;TODO ensure network-state has all the keys to avoid nil
   (atom {}))
 
 (defn get-queue
