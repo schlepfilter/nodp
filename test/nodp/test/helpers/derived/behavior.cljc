@@ -16,17 +16,20 @@
 
 (test/use-fixtures :each test-helpers/fixture)
 
+(def behavior
+  (gen/let [a test-helpers/any-equal]
+           (gen/elements [(frp/behavior a)
+                          frp/time])))
+
 (def lifting
   (gen/let [a test-helpers/any-equal
-            arguments (gen/vector (gen/one-of [(gen/return (frp/behavior unit/unit))
+            arguments (gen/vector (gen/one-of [behavior
                                                test-helpers/any-equal])
                                   1
                                   2)]
            (let [result (helpers/case-eval (count arguments)
                                            1 (frp/lifting ((fn [& _]
                                                              a)
-                                                            ;TODO randomize the values of behaviors and constants
-                                                            ;TODO randomize how behavior is created
                                                             (first arguments)))
                                            (frp/lifting ((fn [& _]
                                                            a)
