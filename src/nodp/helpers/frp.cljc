@@ -1,11 +1,12 @@
 (ns nodp.helpers.frp
-  (:refer-clojure :exclude [stepper time transduce])
+  (:refer-clojure :exclude [max min stepper time transduce])
   (:require [nodp.helpers.io :as io]
-            [nodp.helpers.primitives.behavior :as behavior]
-            [nodp.helpers.primitives.event :as event]
             [nodp.helpers.derived.behavior
              :as derived-behavior
-             :include-macros true]))
+             :include-macros true]
+            [nodp.helpers.derived.event :as derived-event]
+            [nodp.helpers.primitives.behavior :as behavior]
+            [nodp.helpers.primitives.event :as event]))
 
 (declare time)
 
@@ -26,6 +27,12 @@
 
 (def calculus
   behavior/calculus)
+
+(def max
+  derived-event/max)
+
+(def min
+  derived-event/min)
 
 #?(:clj (defmacro lifting
           [expr]

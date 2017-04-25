@@ -10,6 +10,12 @@
 (def temperature
   (helpers/<$> :temperature measurement))
 
+(def max-temperature
+  (frp/max temperature))
+
+(def min-temperature
+  (frp/min temperature))
+
 ;TODO implement weather
 
 (frp/activate)
