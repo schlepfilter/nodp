@@ -27,9 +27,6 @@
   (let [past (time/now)]
     [past (get-new-time past)]))
 
-(def get-earliest
-  (helpers/make-get :earliest))
-
 (defn if-then-else
   [if-function then-function else]
   ((helpers/build if
@@ -37,19 +34,6 @@
                   then-function
                   identity)
     else))
-
-(helpers/defcurried set-earliest
-                    [a e network]
-                    (if-then-else (comp maybe/nothing?
-                                        (get-earliest e))
-                                  (partial s/setval* [:earliest (:id e)] a)
-                                  network))
-
-(helpers/defcurried set-earliest-latest
-                    [a e network]
-                    (->> network
-                         (helpers/set-latest a e)
-                         (set-earliest a e)))
 
 (defn make-get-modifies*
   [network]
@@ -78,7 +62,7 @@
   [occurrence e network]
   (helpers/call-functions
     (concat [(partial s/setval* :time (tuple/fst occurrence))
-             (set-earliest-latest (maybe/just occurrence) e)]
+             (helpers/set-latest (maybe/just occurrence) e)]
             (get-event-modifies e network))
     network))
 
@@ -147,7 +131,7 @@
           `(helpers/get-entity ~event-name
                                Event.
                                ~@fs
-                               (set-earliest-latest helpers/nothing))))
+                               (helpers/set-latest helpers/nothing))))
 
 (defn now?
   [e network]
@@ -182,7 +166,7 @@
   (maybe/maybe network
                (helpers/get-latest parent-event network)
                (comp (fn [a]
-                       (set-earliest-latest a child-event network))
+                       (helpers/set-latest a child-event network))
                      maybe/just
                      (partial nodp.helpers/<*>
                               (tuple/tuple (:time network)
@@ -198,7 +182,7 @@
   (helpers/reify-monad
     (fn [a]
       (event* _
-              (set-earliest-latest (maybe/just (tuple/tuple (time/time 0) a)))))
+              (helpers/set-latest (maybe/just (tuple/tuple (time/time 0) a)))))
     (fn [ma f]
       ;TODO fix >>=
       (let [child-event
@@ -247,7 +231,7 @@
                                     :else
                                     right-event)
                               (helpers/get-latest network)
-                              (set-earliest-latest child-event network))))
+                              (helpers/set-latest child-event network))))
                       (helpers/add-edge right-event)
                       (helpers/add-edge left-event)))
     p/Monoid
@@ -268,7 +252,7 @@
               time/time
               (tuple/tuple init)
               maybe/just
-              set-earliest-latest)
+              helpers/set-latest)
           (helpers/append-modify
             (fn [network]
               (if (now? parent-event network)
