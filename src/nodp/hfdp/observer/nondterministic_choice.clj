@@ -86,7 +86,7 @@
 
 (helpers/printstream statistic-stream)
 
-(defn- get-now
+(defn- get-weather
   [{:keys [temperature humidity]}]
   (str "Current conditions: "
        temperature
@@ -94,9 +94,9 @@
        humidity
        "% humidity"))
 
-(def now-stream
-  (rx/map get-now measurement))
+(def weather-stream
+  (rx/map get-weather measurement))
 
-(helpers/printstream now-stream)
+(helpers/printstream weather-stream)
 
 (rx/connect! measurement)

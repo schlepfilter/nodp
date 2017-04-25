@@ -10,4 +10,6 @@
 (def temperature
   (helpers/<$> :temperature measurement))
 
+;TODO implement weather
+
 (frp/activate)
