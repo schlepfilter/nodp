@@ -25,19 +25,17 @@
 (def behavior?
   (make-entity? nodp.helpers.primitives.behavior.Behavior))
 
-(defn eventize
-  ;TODO refactor
-  [x]
-  (if (event? x)
-    x
-    (nodp.helpers/pure event/context x)))
+(helpers/defcurried entitize
+                    [pred entity-unit x]
+                    (if (pred x)
+                      x
+                      (entity-unit x)))
 
-(defn behaviorize
-  ;TODO refactor
-  [x]
-  (if (behavior? x)
-    x
-    (behavior x)))
+(def eventize
+  (entitize event? (partial nodp.helpers/pure event/context)))
+
+(def behaviorize
+  (entitize behavior? behavior))
 
 #?(:clj
    (do (defn xnor
