@@ -100,20 +100,20 @@
   (comp maybe/cat-maybes
         (partial map deref)))
 
-(defn left-biased?*
+(defn right-biased?*
   [e es]
   (->> es
        get-tuples
        (filter (comp (partial = (tuple/fst @@e))
                      tuple/fst))
-       first
+       last
        tuple/snd
        (= (tuple/snd @@e))))
 
-(def left-biased?
+(def right-biased?
   (helpers/build or
                  all-nothing?
-                 left-biased?*))
+                 right-biased?*))
 
 (defn right-most-earliest?
   [bound-event inner-events]
@@ -143,7 +143,7 @@
                      (= (map deref (drop-last inner-events))
                         (drop-last inner-latests)))
               (right-most-earliest? bound-event (take n inner-events))
-              (left-biased? bound-event (take n inner-events))))))))
+              (right-biased? bound-event (take n inner-events))))))))
 
 (def <>
   ;TODO refactor
@@ -164,14 +164,13 @@
                       (gen/return (apply helpers/<> fmapped-events))
                       (gen/return fmapped-events))))
 
-;TODO change the test for right-bias
 (clojure-test/defspec
   event-<>
   test-helpers/num-tests
   (test-helpers/restart-for-all [[call mappended-event fmapped-events] <>]
                                 (frp/activate)
                                 (call)
-                                (left-biased? mappended-event fmapped-events)))
+                                (right-biased? mappended-event fmapped-events)))
 
 (clojure-test/defspec
   event-mempty

@@ -239,22 +239,22 @@
                       (helpers/append-modify
                         (fn [network]
                           (-> (cond (->> network
-                                         (helpers/get-latest left-event)
-                                         maybe/nothing?)
-                                    right-event
-                                    (->> network
                                          (helpers/get-latest right-event)
                                          maybe/nothing?)
                                     left-event
-                                    (< (get-time-value left-event network)
-                                       (get-time-value right-event network))
+                                    (->> network
+                                         (helpers/get-latest left-event)
+                                         maybe/nothing?)
                                     right-event
+                                    (< (get-time-value right-event network)
+                                       (get-time-value left-event network))
+                                    left-event
                                     :else
-                                    left-event)
+                                    right-event)
                               (helpers/get-latest network)
                               (set-earliest-latest child-event network))))
-                      (helpers/add-edge left-event)
-                      (helpers/add-edge right-event)))
+                      (helpers/add-edge right-event)
+                      (helpers/add-edge left-event)))
     p/Monoid
     (-mempty [_]
              (event* _))))
