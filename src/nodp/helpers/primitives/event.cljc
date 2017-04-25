@@ -173,25 +173,21 @@
   [parent-event child-event]
   (helpers/insert-modify
     (partial if-then-else
-             (helpers/build and
-                            (partial now? parent-event)
-                            (partial (complement now?) child-event))
+             (partial now? parent-event)
              (make-sync parent-event child-event))
     child-event))
 
 (helpers/defcurried
   delay-sync->>=
   [parent-event child-event network]
-  (if-not (now? child-event network)
-    (maybe/maybe network
-                 (get-earliest parent-event network)
-                 (comp (fn [a]
-                         (set-earliest-latest a child-event network))
-                       maybe/just
-                       (partial nodp.helpers/<*>
-                                (tuple/tuple (:time network)
-                                             identity))))
-    network))
+  (maybe/maybe network
+               (helpers/get-latest parent-event network)
+               (comp (fn [a]
+                       (set-earliest-latest a child-event network))
+                     maybe/just
+                     (partial nodp.helpers/<*>
+                              (tuple/tuple (:time network)
+                                           identity)))))
 
 (def get-time-value
   (comp deref

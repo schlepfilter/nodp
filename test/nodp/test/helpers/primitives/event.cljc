@@ -87,10 +87,6 @@
                                      identity)
                                     (count input-event-anys))))))
 
-(defn get-earliest
-  [e]
-  (event/get-earliest e @helpers/network-state))
-
 (defn all-nothing?
   [e es]
   (and (maybe/nothing? @e)
@@ -115,35 +111,40 @@
                  all-nothing?
                  right-biased?*))
 
-(defn right-most-earliest?
+(defn right-most-latest?
   [bound-event inner-events]
-  (= (tuple/snd @(get-earliest (last inner-events)))
-     (tuple/snd @@bound-event)))
+  (->> inner-events
+       get-tuples
+       (filter (comp (partial = (apply (partial max-key deref)
+                                       (->> inner-events
+                                            get-tuples
+                                            (map tuple/fst))))
+                     tuple/fst))
+       last
+       tuple/snd
+       (= (tuple/snd @@bound-event))))
 
-;TODO change the test for right-bias
-#_(clojure-test/defspec
-    event->>=-identity
-    test-helpers/num-tests
-    (test-helpers/restart-for-all
-      [[[outer-event & inner-events] calls call n] event->>=]
-      (let [bound-event (helpers/>>= outer-event
-                                     (test-helpers/make-iterate inner-events))]
-        (frp/activate)
-        (calls)
-        (let [outer-latest @outer-event
-              inner-latests (doall (map deref inner-events))
-              bound-latest @bound-event]
-          (call)
+(clojure-test/defspec
+  event->>=-identity
+  test-helpers/num-tests
+  (test-helpers/restart-for-all
+    [[[outer-event & inner-events] calls call n] event->>=]
+    (let [bound-event (helpers/>>= outer-event
+                                   (test-helpers/make-iterate inner-events))]
+      (frp/activate)
+      (calls)
+      (let [outer-latest @outer-event
+            inner-latests (doall (map deref inner-events))
+            bound-latest @bound-event]
+        (call)
+        (if (or (maybe/nothing? @(last inner-events))
+                (= @outer-event outer-latest))
           (if (= (map deref inner-events) inner-latests)
-            (if (and (not= @outer-event outer-latest)
-                     (maybe/just? @(last inner-events)))
-              (right-most-earliest? bound-event (take n inner-events))
-              (= @bound-event bound-latest))
-            (if (and (not= @outer-event outer-latest)
-                     (= (map deref (drop-last inner-events))
-                        (drop-last inner-latests)))
-              (right-most-earliest? bound-event (take n inner-events))
-              (right-biased? bound-event (take n inner-events))))))))
+            (= @bound-event bound-latest)
+            (right-most-latest? bound-event inner-events))
+          (and (= (tuple/snd @@bound-event) (tuple/snd @@(last inner-events)))
+               (<= @(tuple/fst @@(last inner-events))
+                   @(tuple/fst @@bound-event))))))))
 
 (def <>
   ;TODO refactor
@@ -233,3 +234,4 @@
                                      helpers/nothing))
            (reduce f init)
            (= (tuple/snd @@transduced-event))))))
+
