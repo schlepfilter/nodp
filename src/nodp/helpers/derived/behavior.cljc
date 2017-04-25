@@ -22,15 +22,15 @@
 (def event?
   (make-entity? nodp.helpers.primitives.event.Event))
 
+(def behavior?
+  (make-entity? nodp.helpers.primitives.behavior.Behavior))
+
 (defn eventize
   ;TODO refactor
   [x]
   (if (event? x)
     x
     (nodp.helpers/pure event/context x)))
-
-(def behavior?
-  (make-entity? nodp.helpers.primitives.behavior.Behavior))
 
 (defn behaviorize
   ;TODO refactor
