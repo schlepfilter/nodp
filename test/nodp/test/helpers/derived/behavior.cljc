@@ -25,7 +25,7 @@
            (let [result (helpers/case-eval (count arguments)
                                            1 (frp/lifting ((fn [& _]
                                                              a)
-                                                            ;TODO randomize the numbers and values of behaviors and constants
+                                                            ;TODO randomize the values of behaviors and constants
                                                             ;TODO randomize how behavior is created
                                                             (first arguments)))
                                            (frp/lifting ((fn [& _]
