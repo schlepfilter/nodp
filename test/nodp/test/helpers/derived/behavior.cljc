@@ -19,13 +19,15 @@
 (def lifting
   (gen/let [a test-helpers/any-equal
             ;TODO randomize the function that may be lifted to include functions that won't be lifted
-            behavior-maybe (gen/one-of [(gen/return (frp/behavior unit/unit))
-                                        test-helpers/any-equal])]
+            arguments (gen/vector (gen/one-of [(gen/return (frp/behavior unit/unit))
+                                                     test-helpers/any-equal])
+                                        1
+                                        2)]
            (let [result (frp/lifting ((fn [& _]
                                         a)
                                        ;TODO randomize the numbers and values of behaviors and constants
                                        ;TODO randomize how behavior is created
-                                       behavior-maybe))]
+                                       (first arguments)))]
              (= (if (= (type result) (type (frp/behavior unit/unit)))
                   @result
                   result)
