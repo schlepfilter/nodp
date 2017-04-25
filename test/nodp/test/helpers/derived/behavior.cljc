@@ -23,8 +23,9 @@
 
 (def lifting
   (gen/let [a test-helpers/any-equal
-            arguments (gen/vector (gen/one-of [behavior
-                                               test-helpers/any-equal])
+            arguments (gen/vector (gen/one-of [test-helpers/any-equal
+                                               test-helpers/event
+                                               behavior])
                                   1
                                   2)]
            (let [result (helpers/case-eval (count arguments)
