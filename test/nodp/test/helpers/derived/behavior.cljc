@@ -42,11 +42,19 @@
                                                            a)
                                                           (first arguments)
                                                           (second arguments))))]
+             ;TODO refactor
              (if (contains-value? (map type arguments)
-                                  (type (frp/behavior unit/unit)))
-               (and (= @result)
-                    (= (type result) (type (frp/behavior unit/unit))))
-               (= result a)))))
+                                  (type (frp/event)))
+               (if (contains-value? (map type arguments)
+                                    (type (frp/behavior unit/unit)))
+                 (= result a)
+                 (and (= @result)
+                      (= (type result) (type (frp/event)))))
+               (if (contains-value? (map type arguments)
+                                    (type (frp/behavior unit/unit)))
+                 (and (= @result)
+                      (= (type result) (type (frp/behavior unit/unit))))
+                 (= result a))))))
 
 (clojure-test/defspec
   lifting-identity

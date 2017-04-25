@@ -3,6 +3,7 @@
   (:require [cats.context :as ctx]
             [cats.monad.maybe :as maybe]
             [nodp.helpers.primitives.behavior :as behavior]
+            [nodp.helpers.primitives.event :as event]
             [nodp.helpers :as helpers]))
 
 (defn behavior
@@ -11,11 +12,25 @@
        nodp.helpers/pure
        (ctx/with-context behavior/context)))
 
+(def event?
+  ;TODO refactor
+  (comp (partial = nodp.helpers.primitives.event.Event)
+        type))
+
+(defn eventize
+  ;TODO refactor
+  [x]
+  (if (event? x)
+    x
+    (nodp.helpers/pure event/context x)))
+
 (def behavior?
+  ;TODO refactor
   (comp (partial = nodp.helpers.primitives.behavior.Behavior)
         type))
 
 (defn behaviorize
+  ;TODO refactor
   [x]
   (if (behavior? x)
     x
@@ -25,11 +40,17 @@
           [[f & more]]
           ;TODO handle cases in which more contains constants
           ;TODO handle cases in which some of the arguments is an event
+          ;TODO refactor
           `(let [arguments# [~@more]]
-             (if (some behavior? arguments#)
-               (apply (helpers/lift-a ~(count more) ~f)
-                      (map behaviorize arguments#))
-               (apply ~f arguments#)))))
+             (if (some event? arguments#)
+               (if (some behavior? arguments#)
+                 (apply ~f arguments#)
+                 (apply (helpers/lift-a ~(count more) ~f)
+                        (map eventize arguments#)))
+               (if (some behavior? arguments#)
+                 (apply (helpers/lift-a ~(count more) ~f)
+                        (map behaviorize arguments#))
+                 (apply ~f arguments#))))))
 
 (defn stepper
   [a e]
