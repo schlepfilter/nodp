@@ -42,11 +42,11 @@
                                                            a)
                                                           (first arguments)
                                                           (second arguments))))]
-             (= (if (contains-value? (map type arguments)
-                                     (type (frp/behavior unit/unit)))
-                  @result
-                  result)
-                a))))
+             (if (contains-value? (map type arguments)
+                                  (type (frp/behavior unit/unit)))
+               (and (= @result)
+                    (= (type result) (type (frp/behavior unit/unit))))
+               (= result a)))))
 
 (clojure-test/defspec
   lifting-identity
