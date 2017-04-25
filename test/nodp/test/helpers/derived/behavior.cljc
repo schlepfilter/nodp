@@ -20,14 +20,18 @@
   (gen/let [a test-helpers/any-equal
             ;TODO randomize the function that may be lifted to include functions that won't be lifted
             arguments (gen/vector (gen/one-of [(gen/return (frp/behavior unit/unit))
-                                                     test-helpers/any-equal])
-                                        1
-                                        2)]
-           (let [result (frp/lifting ((fn [& _]
-                                        a)
-                                       ;TODO randomize the numbers and values of behaviors and constants
-                                       ;TODO randomize how behavior is created
-                                       (first arguments)))]
+                                               test-helpers/any-equal])
+                                  1
+                                  2)]
+           (let [result (helpers/case-eval (count arguments)
+                                           1 (frp/lifting ((fn [& _]
+                                                             a)
+                                                            ;TODO randomize the numbers and values of behaviors and constants
+                                                            ;TODO randomize how behavior is created
+                                                            (first arguments)))
+                                           (frp/lifting ((fn [& _]
+                                                           a)
+                                                          (first arguments))))]
              (= (if (= (type result) (type (frp/behavior unit/unit)))
                   @result
                   result)
