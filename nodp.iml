@@ -82,7 +82,7 @@
     <orderEntry type="library" name="Leiningen: incanter:1.5.7" level="project" />
     <orderEntry type="library" name="Leiningen: inflections:0.12.2" level="project" />
     <orderEntry type="library" name="Leiningen: io.reactivex/rxjava:1.2.3" level="project" />
-    <orderEntry type="library" name="Leiningen: jarohen/chime:0.2.0" level="project" />
+    <orderEntry type="library" name="Leiningen: jarohen/chime:0.2.1" level="project" />
     <orderEntry type="library" name="Leiningen: joda-time:2.8.2" level="project" />
     <orderEntry type="library" name="Leiningen: junit:4.8.2" level="project" />
     <orderEntry type="library" name="Leiningen: mvxcvi/arrangement:1.0.0" level="project" />

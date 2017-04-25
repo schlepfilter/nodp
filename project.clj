@@ -14,7 +14,7 @@
                  [funcool/cuerdas "2.0.2"]
                  [incanter "1.5.7"]
                  [inflections "0.12.2"]
-                 [jarohen/chime "0.2.0"]
+                 [jarohen/chime "0.2.1"]
                  [org.clojure/core.async "0.3.442"]
                  [org.clojure/math.combinatorics "0.1.3"]
                  [org.clojure/math.numeric-tower "0.0.4"]
