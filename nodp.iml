@@ -120,9 +120,11 @@
     <orderEntry type="library" name="Leiningen: org.clojure/clojurescript:1.9.494" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/core.async:0.3.442" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/core.cache:0.6.5" level="project" />
+    <orderEntry type="library" name="Leiningen: org.clojure/core.contracts:0.0.6" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/core.incubator:0.1.2" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/core.memoize:0.5.9" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/core.rrb-vector:0.0.11" level="project" />
+    <orderEntry type="library" name="Leiningen: org.clojure/core.unify:0.5.7" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/data.json:0.2.6" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/data.priority-map:0.0.5" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/google-closure-library-third-party:0.0-20160609-f42b4a24" level="project" />

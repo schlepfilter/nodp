@@ -2,6 +2,8 @@
   (:refer-clojure :exclude [stepper])
   (:require [cats.context :as ctx]
             [cats.monad.maybe :as maybe]
+    #?(:clj
+            [clojure.core.contracts.constraints :as constraints])
             [nodp.helpers.primitives.behavior :as behavior]
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers :as helpers]))
@@ -36,21 +38,27 @@
     x
     (behavior x)))
 
-#?(:clj (defmacro lifting
-          [[f & more]]
-          ;TODO handle cases in which more contains constants
-          ;TODO handle cases in which some of the arguments is an event
-          ;TODO refactor
-          `(let [arguments# [~@more]]
-             (if (some event? arguments#)
-               (if (some behavior? arguments#)
-                 (apply ~f arguments#)
-                 (apply (helpers/lift-a ~(count more) ~f)
-                        (map eventize arguments#)))
-               (if (some behavior? arguments#)
-                 (apply (helpers/lift-a ~(count more) ~f)
-                        (map behaviorize arguments#))
-                 (apply ~f arguments#))))))
+#?(:clj
+   (do (defn xnor
+         ;TODO remove the reader conditional if clojure.core.contracts.constraints starts supporting ClojureScript
+         ;TODO support variadic arguments if clojure.core.contracts.constraints starts supporting variadic arguments for xor
+         [p q]
+         (not (constraints/xor p q)))
+
+       (defmacro lifting
+         [[f & more]]
+         ;TODO handle cases in which more contains constants
+         ;TODO handle cases in which some of the arguments is an event
+         ;TODO refactor
+         `(let [arguments# [~@more]]
+            (if (xnor (some event? arguments#)
+                      (some behavior? arguments#))
+              (apply ~f arguments#)
+              (apply (helpers/lift-a ~(count more) ~f)
+                     (map (if (some event? arguments#)
+                            eventize
+                            behaviorize)
+                          arguments#)))))))
 
 (defn stepper
   [a e]
