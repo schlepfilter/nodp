@@ -57,9 +57,8 @@
         alg/topsort))
 
 (def get-behavior-modifies
-  (nodp.helpers/<*> make-get-modifies*
-                    (comp :behavior
-                          :dependency)))
+  (nodp.helpers/<*> make-get-modifies* (comp :behavior
+                                             :dependency)))
 
 (defn modify-behavior!
   [t network]
