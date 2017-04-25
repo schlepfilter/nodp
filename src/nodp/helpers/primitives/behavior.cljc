@@ -84,25 +84,27 @@
              :cljs js/Number.POSITIVE_INFINITY)))
   ([rate]
    (reset! helpers/network-state
-           {:active       false
-            :cancel-state (atom (constantly unit/unit))
-            :dependency   {:event    (graph/digraph)
-                           :behavior (graph/digraph)}
-            :id           0
-            :input-state  (helpers/get-queue helpers/funcall)
-            :modify       {}
-            :time         (time/time 0)})
+           {:active      false
+            :cancel      (constantly unit/unit)
+            :dependency  {:event    (graph/digraph)
+                          :behavior (graph/digraph)}
+            :id          0
+            :input-state (helpers/get-queue helpers/funcall)
+            :modify      {}
+            :time        (time/time 0)})
 
-   (reset! (:cancel-state @helpers/network-state)
-           (if (= rate #?(:clj  Double/POSITIVE_INFINITY
-                          :cljs js/Number.POSITIVE_INFINITY))
-             ;TODO move nop to helpers
-             (constantly unit/unit)
-             ;TODO remove take 2
-             ;TODO call chime-at after reset!ing network-state
-             #?(:clj  (chime/chime-at (take 2 (get-periods rate)) handle)
-                :cljs (->> (js/setInterval handle rate)
-                           (partial js/clearInterval)))))
+   (swap! helpers/network-state
+          (partial s/setval*
+                   :cancel
+                   (if (= rate #?(:clj  Double/POSITIVE_INFINITY
+                                  :cljs js/Number.POSITIVE_INFINITY))
+                     ;TODO move nop to helpers
+                     (constantly unit/unit)
+                     ;TODO remove take 2
+                     ;TODO call chime-at after reset!ing network-state
+                     #?(:clj  (chime/chime-at (take 2 (get-periods rate)) handle)
+                        :cljs (->> (js/setInterval handle rate)
+                                   (partial js/clearInterval))))))
    (def time
      (behavior* b
                 (helpers/append-modify
@@ -118,8 +120,8 @@
 (defn stop
   []
   ;TODO close channel
-  (if-let [cancel-state (:cancel-state @helpers/network-state)]
-    (@cancel-state)))
+  (if-let [cancel (:cancel @helpers/network-state)]
+    (cancel)))
 
 (defn restart
   [& more]
