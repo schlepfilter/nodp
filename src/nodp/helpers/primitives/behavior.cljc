@@ -113,6 +113,7 @@
 
 (defn stop
   []
+  ;TODO close channel
   (if-let [cancel (:cancel @helpers/network-state)]
     (cancel)))
 
