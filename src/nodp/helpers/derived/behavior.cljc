@@ -11,11 +11,18 @@
        nodp.helpers/pure
        (ctx/with-context behavior/context)))
 
+(def behavior?
+  (comp (partial = nodp.helpers.primitives.behavior.Behavior)
+        type))
+
 #?(:clj (defmacro lifting
           [[f & more]]
           ;TODO handle cases in which more contains constants
           ;TODO handle cases in which f won't be lifted
-          `((helpers/lift-a ~(count more) ~f) ~@more)))
+          `(let [arguments# [~@more]]
+             (apply (if (not-any? behavior? arguments#)
+                      ~f
+                      (helpers/lift-a ~(count more) ~f)) arguments#))))
 
 (defn stepper
   [a e]

@@ -16,21 +16,26 @@
 
 (test/use-fixtures :each test-helpers/fixture)
 
-(def invoke
-  (gen/let [a test-helpers/any-equal]
-           ;TODO randomize the function that may be lifted to include functions that won't be lifted
-           (= @(frp/lifting ((fn [& _]
-                               a)
-                              ;TODO randomize the numbers and values of behaviors and constants
-                              ;TODO randomize how behavior is created
-                              (frp/behavior unit/unit)))
-              a)))
+(def lifting
+  (gen/let [a test-helpers/any-equal
+            ;TODO randomize the function that may be lifted to include functions that won't be lifted
+            behavior-maybe (gen/one-of [(gen/return (frp/behavior unit/unit))
+                                        test-helpers/any-equal])]
+           (let [result (frp/lifting ((fn [& _]
+                                        a)
+                                       ;TODO randomize the numbers and values of behaviors and constants
+                                       ;TODO randomize how behavior is created
+                                       behavior-maybe))]
+             (= (if (= (type result) (type (frp/behavior unit/unit)))
+                  @result
+                  result)
+                a))))
 
 (clojure-test/defspec
-  lifting-invoke
+  lifting-identity
   test-helpers/num-tests
-  (test-helpers/restart-for-all [invoke* invoke]
-                                invoke*))
+  (test-helpers/restart-for-all [lifting* lifting]
+                                lifting*))
 
 (def rational-base
   (gen/one-of [gen/s-pos-int gen/s-neg-int]))
