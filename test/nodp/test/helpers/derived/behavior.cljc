@@ -16,6 +16,12 @@
 
 (test/use-fixtures :each test-helpers/fixture)
 
+(defn contains-value?
+  [coll x]
+  (-> coll
+      set
+      (contains? x)))
+
 (def behavior
   (gen/let [a test-helpers/any-equal]
            (gen/elements [(frp/behavior a)
@@ -36,7 +42,8 @@
                                                            a)
                                                           (first arguments)
                                                           (second arguments))))]
-             (= (if (= (type result) (type (frp/behavior unit/unit)))
+             (= (if (contains-value? (map type arguments)
+                                     (type (frp/behavior unit/unit)))
                   @result
                   result)
                 a))))
