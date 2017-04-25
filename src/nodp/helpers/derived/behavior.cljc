@@ -14,10 +14,13 @@
        nodp.helpers/pure
        (ctx/with-context behavior/context)))
 
-(def event?
-  ;TODO refactor
-  (comp (partial = nodp.helpers.primitives.event.Event)
+(defn make-entity?
+  [entity-type]
+  (comp (partial = entity-type)
         type))
+
+(def event?
+  (make-entity? nodp.helpers.primitives.event.Event))
 
 (defn eventize
   ;TODO refactor
@@ -27,9 +30,7 @@
     (nodp.helpers/pure event/context x)))
 
 (def behavior?
-  ;TODO refactor
-  (comp (partial = nodp.helpers.primitives.behavior.Behavior)
-        type))
+  (make-entity? nodp.helpers.primitives.behavior.Behavior))
 
 (defn behaviorize
   ;TODO refactor
