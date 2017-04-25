@@ -4,12 +4,12 @@
 
 (def max
   (partial event/transduce
-           (map identity)
+           (drop 0)
            clojure.core/max
            Double/NEGATIVE_INFINITY))
 
 (def min
   (partial event/transduce
-           (map identity)
+           (drop 0)
            clojure.core/min
            Double/POSITIVE_INFINITY))
