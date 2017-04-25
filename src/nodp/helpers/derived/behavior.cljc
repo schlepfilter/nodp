@@ -25,10 +25,10 @@
           [[f & more]]
           ;TODO handle cases in which more contains constants
           `(let [arguments# [~@more]]
-             (if (not-any? behavior? arguments#)
-               (apply ~f arguments#)
+             (if (some behavior? arguments#)
                (apply (helpers/lift-a ~(count more) ~f)
-                      (map behaviorize arguments#))))))
+                      (map behaviorize arguments#))
+               (apply ~f arguments#)))))
 
 (defn stepper
   [a e]
