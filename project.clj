@@ -16,7 +16,6 @@
                  [inflections "0.12.2"]
                  [jarohen/chime "0.2.0"]
                  [org.clojure/core.async "0.3.442"]
-                 [org.clojure/core.contracts "0.0.6"]
                  [org.clojure/math.combinatorics "0.1.3"]
                  [org.clojure/math.numeric-tower "0.0.4"]
                  [org.clojure/test.check "0.9.0"]

@@ -2,8 +2,6 @@
   (:refer-clojure :exclude [stepper])
   (:require [cats.context :as ctx]
             [cats.monad.maybe :as maybe]
-    #?(:clj
-            [clojure.core.contracts.constraints :as constraints])
             [nodp.helpers.primitives.behavior :as behavior]
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers :as helpers]))
@@ -37,24 +35,27 @@
 (def behaviorize
   (entitize behavior? behavior))
 
-#?(:clj
-   (do (defn xnor
-         ;TODO remove the reader conditional if clojure.core.contracts.constraints starts supporting ClojureScript
-         ;TODO support variadic arguments if clojure.core.contracts.constraints starts supporting variadic arguments for xor
-         [p q]
-         (not (constraints/xor p q)))
+(defn xor
+  ;TODO support variadic arguments
+  [p q]
+  (or (and p (not q))
+      (and (not p) q)))
 
-       (defmacro lifting
-         [[f & more]]
-         `(let [arguments# [~@more]]
-            (if (xnor (some event? arguments#)
-                      (some behavior? arguments#))
-              (apply ~f arguments#)
-              (apply (helpers/lift-a ~(count more) ~f)
-                     (map (if (some event? arguments#)
-                            eventize
-                            behaviorize)
-                          arguments#)))))))
+(def xnor
+  (complement xor))
+
+#?(:clj
+   (defmacro lifting
+     [[f & more]]
+     `(let [arguments# [~@more]]
+        (if (xnor (some event? arguments#)
+                  (some behavior? arguments#))
+          (apply ~f arguments#)
+          (apply (helpers/lift-a ~(count more) ~f)
+                 (map (if (some event? arguments#)
+                        eventize
+                        behaviorize)
+                      arguments#))))))
 
 (defn stepper
   [a e]
