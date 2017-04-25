@@ -18,7 +18,6 @@
 #?(:clj (defmacro lifting
           [[f & more]]
           ;TODO handle cases in which more contains constants
-          ;TODO handle cases in which f won't be lifted
           `(let [arguments# [~@more]]
              (apply (if (not-any? behavior? arguments#)
                       ~f
