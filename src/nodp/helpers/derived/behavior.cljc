@@ -15,13 +15,20 @@
   (comp (partial = nodp.helpers.primitives.behavior.Behavior)
         type))
 
+(defn behaviorize
+  [x]
+  (if (behavior? x)
+    x
+    (behavior x)))
+
 #?(:clj (defmacro lifting
           [[f & more]]
           ;TODO handle cases in which more contains constants
           `(let [arguments# [~@more]]
              (apply (if (not-any? behavior? arguments#)
                       ~f
-                      (helpers/lift-a ~(count more) ~f)) arguments#))))
+                      (helpers/lift-a ~(count more) ~f))
+                    (map behaviorize arguments#)))))
 
 (defn stepper
   [a e]

@@ -18,7 +18,6 @@
 
 (def lifting
   (gen/let [a test-helpers/any-equal
-            ;TODO randomize the function that may be lifted to include functions that won't be lifted
             arguments (gen/vector (gen/one-of [(gen/return (frp/behavior unit/unit))
                                                test-helpers/any-equal])
                                   1
@@ -31,7 +30,8 @@
                                                             (first arguments)))
                                            (frp/lifting ((fn [& _]
                                                            a)
-                                                          (first arguments))))]
+                                                          (first arguments)
+                                                          (second arguments))))]
              (= (if (= (type result) (type (frp/behavior unit/unit)))
                   @result
                   result)
