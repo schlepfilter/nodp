@@ -24,6 +24,7 @@
 #?(:clj (defmacro lifting
           [[f & more]]
           ;TODO handle cases in which more contains constants
+          ;TODO handle cases in which some of the arguments is an event
           `(let [arguments# [~@more]]
              (if (some behavior? arguments#)
                (apply (helpers/lift-a ~(count more) ~f)
