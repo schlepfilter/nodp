@@ -1,6 +1,5 @@
 (ns nodp.test.helpers
-  (:require [cats.monad.maybe :as maybe]
-            [clojure.test.check.generators :as gen :include-macros true]
+  (:require [clojure.test.check.generators :as gen :include-macros true]
             [clojure.test.check.properties :as prop]
             [clojure.test.check.random :as random]
             [clojure.test.check.rose-tree :as rose]
