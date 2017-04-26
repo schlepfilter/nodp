@@ -8,9 +8,6 @@
 \newcommand{\any}[3]{&\ \textit{#1}\ (#2 \rightarrow #3)}
 \begin{document}
 \begin{align*}
-  \mathbf{type}\ E_a = [(\hat{T}, a)]\quad\text{-- for strictly increasing times}
-\end{align*}
-\begin{align*}
   occs\ (>>= e\ f) = foldr\ merge\ []\circ map\ delayOccs\circ map\ (\backslash(\hat{t}_a, a) \rightarrow (\hat{t}_a , f\ a))\ \$ \ occs\ e
 \end{align*}
 \begin{align*}
