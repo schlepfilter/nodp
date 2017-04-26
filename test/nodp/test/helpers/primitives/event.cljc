@@ -250,7 +250,9 @@
                            (gen/return unit/unit))
      f (test-helpers/function test-helpers/any-equal)
      init test-helpers/any-equal
+     ;TODO generate list
      as (gen/vector (gen/vector test-helpers/any-equal))]
+    ;TODO compose xforms
     (let [cat-event (frp/transduce cat f init input-event)
           map-event (frp/transduce (comp (remove empty?)
                                          (map last))
