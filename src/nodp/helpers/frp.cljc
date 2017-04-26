@@ -1,5 +1,5 @@
 (ns nodp.helpers.frp
-  (:refer-clojure :exclude [max min stepper time transduce])
+  (:refer-clojure :exclude [+ count max min stepper time transduce])
   (:require [nodp.helpers.io :as io]
             [nodp.helpers.derived.behavior
              :as derived-behavior
@@ -27,6 +27,12 @@
 
 (def calculus
   behavior/calculus)
+
+(def +
+  derived-event/+)
+
+(def count
+  derived-event/count)
 
 (def max
   derived-event/max)
