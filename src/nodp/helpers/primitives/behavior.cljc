@@ -94,7 +94,6 @@
             :input-state (helpers/get-queue helpers/funcall)
             :modify      {}
             :time        (time/time 0)})
-
    (swap! helpers/network-state
           (partial s/setval*
                    :cancel
