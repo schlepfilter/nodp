@@ -103,7 +103,6 @@
                      ;TODO move nop to helpers
                      (constantly unit/unit)
                      ;TODO remove take 2
-                     ;TODO call chime-at after reset!ing network-state
                      #?(:clj  (chime/chime-at (take 2 (get-periods rate)) handle)
                         :cljs (->> (js/setInterval handle rate)
                                    (partial js/clearInterval))))))
