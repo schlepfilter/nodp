@@ -239,3 +239,5 @@
         (= @transduced-event helpers/nothing)
         (= (tuple/snd @@transduced-event)
            (reduce f init (get-elements xf earliest as)))))))
+
+;TODO test cat
