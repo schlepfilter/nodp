@@ -140,6 +140,9 @@
                     (fn ~bindings
                       ~@body)))))
 
+(def nop
+  (constantly unit/unit))
+
 (defn infer
   "Given an optional value infer its context. If context is already set, it
   is returned as is without any inference operation."

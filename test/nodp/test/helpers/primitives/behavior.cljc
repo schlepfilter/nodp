@@ -37,7 +37,7 @@
   (test-helpers/restart-for-all
     [units (gen/vector (gen/return unit/unit))]
     (let [e (frp/event)
-          _ ((helpers/lift-a 2 (constantly unit/unit))
+          _ ((helpers/lift-a 2 helpers/nop)
               frp/time
               (frp/stepper unit/unit e))]
       (frp/activate)

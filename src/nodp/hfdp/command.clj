@@ -5,8 +5,7 @@
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
             [com.rpl.specter :as s]
-            [nodp.helpers :as helpers]
-            [nodp.helpers.unit :as unit]))
+            [nodp.helpers :as helpers]))
 
 (def slot-n 2)
 
@@ -16,11 +15,8 @@
         (apply s/multi-path))
    (s/multi-path :on :off)])
 
-(def nop
-  (constantly unit/unit))
-
 (def control
-  (s/setval do-path nop []))
+  (s/setval do-path helpers/nop []))
 
 (def environment
   {:actions []

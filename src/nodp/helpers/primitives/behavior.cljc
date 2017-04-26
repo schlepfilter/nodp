@@ -87,7 +87,7 @@
   ([rate]
    (reset! helpers/network-state
            {:active      false
-            :cancel      (constantly unit/unit)
+            :cancel      helpers/nop
             :dependency  {:event    (graph/digraph)
                           :behavior (graph/digraph)}
             :id          0
@@ -100,8 +100,7 @@
                    :cancel
                    (if (= rate #?(:clj  Double/POSITIVE_INFINITY
                                   :cljs js/Number.POSITIVE_INFINITY))
-                     ;TODO move nop to helpers
-                     (constantly unit/unit)
+                     helpers/nop
                      ;TODO remove take 2
                      #?(:clj  (chime/chime-at (take 2 (get-periods rate)) handle)
                         :cljs (->> (js/setInterval handle rate)
