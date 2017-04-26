@@ -194,7 +194,7 @@
                               (let [parent-event (->> network
                                                       (get-value ma)
                                                       f)]
-                                ;TODO write a test that fails if effect-swap-identity! isn't called
+                                ;TODO add a test that fails if effect-swap-identity! isn't called
                                 (helpers/effect-swap-entity! parent-event)
                                 (helpers/call-functions
                                   ((juxt helpers/add-edge

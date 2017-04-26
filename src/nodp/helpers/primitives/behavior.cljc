@@ -76,7 +76,9 @@
     (event/queue
       (fn []
         (reset! helpers/network-state
-                (event/modify-behavior! (time/now) @helpers/network-state))))))
+                (event/modify-behavior! (time/now) @helpers/network-state))
+        ;TODO add a test that fails without run-effects!
+        (event/run-effects! @helpers/network-state)))))
 
 (defn start
   ([]
