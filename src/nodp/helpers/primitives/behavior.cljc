@@ -13,7 +13,6 @@
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.time :as time]
             [nodp.helpers.tuple :as tuple]
-            [nodp.helpers.unit :as unit]
             [nodp.helpers :as helpers])
   #?(:clj
            (:import [clojure.lang IDeref])
