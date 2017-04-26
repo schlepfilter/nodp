@@ -3,9 +3,10 @@
   (:require [cats.monad.maybe :as maybe]
             [cats.protocols :as protocols]
             [cats.util :as util]
+            [#?(:clj  clojure.core.async
+                :cljs cljs.core.async) :as async]
             [com.rpl.specter :as s]
             [cuerdas.core :as cuerdas]
-            [loom.graph :as graph]
     #?@(:clj [
             [chime :as chime]
             [clj-time.core :as t]
@@ -109,8 +110,8 @@
 
 (defn stop
   []
-  ;TODO close channel
-  ((:cancel @helpers/network-state)))
+  ((:cancel @helpers/network-state))
+  (async/close! (:input-state @helpers/network-state)))
 
 (defn restart
   [& more]
