@@ -226,11 +226,11 @@
   test-helpers/num-tests
   ;TODO refactor
   (test-helpers/restart-for-all
-    [input-event (gen/no-shrink test-helpers/event)
-     xf (gen/no-shrink xform)
-     f (gen/no-shrink (test-helpers/function test-helpers/any-equal))
-     init (gen/no-shrink test-helpers/any-equal)
-     as (gen/no-shrink (gen/vector test-helpers/any-equal))]
+    [input-event test-helpers/event
+     xf xform
+     f (test-helpers/function test-helpers/any-equal)
+     init test-helpers/any-equal
+     as (gen/vector test-helpers/any-equal)]
     (let [transduced-event (frp/transduce xf f init input-event)
           earliest @input-event]
       (frp/activate)
