@@ -250,9 +250,10 @@
                            (gen/return unit/unit))
      f (test-helpers/function test-helpers/any-equal)
      init test-helpers/any-equal
-     as (gen/vector (gen/not-empty (gen/vector test-helpers/any-equal)))]
+     as (gen/vector (gen/vector test-helpers/any-equal))]
     (let [cat-event (frp/transduce cat f init input-event)
-          map-event (frp/transduce (map last) f init input-event)]
+          map-event (frp/transduce (comp (remove empty?)
+                                         (map last)) f init input-event)]
       (frp/activate)
       (run! input-event as)
       (= @cat-event @map-event))))
