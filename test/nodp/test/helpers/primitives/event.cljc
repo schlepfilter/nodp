@@ -253,7 +253,10 @@
      as (gen/vector (gen/vector test-helpers/any-equal))]
     (let [cat-event (frp/transduce cat f init input-event)
           map-event (frp/transduce (comp (remove empty?)
-                                         (map last)) f init input-event)]
+                                         (map last))
+                                   f
+                                   init
+                                   input-event)]
       (frp/activate)
       (run! input-event as)
       (= @cat-event @map-event))))
