@@ -240,6 +240,7 @@
 (util/make-printable Event)
 
 (defn transduce
+  ;TODO make transduce variadic arity
   [xform f init parent-event]
   (let [step (xform (comp maybe/just
                           second
