@@ -1,9 +1,10 @@
 (ns nodp.helpers.derived.event
-  (:refer-clojure :exclude [+ count max min reduce])
-  (:require [nodp.helpers.primitives.event :as event]))
+  (:refer-clojure :exclude [+ count drop max min reduce])
+  (:require [nodp.helpers.primitives.event :as event]
+            [nodp.helpers.unit :as unit]))
 
 (def reduce
-  (partial event/transduce (drop 0)))
+  (partial event/transduce (clojure.core/drop 0)))
 
 (def max
   (partial reduce clojure.core/max #?(:clj  Double/NEGATIVE_INFINITY
@@ -18,3 +19,7 @@
 
 (def count
   (partial event/transduce (map (constantly 1)) clojure.core/+ 0))
+
+(defn drop
+  [n e]
+  (transduce (clojure.core/drop n) (comp second vector) unit/unit) e)
