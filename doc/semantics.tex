@@ -11,6 +11,8 @@
   occs\ (>>= e\ f) = foldr\ merge\ []\circ map\ delayOccs\circ map\ (\backslash(\hat{t}_a, a) \rightarrow (\hat{t}_a , f\ a))\ \$ \ occs\ e
 \end{align*}
 \begin{align*}
+  %TODO add cat
+  %TODO add comp
   \mathbf{data}\ Xform\ a\ b\ c\ d\ e\ f\ g\ h\ i\ j\ k\ l\ m\ n =\zeroarity{dedupe}\\
   |\zeroarity{distinct}\\
   |\positive{take-nth}\\
@@ -28,6 +30,7 @@
   |\any{keep-indexed}{m}{n}
 \end{align*}
 \begin{align*}
+  %TODO add the 3 arity version of transduce
   transduce :: Xform \rightarrow (a \rightarrow b \rightarrow a) \rightarrow a \rightarrow Event\ b \rightarrow Event\ a
 \end{align*}
 \begin{align*}
