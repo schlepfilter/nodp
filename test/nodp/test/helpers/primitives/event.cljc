@@ -210,27 +210,32 @@
        gen/not-empty
        (gen/fmap (partial apply comp))))
 
+(defn get-elements
+  [xf earliest as]
+  (->> (comp (partial (helpers/flip cons) as)
+             tuple/snd)
+       (maybe/maybe as earliest)
+       (maybe/map-maybe (partial (comp unreduced
+                                       (xf (comp maybe/just
+                                                 second
+                                                 vector)))
+                                 helpers/nothing))))
+
 (clojure-test/defspec
   transduce-identity
   test-helpers/num-tests
   ;TODO refactor
   (test-helpers/restart-for-all
-    [input-event test-helpers/event
-     xf xform
-     f (test-helpers/function test-helpers/any-equal)
-     init test-helpers/any-equal
-     as (gen/vector test-helpers/any-equal)]
+    [input-event (gen/no-shrink test-helpers/event)
+     xf (gen/no-shrink xform)
+     f (gen/no-shrink (test-helpers/function test-helpers/any-equal))
+     init (gen/no-shrink test-helpers/any-equal)
+     as (gen/no-shrink (gen/vector test-helpers/any-equal))]
     (let [transduced-event (frp/transduce xf f init input-event)
           earliest @input-event]
       (frp/activate)
       (run! input-event as)
-      (->> (comp (partial (helpers/flip cons) as)
-                 tuple/snd)
-           (maybe/maybe as earliest)
-           (maybe/map-maybe (partial (comp unreduced
-                                           (xf (comp maybe/just
-                                                     second
-                                                     vector)))
-                                     helpers/nothing))
-           (reduce f init)
-           (= (tuple/snd @@transduced-event))))))
+      (if (empty? (get-elements xf earliest as))
+        (= @transduced-event helpers/nothing)
+        (= (tuple/snd @@transduced-event)
+           (reduce f init (get-elements xf earliest as)))))))

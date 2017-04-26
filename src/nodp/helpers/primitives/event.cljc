@@ -247,7 +247,7 @@
         transduction-event
         (event*
           transduction-event*
-          (-> 0
+          (-> -1
               time/time
               (tuple/tuple init)
               maybe/just
