@@ -143,6 +143,7 @@
 (def nop
   (constantly unit/unit))
 
+;TODO remove this function after cats.context is fixed
 (defn infer
   "Given an optional value infer its context. If context is already set, it
   is returned as is without any inference operation."

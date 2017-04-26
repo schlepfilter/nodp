@@ -1,13 +1,14 @@
 (ns nodp.helpers.time
   (:refer-clojure :exclude [time])
-  (:require [cats.protocols :as p]
+  (:require [cats.context :as ctx]
+            [cats.core :as m]
+            [cats.protocols :as p]
             [cats.util :as util]
     #?@(:clj  [
             [clj-time.coerce :as c]
             [clj-time.core :as t]]
         :cljs [[cljs-time.coerce :as c]
-               [cljs-time.core :as t]])
-            [nodp.helpers :as helpers])
+               [cljs-time.core :as t]]))
   #?(:clj
      (:import (clojure.lang IDeref))))
 
@@ -65,7 +66,31 @@
       (- @epoch-state)
       time))
 
+;TODO remove this function after cats.context is fixed
+(defn infer
+  "Given an optional value infer its context. If context is already set, it
+  is returned as is without any inference operation."
+  {:no-doc true}
+  ([]
+   (when (nil? ctx/*context*)
+     (ctx/throw-illegal-argument "No context is set."))
+   ctx/*context*)
+  ([v]
+   (cond
+     (satisfies? p/Contextual v)
+     (p/-get-context v)
+     :else
+     (ctx/throw-illegal-argument
+       (str "No context is set and it can not be automatically "
+            "resolved from provided value")))))
+
+;TODO remove this function after cats.context is fixed
+(defn <$>
+  [& more]
+  (with-redefs [cats.context/infer infer]
+    (apply m/<$> more)))
+
 (defn to-real-time
   [t]
-  (helpers/<$> (partial + @epoch-state)
-               t))
+  (<$> (partial + @epoch-state)
+       t))
