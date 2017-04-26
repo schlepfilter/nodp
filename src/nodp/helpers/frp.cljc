@@ -34,9 +34,6 @@
 (def count
   derived-event/count)
 
-(def drop
-  derived-event/drop)
-
 (def max
   derived-event/max)
 

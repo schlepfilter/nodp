@@ -19,7 +19,3 @@
 
 (def count
   (partial event/transduce (map (constantly 1)) clojure.core/+ 0))
-
-(defn drop
-  [n e]
-  (transduce (clojure.core/drop n) (comp second vector) unit/unit) e)
