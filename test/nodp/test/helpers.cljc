@@ -12,7 +12,7 @@
 
 (defn fixture
   [f]
-  (reset! helpers/network-state nil)
+  (reset! helpers/network-state (helpers/get-initial-network))
   (with-redefs [event/queue helpers/funcall]
     (f)))
 

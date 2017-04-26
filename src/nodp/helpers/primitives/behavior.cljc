@@ -85,15 +85,7 @@
              :cljs js/Number.POSITIVE_INFINITY)))
   ([rate]
     ;TODO add a test that tests rate
-   (reset! helpers/network-state
-           {:active      false
-            :cancel      helpers/nop
-            :dependency  {:event    (graph/digraph)
-                          :behavior (graph/digraph)}
-            :id          0
-            :input-state (helpers/get-queue helpers/funcall)
-            :modify      {}
-            :time        (time/time 0)})
+   (reset! helpers/network-state (helpers/get-initial-network))
    (swap! helpers/network-state
           (partial s/setval*
                    :cancel
@@ -118,8 +110,7 @@
 (defn stop
   []
   ;TODO close channel
-  (if-let [cancel (:cancel @helpers/network-state)]
-    (cancel)))
+  ((:cancel @helpers/network-state)))
 
 (defn restart
   [& more]

@@ -17,6 +17,7 @@
             [clojurewerkz.money.amounts :as ma]
             [clojurewerkz.money.currencies :as mc]
             [potemkin :as potemkin]])
+            [nodp.helpers.time :as time]
             [nodp.helpers.unit :as unit])
   #?(:cljs (:require-macros [cljs.core.async.macros :as async]
              [nodp.helpers :refer [build case-eval casep defcurried mlet]])))
@@ -285,10 +286,6 @@
   (atom {:defs         []
          :synchronizes []}))
 
-(def network-state
-  ;TODO ensure network-state has all the keys to avoid nil
-  (atom {}))
-
 (defn get-queue
   [f]
   ;TODO handle exceptions
@@ -304,6 +301,21 @@
    (f))
   ([f & more]
    (apply f more)))
+
+(defn get-initial-network
+  []
+  {:active      false
+   :cancel      nop
+   :dependency  {:event    (graph/digraph)
+                 :behavior (graph/digraph)}
+   :id          0
+   :input-state (get-queue funcall)
+   :modify      {}
+   :time        (time/time 0)})
+
+(def network-state
+  ;TODO ensure network-state has all the keys to avoid nil
+  (atom (get-initial-network)))
 
 (defcurried make-get
             [k entity network]
