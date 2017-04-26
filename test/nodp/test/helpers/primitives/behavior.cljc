@@ -236,18 +236,3 @@
   (test-helpers/restart-for-all
     [calculus* calculus]
     (calculus*)))
-
-(clojure-test/defspec
-  sample
-  test-helpers/num-tests
-  (prop/for-all []
-                ;TODO change 10 to 1 after chime is fixed
-                ;(frp/restart 1) produces an error
-                ;java.lang.IllegalArgumentException: No implementation of method: :before? of protocol: #'clj-time.core/DateTimeProtocol found for class: nil
-                (frp/restart 10)
-                (frp/activate)
-                #?(:clj  (let [t @frp/time]
-                           (Thread/sleep 100)
-                           (<= @t @@frp/time))
-                   ;TODO test inequality after cljs.test supports asynchronous tests
-                   :cljs true)))
