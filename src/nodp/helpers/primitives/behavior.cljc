@@ -100,8 +100,7 @@
                    (if (= rate #?(:clj  Double/POSITIVE_INFINITY
                                   :cljs js/Number.POSITIVE_INFINITY))
                      helpers/nop
-                     ;TODO remove take 2
-                     #?(:clj  (chime/chime-at (take 2 (get-periods rate)) handle)
+                     #?(:clj  (chime/chime-at (get-periods rate) handle)
                         :cljs (->> (js/setInterval handle rate)
                                    (partial js/clearInterval))))))
    (def time
