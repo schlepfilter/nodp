@@ -247,6 +247,7 @@
         transduction-event
         (event*
           transduction-event*
+          ;TODO don't use -1 after speccing time/time
           (-> -1
               time/time
               (tuple/tuple init)
