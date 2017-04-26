@@ -84,6 +84,7 @@
    (start #?(:clj  Double/POSITIVE_INFINITY
              :cljs js/Number.POSITIVE_INFINITY)))
   ([rate]
+    ;TODO add a test that tests rate
    (reset! helpers/network-state
            {:active      false
             :cancel      helpers/nop
