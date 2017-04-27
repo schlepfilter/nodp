@@ -56,11 +56,11 @@
   &\quad on :: (a\rightarrow IO\ ())\rightarrow e \rightarrow IO\ ()
 \end{align*}
 \begin{align*}
-  biasedOccs\ e = foldl\ (\backslash xs\ x\rightarrow\ &\mathbf{if}\ fst\ (last\ xs) = fst\ x\ \mathbf{then}\ xs\ \mathbf{else}\ xs : x)\ [\ ]\ \$\ occs\ e
+  &\mathbf{instance_{sem}}\ Entity\ (Event\ a)\ \mathbf{where}\\
+  &\quad occs\ \$\ on\ f\ e = map\ (fmap\ f)\ \$\ occs\ e
 \end{align*}
 \begin{align*}
-  &\mathbf{instance_{sem}}\ Entity\ (Event\ a)\ \mathbf{where}\\
-  &\quad occs\ \$\ on\ f\ e = map\ (fmap\ f)\ \$\ biasedOccs\ e
+  biasedOccs\ e = foldl\ (\backslash xs\ x\rightarrow\ &\mathbf{if}\ fst\ (last\ xs) = fst\ x\ \mathbf{then}\ xs\ \mathbf{else}\ xs : x)\ [\ ]\ \$\ occs\ e
 \end{align*}
 \begin{align*}
   &\mathbf{instance_{sem}}\ Entity\ (Behavior\ a)\ \mathbf{where}\\
