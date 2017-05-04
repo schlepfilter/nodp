@@ -85,9 +85,9 @@
                  (get-id-number :function)))
 
 (defn event**
-  [id fs]
+  [id fs network]
   ;TODO add a node to dependency
-  (->> @helpers/network-state
+  (->> network
        (helpers/call-functions
          (concat [(set-occs [] id)]
                  (map (partial (helpers/flip helpers/funcall) id) fs)))
@@ -96,7 +96,7 @@
 
 (defn event*
   [fs]
-  (event** (get-id @helpers/network-state) fs))
+  (event** (get-id @helpers/network-state) fs @helpers/network-state))
 
 (def context
   (helpers/reify-monad
