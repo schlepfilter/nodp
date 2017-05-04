@@ -91,8 +91,7 @@
             inner-occs-coll (doall (map deref inner-events))
             bound-occs @bound-event]
         (call)
-        (if (or (empty? @(last inner-events))
-                (= @outer-event outer-occs))
+        (if (= @outer-event outer-occs)
           (if (= (map deref inner-events) inner-occs-coll)
             (= @bound-event bound-occs)
             ;TODO test bound-event
