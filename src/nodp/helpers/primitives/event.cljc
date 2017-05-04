@@ -30,9 +30,15 @@
 
 (defn modify-network!
   [occ id network]
-  ;TODO set modified
-  (helpers/call-functions [(set-occs [occ] id)]
-                          network))
+  ;TODO advance
+  (helpers/call-functions
+    (concat [(partial s/setval* [:modified s/MAP-VALS] false)
+             ;TODO clear cache
+             (partial s/setval* :time (tuple/fst occ))
+             (set-occs [occ] id)
+             (partial s/setval* [:modified id] true)]
+            (mapcat (:modifies! network) (alg/topsort (:dependency network))))
+    network))
 
 (defrecord Event
   [id]
