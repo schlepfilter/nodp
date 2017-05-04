@@ -2,6 +2,7 @@
   (:require [cats.protocols :as p]
             [cats.util :as util]
             [com.rpl.specter :as s]
+            [loom.alg :as alg]
             [loom.graph :as graph]
     #?(:cljs [cljs.reader :as reader])
             [nodp.helpers :as helpers]
@@ -91,7 +92,7 @@
   (->> network
        (helpers/call-functions
          (concat [(set-occs [] id)]
-                 (map (partial (helpers/flip helpers/funcall) id) fs)))
+                 (map (fn [f] (partial f id)) fs)))
        (reset! helpers/network-state))
   (Event. id))
 
@@ -106,14 +107,140 @@
                                           [id (:id e)])
                                  network))
 
+(defn get-latests
+  [id network]
+  (reverse (take-while (comp (partial = (:time network))
+                             tuple/fst)
+                       (rseq (get-occs id network)))))
+
+(defn make-get-occs-or-latests
+  [initial]
+  (if initial
+    get-occs
+    get-latests))
+
+(defn effect-swap!
+  [state f]
+  (reset! state (f @state)))
+
+(defn get-reachable-subgraph
+  [g n]
+  (->> n
+       (alg/bf-traverse g)
+       (graph/subgraph g)))
+
+(defn get-ancestor-subgraph
+  [id network]
+  (-> network
+      :dependency
+      graph/transpose
+      (get-reachable-subgraph id)
+      (graph/remove-nodes id)
+      graph/transpose))
+
+(defn get-parent-ancestor-modifies
+  [id network]
+  (mapcat (:modifies! network) (alg/topsort (get-ancestor-subgraph id network))))
+
+(defn modify-parent-ancestor!
+  [id network]
+  (helpers/call-functions (get-parent-ancestor-modifies id network) network))
+
+(helpers/defcurried modify-event!
+                    [id network]
+                    (helpers/call-functions (id (:modifies! network))
+                                            network))
+
+(defn effect-swap-event!
+  [id]
+  (run! (fn [f]
+          (effect-swap! helpers/network-state (partial f id)))
+        [modify-parent-ancestor! modify-event!]))
+
+(defn make-call-once
+  [id modify!]
+  (fn [network]
+    (if (id (:modified network))
+      network
+      (modify! network))))
+
+(defn insert-modify
+  [modify! id network]
+  (->> network
+       (s/transform [:modifies! id] drop-last)
+       (s/setval [:modifies! id s/END]
+                 [(make-call-once id modify!)
+                  (last (id (:modifies! network)))])))
+
+
+(helpers/defcurried
+  insert-merge-sync
+  [id e network]
+  (insert-modify (fn [network*]
+                   (set-occs (get-latests id network*)
+                             e
+                             network*))
+                 e
+                 network))
+
+(helpers/defcurried
+  delay-sync
+  [id e network]
+  (set-occs (map (partial nodp.helpers/<*>
+                          (tuple/tuple (:time network)
+                                       identity))
+                 (get-occs id network))
+            e
+            network))
+
+(helpers/defcurried modify->>=
+                    [ma f initial child-event network]
+                    (do (reset! helpers/network-state network)
+                        (let [parent-events
+                              (->> network
+                                   ((make-get-occs-or-latests initial) ma)
+                                   (map (comp f
+                                              tuple/snd))
+                                   doall)]
+                          (run! (comp effect-swap-event!
+                                      :id)
+                                parent-events)
+                          (helpers/call-functions
+                            (map (comp (fn [id]
+                                         (partial helpers/call-functions
+                                                  ((juxt add-edge
+                                                         insert-merge-sync
+                                                         delay-sync)
+                                                    id
+                                                    child-event)))
+                                       :id)
+                                 parent-events)
+                            @helpers/network-state))))
+
+(defn set-modify
+  [id modify! network]
+  (s/setval [:modifies! id]
+            [(make-call-once id modify!)
+             (partial s/setval* [:modified id] true)]
+            network))
+
+(defn make-set-modify-modify
+  [modify*]
+  [(fn [id network]
+     (set-modify id
+                 (modify* false id)
+                 network))
+   (modify* true)])
+
 (def context
   (helpers/reify-monad
     (fn [a]
       (event* [(set-occs [(tuple/tuple (time/time 0) a)])]))
-    ;TODO implement monad
     (fn [ma f]
-      (event* (cons (add-edge (:id ma))
-                    [])))
+      (->> (modify->>= (:id ma) f)
+           make-set-modify-modify
+           (cons (add-edge (:id ma)))
+           event*))
     ;TODO implement semigroup
     ;TODO implement monoid
     p/Monoid
