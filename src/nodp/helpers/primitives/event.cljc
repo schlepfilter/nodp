@@ -4,6 +4,10 @@
 
 (declare context)
 
+(defn event*
+  ;TODO return Event
+  [fs])
+
 (def context
   (helpers/reify-monad
     ;TODO implement monad
@@ -12,4 +16,5 @@
     ;TODO implement semigroup
     ;TODO implement monoid
     p/Monoid
-    (-mempty [_])))
+    (-mempty [_]
+             (event* []))))
