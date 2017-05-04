@@ -98,7 +98,9 @@
   (->> network
        (helpers/call-functions
          (concat [(set-occs [] id)]
-                 (map (fn [f] (partial f id)) fs)))
+                 (map (fn [f]
+                        (partial f id))
+                      fs)))
        (reset! helpers/network-state))
   (Event. id))
 

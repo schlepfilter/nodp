@@ -1,5 +1,6 @@
 (ns nodp.helpers.frp
-  (:require [nodp.helpers.primitives.behavior :as behavior]
+  (:require [nodp.helpers.derived.behavior :as derived-behavior]
+            [nodp.helpers.primitives.behavior :as behavior]
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.io :as io]))
 
@@ -11,3 +12,6 @@
 
 (def event
   io/event)
+
+(def behavior
+  derived-behavior/behavior)
