@@ -182,7 +182,6 @@
                  [(make-call-once id modify!)
                   (last (id (:modifies! network)))])))
 
-
 (helpers/defcurried
   insert-merge-sync
   [parent-id child-id network]
@@ -241,6 +240,20 @@
                  (modify* false id)
                  network))
    (modify* true)])
+
+(defn merge-occs*
+  [left right merged]
+  ;TODO refactor
+  (cond (empty? left) (s/setval s/END right merged)
+        (empty? right) (s/setval s/END left merged)
+        (<= @(tuple/fst (first left)) @(tuple/fst (first right)))
+        (recur (rest left) right (s/setval s/END [(first left)] merged))
+        :else
+        (recur left (rest right) (s/setval s/END [(first right)] merged))))
+
+(defn merge-occs
+  [left right]
+  (merge-occs* left right []))
 
 (def context
   (helpers/reify-monad

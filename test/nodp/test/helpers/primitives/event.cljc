@@ -8,6 +8,7 @@
             [clojure.test.check.generators :as gen]
             [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]
+            [nodp.helpers.primitives.event :as event]
             [nodp.helpers.time :as time]
             [nodp.helpers.tuple :as tuple]
             [nodp.test.helpers :as test-helpers :include-macros true]))
@@ -77,13 +78,28 @@
                       (gen/return (partial doall (map helpers/funcall
                                                       calls))))))
 
+(defn delay-inner-occs
+  [outer-occ inner-occs]
+  ;TODO refactor
+  (map (partial nodp.helpers/<*>
+                (tuple/tuple (tuple/fst outer-occ) identity))
+       inner-occs))
+
+(def delay-inner-occs-coll
+  (partial map delay-inner-occs))
+
 (clojure-test/defspec
   event->>=-identity
-  test-helpers/num-tests
+  {:num-tests test-helpers/num-tests
+   :seed      1493897823370}
   (test-helpers/restart-for-all
-    [[[outer-event & inner-events] calls] event->>=]
+    [[[outer-event & inner-events] calls] (gen/no-shrink event->>=)]
     (let [bound-event (helpers/>>= outer-event
                                    (test-helpers/make-iterate inner-events))]
       (frp/activate)
       (calls)
-      true)))
+      (->> inner-events
+           (map deref)
+           (delay-inner-occs-coll @outer-event)
+           (reduce event/merge-occs [])
+           (= @bound-event)))))
