@@ -248,15 +248,18 @@
                  network))
    (modify* true)])
 
+(defn merge-one
+  [parent merged]
+  (s/setval s/END [(first parent)] merged))
+
 (defn merge-occs*
   [left right merged]
-  ;TODO refactor
   (cond (empty? left) (s/setval s/END right merged)
         (empty? right) (s/setval s/END left merged)
         (<= @(tuple/fst (first left)) @(tuple/fst (first right)))
-        (recur (rest left) right (s/setval s/END [(first left)] merged))
+        (recur (rest left) right (merge-one left merged))
         :else
-        (recur left (rest right) (s/setval s/END [(first right)] merged))))
+        (recur left (rest right) (merge-one right merged))))
 
 (defn merge-occs
   [left right]
