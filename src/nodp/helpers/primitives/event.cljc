@@ -2,7 +2,9 @@
   (:require [cats.protocols :as p]
             [cats.util :as util]
             [com.rpl.specter :as s]
-            [nodp.helpers :as helpers])
+            [nodp.helpers :as helpers]
+            [nodp.helpers.time :as time]
+            [nodp.helpers.tuple :as tuple])
   #?(:clj
      (:import [clojure.lang IDeref IFn])))
 
@@ -11,6 +13,19 @@
 (defn get-occs
   [id network]
   (id (:occs network)))
+
+(defn get-new-time
+  [past]
+  (let [current (time/now)]
+    (if (= past current)
+      (get-new-time past)
+      current)))
+
+(defn modify-network!
+  [occ id network]
+  ;TODO set modified
+  (helpers/call-functions [(partial s/setval* [:occs id s/END] [occ])]
+                          network))
 
 (defrecord Event
   [id]
@@ -24,11 +39,14 @@
       :cljs -deref) [e]
     (get-occs (:id e) @helpers/network-state))
   IFn
-  ;TODO implement invoke
   (#?(:clj  invoke
       :cljs -invoke) [e a]
     ;e stands for an event, and a stands for any as in Push-Pull Functional Reactive Programming.
-    )
+    (if (:active @helpers/network-state)
+      (reset! helpers/network-state
+              (modify-network! (tuple/tuple (get-new-time (time/now)) a)
+                               (:id e)
+                               @helpers/network-state))))
   p/Printable
   (-repr [_]
     (str "#[event " id "]")))

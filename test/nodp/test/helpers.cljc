@@ -5,7 +5,8 @@
             [clojure.test.check.rose-tree :as rose]
     #?(:clj
             [clojure.math.numeric-tower :as numeric-tower])
-            [nodp.helpers.unit :as unit]))
+            [nodp.helpers.unit :as unit]
+            [nodp.helpers.frp :as frp]))
 
 (def num-tests
   #?(:clj  10
@@ -13,7 +14,8 @@
 
 (def restart
   ;TODO call restart
-  (gen/fmap (fn [_])
+  (gen/fmap (fn [_]
+              (frp/restart))
             (gen/return unit/unit)))
 
 #?(:clj (defmacro restart-for-all

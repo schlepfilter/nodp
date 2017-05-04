@@ -5,6 +5,7 @@
              :include-macros true]
             [clojure.test.check.generators :as gen]
             [nodp.helpers.frp :as frp]
+            [nodp.helpers.tuple :as tuple]
             [nodp.test.helpers :as test-helpers :include-macros true]))
 
 (clojure-test/defspec
@@ -22,4 +23,4 @@
                                 (let [e (frp/event)]
                                   (frp/activate)
                                   (run! e as)
-                                  true)))
+                                  (= (map tuple/snd @e) as))))
