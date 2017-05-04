@@ -12,6 +12,7 @@
      :cljs 2))
 
 (def restart
+  ;TODO call restart
   (gen/fmap (fn [_])
             (gen/return unit/unit)))
 
