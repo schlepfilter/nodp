@@ -14,3 +14,12 @@
                                 (let [e (frp/event)]
                                   (run! e as)
                                   (= @e []))))
+
+(clojure-test/defspec
+  call-active
+  test-helpers/num-tests
+  (test-helpers/restart-for-all [as (gen/vector test-helpers/any-equal)]
+                                (let [e (frp/event)]
+                                  (frp/activate)
+                                  (run! e as)
+                                  true)))

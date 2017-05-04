@@ -82,3 +82,7 @@
     p/Monoid
     (-mempty [_]
              (event* []))))
+
+(def activate
+  ;TODO start time
+  (juxt (partial swap! helpers/network-state (partial s/setval* :active true))))
