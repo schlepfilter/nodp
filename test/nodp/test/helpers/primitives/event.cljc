@@ -85,5 +85,6 @@
 (clojure-test/defspec
   event->>=-identity
   test-helpers/num-tests
-  (test-helpers/restart-for-all [_ event->>=]
-                                true))
+  (test-helpers/restart-for-all
+    [[[outer-event & inner-events] calls call n] event->>=]
+    true))
