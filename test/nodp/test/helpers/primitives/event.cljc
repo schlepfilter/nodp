@@ -91,6 +91,14 @@
                                    (test-helpers/make-iterate inner-events))]
       (frp/activate)
       (calls)
-      ;TODO test bound-event
-      true
-      )))
+      (let [outer-occs @outer-event
+            inner-occs-coll (doall (map deref inner-events))
+            bound-occs @bound-event]
+        (call)
+        (if (or (empty? @(last inner-events))
+                (= @outer-event outer-occs))
+          (if (= (map deref inner-events) inner-occs-coll)
+            (= @bound-event bound-occs)
+            ;TODO test bound-event
+            true)
+          true)))))
