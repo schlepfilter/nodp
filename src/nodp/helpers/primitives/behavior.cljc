@@ -8,10 +8,6 @@
 
 (declare context)
 
-(defn get-function
-  [b network]
-  ((:id b) (:function network)))
-
 (defrecord Behavior
   [id]
   protocols/Contextual
@@ -19,8 +15,8 @@
     context)
   IDeref
   (#?(:clj  deref
-      :cljs -deref) [b]
-    ((get-function b @helpers/network-state)
+      :cljs -deref) [_]
+    ((id (:function @helpers/network-state))
       (:time @helpers/network-state))))
 
 (defn behavior**
