@@ -47,10 +47,6 @@
     ;If context is inlined, the following error seems to occur.
     ;java.lang.LinkageError: loader (instance of clojure/lang/DynamicClassLoader): attempted duplicate class definition for name: "nodp/helpers/primitives/event/Event"
     context)
-  IDeref
-  (#?(:clj  deref
-      :cljs -deref) [_]
-    (get-occs id @helpers/network-state))
   IFn
   (#?(:clj  invoke
       :cljs -invoke) [_ a]
@@ -60,6 +56,10 @@
               (modify-network! (tuple/tuple (get-new-time (time/now)) a)
                                id
                                @helpers/network-state))))
+  IDeref
+  (#?(:clj  deref
+      :cljs -deref) [_]
+    (get-occs id @helpers/network-state))
   p/Printable
   (-repr [_]
     (str "#[event " id "]")))
