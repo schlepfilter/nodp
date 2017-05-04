@@ -11,6 +11,17 @@
   #?(:clj  10
      :cljs 2))
 
+(def restart
+  (gen/fmap (fn [_])
+            (gen/return unit/unit)))
+
+#?(:clj (defmacro restart-for-all
+          [bindings & body]
+          ;TODO generate times and redefine get-new-time
+          `(prop/for-all ~(concat `[_# restart]
+                                  bindings)
+                         ~@body)))
+
 (defn generate
   ([generator {:keys [seed size]
                :or   {size 30}}]
