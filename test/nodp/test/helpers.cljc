@@ -64,6 +64,11 @@
 (def any-equal
   (gen/recursive-gen gen/container-type simple-type-equal))
 
+(def probability
+  (gen/double* {:max  1
+                :min  0
+                :NaN? false}))
+
 (def advance
   (gen/let [n gen/pos-int]
            (let [e (frp/event)]
