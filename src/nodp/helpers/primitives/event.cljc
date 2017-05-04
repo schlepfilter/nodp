@@ -256,11 +256,16 @@
   [parent merged]
   (s/setval s/END [(first parent)] merged))
 
+(def get-first-time-number
+  (comp deref
+        tuple/fst
+        first))
+
 (defn merge-occs*
   [left right merged]
   (cond (empty? left) (s/setval s/END right merged)
         (empty? right) (s/setval s/END left merged)
-        (<= @(tuple/fst (first left)) @(tuple/fst (first right)))
+        (<= (get-first-time-number left) (get-first-time-number right))
         (recur (rest left) right (merge-one left merged))
         :else
         (recur left (rest right) (merge-one right merged))))
