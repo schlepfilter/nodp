@@ -180,7 +180,12 @@
 
 (defn insert-modify
   [modify! id network]
-  (s/setval [:modifies! id (snth (- (count (id (:modifies! network))) 2))]
+  (s/setval [:modifies! id (-> network
+                               :modifies!
+                               id
+                               count
+                               (- 2)
+                               snth)]
             [(make-call-once id modify!)]
             network))
 
