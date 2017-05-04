@@ -9,8 +9,8 @@
 (declare context)
 
 (defn get-occs
-  [e network]
-  ((:id e) (:occs network)))
+  [id network]
+  (id (:occs network)))
 
 (defrecord Event
   [id]
@@ -22,7 +22,7 @@
   IDeref
   (#?(:clj  deref
       :cljs -deref) [e]
-    (get-occs e @helpers/network-state))
+    (get-occs (:id e) @helpers/network-state))
   IFn
   ;TODO implement invoke
   (#?(:clj  invoke
