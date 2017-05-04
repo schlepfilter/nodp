@@ -2,15 +2,26 @@
   (:require [cats.protocols :as protocols]
             [com.rpl.specter :as s]
             [nodp.helpers :as helpers]
-            [nodp.helpers.primitives.event :as event]))
+            [nodp.helpers.primitives.event :as event])
+  #?(:clj
+     (:import [clojure.lang IDeref])))
 
 (declare context)
+
+(defn get-function
+  [b network]
+  ((:id b) (:function network)))
 
 (defrecord Behavior
   [id]
   protocols/Contextual
   (-get-context [_]
-    context))
+    context)
+  IDeref
+  (#?(:clj  deref
+      :cljs -deref) [b]
+    ((get-function b @helpers/network-state)
+      (:time @helpers/network-state))))
 
 (defn behavior**
   [id & fs]

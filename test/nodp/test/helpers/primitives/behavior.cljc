@@ -11,8 +11,8 @@
   behavior-return
   test-helpers/num-tests
   (test-helpers/restart-for-all [a test-helpers/any-equal]
-                                (-> unit/unit
-                                    frp/behavior
-                                    helpers/infer
-                                    (nodp.helpers/return a))
-                                true))
+                                (= @(-> unit/unit
+                                        frp/behavior
+                                        helpers/infer
+                                        (nodp.helpers/return a))
+                                   a)))
