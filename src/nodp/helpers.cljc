@@ -291,7 +291,8 @@
 
 (defn get-initial-network
   []
-  {:function (linked/map)
+  {:dependency (graph/digraph)
+   :function (linked/map)
    :occs     (linked/map)})
 
 (def network-state

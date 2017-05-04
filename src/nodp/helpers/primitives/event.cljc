@@ -2,6 +2,7 @@
   (:require [cats.protocols :as p]
             [cats.util :as util]
             [com.rpl.specter :as s]
+            [loom.graph :as graph]
     #?(:cljs [cljs.reader :as reader])
             [nodp.helpers :as helpers]
             [nodp.helpers.time :as time]
@@ -98,12 +99,21 @@
   [fs]
   (event** (get-id @helpers/network-state) fs @helpers/network-state))
 
+(helpers/defcurried add-edge
+                    [id e network]
+                    (s/transform :dependency
+                                 (partial (helpers/flip graph/add-edges)
+                                          [id (:id e)])
+                                 network))
+
 (def context
   (helpers/reify-monad
-    ;TODO implement monad
     (fn [a]
       (event* [(set-occs [(tuple/tuple (time/time 0) a)])]))
-    (fn [ma f])
+    ;TODO implement monad
+    (fn [ma f]
+      (event* (cons (add-edge (:id ma))
+                    [])))
     ;TODO implement semigroup
     ;TODO implement monoid
     p/Monoid

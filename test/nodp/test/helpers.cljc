@@ -99,6 +99,14 @@
 (def get-events
   (partial reduce conj-event []))
 
+(defn make-iterate
+  [coll]
+  (let [state (atom coll)]
+    (memoize (fn [& _]
+               (let [result (first @state)]
+                 (swap! state rest)
+                 result)))))
+
 (def advance
   (gen/let [n gen/pos-int]
            (let [e (frp/event)]

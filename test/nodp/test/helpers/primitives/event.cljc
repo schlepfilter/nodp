@@ -87,5 +87,8 @@
   test-helpers/num-tests
   (test-helpers/restart-for-all
     [[[outer-event & inner-events] calls call n] event->>=]
-    ;TODO test bound-event
-    true))
+    (let [bound-event (helpers/>>= outer-event
+                                   (test-helpers/make-iterate inner-events))]
+      ;TODO test bound-event
+      true
+      )))
