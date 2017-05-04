@@ -83,6 +83,22 @@
                                       (helpers/infer (frp/event))
                                       a))])))
 
+(defn conj-event
+  [coll probability*]
+  (->> coll
+       count
+       inc
+       (* probability*)
+       int
+       (if (= 1.0 probability*)
+         0)
+       (nth (conj coll
+                  (generate event {:seed (hash probability*)})))
+       (conj coll)))
+
+(def get-events
+  (partial reduce conj-event []))
+
 (def advance
   (gen/let [n gen/pos-int]
            (let [e (frp/event)]

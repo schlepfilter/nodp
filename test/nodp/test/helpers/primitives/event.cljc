@@ -47,7 +47,9 @@
   (gen/let [probabilities (gen/sized (comp (partial gen/vector
                                                     test-helpers/probability
                                                     3)
-                                           (partial + 3)))]))
+                                           (partial + 3)))
+            [outer-input-event & inner-input-events :as input-events]
+            (gen/return (test-helpers/get-events probabilities))]))
 
 (clojure-test/defspec
   event->>=-identity
