@@ -39,8 +39,8 @@
 
 (def context
   (helpers/reify-monad
-    (fn [a]
-      (behavior* (constantly a)))
+    (comp behavior*
+          constantly)
     ;TODO implement >>=
     (fn [])))
 
