@@ -63,3 +63,10 @@
 
 (def any-equal
   (gen/recursive-gen gen/container-type simple-type-equal))
+
+(def advance
+  (gen/let [n gen/pos-int]
+           (let [e (frp/event)]
+             (fn []
+               (dotimes [_ n]
+                 (e unit/unit))))))
