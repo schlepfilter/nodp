@@ -69,6 +69,20 @@
                 :min  0
                 :NaN? false}))
 
+(def event
+  ;gen/fmap ensures a new event is returned
+  ;(gen/sample (gen/return (rand)) 2)
+  ;=> (0.7306051862977597 0.7306051862977597)
+  ;(gen/sample (gen/fmap (fn [_] (rand))
+  ;                      (gen/return 0))
+  ;            2)
+  ;=> (0.8163040448517938 0.8830449199816961)
+  (gen/let [a any-equal]
+           (gen/one-of [(gen/return (frp/event))
+                        (gen/return (nodp.helpers/pure
+                                      (helpers/infer (frp/event))
+                                      a))])))
+
 (def advance
   (gen/let [n gen/pos-int]
            (let [e (frp/event)]
