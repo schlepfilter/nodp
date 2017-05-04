@@ -198,27 +198,28 @@
 
 (helpers/defcurried modify->>=
                     [parent-id f initial child-id network]
-                    (do (reset! helpers/network-state network)
-                        (let [parent-events
-                              (->> network
-                                   ((make-get-occs-or-latests initial) parent-id)
-                                   (map (comp f
-                                              tuple/snd))
-                                   doall)]
-                          (run! (comp effect-swap-event!
-                                      :id)
-                                parent-events)
-                          (helpers/call-functions
-                            (map (comp (fn [parent-id*]
-                                         (partial helpers/call-functions
-                                                  ((juxt add-edge
-                                                         insert-merge-sync
-                                                         delay-sync)
-                                                    parent-id*
-                                                    child-id)))
-                                       :id)
-                                 parent-events)
-                            @helpers/network-state))))
+                    (do
+                      (reset! helpers/network-state network)
+                      (let [parent-events
+                            (->> network
+                                 ((make-get-occs-or-latests initial) parent-id)
+                                 (map (comp f
+                                            tuple/snd))
+                                 doall)]
+                        (run! (comp effect-swap-event!
+                                    :id)
+                              parent-events)
+                        (helpers/call-functions
+                          (map (comp (fn [parent-id*]
+                                       (partial helpers/call-functions
+                                                ((juxt add-edge
+                                                       insert-merge-sync
+                                                       delay-sync)
+                                                  parent-id*
+                                                  child-id)))
+                                     :id)
+                               parent-events)
+                          @helpers/network-state))))
 
 (defn set-modify
   [id modify! network]
