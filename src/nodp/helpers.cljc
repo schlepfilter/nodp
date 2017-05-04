@@ -10,7 +10,7 @@
             [#?(:clj  clojure.core.async
                 :cljs cljs.core.async) :as async]
             [com.rpl.specter :as s]
-            [flatland.ordered.map :as ordered-map]
+            [linked.core :as linked]
             [loom.alg :as alg]
             [loom.graph :as graph]
     #?@(:clj [
@@ -291,8 +291,8 @@
 
 (defn get-initial-network
   []
-  {:function (ordered-map/ordered-map)
-   :occs     (ordered-map/ordered-map)})
+  {:function (linked/map)
+   :occs     (linked/map)})
 
 (def network-state
   (atom (get-initial-network)))

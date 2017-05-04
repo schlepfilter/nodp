@@ -9,6 +9,7 @@
                  [clojurewerkz/money "1.9.0"]
                  [com.andrewmcveigh/cljs-time "0.4.0"]
                  [com.rpl/specter "1.0.0"]
+                 [frankiesardo/linked "1.2.9"]
                  [funcool/beicon "2.7.0"]
                  [funcool/cats "2.0.0"]
                  [funcool/cuerdas "2.0.2"]
