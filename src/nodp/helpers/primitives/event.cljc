@@ -121,7 +121,9 @@
 
 (defn effect-swap!
   [state f]
-  (reset! state (f @state)))
+  (->> @state
+       f
+       (reset! state)))
 
 (defn get-reachable-subgraph
   [g n]
