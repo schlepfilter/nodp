@@ -42,6 +42,7 @@
   (helpers/reify-monad
     (fn [a]
       (behavior* (constantly a)))
+    ;TODO implement >>=
     (fn [])))
 
 (defn start
