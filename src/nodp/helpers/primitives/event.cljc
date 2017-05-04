@@ -171,7 +171,9 @@
 (defn make-call-once
   [id modify!]
   (fn [network]
-    (if (id (:modified network))
+    (if (-> network
+            :modified
+            id)
       network
       (modify! network))))
 
