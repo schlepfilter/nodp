@@ -140,7 +140,10 @@
 
 (defn get-parent-ancestor-modifies
   [id network]
-  (mapcat (:modifies! network) (alg/topsort (get-ancestor-subgraph id network))))
+  (->> network
+       (get-ancestor-subgraph id)
+       alg/topsort
+       (mapcat (:modifies! network))))
 
 (defn modify-parent-ancestor!
   [id network]
