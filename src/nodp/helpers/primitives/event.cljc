@@ -177,10 +177,10 @@
 (defn insert-modify
   [modify! id network]
   (->> network
-       (s/transform [:modifies! id] drop-last)
+       (s/transform [:modifies! id] (partial drop-last 2))
        (s/setval [:modifies! id s/END]
-                 [(make-call-once id modify!)
-                  (last (id (:modifies! network)))])))
+                 (cons (make-call-once id modify!)
+                       (take-last 2 (id (:modifies! network)))))))
 
 (helpers/defcurried
   insert-merge-sync
