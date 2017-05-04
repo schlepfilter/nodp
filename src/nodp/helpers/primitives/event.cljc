@@ -23,9 +23,15 @@
 
 (helpers/defcurried get-id-number
                     [k network]
-                    (if (empty? (k network))
+                    (if (-> network
+                            k
+                            empty?)
                       0
-                      (inc (get-number (last (k network))))))
+                      (-> network
+                          k
+                          last
+                          get-number
+                          inc)))
 
 (def get-id
   (helpers/build (comp keyword
