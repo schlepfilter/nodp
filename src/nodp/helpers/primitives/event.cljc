@@ -288,8 +288,11 @@
 
 (def context
   (helpers/reify-monad
-    (fn [a]
-      (event* [(set-occs [(tuple/tuple (time/time 0) a)])]))
+    (comp event*
+          vector
+          set-occs
+          vector
+          (partial tuple/tuple (time/time 0)))
     (fn [ma f]
       (->> (modify->>= (:id ma) f)
            make-set-modify-modify
