@@ -75,8 +75,8 @@
                                               fs
                                               input-events)))
                       (gen/return (partial doall (map helpers/funcall
-                                                      (drop-last calls))))
-                      (gen/return (last calls))
+                                                      (rest calls))))
+                      (gen/return (first calls))
                       (gen/return ((if (empty? @outer-input-event)
                                      identity
                                      inc)
