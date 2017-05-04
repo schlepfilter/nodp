@@ -43,13 +43,35 @@
                                        (tuple/tuple a)))))
 
 (def event->>=
+  ;TODO refactor
   ;TODO return a tuple
   (gen/let [probabilities (gen/sized (comp (partial gen/vector
                                                     test-helpers/probability
                                                     3)
                                            (partial + 3)))
             [outer-input-event & inner-input-events :as input-events]
-            (gen/return (test-helpers/get-events probabilities))]))
+            (gen/return (test-helpers/get-events probabilities))
+            ;TODO generalize gen/uuid
+            fs (gen/vector (test-helpers/function gen/uuid)
+                           (count input-events))
+            input-event-anys (gen/vector gen/uuid
+                                         ((if (empty? @outer-input-event)
+                                            identity
+                                            dec)
+                                           (dec (count input-events))))
+            calls (gen/shuffle
+                    (concat (map (fn [a]
+                                   (fn []
+                                     (outer-input-event a)))
+                                 input-event-anys)
+                            (map (fn [inner-input-event as]
+                                   (fn []
+                                     (if (not= inner-input-event
+                                               outer-input-event)
+                                       (run! inner-input-event as))))
+                                 inner-input-events
+                                 (gen/vector (gen/vector test-helpers/any-equal)
+                                             (count inner-input-events)))))]))
 
 (clojure-test/defspec
   event->>=-identity
