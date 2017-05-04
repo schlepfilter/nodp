@@ -12,4 +12,5 @@
   test-helpers/num-tests
   (test-helpers/restart-for-all [as (gen/vector test-helpers/any-equal)]
                                 (let [e (frp/event)]
+                                  (run! e as)
                                   true)))

@@ -10,6 +10,7 @@
             [#?(:clj  clojure.core.async
                 :cljs cljs.core.async) :as async]
             [com.rpl.specter :as s]
+            [flatland.ordered.map :as ordered-map]
             [loom.alg :as alg]
             [loom.graph :as graph]
     #?@(:clj [
@@ -287,6 +288,14 @@
    (f))
   ([f & more]
    (apply f more)))
+
+(defn get-initial-network
+  []
+  {:function (ordered-map/ordered-map)
+   :occs     (ordered-map/ordered-map)})
+
+(def network-state
+  (atom (get-initial-network)))
 
 #?(:clj
    (do (defmacro defpfmethod
