@@ -86,7 +86,7 @@
 
 (defn event**
   [id fs]
-  ;TODO call fs
+  ;TODO add a node to dependency
   (->> @helpers/network-state
        (helpers/call-functions
          (concat [(set-occs [] id)]
