@@ -89,6 +89,8 @@
     [[[outer-event & inner-events] calls call n] event->>=]
     (let [bound-event (helpers/>>= outer-event
                                    (test-helpers/make-iterate inner-events))]
+      (frp/activate)
+      (calls)
       ;TODO test bound-event
       true
       )))
