@@ -10,11 +10,15 @@
   [id]
   p/Contextual
   (-get-context [_]
+    ;If context is inlined, the following error seems to occur.
+    ;java.lang.LinkageError: loader (instance of clojure/lang/DynamicClassLoader): attempted duplicate class definition for name: "nodp/helpers/primitives/event/Event"
     context)
   IFn
   ;TODO implement invoke
   (#?(:clj  invoke
-      :cljs -invoke) [e a]))
+      :cljs -invoke) [e a]
+    ;e stands for an event, and a stands for any as in Push-Pull Functional Reactive Programming.
+    ))
 
 (def get-number
   (comp read-string
