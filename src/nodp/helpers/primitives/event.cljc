@@ -2,6 +2,7 @@
   (:require [cats.protocols :as p]
             [cats.util :as util]
             [com.rpl.specter :as s]
+    #?(:cljs [cljs.reader :as reader])
             [nodp.helpers :as helpers]
             [nodp.helpers.time :as time]
             [nodp.helpers.tuple :as tuple])
@@ -54,7 +55,8 @@
 (util/make-printable Event)
 
 (def get-number
-  (comp read-string
+  (comp #?(:clj  read-string
+           :cljs reader/read-string)
         (partial (helpers/flip subs) 1)
         str))
 
