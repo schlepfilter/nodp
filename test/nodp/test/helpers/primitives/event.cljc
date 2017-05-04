@@ -61,9 +61,7 @@
                                             dec)
                                            (dec (count input-events))))
             calls (gen/shuffle
-                    (concat (map (fn [a]
-                                   (fn []
-                                     (outer-input-event a)))
+                    (concat (map (helpers/curry 2 outer-input-event)
                                  input-event-anys)
                             (map (fn [inner-input-event as]
                                    (fn []
@@ -110,8 +108,7 @@
                            (count input-events))
             calls (gen/shuffle (mapcat (fn [n e]
                                          (repeat n
-                                                 (fn []
-                                                   (e unit/unit))))
+                                                 (partial e unit/unit)))
                                        ns
                                        input-events))]
            (gen/tuple (gen/return (partial run!
