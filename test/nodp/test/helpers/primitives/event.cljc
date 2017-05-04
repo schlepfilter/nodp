@@ -1,5 +1,7 @@
 (ns nodp.test.helpers.primitives.event
-  (:require [clojure.test.check]
+  (:require [#?(:clj  clojure.test
+                :cljs cljs.test) :as test :include-macros true]
+            [clojure.test.check]
             [clojure.test.check.clojure-test
              :as clojure-test
              :include-macros true]
@@ -7,6 +9,8 @@
             [nodp.helpers.frp :as frp]
             [nodp.helpers.tuple :as tuple]
             [nodp.test.helpers :as test-helpers :include-macros true]))
+
+(test/use-fixtures :each test-helpers/fixture)
 
 (clojure-test/defspec
   call-inactive

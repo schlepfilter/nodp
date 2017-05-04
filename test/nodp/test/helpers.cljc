@@ -5,8 +5,15 @@
             [clojure.test.check.rose-tree :as rose]
     #?(:clj
             [clojure.math.numeric-tower :as numeric-tower])
+            [nodp.helpers :as helpers]
             [nodp.helpers.unit :as unit]
             [nodp.helpers.frp :as frp]))
+
+(defn fixture
+  [f]
+  (reset! helpers/network-state (helpers/get-initial-network))
+  ;TODO redefine event/queue
+  (f))
 
 (def num-tests
   #?(:clj  10
