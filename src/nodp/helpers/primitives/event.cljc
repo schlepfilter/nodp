@@ -148,8 +148,7 @@
 
 (helpers/defcurried modify-event!
                     [id network]
-                    (helpers/call-functions (id (:modifies! network))
-                                            network))
+                    (helpers/call-functions (id (:modifies! network)) network))
 
 (defn effect-swap-event!
   [id]
@@ -177,9 +176,7 @@
   insert-merge-sync
   [id e network]
   (insert-modify (fn [network*]
-                   (set-occs (get-latests id network*)
-                             e
-                             network*))
+                   (set-occs (get-latests id network*) e network*))
                  e
                  network))
 
@@ -187,8 +184,7 @@
   delay-sync
   [id e network]
   (set-occs (map (partial nodp.helpers/<*>
-                          (tuple/tuple (:time network)
-                                       identity))
+                          (tuple/tuple (:time network) identity))
                  (get-occs id network))
             e
             network))
