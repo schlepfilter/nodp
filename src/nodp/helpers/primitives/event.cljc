@@ -22,10 +22,14 @@
       (get-new-time past)
       current)))
 
+(helpers/defcurried set-occs
+                    [occs id network]
+                    (s/setval [:occs id s/END] occs network))
+
 (defn modify-network!
   [occ id network]
   ;TODO set modified
-  (helpers/call-functions [(partial s/setval* [:occs id s/END] [occ])]
+  (helpers/call-functions [(set-occs [occ] id)]
                           network))
 
 (defrecord Event
@@ -84,7 +88,9 @@
   [id fs]
   ;TODO call fs
   (->> @helpers/network-state
-       (helpers/call-functions [(partial s/setval* [:occs id] [])])
+       (helpers/call-functions
+         (concat [(set-occs [] id)]
+                 (map (partial (helpers/flip helpers/funcall) id) fs)))
        (reset! helpers/network-state))
   (Event. id))
 
@@ -95,7 +101,8 @@
 (def context
   (helpers/reify-monad
     ;TODO implement monad
-    (fn [])
+    (fn [a]
+      (event* [(set-occs [(tuple/tuple (time/time 0) a)])]))
     (fn [])
     ;TODO implement semigroup
     ;TODO implement monoid

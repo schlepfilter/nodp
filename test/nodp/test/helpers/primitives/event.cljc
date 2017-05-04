@@ -6,7 +6,9 @@
              :as clojure-test
              :include-macros true]
             [clojure.test.check.generators :as gen]
+            [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]
+            [nodp.helpers.time :as time]
             [nodp.helpers.tuple :as tuple]
             [nodp.test.helpers :as test-helpers :include-macros true]))
 
@@ -28,3 +30,14 @@
                                   (frp/activate)
                                   (run! e as)
                                   (= (map tuple/snd @e) as))))
+
+(clojure-test/defspec
+  event-return
+  test-helpers/num-tests
+  (test-helpers/restart-for-all [a test-helpers/any-equal]
+                                (= (last @(-> (frp/event)
+                                              helpers/infer
+                                              (nodp.helpers/return a)))
+                                   (-> 0
+                                       time/time
+                                       (tuple/tuple a)))))
