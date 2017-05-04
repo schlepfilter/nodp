@@ -25,10 +25,10 @@
 
 (defn behavior**
   [id & fs]
-  (swap! helpers/network-state
-         (partial helpers/call-functions
-                  (map (partial (helpers/flip helpers/funcall) id)
-                       fs)))
+  (->> fs
+       (map (partial (helpers/flip helpers/funcall) id))
+       (partial helpers/call-functions)
+       (swap! helpers/network-state))
   (Behavior. id))
 
 (defn behavior*
