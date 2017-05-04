@@ -49,16 +49,16 @@
     context)
   IDeref
   (#?(:clj  deref
-      :cljs -deref) [e]
-    (get-occs (:id e) @helpers/network-state))
+      :cljs -deref) [_]
+    (get-occs id @helpers/network-state))
   IFn
   (#?(:clj  invoke
-      :cljs -invoke) [e a]
+      :cljs -invoke) [_ a]
     ;e stands for an event, and a stands for any as in Push-Pull Functional Reactive Programming.
     (if (:active @helpers/network-state)
       (reset! helpers/network-state
               (modify-network! (tuple/tuple (get-new-time (time/now)) a)
-                               (:id e)
+                               id
                                @helpers/network-state))))
   p/Printable
   (-repr [_]
