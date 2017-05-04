@@ -76,17 +76,13 @@
                                               input-events)))
                       (gen/return (partial doall (map helpers/funcall
                                                       (rest calls))))
-                      (gen/return (first calls))
-                      (gen/return ((if (empty? @outer-input-event)
-                                     identity
-                                     inc)
-                                    (count input-event-anys))))))
+                      (gen/return (first calls)))))
 
 (clojure-test/defspec
   event->>=-identity
   test-helpers/num-tests
   (test-helpers/restart-for-all
-    [[[outer-event & inner-events] calls call n] event->>=]
+    [[[outer-event & inner-events] calls call] event->>=]
     (let [bound-event (helpers/>>= outer-event
                                    (test-helpers/make-iterate inner-events))]
       (frp/activate)
