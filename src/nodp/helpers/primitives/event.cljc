@@ -1,10 +1,16 @@
 (ns nodp.helpers.primitives.event
   (:require [cats.protocols :as p]
+            [cats.util :as util]
+            [com.rpl.specter :as s]
             [nodp.helpers :as helpers])
   #?(:clj
-     (:import [clojure.lang IFn])))
+     (:import [clojure.lang IDeref IFn])))
 
 (declare context)
+
+(defn get-occs
+  [e network]
+  ((:id e) (:occs network)))
 
 (defrecord Event
   [id]
@@ -13,12 +19,21 @@
     ;If context is inlined, the following error seems to occur.
     ;java.lang.LinkageError: loader (instance of clojure/lang/DynamicClassLoader): attempted duplicate class definition for name: "nodp/helpers/primitives/event/Event"
     context)
+  IDeref
+  (#?(:clj  deref
+      :cljs -deref) [e]
+    (get-occs e @helpers/network-state))
   IFn
   ;TODO implement invoke
   (#?(:clj  invoke
       :cljs -invoke) [e a]
     ;e stands for an event, and a stands for any as in Push-Pull Functional Reactive Programming.
-    ))
+    )
+  p/Printable
+  (-repr [_]
+    (str "#[event " id "]")))
+
+(util/make-printable Event)
 
 (def get-number
   (comp read-string
@@ -34,6 +49,7 @@
                       (-> network
                           k
                           last
+                          key
                           get-number
                           inc)))
 
@@ -44,10 +60,17 @@
                  (get-id-number :occs)
                  (get-id-number :function)))
 
-(defn event*
+(defn event**
+  [id fs]
   ;TODO call fs
+  (->> @helpers/network-state
+       (helpers/call-functions [(partial s/setval* [:occs id] [])])
+       (reset! helpers/network-state))
+  (Event. id))
+
+(defn event*
   [fs]
-  (Event. (get-id @helpers/network-state)))
+  (event** (get-id @helpers/network-state) fs))
 
 (def context
   (helpers/reify-monad

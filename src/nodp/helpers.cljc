@@ -297,6 +297,9 @@
 (def network-state
   (atom (get-initial-network)))
 
+(def call-functions
+  (flip (partial reduce (flip funcall))))
+
 #?(:clj
    (do (defmacro defpfmethod
          [multifn dispatch-val f]
