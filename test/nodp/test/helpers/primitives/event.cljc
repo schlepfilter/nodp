@@ -41,3 +41,16 @@
                                    (-> 0
                                        time/time
                                        (tuple/tuple a)))))
+
+(def event->>=
+  ;TODO return a tuple
+  (gen/let [probabilities (gen/sized (comp (partial gen/vector
+                                                    test-helpers/probability
+                                                    3)
+                                           (partial + 3)))]))
+
+(clojure-test/defspec
+  event->>=-identity
+  test-helpers/num-tests
+  (test-helpers/restart-for-all [_ event->>=]
+                                true))
