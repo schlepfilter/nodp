@@ -269,6 +269,17 @@
   [left right]
   (merge-occs* left right []))
 
+(helpers/defcurried modify-<>
+                    [left-id right-id initial child-id network]
+                    (set-occs (merge-occs ((make-get-occs-or-latests initial)
+                                            left-id
+                                            network)
+                                          ((make-get-occs-or-latests initial)
+                                            right-id
+                                            network))
+                              child-id
+                              network))
+
 (def context
   (helpers/reify-monad
     (fn [a]
@@ -278,8 +289,15 @@
            make-set-modify-modify
            (cons (add-edge (:id ma)))
            event*))
-    ;TODO implement semigroup
-    ;TODO implement monoid
+    p/Semigroup
+    (-mappend [_ left-event right-event]
+              (-> (modify-<> (:id left-event)
+                             (:id right-event))
+                  make-set-modify-modify
+                  (concat (map (comp add-edge
+                                     :id)
+                               [left-event right-event]))
+                  event*))
     p/Monoid
     (-mempty [_]
              (event* []))))

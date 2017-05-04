@@ -11,6 +11,7 @@
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.time :as time]
             [nodp.helpers.tuple :as tuple]
+            [nodp.helpers.unit :as unit]
             [nodp.test.helpers :as test-helpers :include-macros true]))
 
 (test/use-fixtures :each test-helpers/fixture)
@@ -99,3 +100,33 @@
            (delay-inner-occs-coll @outer-event)
            (reduce event/merge-occs [])
            (= @bound-event)))))
+
+(def <>
+  ;TODO refactor
+  (gen/let [probabilities (gen/vector test-helpers/probability 2)
+            [input-events fmapped-events]
+            (test-helpers/events-tuple probabilities)
+            ns (gen/vector (gen/sized (partial gen/choose 0))
+                           (count input-events))
+            calls (gen/shuffle (mapcat (fn [n e]
+                                         (repeat n
+                                                 (fn []
+                                                   (e unit/unit))))
+                                       ns
+                                       input-events))]
+           (gen/tuple (gen/return (partial run!
+                                           helpers/funcall
+                                           calls))
+                      (gen/return (apply helpers/<> fmapped-events))
+                      (gen/return fmapped-events))))
+
+(clojure-test/defspec
+  event-<>
+  test-helpers/num-tests
+  (test-helpers/restart-for-all [[call mappended-event fmapped-events] <>]
+                                (frp/activate)
+                                (call)
+                                (->> fmapped-events
+                                     (map deref)
+                                     (apply event/merge-occs)
+                                     (= @mappended-event))))
