@@ -101,10 +101,10 @@
   (event** (get-id @helpers/network-state) fs @helpers/network-state))
 
 (helpers/defcurried add-edge
-                    [id e network]
+                    [parent-id child-id network]
                     (s/transform :dependency
                                  (partial (helpers/flip graph/add-edges)
-                                          [id (:id e)])
+                                          [parent-id child-id])
                                  network))
 
 (defn get-latests
@@ -179,27 +179,29 @@
 
 (helpers/defcurried
   insert-merge-sync
-  [id e network]
+  [parent-id child-id network]
   (insert-modify (fn [network*]
-                   (set-occs (get-latests id network*) e network*))
-                 e
+                   (set-occs (get-latests parent-id network*)
+                             child-id
+                             network*))
+                 child-id
                  network))
 
 (helpers/defcurried
   delay-sync
-  [id e network]
+  [parent-id child-id network]
   (set-occs (map (partial nodp.helpers/<*>
                           (tuple/tuple (:time network) identity))
-                 (get-occs id network))
-            e
+                 (get-occs parent-id network))
+            child-id
             network))
 
 (helpers/defcurried modify->>=
-                    [ma f initial child-event network]
+                    [parent-id f initial child-id network]
                     (do (reset! helpers/network-state network)
                         (let [parent-events
                               (->> network
-                                   ((make-get-occs-or-latests initial) ma)
+                                   ((make-get-occs-or-latests initial) parent-id)
                                    (map (comp f
                                               tuple/snd))
                                    doall)]
@@ -207,13 +209,13 @@
                                       :id)
                                 parent-events)
                           (helpers/call-functions
-                            (map (comp (fn [id]
+                            (map (comp (fn [parent-id*]
                                          (partial helpers/call-functions
                                                   ((juxt add-edge
                                                          insert-merge-sync
                                                          delay-sync)
-                                                    id
-                                                    child-event)))
+                                                    parent-id*
+                                                    child-id)))
                                        :id)
                                  parent-events)
                             @helpers/network-state))))
