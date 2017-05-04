@@ -27,8 +27,7 @@
   [id & fs]
   (swap! helpers/network-state
          (partial helpers/call-functions
-                  (map (fn [f]
-                         (f id))
+                  (map (partial (helpers/flip helpers/funcall) id)
                        fs)))
   (Behavior. id))
 
