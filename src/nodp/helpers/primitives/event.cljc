@@ -199,12 +199,16 @@
                  child-id
                  network))
 
+(defn delay-time-occs
+  [t occs]
+  (map (partial nodp.helpers/<*>
+                (tuple/tuple t identity))
+       occs))
+
 (helpers/defcurried
   delay-sync
   [parent-id child-id network]
-  (set-occs (map (partial nodp.helpers/<*>
-                          (tuple/tuple (:time network) identity))
-                 (get-occs parent-id network))
+  (set-occs (delay-time-occs (:time network) (get-occs parent-id network))
             child-id
             network))
 

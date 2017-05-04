@@ -80,10 +80,7 @@
 
 (defn delay-inner-occs
   [outer-occ inner-occs]
-  ;TODO refactor
-  (map (partial nodp.helpers/<*>
-                (tuple/tuple (tuple/fst outer-occ) identity))
-       inner-occs))
+  (event/delay-time-occs (tuple/fst outer-occ) inner-occs))
 
 (def delay-inner-occs-coll
   (partial map delay-inner-occs))
