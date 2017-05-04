@@ -44,7 +44,6 @@
 
 (def event->>=
   ;TODO refactor
-  ;TODO return a tuple
   (gen/let [probabilities (gen/sized (comp (partial gen/vector
                                                     test-helpers/probability
                                                     3)
@@ -71,7 +70,17 @@
                                        (run! inner-input-event as))))
                                  inner-input-events
                                  (gen/vector (gen/vector test-helpers/any-equal)
-                                             (count inner-input-events)))))]))
+                                             (count inner-input-events)))))]
+           (gen/tuple (gen/return (doall (map nodp.helpers/<$>
+                                              fs
+                                              input-events)))
+                      (gen/return (partial doall (map helpers/funcall
+                                                      (drop-last calls))))
+                      (gen/return (last calls))
+                      (gen/return ((if (empty? @outer-input-event)
+                                     identity
+                                     inc)
+                                    (count input-event-anys))))))
 
 (clojure-test/defspec
   event->>=-identity

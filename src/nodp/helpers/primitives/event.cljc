@@ -103,7 +103,7 @@
     ;TODO implement monad
     (fn [a]
       (event* [(set-occs [(tuple/tuple (time/time 0) a)])]))
-    (fn [])
+    (fn [ma f])
     ;TODO implement semigroup
     ;TODO implement monoid
     p/Monoid
