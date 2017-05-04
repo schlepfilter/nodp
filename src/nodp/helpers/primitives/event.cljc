@@ -259,4 +259,5 @@
 
 (def activate
   ;TODO start time
-  (juxt (partial swap! helpers/network-state (partial s/setval* :active true))))
+  (juxt (partial swap! helpers/network-state (partial s/setval* :active true))
+        time/start))
