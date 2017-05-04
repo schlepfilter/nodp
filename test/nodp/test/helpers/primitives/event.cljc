@@ -92,7 +92,7 @@
   event->>=-identity
   test-helpers/num-tests
   (test-helpers/restart-for-all
-    [[[outer-event & inner-events] calls] event->>=]
+    [[[outer-event & inner-events] calls] (gen/no-shrink event->>=)]
     (let [bound-event (helpers/>>= outer-event
                                    (test-helpers/make-iterate inner-events))]
       (frp/activate)

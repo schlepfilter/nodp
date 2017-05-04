@@ -174,13 +174,15 @@
       network
       (modify! network))))
 
+(defn snth
+  [n]
+  (s/srange n n))
+
 (defn insert-modify
   [modify! id network]
-  (->> network
-       (s/transform [:modifies! id] (partial drop-last 2))
-       (s/setval [:modifies! id s/END]
-                 (cons (make-call-once id modify!)
-                       (take-last 2 (id (:modifies! network)))))))
+  (s/setval [:modifies! id (snth (- (count (id (:modifies! network))) 2))]
+            [(make-call-once id modify!)]
+            network))
 
 (helpers/defcurried
   insert-merge-sync
