@@ -20,8 +20,8 @@
                        (fn []
                          (resize {:inner-height js/window.innerHeight})))
 
+  ;TODO add a function that calls removeEventListener to :cancel
+
   (js/addEventListener "popstate"
                        (fn []
-                         (popstate {:pathname js/location.pathname})))
-  ;TODO add a function that calls removeEventListener to :cancel
-  )
+                         (popstate {:pathname js/location.pathname}))))
