@@ -62,14 +62,12 @@
             input-events-anys (gen/vector test-helpers/any-equal
                                           (count input-event-anys))
             calls (gen/shuffle (concat (map (fn [a]
-                                              (fn []
-                                                (input-event a)))
+                                              (partial input-event a))
                                             input-event-anys)
                                        (maybe/cat-maybes (map (fn [input-event* a]
                                                                 (helpers/maybe-if-not (= input-event*
                                                                                          input-event)
-                                                                                      (fn []
-                                                                                        (input-event* a))))
+                                                                                      (partial input-event* a)))
                                                               input-events
                                                               input-events-anys))))]
            (gen/tuple (gen/return outer-behavior)
