@@ -84,16 +84,19 @@
        (dec (first-pred-index (complement pred) 0 (count coll) coll))
        default))
 
+(defn get-switcher-value
+  [b e t network]
+  ((get-function (->> network
+                      (event/get-occs (:id e))
+                      (last-pred (tuple/tuple (time/time 0) b)
+                                 (comp (partial > @t)
+                                       deref
+                                       tuple/fst))
+                      tuple/snd)
+                 network)
+    t))
+
 (defn switcher
   [b e]
   (behavior* (fn [t]
-               ;TODO refactor
-               ((get-function (->> @event/network-state
-                                   (event/get-occs (:id e))
-                                   (last-pred (tuple/tuple (time/time 0) b)
-                                              (comp (partial > @t)
-                                                    deref
-                                                    tuple/fst))
-                                   tuple/snd)
-                              @event/network-state)
-                 t))))
+               (get-switcher-value b e t @event/network-state))))
