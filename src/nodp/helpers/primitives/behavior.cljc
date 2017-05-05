@@ -53,9 +53,14 @@
 (def registry
   (atom []))
 
-(defn register
+(defn register*
   [f]
   (swap! registry (partial s/setval* s/END [f])))
+
+#?(:clj (defmacro register
+          [expr]
+          `(register* (fn []
+                        ~expr))))
 
 (defn start
   ([]

@@ -1,13 +1,13 @@
 (ns nodp.helpers.frp
   (:refer-clojure :exclude [stepper time])
   (:require [nodp.helpers.derived.behavior :as derived-behavior]
-            [nodp.helpers.primitives.behavior :as behavior]
+            [nodp.helpers.primitives.behavior :as behavior :include-macros true]
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.io :as io]))
 
-(def register
-  ;TODO turn register into a macro
-  behavior/register)
+(defmacro register
+  [& more]
+  `(behavior/register ~more))
 
 (def restart
   (comp (fn [_]
