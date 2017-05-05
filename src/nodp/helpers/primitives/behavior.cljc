@@ -1,4 +1,5 @@
 (ns nodp.helpers.primitives.behavior
+  (:refer-clojure :exclude [time])
   (:require [cats.protocols :as protocols]
             [cats.util :as util]
             [com.rpl.specter :as s]
@@ -53,7 +54,9 @@
    (start {}))
   ;TODO specify default sample-rate
   ([{:keys [sample-rate]}]
-   (reset! event/network-state (event/get-initial-network))))
+   (reset! event/network-state (event/get-initial-network))
+   (def time
+     (behavior* identity))))
 
 (def restart
   ;TODO call stop

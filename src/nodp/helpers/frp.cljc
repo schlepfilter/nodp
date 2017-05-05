@@ -1,12 +1,15 @@
 (ns nodp.helpers.frp
-  (:refer-clojure :exclude [stepper])
+  (:refer-clojure :exclude [stepper time])
   (:require [nodp.helpers.derived.behavior :as derived-behavior]
             [nodp.helpers.primitives.behavior :as behavior]
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.io :as io]))
 
 (def restart
-  behavior/restart)
+  (comp (fn [_]
+          (def time
+            behavior/time))
+        behavior/restart))
 
 (def activate
   event/activate)
@@ -16,6 +19,8 @@
 
 (def behavior
   derived-behavior/behavior)
+
+(declare time)
 
 (def switcher
   behavior/switcher)

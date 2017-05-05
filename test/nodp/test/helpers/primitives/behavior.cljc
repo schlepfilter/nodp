@@ -21,6 +21,18 @@
                                         (nodp.helpers/return a))
                                    a)))
 
+(clojure-test/defspec
+  time-increasing
+  test-helpers/num-tests
+  (test-helpers/restart-for-all
+    [advance1 test-helpers/advance
+     advance2 test-helpers/advance]
+    (frp/activate)
+    (advance1)
+    (let [t @frp/time]
+      (advance2)
+      (<= @t @@frp/time))))
+
 (def switcher
   ;TODO refactor
   (gen/let [probabilities (test-helpers/probabilities 4)
