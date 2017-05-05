@@ -4,11 +4,12 @@
              :as clojure-test
              :include-macros true]
             [clojure.test.check.generators :as gen]
-            [nodp.helpers :as helpers]
+            [nodp.helpers :as helpers :include-macros true]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.tuple :as tuple]
             [nodp.helpers.unit :as unit]
-            [nodp.test.helpers :as test-helpers]))
+            [nodp.test.helpers :as test-helpers]
+            [cats.monad.maybe :as maybe]))
 
 (clojure-test/defspec
   behavior-return
@@ -64,13 +65,13 @@
                                               (fn []
                                                 (input-event a)))
                                             input-event-anys)
-                                       (map (fn [a input-event*]
-                                              (fn []
-                                                (if-not (= input-event*
-                                                           input-event)
-                                                  (input-event* a))))
-                                            input-events-anys
-                                            input-events)))]
+                                       (maybe/cat-maybes (map (fn [a input-event*]
+                                                                (helpers/maybe-if-not (= input-event*
+                                                                                         input-event)
+                                                                                      (fn []
+                                                                                        (input-event* a))))
+                                                              input-events-anys
+                                                              input-events))))]
            (gen/tuple (gen/return outer-behavior)
                       (gen/return switching-event)
                       (gen/return (frp/switcher outer-behavior
@@ -85,11 +86,11 @@
   test-helpers/num-tests
   (test-helpers/restart-for-all
     ;TODO refactor
-    [[outer-behavior e switched-behavior calls call] (gen/no-shrink switcher)]
+    [[outer-behavior e switched-behavior calls call] switcher]
     (frp/activate)
     (calls)
     (let [occs @e]
       (call)
       (if (= @e occs)
-        true
+        (= @switched-behavior @(last (cons outer-behavior (map tuple/snd @e))))
         (= @switched-behavior @(tuple/snd (last (drop-last @e))))))))
