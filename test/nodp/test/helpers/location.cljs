@@ -17,4 +17,5 @@
     [advance* test-helpers/advance]
     (frp/activate)
     (advance*)
+    ;TODO call history.pushState
     (= @location/pathname js/location.pathname)))
