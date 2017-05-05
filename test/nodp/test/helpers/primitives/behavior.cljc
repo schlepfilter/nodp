@@ -23,8 +23,8 @@
   ;TODO refactor
   (gen/let [probabilities (gen/sized (comp (partial gen/vector
                                                     test-helpers/probability
-                                                    3)
-                                           (partial + 3)))
+                                                    4)
+                                           (partial + 4)))
             [[input-event & input-events]
              [fmapped-switching-event
               fmapped-outer-event
@@ -53,7 +53,6 @@
             (gen/return (helpers/<$>
                           (test-helpers/make-iterate inner-behaviors)
                           fmapped-switching-event))
-
             input-event-anys (gen/vector test-helpers/any-equal
                                          ((if (empty? @switching-event)
                                             identity
@@ -71,25 +70,26 @@
                                                            input-event)
                                                   (input-event* a))))
                                             input-events-anys
-                                            input-events)))
-            invocations (gen/vector gen/boolean (count calls))]
+                                            input-events)))]
            (gen/tuple (gen/return outer-behavior)
                       (gen/return switching-event)
                       (gen/return (frp/switcher outer-behavior
                                                 switching-event))
-                      (gen/return (partial doall (map (fn [invocation call]
-                                                        (if invocation
-                                                          (call)))
-                                                      invocations
-                                                      (drop-last calls)))))))
+                      (gen/return (partial doall (map (fn [call]
+                                                        (call))
+                                                      (drop-last calls))))
+                      (gen/return (last calls)))))
 
 (clojure-test/defspec
   switcher-identity
   test-helpers/num-tests
   (test-helpers/restart-for-all
-    [[outer-behavior e switched-behavior call] (gen/no-shrink switcher)]
+    ;TODO refactor
+    [[outer-behavior e switched-behavior calls call] (gen/no-shrink switcher)]
     (frp/activate)
-    (call)
-    (if (empty? @e)
-      (= @switched-behavior @outer-behavior)
-      true)))
+    (calls)
+    (let [occs @e]
+      (call)
+      (if (= @e occs)
+        true
+        (= @switched-behavior @(tuple/snd (last (drop-last @e))))))))
