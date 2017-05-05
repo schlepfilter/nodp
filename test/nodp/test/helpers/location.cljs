@@ -12,7 +12,7 @@
 
 (clojure-test/defspec
   location
-  test-helpers/num-tests
+  test-helpers/cljs-num-tests
   (test-helpers/restart-for-all
     [advance* test-helpers/advance]
     (frp/activate)

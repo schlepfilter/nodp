@@ -13,7 +13,7 @@
 
 (clojure-test/defspec
   behavior-return
-  test-helpers/num-tests
+  test-helpers/cljc-num-tests
   (test-helpers/restart-for-all [a test-helpers/any-equal]
                                 (= @(-> unit/unit
                                         frp/behavior
@@ -23,7 +23,7 @@
 
 (clojure-test/defspec
   time-increasing
-  test-helpers/num-tests
+  test-helpers/cljc-num-tests
   (test-helpers/restart-for-all
     [advance1 test-helpers/advance
      advance2 test-helpers/advance]
@@ -93,7 +93,7 @@
 
 (clojure-test/defspec
   switcher-identity
-  test-helpers/num-tests
+  test-helpers/cljc-num-tests
   (test-helpers/restart-for-all
     ;TODO refactor
     [[outer-behavior e switched-behavior calls call] switcher]

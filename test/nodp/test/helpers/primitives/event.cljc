@@ -18,7 +18,7 @@
 
 (clojure-test/defspec
   call-inactive
-  test-helpers/num-tests
+  test-helpers/cljc-num-tests
   (test-helpers/restart-for-all [as (gen/vector test-helpers/any-equal)]
                                 (let [e (frp/event)]
                                   (run! e as)
@@ -26,7 +26,7 @@
 
 (clojure-test/defspec
   call-active
-  test-helpers/num-tests
+  test-helpers/cljc-num-tests
   (test-helpers/restart-for-all [as (gen/vector test-helpers/any-equal)]
                                 (let [e (frp/event)]
                                   (frp/activate)
@@ -35,7 +35,7 @@
 
 (clojure-test/defspec
   event-return
-  test-helpers/num-tests
+  test-helpers/cljc-num-tests
   (test-helpers/restart-for-all [a test-helpers/any-equal]
                                 (= (last @(-> (frp/event)
                                               helpers/infer
@@ -83,7 +83,7 @@
 
 (clojure-test/defspec
   event->>=-identity
-  test-helpers/num-tests
+  test-helpers/cljc-num-tests
   (test-helpers/restart-for-all
     [[[outer-event & inner-events] call] (gen/no-shrink event->>=)]
     (let [bound-event (helpers/>>= outer-event
@@ -116,7 +116,7 @@
 
 (clojure-test/defspec
   event-<>
-  test-helpers/num-tests
+  test-helpers/cljc-num-tests
   (test-helpers/restart-for-all [[fmapped-events mappended-event call] <>]
                                 (frp/activate)
                                 (call)

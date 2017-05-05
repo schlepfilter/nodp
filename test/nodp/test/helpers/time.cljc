@@ -8,7 +8,7 @@
 
 (clojure-test/defspec
   time-increasing
-  test-helpers/num-tests
+  test-helpers/cljc-num-tests
   (prop/for-all []
                 (<= (time/now-long)
                     @(time/to-real-time (time/now))

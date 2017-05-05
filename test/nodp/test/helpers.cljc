@@ -16,9 +16,12 @@
   ;TODO redefine event/queue
   (f))
 
-(def num-tests
+(def cljc-num-tests
   #?(:clj  10
      :cljs 2))
+
+(def cljs-num-tests
+  10)
 
 (def restart
   ;TODO call restart
