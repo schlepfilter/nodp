@@ -9,6 +9,9 @@
   (def resize
     (frp/event))
 
+  (def popstate
+    (frp/event))
+
   (def inner-height
     (frp/stepper js/window.innerHeight
                  (helpers/<$> :inner-height resize)))
@@ -16,5 +19,9 @@
   (js/addEventListener "resize"
                        (fn []
                          (resize {:inner-height js/window.innerHeight})))
+
+  (js/addEventListener "popstate"
+                       (fn []
+                         (popstate {:pathname js/location.pathname})))
   ;TODO add a function that calls removeEventListener to :cancel
   )
