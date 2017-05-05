@@ -46,12 +46,9 @@
 
 (def event->>=
   ;TODO refactor
-  (gen/let [probabilities (gen/sized (comp (partial gen/vector
-                                                    test-helpers/probability
-                                                    3)
-                                           (partial + 3)))
+  (gen/let [probabilities* (test-helpers/probabilities 3)
             [outer-input-event & inner-input-events :as input-events]
-            (gen/return (test-helpers/get-events probabilities))
+            (gen/return (test-helpers/get-events probabilities*))
             ;TODO generalize gen/uuid
             fs (gen/vector (test-helpers/function gen/uuid)
                            (count input-events))

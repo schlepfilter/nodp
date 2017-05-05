@@ -22,10 +22,7 @@
                                    a)))
 (def switcher
   ;TODO refactor
-  (gen/let [probabilities (gen/sized (comp (partial gen/vector
-                                                    test-helpers/probability
-                                                    4)
-                                           (partial + 4)))
+  (gen/let [probabilities (test-helpers/probabilities 4)
             [[input-event & input-events]
              [fmapped-switching-event
               fmapped-outer-event
