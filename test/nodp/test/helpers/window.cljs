@@ -6,7 +6,7 @@
              :include-macros true]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.window :as window]
-            [nodp.test.helpers :as test-helpers]))
+            [nodp.test.helpers :as test-helpers :include-macros true]))
 
 (test/use-fixtures :each test-helpers/fixture)
 
@@ -18,5 +18,4 @@
     (frp/activate)
     (advance*)
     ;TODO test location
-    ;TODO test window
     (= @window/inner-height js/window.innerHeight)))
