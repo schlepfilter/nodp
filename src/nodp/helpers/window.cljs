@@ -1,5 +1,6 @@
 (ns nodp.helpers.window
-  (:require [nodp.helpers.frp :as frp]))
+  (:require [nodp.helpers :as helpers]
+            [nodp.helpers.frp :as frp]))
 
 (declare inner-height)
 
@@ -8,4 +9,5 @@
                   (frp/event))
 
                 (def inner-height
-                  (frp/stepper js/window.innerHeight resize))))
+                  (frp/stepper js/window.innerHeight
+                               (helpers/<$> :inner-height resize)))))
