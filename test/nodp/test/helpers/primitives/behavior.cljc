@@ -65,13 +65,13 @@
                                               (fn []
                                                 (input-event a)))
                                             input-event-anys)
-                                       (maybe/cat-maybes (map (fn [a input-event*]
+                                       (maybe/cat-maybes (map (fn [input-event* a]
                                                                 (helpers/maybe-if-not (= input-event*
                                                                                          input-event)
                                                                                       (fn []
                                                                                         (input-event* a))))
-                                                              input-events-anys
-                                                              input-events))))]
+                                                              input-events
+                                                              input-events-anys))))]
            (gen/tuple (gen/return outer-behavior)
                       (gen/return switching-event)
                       (gen/return (frp/switcher outer-behavior
