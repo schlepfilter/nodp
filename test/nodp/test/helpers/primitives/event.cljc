@@ -111,16 +111,16 @@
                                                  (partial e unit/unit)))
                                        ns
                                        input-events))]
-           (gen/tuple (gen/return (partial run!
-                                           helpers/funcall
-                                           calls))
+           (gen/tuple (gen/return fmapped-events)
                       (gen/return (apply helpers/<> fmapped-events))
-                      (gen/return fmapped-events))))
+                      (gen/return (partial run!
+                                           helpers/funcall
+                                           calls)))))
 
 (clojure-test/defspec
   event-<>
   test-helpers/num-tests
-  (test-helpers/restart-for-all [[call mappended-event fmapped-events] <>]
+  (test-helpers/restart-for-all [[fmapped-events mappended-event call] <>]
                                 (frp/activate)
                                 (call)
                                 (->> fmapped-events
