@@ -44,9 +44,9 @@
             [stepper-outer-any input-outer-any]
             (gen/vector test-helpers/any-equal 2)
             outer-behavior
-            ;TODO generate time
             (gen/elements [(frp/stepper stepper-outer-any
-                                        fmapped-outer-event)])
+                                        fmapped-outer-event)
+                           frp/time])
             stepper-inner-anys (gen/vector test-helpers/any-equal
                                            (count fmapped-inner-events))
             steps (gen/vector gen/boolean (count fmapped-inner-events))
@@ -54,9 +54,10 @@
             (gen/return
               (doall
                 (map (fn [step stepping-inner-any fmapped-inner-event]
-                       ;TODO generate time
-                       (frp/stepper stepping-inner-any
-                                    fmapped-inner-event))
+                       (if step
+                         (frp/stepper stepping-inner-any
+                                      fmapped-inner-event)
+                         frp/time))
                      steps
                      stepper-inner-anys
                      fmapped-inner-events)))
