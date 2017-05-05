@@ -1,4 +1,4 @@
-(ns nodp.test.helpers.browser
+(ns nodp.test.helpers.window
   (:require [cljs.test :as test]
             [clojure.test.check]
             [clojure.test.check.clojure-test
@@ -11,7 +11,7 @@
 (test/use-fixtures :each test-helpers/fixture)
 
 (clojure-test/defspec
-  browser
+  window
   test-helpers/num-tests
   (test-helpers/restart-for-all
     [advance* test-helpers/advance]
