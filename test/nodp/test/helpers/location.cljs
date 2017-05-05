@@ -5,6 +5,7 @@
              :as clojure-test
              :include-macros true]
             [nodp.helpers.frp :as frp]
+            [nodp.helpers.location :as location]
             [nodp.test.helpers :as test-helpers :include-macros true]))
 
 (test/use-fixtures :each test-helpers/fixture)
@@ -16,5 +17,4 @@
     [advance* test-helpers/advance]
     (frp/activate)
     (advance*)
-    ;TODO test location
-    true))
+    (= @location/pathname js/location.pathname)))
