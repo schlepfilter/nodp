@@ -15,4 +15,6 @@
 
   (js/addEventListener "resize"
                        (fn []
-                         (resize {:inner-height js/window.innerHeight}))))
+                         (resize {:inner-height js/window.innerHeight})))
+  ;TODO add a function that calls removeEventListener to :cancel
+  )
