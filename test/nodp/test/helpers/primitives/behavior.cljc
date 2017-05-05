@@ -76,8 +76,7 @@
                       (gen/return switching-event)
                       (gen/return (frp/switcher outer-behavior
                                                 switching-event))
-                      (gen/return (partial doall (map (fn [call]
-                                                        (call))
+                      (gen/return (partial doall (map helpers/funcall
                                                       (drop-last calls))))
                       (gen/return (last calls)))))
 
