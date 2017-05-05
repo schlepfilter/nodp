@@ -91,6 +91,6 @@
     (calls)
     (let [occs @e]
       (call)
-      (if (= @e occs)
-        (= @switched-behavior @(last (cons outer-behavior (map tuple/snd @e))))
-        (= @switched-behavior @(tuple/snd (last (drop-last @e))))))))
+      (= @switched-behavior @(if (= @e occs)
+                               (last (cons outer-behavior (map tuple/snd @e)))
+                               (tuple/snd (last (drop-last @e))))))))
