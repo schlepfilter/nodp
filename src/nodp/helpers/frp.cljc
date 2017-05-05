@@ -6,8 +6,8 @@
             [nodp.helpers.io :as io]))
 
 #?(:clj (defmacro register
-          [& more]
-          `(behavior/register ~more)))
+          [& body]
+          `(behavior/register ~body)))
 
 (def restart
   (comp (fn [_]

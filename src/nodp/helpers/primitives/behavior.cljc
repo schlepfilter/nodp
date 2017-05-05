@@ -58,9 +58,9 @@
   (swap! registry (partial s/setval* s/END [f])))
 
 #?(:clj (defmacro register
-          [expr]
+          [body]
           `(register* (fn []
-                        ~expr))))
+                        ~@body))))
 
 (defn start
   ([]
