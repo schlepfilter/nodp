@@ -53,16 +53,23 @@
             (gen/return (helpers/<$>
                           (test-helpers/make-iterate inner-behaviors)
                           fmapped-switching-event))
-            input-event-anys (gen/vector test-helpers/any-equal)
+
+            input-event-anys (gen/vector test-helpers/any-equal
+                                         ((if (empty? @switching-event)
+                                            identity
+                                            dec)
+                                           (count fmapped-inner-events)))
             input-events-anys (gen/vector test-helpers/any-equal
-                                          (count input-events))
+                                          (count input-event-anys))
             calls (gen/shuffle (concat (map (fn [a]
                                               (fn []
                                                 (input-event a)))
                                             input-event-anys)
                                        (map (fn [a input-event*]
                                               (fn []
-                                                (input-event* a)))
+                                                (if-not (= input-event*
+                                                           input-event)
+                                                  (input-event* a))))
                                             input-events-anys
                                             input-events)))
             invocations (gen/vector gen/boolean (count calls))]
@@ -80,7 +87,7 @@
   switcher-identity
   test-helpers/num-tests
   (test-helpers/restart-for-all
-    [[outer-behavior e switched-behavior call] switcher]
+    [[outer-behavior e switched-behavior call] (gen/no-shrink switcher)]
     (frp/activate)
     (call)
     (if (empty? @e)
