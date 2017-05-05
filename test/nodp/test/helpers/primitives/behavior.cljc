@@ -20,6 +20,7 @@
                                         helpers/infer
                                         (nodp.helpers/return a))
                                    a)))
+
 (def switcher
   ;TODO refactor
   (gen/let [probabilities (test-helpers/probabilities 4)
