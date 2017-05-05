@@ -15,3 +15,9 @@
 
 (def behavior
   derived-behavior/behavior)
+
+(def switcher
+  behavior/switcher)
+
+(def stepper
+  derived-behavior/stepper)

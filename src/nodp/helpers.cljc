@@ -292,8 +292,9 @@
 (defn get-initial-network
   []
   {:dependency (graph/digraph)
-   :function (linked/map)
-   :occs     (linked/map)})
+   :function   (linked/map)
+   :occs       (linked/map)
+   :time       (time/time 0)})
 
 (def network-state
   (atom (get-initial-network)))

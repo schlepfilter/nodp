@@ -8,3 +8,7 @@
        nodp.helpers/pure
        (ctx/with-context behavior/context)))
 
+(defn stepper
+  [a e]
+  (behavior/switcher (behavior a)
+                     (nodp.helpers/<$> behavior e)))

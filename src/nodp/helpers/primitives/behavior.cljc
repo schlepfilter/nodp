@@ -1,8 +1,11 @@
 (ns nodp.helpers.primitives.behavior
   (:require [cats.protocols :as protocols]
+            [cats.util :as util]
             [com.rpl.specter :as s]
             [nodp.helpers :as helpers]
-            [nodp.helpers.primitives.event :as event])
+            [nodp.helpers.primitives.event :as event]
+            [nodp.helpers.time :as time]
+            [nodp.helpers.tuple :as tuple])
   #?(:clj
      (:import [clojure.lang IDeref])))
 
@@ -17,7 +20,12 @@
   (#?(:clj  deref
       :cljs -deref) [_]
     ((id (:function @helpers/network-state))
-      (:time @helpers/network-state))))
+      (:time @helpers/network-state)))
+  protocols/Printable
+  (-repr [_]
+    (str "#[behavior " id "]")))
+
+(util/make-printable Behavior)
 
 (defn behavior**
   [id & fs]
@@ -50,3 +58,39 @@
 (def restart
   ;TODO call stop
   start)
+
+(defn get-function
+  [b network]
+  ((:id b) (:function network)))
+
+(defn get-middle
+  [left right]
+  (+ left (quot (- right left) 2)))
+
+(defn first-pred-index
+  [pred left right coll]
+  (if (= left right)
+    left
+    (if (pred (get coll (get-middle left right)))
+      (recur pred left (get-middle left right) coll)
+      (recur pred (inc (get-middle left right)) right coll))))
+
+(defn last-pred
+  [default pred coll]
+  (nth coll
+       (dec (first-pred-index (complement pred) 0 (count coll) coll))
+       default))
+
+(defn switcher
+  [b e]
+  (behavior* (fn [t]
+               ;TODO refactor
+               ((get-function (->> @helpers/network-state
+                                   (event/get-occs (:id e))
+                                   (last-pred (tuple/tuple (time/time 0) b)
+                                              (comp (partial > @t)
+                                                    deref
+                                                    tuple/fst))
+                                   tuple/snd)
+                              @helpers/network-state)
+                 t))))
