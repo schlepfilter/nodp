@@ -49,6 +49,14 @@
     ;TODO implement >>=
     (fn [])))
 
+;TODO make registration public
+(def registry
+  (atom []))
+
+(defn register
+  [f]
+  (swap! registry (partial s/setval* s/END [f])))
+
 (defn start
   ([]
    (start {}))
@@ -56,7 +64,8 @@
   ([{:keys [sample-rate]}]
    (reset! event/network-state (event/get-initial-network))
    (def time
-     (behavior* identity))))
+     (behavior* identity))
+   (run! helpers/funcall @registry)))
 
 (def restart
   ;TODO call stop

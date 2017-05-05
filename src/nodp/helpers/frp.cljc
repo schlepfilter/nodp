@@ -5,6 +5,9 @@
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.io :as io]))
 
+(def register
+  behavior/register)
+
 (def restart
   (comp (fn [_]
           (def time
