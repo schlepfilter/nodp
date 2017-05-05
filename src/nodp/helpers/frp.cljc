@@ -1,4 +1,5 @@
 (ns nodp.helpers.frp
+  (:refer-clojure :exclude [stepper])
   (:require [nodp.helpers.derived.behavior :as derived-behavior]
             [nodp.helpers.primitives.behavior :as behavior]
             [nodp.helpers.primitives.event :as event]
