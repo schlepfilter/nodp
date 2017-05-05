@@ -61,15 +61,17 @@
                                            (count fmapped-inner-events)))
             input-events-anys (gen/vector test-helpers/any-equal
                                           (count input-event-anys))
-            calls (gen/shuffle (concat (map (fn [a]
-                                              (partial input-event a))
-                                            input-event-anys)
-                                       (maybe/cat-maybes (map (fn [input-event* a]
-                                                                (helpers/maybe-if-not (= input-event*
-                                                                                         input-event)
-                                                                                      (partial input-event* a)))
-                                                              input-events
-                                                              input-events-anys))))]
+            calls (->> (map (fn [input-event* a]
+                              (helpers/maybe-if-not (= input-event*
+                                                       input-event)
+                                                    (partial input-event* a)))
+                            input-events
+                            input-events-anys)
+                       maybe/cat-maybes
+                       (concat (map (fn [a]
+                                      (partial input-event a))
+                                    input-event-anys))
+                       gen/shuffle)]
            (gen/tuple (gen/return outer-behavior)
                       (gen/return switching-event)
                       (gen/return (frp/switcher outer-behavior
@@ -89,5 +91,11 @@
     (let [occs @e]
       (call)
       (= @switched-behavior @(if (= @e occs)
-                               (last (cons outer-behavior (map tuple/snd @e)))
-                               (tuple/snd (last (drop-last @e))))))))
+                               (->> @e
+                                    (map tuple/snd)
+                                    (cons outer-behavior)
+                                    last)
+                               (-> @e
+                                   drop-last
+                                   last
+                                   tuple/snd))))))
