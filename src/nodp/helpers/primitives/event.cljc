@@ -2,6 +2,7 @@
   (:require [cats.protocols :as p]
             [cats.util :as util]
             [com.rpl.specter :as s]
+            [linked.core :as linked]
             [loom.alg :as alg]
             [loom.graph :as graph]
     #?(:cljs [cljs.reader :as reader])
@@ -12,6 +13,16 @@
      (:import [clojure.lang IDeref IFn])))
 
 (declare context)
+
+(defn get-initial-network
+  []
+  {:dependency (graph/digraph)
+   :function   (linked/map)
+   :occs       (linked/map)
+   :time       (time/time 0)})
+
+(def network-state
+  (atom (get-initial-network)))
 
 (defn get-occs
   [id network]
@@ -51,15 +62,15 @@
   (#?(:clj  invoke
       :cljs -invoke) [_ a]
     ;e stands for an event, and a stands for any as in Push-Pull Functional Reactive Programming.
-    (if (:active @helpers/network-state)
-      (reset! helpers/network-state
+    (if (:active @network-state)
+      (reset! network-state
               (modify-network! (tuple/tuple (get-new-time (time/now)) a)
                                id
-                               @helpers/network-state))))
+                               @network-state))))
   IDeref
   (#?(:clj  deref
       :cljs -deref) [_]
-    (get-occs id @helpers/network-state))
+    (get-occs id @network-state))
   p/Printable
   (-repr [_]
     (str "#[event " id "]")))
@@ -100,12 +111,12 @@
          (concat [(set-occs [] id)]
                  (map ((helpers/curry 3 (helpers/flip helpers/funcall)) id)
                       fs)))
-       (reset! helpers/network-state))
+       (reset! network-state))
   (Event. id))
 
 (defn event*
   [fs]
-  (event** (get-id @helpers/network-state) fs @helpers/network-state))
+  (event** (get-id @network-state) fs @network-state))
 
 (helpers/defcurried add-edge
                     [parent-id child-id network]
@@ -165,7 +176,7 @@
 (defn effect-swap-event!
   [id]
   (run! (fn [f]
-          (effect-swap! helpers/network-state (partial f id)))
+          (effect-swap! network-state (partial f id)))
         [modify-parent-ancestor! modify-event!]))
 
 (defn make-call-once
@@ -218,7 +229,7 @@
 (helpers/defcurried modify->>=
                     [parent-id f initial child-id network]
                     (do
-                      (reset! helpers/network-state network)
+                      (reset! network-state network)
                       (let [parent-events
                             (->> network
                                  ((make-get-occs-or-latests initial) parent-id)
@@ -238,7 +249,7 @@
                                                   child-id)))
                                      :id)
                                parent-events)
-                          @helpers/network-state))))
+                          @network-state))))
 
 (defn set-modify
   [id modify! network]
@@ -315,5 +326,5 @@
 
 (def activate
   ;TODO start time
-  (juxt (partial swap! helpers/network-state (partial s/setval* :active true))
+  (juxt (partial swap! network-state (partial s/setval* :active true))
         time/start))

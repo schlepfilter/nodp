@@ -6,12 +6,13 @@
     #?(:clj
             [clojure.math.numeric-tower :as numeric-tower])
             [nodp.helpers :as helpers]
-            [nodp.helpers.unit :as unit]
-            [nodp.helpers.frp :as frp]))
+            [nodp.helpers.frp :as frp]
+            [nodp.helpers.primitives.event :as event]
+            [nodp.helpers.unit :as unit]))
 
 (defn fixture
   [f]
-  (reset! helpers/network-state (helpers/get-initial-network))
+  (reset! event/network-state (event/get-initial-network))
   ;TODO redefine event/queue
   (f))
 

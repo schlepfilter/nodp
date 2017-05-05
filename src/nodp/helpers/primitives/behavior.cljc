@@ -19,8 +19,8 @@
   IDeref
   (#?(:clj  deref
       :cljs -deref) [_]
-    ((id (:function @helpers/network-state))
-      (:time @helpers/network-state)))
+    ((id (:function @event/network-state))
+      (:time @event/network-state)))
   protocols/Printable
   (-repr [_]
     (str "#[behavior " id "]")))
@@ -32,12 +32,12 @@
   (->> fs
        (map (partial (helpers/flip helpers/funcall) id))
        (partial helpers/call-functions)
-       (swap! helpers/network-state))
+       (swap! event/network-state))
   (Behavior. id))
 
 (defn behavior*
   [f]
-  (behavior** (event/get-id @helpers/network-state)
+  (behavior** (event/get-id @event/network-state)
               (fn [id]
                 (partial s/setval* [:function id] f))))
 
@@ -53,7 +53,7 @@
    (start {}))
   ;TODO specify default sample-rate
   ([{:keys [sample-rate]}]
-   (reset! helpers/network-state (helpers/get-initial-network))))
+   (reset! event/network-state (event/get-initial-network))))
 
 (def restart
   ;TODO call stop
@@ -85,12 +85,12 @@
   [b e]
   (behavior* (fn [t]
                ;TODO refactor
-               ((get-function (->> @helpers/network-state
+               ((get-function (->> @event/network-state
                                    (event/get-occs (:id e))
                                    (last-pred (tuple/tuple (time/time 0) b)
                                               (comp (partial > @t)
                                                     deref
                                                     tuple/fst))
                                    tuple/snd)
-                              @helpers/network-state)
+                              @event/network-state)
                  t))))

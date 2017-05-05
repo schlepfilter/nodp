@@ -7,18 +7,12 @@
             [cats.monad.exception :as exc]
             [cats.monad.maybe :as maybe]
             [cats.protocols :as p]
-            [#?(:clj  clojure.core.async
-                :cljs cljs.core.async) :as async]
             [com.rpl.specter :as s]
-            [linked.core :as linked]
-            [loom.alg :as alg]
-            [loom.graph :as graph]
     #?@(:clj [
             [clojure.test :as test]
             [clojurewerkz.money.amounts :as ma]
             [clojurewerkz.money.currencies :as mc]
             [potemkin :as potemkin]])
-            [nodp.helpers.time :as time]
             [nodp.helpers.unit :as unit])
   #?(:cljs (:require-macros [cljs.core.async.macros :as async]
              [nodp.helpers :refer [build case-eval casep defcurried mlet]])))
@@ -288,16 +282,6 @@
    (f))
   ([f & more]
    (apply f more)))
-
-(defn get-initial-network
-  []
-  {:dependency (graph/digraph)
-   :function   (linked/map)
-   :occs       (linked/map)
-   :time       (time/time 0)})
-
-(def network-state
-  (atom (get-initial-network)))
 
 (def call-functions
   (flip (partial reduce (flip funcall))))
