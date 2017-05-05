@@ -26,7 +26,9 @@
 
 (defn get-occs
   [id network]
-  (id (:occs network)))
+  (-> network
+      :occs
+      id))
 
 (defn get-new-time
   [past]
