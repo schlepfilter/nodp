@@ -5,9 +5,9 @@
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.io :as io]))
 
-(defmacro register
-  [& more]
-  `(behavior/register ~more))
+#?(:clj (defmacro register
+          [& more]
+          `(behavior/register ~more)))
 
 (def restart
   (comp (fn [_]
