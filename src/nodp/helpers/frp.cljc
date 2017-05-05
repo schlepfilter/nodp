@@ -6,6 +6,7 @@
             [nodp.helpers.io :as io]))
 
 (def register
+  ;TODO turn register into a macro
   behavior/register)
 
 (def restart

@@ -5,6 +5,7 @@
 (declare inner-height)
 
 (frp/register
+  ;TODO define a macro to define behaviors and add event listeners
   (fn []
     (def resize
       (frp/event))
