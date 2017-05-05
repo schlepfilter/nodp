@@ -1,3 +1,4 @@
+;event and behavior namespaces are separated to limit the impact of :refer-clojure :exclude for transduce
 (ns nodp.helpers.primitives.event
   (:require [cats.protocols :as p]
             [cats.util :as util]
