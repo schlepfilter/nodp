@@ -7,7 +7,9 @@
     ;Compiling "resources/public/test/js/main.js" from ["src" "test"]...
     ;WARNING: Use of undeclared Var clojure.test.check/quick-check
             [clojure.test.check]
-            [clojure.test.check.clojure-test :as clojure-test :include-macros true]
+            [clojure.test.check.clojure-test
+             :as clojure-test
+             :include-macros true]
             [clojure.test.check.generators :as gen]
             [clojure.test.check.properties :as prop :include-macros true]
             [nodp.helpers :as helpers]
