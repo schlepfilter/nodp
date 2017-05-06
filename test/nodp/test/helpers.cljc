@@ -5,7 +5,6 @@
             [clojure.test.check.rose-tree :as rose]
     #?(:clj
             [clojure.math.numeric-tower :as numeric-tower])
-            [potemkin :as potemkin]
             [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.primitives.event :as event]
