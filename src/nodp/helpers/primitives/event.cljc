@@ -191,9 +191,9 @@
       network
       (modify! network))))
 
-(defn snth
-  [n]
-  (s/srange n n))
+(def snth
+  (comp (partial apply s/srange)
+        (partial repeat 2)))
 
 (defn insert-modify
   [modify! id network]
