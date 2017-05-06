@@ -7,7 +7,10 @@
              :include-macros true]
             [#?(:clj  clojure.test
                 :cljs cljs.test) :as test :include-macros true]
+            [com.rpl.specter :as s]
             [nodp.helpers :as helpers]
+            [nodp.helpers.frp :as frp]
+            [nodp.helpers.tuple :as tuple]
             [nodp.test.helpers :as test-helpers :include-macros true]
     #?(:clj
             [riddley.walk :as walk]))
@@ -53,3 +56,17 @@
                               (exit a)
                               b)
                    a)))
+
+(clojure-test/defspec
+  behavior-on-identity
+  test-helpers/cljc-num-tests
+  (test-helpers/restart-for-all
+    [e test-helpers/event
+     a test-helpers/any-equal
+     as (gen/vector gen/uuid 2)]
+    (let [b (frp/stepper a e)]
+      (= (with-exit exit
+                    (frp/on exit b)
+                    (frp/activate)
+                    (run! e as))
+         (last (drop-last as))))))

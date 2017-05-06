@@ -26,6 +26,9 @@
 
 (declare time)
 
+(def on
+  io/on)
+
 (def switcher
   behavior/switcher)
 

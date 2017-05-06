@@ -1,9 +1,49 @@
 ;primitives.event and io namespaces are separated to limit the impact of :refer-clojure :exclude for transduce
 (ns nodp.helpers.io
-  (:require [cats.context :as ctx]
-            [nodp.helpers.primitives.event :as event]))
+  (:require [clojure.string :as str]
+            [cats.context :as ctx]
+            [cats.core :as m]
+            [com.rpl.specter :as s]
+            [nodp.helpers.primitives.behavior :as behavior]
+            [nodp.helpers.primitives.event :as event]
+            [nodp.helpers :as helpers])
+  #?(:cljs (:require-macros [nodp.helpers.io :refer [defcurriedmethod]])))
 
 (defn event
   []
   (->> (nodp.helpers/mempty)
        (ctx/with-context event/context)))
+
+(def get-keyword
+  (comp keyword
+        str/lower-case
+        last
+        (partial (helpers/flip str/split) #"\.")
+        pr-str
+        type))
+
+(defmulti get-effect! (comp get-keyword
+                            second
+                            vector))
+
+#?(:clj (defmacro defcurriedmethod
+          [multifn dispatch-val bindings & body]
+          `(helpers/defpfmethod ~multifn ~dispatch-val
+                                (helpers/curry ~(count bindings)
+                                               (fn ~bindings
+                                                 ~@body)))))
+
+(defcurriedmethod get-effect! :behavior
+                  [f! b network]
+                  (let [past-latest-maybe (atom helpers/nothing)]
+                    (when (not= @past-latest-maybe
+                                ((behavior/get-function b network) (:time network)))
+                      (reset! past-latest-maybe
+                              ((behavior/get-function b network) (:time network)))
+                      (f! ((behavior/get-function b network) (:time network))))))
+
+(def on
+  (comp (partial swap! event/network-state)
+        ((m/curry s/setval*) [:effects s/END])
+        vector
+        get-effect!))

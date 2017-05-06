@@ -54,6 +54,11 @@
             (mapcat (:modifies! network) (alg/topsort (:dependency network))))
     network))
 
+(def run-effects!
+  (helpers/build run!
+                 (helpers/curry 2 (helpers/flip helpers/funcall))
+                 :effects))
+
 (defrecord Event
   [id]
   p/Contextual
@@ -66,10 +71,11 @@
       :cljs -invoke) [_ a]
     ;e stands for an event, and a stands for any as in Push-Pull Functional Reactive Programming.
     (if (:active @network-state)
-      (reset! network-state
-              (modify-network! (tuple/tuple (get-new-time (time/now)) a)
-                               id
-                               @network-state))))
+      ((juxt (partial reset! network-state)
+             run-effects!)
+        (modify-network! (tuple/tuple (get-new-time (time/now)) a)
+                         id
+                         @network-state))))
   IDeref
   (#?(:clj  deref
       :cljs -deref) [_]
