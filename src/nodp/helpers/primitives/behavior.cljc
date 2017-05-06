@@ -35,7 +35,9 @@
 
 (defn behavior*
   [f]
-  (behavior** (event/get-id @event/network-state) f))
+  (-> @event/network-state
+      event/get-id
+      (behavior** f)))
 
 (def context
   (helpers/reify-monad
