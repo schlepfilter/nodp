@@ -14,10 +14,10 @@
     (helpers/reify-monad
       (partial ->Tuple (nodp.helpers/mempty
                          (helpers/infer fst)))
-      (fn [ma f]
-        (Tuple. (nodp.helpers/<> (:fst ma)
-                                 (:fst (f (:snd ma))))
-                (:snd (f (:snd ma)))))))
+      (fn [_ f]
+        (Tuple. (nodp.helpers/<> fst
+                                 (:fst (f snd)))
+                (:snd (f snd))))))
 
   p/Printable
   (-repr [_]
