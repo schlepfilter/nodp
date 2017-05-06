@@ -16,9 +16,13 @@
                            helpers/infer
                            nodp.helpers/mempty))
       (fn [_ f]
-        (Tuple. (nodp.helpers/<> fst
-                                 (:fst (f snd)))
-                (:snd (f snd))))))
+        (Tuple. (->> snd
+                     f
+                     :fst
+                     (nodp.helpers/<> fst))
+                (-> snd
+                    f
+                    :snd)))))
 
   p/Printable
   (-repr [_]
