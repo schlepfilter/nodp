@@ -26,7 +26,9 @@
         (Time. 0))
       p/Functor
       (-fmap [_ f fa]
-        (Time. (f @fa)))))
+        (-> @fa
+            f
+            Time.))))
   IDeref
   (#?(:clj  deref
       :cljs -deref) [_]
