@@ -12,8 +12,9 @@
   p/Contextual
   (-get-context [_]
     (helpers/reify-monad
-      (partial ->Tuple (nodp.helpers/mempty
-                         (helpers/infer fst)))
+      (partial ->Tuple (-> fst
+                           helpers/infer
+                           nodp.helpers/mempty))
       (fn [_ f]
         (Tuple. (nodp.helpers/<> fst
                                  (:fst (f snd)))
