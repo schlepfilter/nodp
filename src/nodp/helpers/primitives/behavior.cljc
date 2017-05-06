@@ -28,20 +28,14 @@
 
 (util/make-printable Behavior)
 
-;TODO remove this function
 (defn behavior**
-  [id & fs]
-  (->> fs
-       (map (partial (helpers/flip helpers/funcall) id))
-       (partial helpers/call-functions)
-       (swap! event/network-state))
+  [id f]
+  (swap! event/network-state (partial s/setval* [:function id] f))
   (Behavior. id))
 
 (defn behavior*
   [f]
-  (behavior** (event/get-id @event/network-state)
-              (fn [id]
-                (partial s/setval* [:function id] f))))
+  (behavior** (event/get-id @event/network-state) f))
 
 (def context
   (helpers/reify-monad
