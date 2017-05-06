@@ -24,4 +24,5 @@
 
   (js/addEventListener "popstate"
                        (fn []
+                         ;TODO namespace pathname
                          (popstate {:pathname js/location.pathname}))))

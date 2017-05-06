@@ -28,6 +28,7 @@
 
 (util/make-printable Behavior)
 
+;TODO remove this function
 (defn behavior**
   [id & fs]
   (->> fs

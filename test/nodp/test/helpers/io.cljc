@@ -63,6 +63,7 @@
   (test-helpers/restart-for-all
     [e test-helpers/event
      a test-helpers/any-equal
+     ;TODO replace uuid with any-equal
      as (gen/vector gen/uuid 2)]
     (let [b (frp/stepper a e)]
       (= (with-exit exit
