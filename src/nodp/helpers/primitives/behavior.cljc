@@ -114,3 +114,5 @@
   [b e]
   (behavior* (fn [t]
                (get-switcher-value b e t @event/network-state))))
+
+;TODO implement calculus after a Clojure/ClojureScript library for symbolic computation is released
