@@ -36,6 +36,5 @@
 (def fst
   :fst)
 
-(defn tuple
-  [x y]
-  (Tuple. x y))
+(def tuple
+  ->Tuple)
