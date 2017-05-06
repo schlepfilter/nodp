@@ -20,4 +20,5 @@
 
 (util/make-printable Unit)
 
-(def unit (Unit.))
+(def unit
+  (Unit.))
