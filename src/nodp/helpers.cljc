@@ -11,8 +11,7 @@
     #?@(:clj [
             [clojure.test :as test]
             [clojurewerkz.money.amounts :as ma]
-            [clojurewerkz.money.currencies :as mc]
-            [potemkin :as potemkin]])
+            [clojurewerkz.money.currencies :as mc]])
             [nodp.helpers.unit :as unit])
   #?(:cljs (:require-macros [cljs.core.async.macros :as async]
              [nodp.helpers :refer [build case-eval casep defcurried mlet]])))
