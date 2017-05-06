@@ -54,6 +54,7 @@
   (atom []))
 
 (defn register*
+  ;TODO refactor
   [f]
   (swap! registry (partial s/setval* s/END [f])))
 
