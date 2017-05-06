@@ -44,10 +44,10 @@
   at\ \$\>>= b\ f =\backslash t \rightarrow f\ (b\ `at` \ t)\ `at` \ t
 \end{align*}
 \begin{align*}
-  calculus :: Real\ a\Rightarrow ((Time \rightarrow a) \rightarrow Time \rightarrow Time \rightarrow a) \rightarrow Time \rightarrow Behavior\ a\rightarrow Behavior\ a
+  calculus :: ((Real \rightarrow Real) \rightarrow Real \rightarrow Real \rightarrow Real) \rightarrow Time \rightarrow Behavior\ Real\rightarrow Behavior\ Real
 \end{align*}
 \begin{align*}
-  at\ \$\ calculus\ f\ x\ b = \backslash t\rightarrow f\ (at\ b)\ x\ t
+  at\ \$\ calculus\ f\ x\ b = \backslash t\rightarrow f\ ((at\ b)\ .\ toTime)\ (fromTime\ x)\ \$\ fromTime\ t
 \end{align*}
 \begin{align*}
   &\mathbf{class}\ Entity\ e\ \mathbf{where}\\
