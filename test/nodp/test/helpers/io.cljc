@@ -58,7 +58,7 @@
                    a)))
 
 (clojure-test/defspec
-  behavior-on-identity
+  behavior-on
   test-helpers/cljc-num-tests
   (test-helpers/restart-for-all
     [e test-helpers/event
