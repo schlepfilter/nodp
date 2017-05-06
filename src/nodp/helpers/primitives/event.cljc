@@ -279,17 +279,16 @@
         first))
 
 (defn merge-occs*
-  [left right merged]
+  [merged left right]
   (cond (empty? left) (s/setval s/END right merged)
         (empty? right) (s/setval s/END left merged)
         (<= (get-first-time-number left) (get-first-time-number right))
-        (recur (rest left) right (merge-one left merged))
+        (recur (merge-one left merged) (rest left) right)
         :else
-        (recur left (rest right) (merge-one right merged))))
+        (recur (merge-one right merged) left (rest right))))
 
-(defn merge-occs
-  [left right]
-  (merge-occs* left right []))
+(def merge-occs
+  (partial merge-occs* []))
 
 (helpers/defcurried modify-<>
                     [left-id right-id initial child-id network]
