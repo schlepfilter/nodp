@@ -30,11 +30,11 @@
 
 (util/make-printable Tuple)
 
+(def tuple
+  ->Tuple)
+
 (def snd
   :snd)
 
 (def fst
   :fst)
-
-(def tuple
-  ->Tuple)
