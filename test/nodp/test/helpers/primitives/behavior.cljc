@@ -96,10 +96,11 @@
   test-helpers/cljc-num-tests
   (test-helpers/restart-for-all
     ;TODO refactor
-    [[outer-behavior e switched-behavior calls] switcher]
+    ;Push-Pull Functional Reactive Programming calls the behavior returned by switcher the switcher behavior.
+    [[outer-behavior e switcher-behavior calls] switcher]
     (frp/activate)
     (calls)
-    (= @switched-behavior @(->> @e
+    (= @switcher-behavior @(->> @e
                                 (map tuple/snd)
                                 (cons outer-behavior)
                                 last))))
