@@ -351,6 +351,8 @@
         run-network-state-effects!
         time/start
         (fn []
-          (swap! network-state
-                 (partial s/setval* :time (get-new-time (time/now)))))
+          (->> (time/now)
+               get-new-time
+               (partial s/setval* :time)
+               (swap! network-state)))
         run-network-state-effects!))
