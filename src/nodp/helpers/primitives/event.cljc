@@ -346,4 +346,8 @@
   (juxt (partial swap! network-state (partial s/setval* :active true))
         (fn []
           (run-effects! @network-state))
-        time/start))
+        time/start
+        (fn []
+          (swap! network-state
+                 (partial s/setval* :time (get-new-time (time/now))))
+          (run-effects! @network-state))))
