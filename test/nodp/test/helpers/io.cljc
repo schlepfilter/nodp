@@ -43,20 +43,6 @@
                                b)
                    as)))
 
-#?(:clj (defmacro with-exit
-          [exit-name & body]
-          `(last (with-exitv ~exit-name ~@body))))
-
-(clojure-test/defspec
-  with-exit-identity
-  test-helpers/cljc-num-tests
-  (prop/for-all [a test-helpers/any-equal
-                 b test-helpers/any-equal]
-                (= (with-exit exit
-                              (exit a)
-                              b)
-                   a)))
-
 (clojure-test/defspec
   behavior-on
   test-helpers/cljc-num-tests
