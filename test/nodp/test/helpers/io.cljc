@@ -14,8 +14,7 @@
             [nodp.test.helpers :as test-helpers :include-macros true]
     #?(:clj
             [riddley.walk :as walk]))
-  #?(:cljs (:require-macros [nodp.test.helpers.io :refer [with-exit
-                                                          with-exitv]])))
+  #?(:cljs (:require-macros [nodp.test.helpers.io :refer [with-exitv]])))
 
 (test/use-fixtures :each test-helpers/fixture)
 
@@ -52,10 +51,10 @@
      as (gen/vector test-helpers/any-equal)]
     (let [b (frp/stepper a e)]
       (= (into [] (dedupe (concat [a]
-                                    (remove (partial = a)
-                                            (map tuple/snd @e))
-                                    as)))
-           (with-exitv exit
-                       (frp/on exit b)
-                       (frp/activate)
-                       (run! e as))))))
+                                  (remove (partial = a)
+                                          (map tuple/snd @e))
+                                  as)))
+         (with-exitv exit
+                     (frp/on exit b)
+                     (frp/activate)
+                     (run! e as))))))
