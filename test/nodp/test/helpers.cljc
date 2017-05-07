@@ -3,8 +3,6 @@
             [clojure.test.check.properties :as prop]
             [clojure.test.check.random :as random]
             [clojure.test.check.rose-tree :as rose]
-    #?(:clj
-            [clojure.math.numeric-tower :as numeric-tower])
             [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.primitives.event :as event]
