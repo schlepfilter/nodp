@@ -38,16 +38,24 @@
                                                (fn ~bindings
                                                  ~@body)))))
 
+(defn if-then-else
+  [if-function then-function else]
+  ((helpers/build if
+                  if-function
+                  then-function
+                  identity)
+    else))
+
 (defmethod get-effect! :behavior
   [f! b]
   (let [past-latest-maybe-state (atom helpers/nothing)]
     (fn [network]
-      (when (not= @past-latest-maybe-state
-                  ;TODO refactor
-                  (maybe/just ((behavior/get-function b network) (:time network))))
-        (reset! past-latest-maybe-state
-                (maybe/just ((behavior/get-function b network) (:time network))))
-        (f! ((behavior/get-function b network) (:time network)))))))
+      (if-then-else (comp (partial not= @past-latest-maybe-state)
+                          maybe/just)
+                    (juxt (comp (partial reset! past-latest-maybe-state)
+                                maybe/just)
+                          f!)
+                    ((behavior/get-function b network) (:time network))))))
 
 (def on
   (comp (partial swap! event/network-state)
