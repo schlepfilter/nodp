@@ -54,7 +54,9 @@
                     (juxt (partial reset! past-latest-maybe-state)
                           (comp f!
                                 deref))
-                    (maybe/just ((behavior/get-function b network) (:time network)))))))
+                    (maybe/just ((behavior/get-function b
+                                                        network)
+                                  (:time network)))))))
 
 (def on
   (comp (partial swap! event/network-state)
