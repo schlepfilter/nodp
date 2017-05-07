@@ -37,6 +37,7 @@
                   [f! b network]
                   (let [past-latest-maybe (atom helpers/nothing)]
                     (when (not= @past-latest-maybe
+                                ;TODO refactor
                                 ((behavior/get-function b network) (:time network)))
                       (reset! past-latest-maybe
                               ((behavior/get-function b network) (:time network)))
