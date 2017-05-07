@@ -70,4 +70,4 @@
                     (frp/on exit b)
                     (frp/activate)
                     (run! e as))
-         (last (drop-last as))))))
+         (last as)))))

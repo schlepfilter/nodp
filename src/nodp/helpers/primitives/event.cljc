@@ -38,6 +38,11 @@
       (get-new-time past)
       current)))
 
+(defn get-times
+  []
+  (let [past (time/now)]
+    [past (get-new-time past)]))
+
 (helpers/defcurried set-occs
                     [occs id network]
                     (s/setval [:occs id s/END] occs network))
@@ -70,13 +75,17 @@
   (#?(:clj  invoke
       :cljs -invoke) [_ a]
     ;e stands for an event, and a stands for any as in Push-Pull Functional Reactive Programming.
-    (if (:active @network-state)
+    (when (:active @network-state)
       ;TODO call run-effects! twice with different times
-      ((juxt (partial reset! network-state)
-             run-effects!)
-        (modify-network! (tuple/tuple (get-new-time (time/now)) a)
-                         id
-                         @network-state))))
+      (let [[past current] (get-times)]
+        ((juxt (partial reset! network-state)
+               run-effects!)
+          (modify-network! (tuple/tuple past a)
+                           id
+                           @network-state))
+        (->> (partial s/setval* :time current)
+             (swap! network-state))
+        (run-effects! @network-state))))
   IDeref
   (#?(:clj  deref
       :cljs -deref) [_]

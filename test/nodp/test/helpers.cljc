@@ -66,7 +66,8 @@
                gen/uuid]))
 
 (def any-equal
-  (gen/recursive-gen gen/container-type simple-type-equal))
+  gen/char-ascii
+  #_(gen/recursive-gen gen/container-type simple-type-equal))
 
 (def probability
   (gen/double* {:max  1

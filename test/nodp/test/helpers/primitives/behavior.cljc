@@ -85,29 +85,21 @@
                        gen/shuffle)]
            (gen/tuple (gen/return outer-behavior)
                       (gen/return switching-event)
-                      (gen/return (frp/switcher outer-behavior
-                                                switching-event))
-                      (gen/return (partial doall (map helpers/funcall
-                                                      (drop-last calls))))
-                      (gen/return (last calls)))))
+                      (gen/return (frp/switcher outer-behavior switching-event))
+                      (->> calls
+                           (map helpers/funcall)
+                           (partial doall)
+                           gen/return))))
 
 (clojure-test/defspec
   switcher-identity
   test-helpers/cljc-num-tests
   (test-helpers/restart-for-all
     ;TODO refactor
-    ;TODO don't use call by moving forward in time when event is called
-    [[outer-behavior e switched-behavior calls call] switcher]
+    [[outer-behavior e switched-behavior calls] switcher]
     (frp/activate)
     (calls)
-    (let [occs @e]
-      (call)
-      (= @switched-behavior @(if (= @e occs)
-                               (->> @e
-                                    (map tuple/snd)
-                                    (cons outer-behavior)
-                                    last)
-                               (-> @e
-                                   drop-last
-                                   last
-                                   tuple/snd))))))
+    (= @switched-behavior @(->> @e
+                                (map tuple/snd)
+                                (cons outer-behavior)
+                                last))))
