@@ -42,7 +42,7 @@
                   ;TODO refactor
                   (maybe/just ((behavior/get-function b network) (:time network))))
         (reset! past-latest-maybe-state
-                ((behavior/get-function b network) (:time network)))
+                (maybe/just ((behavior/get-function b network) (:time network))))
         (f! ((behavior/get-function b network) (:time network)))))))
 
 (def on
