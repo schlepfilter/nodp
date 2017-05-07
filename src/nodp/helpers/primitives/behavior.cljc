@@ -108,6 +108,7 @@
                  network)
     t))
 
+;TODO move switcher to derived and move stepper to primitive instead
 (defn switcher
   [b e]
   (behavior* (fn [t]
