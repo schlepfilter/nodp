@@ -34,15 +34,16 @@
                                                (fn ~bindings
                                                  ~@body)))))
 
-(defcurriedmethod get-effect! :behavior
-                  [f! b network]
-                  (let [past-latest-maybe (atom helpers/nothing)]
-                    (when (not= past-latest-maybe
-                                ;TODO refactor
-                                (maybe/just ((behavior/get-function b network) (:time network))))
-                      (reset! past-latest-maybe
-                              ((behavior/get-function b network) (:time network)))
-                      (f! ((behavior/get-function b network) (:time network))))))
+(defmethod get-effect! :behavior
+  [f! b]
+  (let [past-latest-maybe (atom helpers/nothing)]
+    (fn [network]
+      (when (not= past-latest-maybe
+                  ;TODO refactor
+                  (maybe/just ((behavior/get-function b network) (:time network))))
+        (reset! past-latest-maybe
+                ((behavior/get-function b network) (:time network)))
+        (f! ((behavior/get-function b network) (:time network)))))))
 
 (def on
   (comp (partial swap! event/network-state)
