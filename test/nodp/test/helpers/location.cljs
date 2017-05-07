@@ -17,5 +17,5 @@
     [advance* test-helpers/advance]
     (frp/activate)
     (advance*)
-    ;TODO call history.pushState
+    ;TODO call on if asynchronous testing gets supported in test.check
     (= @location/pathname js/location.pathname)))
