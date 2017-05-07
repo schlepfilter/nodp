@@ -19,7 +19,11 @@
   (comp keyword
         str/lower-case
         last
-        (partial (helpers/flip str/split) #"\.")
+        (partial (helpers/flip str/split) #?(:clj  #"\."
+                                             :cljs #"/"))
+        ;JavaScript doesn't seem to implement lookbehind.
+        ;=> (partial re-find #"(?<=\.)\w*$")
+        ;#object[SyntaxError SyntaxError: Invalid regular expression: /(?<=\.)\w*$/: Invalid group]
         pr-str
         type))
 
