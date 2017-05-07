@@ -122,7 +122,6 @@
   (gen/let [input-events (gen/return (get-events probabilities))
             fs (gen/vector (function any-equal)
                            (count input-events))]
-
            (gen/tuple (gen/return input-events)
                       (gen/return (doall (map helpers/<$> fs input-events))))))
 
