@@ -36,12 +36,12 @@
 
 (defmethod get-effect! :behavior
   [f! b]
-  (let [past-latest-maybe (atom helpers/nothing)]
+  (let [past-latest-maybe-state (atom helpers/nothing)]
     (fn [network]
-      (when (not= past-latest-maybe
+      (when (not= @past-latest-maybe-state
                   ;TODO refactor
                   (maybe/just ((behavior/get-function b network) (:time network))))
-        (reset! past-latest-maybe
+        (reset! past-latest-maybe-state
                 ((behavior/get-function b network) (:time network)))
         (f! ((behavior/get-function b network) (:time network)))))))
 
