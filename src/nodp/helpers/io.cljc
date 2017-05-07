@@ -3,6 +3,7 @@
   (:require [clojure.string :as str]
             [cats.context :as ctx]
             [cats.core :as m]
+            [cats.monad.maybe :as maybe]
             [com.rpl.specter :as s]
             [nodp.helpers.primitives.behavior :as behavior]
             [nodp.helpers.primitives.event :as event]
@@ -36,9 +37,9 @@
 (defcurriedmethod get-effect! :behavior
                   [f! b network]
                   (let [past-latest-maybe (atom helpers/nothing)]
-                    (when (not= @past-latest-maybe
+                    (when (not= past-latest-maybe
                                 ;TODO refactor
-                                ((behavior/get-function b network) (:time network)))
+                                (maybe/just ((behavior/get-function b network) (:time network))))
                       (reset! past-latest-maybe
                               ((behavior/get-function b network) (:time network)))
                       (f! ((behavior/get-function b network) (:time network))))))
