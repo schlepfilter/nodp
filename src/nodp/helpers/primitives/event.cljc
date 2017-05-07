@@ -342,13 +342,15 @@
     (-mempty [_]
              (event* []))))
 
+(defn run-network-state-effects!
+  []
+  (run-effects! @network-state))
+
 (def activate
   (juxt (partial swap! network-state (partial s/setval* :active true))
-        (fn []
-          (run-effects! @network-state))
+        run-network-state-effects!
         time/start
         (fn []
           (swap! network-state
                  (partial s/setval* :time (get-new-time (time/now)))))
-        (fn []
-          (run-effects! @network-state))))
+        run-network-state-effects!))
