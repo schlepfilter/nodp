@@ -345,4 +345,6 @@
 (def activate
   ;TODO start time
   (juxt (partial swap! network-state (partial s/setval* :active true))
+        (fn []
+          (run-effects! @network-state))
         time/start))

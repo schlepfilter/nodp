@@ -63,11 +63,13 @@
   (test-helpers/restart-for-all
     [e test-helpers/event
      a test-helpers/any-equal
-     as (gen/vector test-helpers/any-equal)]
+     as (gen/not-empty (gen/vector test-helpers/any-equal))]
     (let [b (frp/stepper a e)]
-      ;TODO replace with-exit with with-exitv
-      (= (with-exit exit
-                    (frp/on exit b)
-                    (frp/activate)
-                    (run! e as))
-         (last as)))))
+      (= (into [] (dedupe (concat [a]
+                                  (remove (partial = a)
+                                          (map tuple/snd @e))
+                                  as)))
+         (with-exitv exit
+                     (frp/on exit b)
+                     (frp/activate)
+                     (run! e as))))))
