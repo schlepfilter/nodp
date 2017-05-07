@@ -66,6 +66,7 @@
      ;TODO replace uuid with any-equal
      as (gen/vector gen/uuid 2)]
     (let [b (frp/stepper a e)]
+      ;TODO replace with-exit with with-exitv
       (= (with-exit exit
                     (frp/on exit b)
                     (frp/activate)
