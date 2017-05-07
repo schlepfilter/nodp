@@ -50,12 +50,11 @@
   [f! b]
   (let [past-latest-maybe-state (atom helpers/nothing)]
     (fn [network]
-      (if-then-else (comp (partial not= @past-latest-maybe-state)
-                          maybe/just)
-                    (juxt (comp (partial reset! past-latest-maybe-state)
-                                maybe/just)
-                          f!)
-                    ((behavior/get-function b network) (:time network))))))
+      (if-then-else (partial not= @past-latest-maybe-state)
+                    (juxt (partial reset! past-latest-maybe-state)
+                          (comp f!
+                                deref))
+                    (maybe/just ((behavior/get-function b network) (:time network)))))))
 
 (def on
   (comp (partial swap! event/network-state)
