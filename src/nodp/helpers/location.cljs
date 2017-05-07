@@ -9,4 +9,6 @@
   ;TODO define a macro to define behaviors and add event listeners
   (def pathname
     (frp/stepper js/location.pathname
-                 (helpers/<$> :pathname window/popstate))))
+                 (helpers/<$> (comp :pathname
+                                    :location)
+                              window/popstate))))

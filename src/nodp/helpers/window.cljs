@@ -22,7 +22,7 @@
 
   ;TODO add a function that calls removeEventListener to :cancel
 
-  (js/addEventListener "popstate"
-                       (fn []
-                         ;TODO namespace pathname
-                         (popstate {:pathname js/location.pathname}))))
+  (js/addEventListener
+    "popstate"
+    (fn []
+      (popstate {:location {:pathname js/location.pathname}}))))
