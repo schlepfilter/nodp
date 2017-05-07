@@ -14,6 +14,7 @@
   [f]
   (reset! event/network-state (event/get-initial-network))
   ;TODO redefine event/queue
+  ;TODO redefine get-new-time
   (f))
 
 (def cljc-num-tests
