@@ -96,7 +96,9 @@
   [pred left right coll]
   (if (= left right)
     left
-    (if (pred (get coll (get-middle left right)))
+    (if (->> (get-middle left right)
+             (get coll)
+             pred)
       (recur pred left (get-middle left right) coll)
       (recur pred (inc (get-middle left right)) right coll))))
 
