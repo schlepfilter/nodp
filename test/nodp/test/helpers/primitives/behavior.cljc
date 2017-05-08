@@ -37,7 +37,7 @@
       (<= @t @@frp/time))))
 
 (clojure-test/defspec
-  stepper
+  stepper-identity
   test-helpers/cljc-num-tests
   (test-helpers/restart-for-all
     [a test-helpers/any-equal
