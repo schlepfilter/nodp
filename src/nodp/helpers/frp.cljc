@@ -29,8 +29,8 @@
 (def on
   io/on)
 
-(def switcher
-  derived-behavior/switcher)
-
 (def stepper
   behavior/stepper)
+
+(def switcher
+  derived-behavior/switcher)
