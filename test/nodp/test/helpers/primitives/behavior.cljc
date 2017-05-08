@@ -34,3 +34,6 @@
     (let [t @frp/time]
       (advance2)
       (<= @t @@frp/time))))
+
+;TODO test stepper
+;TODO test >>=
