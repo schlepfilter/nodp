@@ -15,9 +15,6 @@
             behavior/time))
         behavior/restart))
 
-(def activate
-  event/activate)
-
 (def event
   io/event)
 
@@ -26,11 +23,14 @@
 
 (declare time)
 
-(def on
-  io/on)
-
 (def stepper
   behavior/stepper)
+
+(def activate
+  event/activate)
+
+(def on
+  io/on)
 
 (def switcher
   derived-behavior/switcher)
