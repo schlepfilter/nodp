@@ -41,7 +41,7 @@
   >>= :: Behavior\ a \rightarrow f \rightarrow Behavior\ b
 \end{align*}
 \begin{align*}
-  at\ \$\>>= b\ f =\backslash t \rightarrow f\ (b\ `at` \ t)\ `at` \ t
+  at\ \$>>= b\ f =\backslash t \rightarrow f\ (b\ `at` \ t)\ `at` \ t
 \end{align*}
 %TODO add toTime and fromTime
 \begin{align*}
@@ -64,7 +64,7 @@
 \begin{align*}
   &\mathbf{instance_{sem}}\ Entity\ (Behavior\ a)\ \mathbf{where}\\
   &\quad occs\ \$\ on\ f\ b = map\ ((fmap\ f)\ .\ dedupe)\ \$\ (map\ (\backslash (t, x)\rightarrow(inc\ t, x))\ \$\ biasedOccs\ e)\\
-  &\qquad\oplus((\backslash t\rightarrow (t, (at\ b)\ t))\ \langle\$\rangle\ [time\ \$\ n * internal + error_n])\\
+  &\qquad\oplus((\backslash t\rightarrow (t, (at\ b)\ t))\ {<}\${>}\ [time\ \$\ n * internal + error_n])\\
   &\qquad\ \text{-- where }b = (a\ stepper\ e)\wedge (n\geq 0)\wedge (interval > 0)\wedge (n * internal + error_n) < ((n + 1) * internal + error_{n+1})
 \end{align*}
 \end{document}
