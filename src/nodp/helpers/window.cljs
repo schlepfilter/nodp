@@ -16,11 +16,10 @@
     (frp/stepper js/window.innerHeight
                  (helpers/<$> :inner-height resize)))
 
+  ;TODO add a function that calls removeEventListener to :cancel
   (js/addEventListener "resize"
                        (fn []
                          (resize {:inner-height js/window.innerHeight})))
-
-  ;TODO add a function that calls removeEventListener to :cancel
 
   (js/addEventListener
     "popstate"
