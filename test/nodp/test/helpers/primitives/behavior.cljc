@@ -36,4 +36,47 @@
       (<= @t @@frp/time))))
 
 ;TODO test stepper
-;TODO test >>=
+
+(def behavior->>=
+  ;TODO refactor
+  (gen/let [probabilities (gen/vector test-helpers/probability 2)
+            [[input-outer-event input-inner-event]
+             [fmapped-outer-event fmapped-inner-event]]
+            (test-helpers/events-tuple probabilities)
+            outer-any test-helpers/any-equal
+            outer-behavior (gen/elements [(frp/stepper outer-any
+                                                       fmapped-outer-event)
+                                          frp/time])
+            inner-any test-helpers/any-equal
+            f (gen/elements [frp/behavior
+                             (constantly (frp/stepper inner-any
+                                                      fmapped-inner-event))
+                             (constantly frp/time)])
+            [input-outer-anys input-inner-anys]
+            (gen/vector (gen/vector test-helpers/any-equal) 2)
+            calls (gen/shuffle (concat (map (fn [a]
+                                              (fn []
+                                                (input-outer-event a)))
+                                            input-outer-anys)
+                                       (map (fn [a]
+                                              (fn []
+                                                (input-inner-event a)))
+                                            input-inner-anys)))
+            invocations (gen/vector gen/boolean (count calls))]
+           (gen/tuple (gen/return outer-behavior)
+                      (gen/return f)
+                      (gen/return (partial doall (map (fn [invocation call]
+                                                        (if invocation
+                                                          (call)))
+                                                      invocations
+                                                      calls))))))
+
+(clojure-test/defspec
+  behavior->>=-identity
+  test-helpers/cljc-num-tests
+  (test-helpers/restart-for-all
+    [[outer-behavior get-behavior call] behavior->>=]
+    (let [bound-behavior (helpers/>>= outer-behavior get-behavior)]
+      (frp/activate)
+      (call)
+      (= @bound-behavior @(get-behavior @outer-behavior)))))
