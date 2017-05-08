@@ -140,6 +140,9 @@
   [fs]
   (event** (get-id @network-state) fs @network-state))
 
+(def get-unit
+  (partial tuple/tuple (time/time 0)))
+
 (helpers/defcurried add-edge
                     [parent-id child-id network]
                     (s/transform :dependency
@@ -326,7 +329,7 @@
           vector
           set-occs
           vector
-          (partial tuple/tuple (time/time 0)))
+          get-unit)
     (fn [ma f]
       (->> (modify->>= (:id ma) f)
            make-set-modify-modify

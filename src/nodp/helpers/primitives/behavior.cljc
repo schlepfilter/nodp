@@ -110,7 +110,7 @@
   [a e t network]
   (->> network
        (event/get-occs (:id e))
-       (last-pred (tuple/tuple (time/time 0) a)
+       (last-pred (event/get-unit a)
                   (comp (partial > @t)
                         deref
                         tuple/fst))
