@@ -30,7 +30,7 @@
   io/on)
 
 (def switcher
-  behavior/switcher)
+  derived-behavior/switcher)
 
 (def stepper
-  derived-behavior/stepper)
+  behavior/stepper)

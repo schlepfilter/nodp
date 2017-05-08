@@ -1,5 +1,5 @@
 (ns nodp.helpers.primitives.behavior
-  (:refer-clojure :exclude [time])
+  (:refer-clojure :exclude [stepper time])
   (:require [cats.protocols :as protocols]
             [cats.util :as util]
             [com.rpl.specter :as s]
@@ -39,12 +39,18 @@
       event/get-id
       (behavior** f)))
 
+(defn get-function
+  [b network]
+  ((:id b) (:function network)))
+
 (def context
   (helpers/reify-monad
     (comp behavior*
           constantly)
-    ;TODO implement >>=
-    (fn [])))
+    ;TODO refactor
+    (fn [ma f]
+      (behavior* (fn [t]
+                   ((get-function (f ((get-function ma @event/network-state) t)) @event/network-state) t))))))
 
 ;TODO make registration public
 (def registry
@@ -74,10 +80,6 @@
   ;TODO call stop
   start)
 
-(defn get-function
-  [b network]
-  ((:id b) (:function network)))
-
 (defn get-middle
   [left right]
   (+ left (quot (- right left) 2)))
@@ -96,22 +98,19 @@
        (dec (first-pred-index (complement pred) 0 (count coll) coll))
        default))
 
-(defn get-switcher-value
-  [b e t network]
-  ((get-function (->> network
-                      (event/get-occs (:id e))
-                      (last-pred (tuple/tuple (time/time 0) b)
-                                 (comp (partial > @t)
-                                       deref
-                                       tuple/fst))
-                      tuple/snd)
-                 network)
-    t))
+(defn get-stepper-value
+  [a e t network]
+  (->> network
+       (event/get-occs (:id e))
+       (last-pred (tuple/tuple (time/time 0) a)
+                  (comp (partial > @t)
+                        deref
+                        tuple/fst))
+       tuple/snd))
 
-;TODO move switcher to derived and move stepper to primitive instead
-(defn switcher
-  [b e]
+(defn stepper
+  [a e]
   (behavior* (fn [t]
-               (get-switcher-value b e t @event/network-state))))
+               (get-stepper-value a e t @event/network-state))))
 
 ;TODO implement calculus after a Clojure/ClojureScript library for symbolic computation is released
