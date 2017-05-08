@@ -1,6 +1,8 @@
 (ns nodp.test.helpers.primitives.event
+  (:refer-clojure :exclude [transduce])
   (:require [#?(:clj  clojure.test
                 :cljs cljs.test) :as test :include-macros true]
+            [cats.monad.maybe :as maybe]
             [clojure.test.check]
             [clojure.test.check.clojure-test
              :as clojure-test
@@ -124,3 +126,47 @@
                                      (map deref)
                                      (apply event/merge-occs)
                                      (= @mappended-event))))
+
+(defn get-generators
+  [generator xforms**]
+  (map (partial (helpers/flip gen/fmap) generator) xforms**))
+
+(def any-nilable-equal
+  (gen/one-of [test-helpers/any-equal (gen/return nil)]))
+
+(def xform*
+  (gen/one-of
+    (concat [(gen/return (distinct))
+             (gen/return (dedupe))
+             (gen/fmap replace (gen/map test-helpers/any-equal
+                                        test-helpers/any-equal))]
+            (get-generators (test-helpers/function gen/boolean)
+                            [drop-while filter remove take-while])
+            (get-generators gen/s-pos-int [take-nth partition-all])
+            (get-generators gen/int [drop take])
+            (get-generators (test-helpers/function any-nilable-equal)
+                            [keep keep-indexed])
+            (get-generators (test-helpers/function test-helpers/any-equal)
+                            [map map-indexed partition-by]))))
+
+(def xform
+  (->> xform*
+       gen/vector
+       gen/not-empty
+       (gen/fmap (partial apply comp))))
+
+(clojure-test/defspec
+  transduce-identity
+  test-helpers/cljc-num-tests
+  ;TODO refactor
+  (test-helpers/restart-for-all
+    [input-event test-helpers/event
+     xf xform
+     f (test-helpers/function test-helpers/any-equal)
+     init test-helpers/any-equal
+     as (gen/vector test-helpers/any-equal)]
+    (let [earliest @input-event]
+      (frp/activate)
+      (run! input-event as)
+      true)))
+
