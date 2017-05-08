@@ -199,7 +199,10 @@
 
 (helpers/defcurried modify-event!
                     [id network]
-                    (helpers/call-functions (id (:modifies! network)) network))
+                    (-> network
+                        :modifies!
+                        id
+                        (helpers/call-functions network)))
 
 (defn effect-swap-event!
   [id]
