@@ -5,7 +5,6 @@
             [com.rpl.specter :as s]
             [nodp.helpers :as helpers]
             [nodp.helpers.primitives.event :as event]
-            [nodp.helpers.time :as time]
             [nodp.helpers.tuple :as tuple])
   #?(:clj
      (:import [clojure.lang IDeref])))
@@ -112,10 +111,9 @@
   [a e t network]
   (->> network
        (event/get-occs (:id e))
-       (last-pred (event/get-unit a)
-                  (comp (partial > @t)
-                        deref
-                        tuple/fst))
+       (last-pred (event/get-unit a) (comp (partial > @t)
+                                           deref
+                                           tuple/fst))
        tuple/snd))
 
 (defn stepper
