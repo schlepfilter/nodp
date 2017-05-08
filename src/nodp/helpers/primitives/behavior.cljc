@@ -1,7 +1,6 @@
 (ns nodp.helpers.primitives.behavior
   (:refer-clojure :exclude [stepper time])
-  (:require [cats.core :as m]
-            [cats.protocols :as protocols]
+  (:require [cats.protocols :as protocols]
             [cats.util :as util]
             [com.rpl.specter :as s]
             [nodp.helpers :as helpers]
@@ -65,7 +64,7 @@
 
 (def register*
   (comp (partial swap! registry)
-        ((m/curry s/setval*) s/END)
+        ((helpers/curry 2 s/setval*) s/END)
         vector))
 
 #?(:clj (defmacro register
