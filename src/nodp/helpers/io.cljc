@@ -2,7 +2,6 @@
 (ns nodp.helpers.io
   (:require [clojure.string :as str]
             [cats.context :as ctx]
-            [cats.core :as m]
             [cats.monad.maybe :as maybe]
             [com.rpl.specter :as s]
             [nodp.helpers :as helpers]
@@ -67,6 +66,6 @@
 
 (def on
   (comp (partial swap! event/network-state)
-        ((m/curry s/setval*) [:effects s/END])
+        ((helpers/curry 3 s/setval*) [:effects s/END])
         vector
         get-effect!))
