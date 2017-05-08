@@ -1,5 +1,8 @@
 (ns nodp.test.helpers.primitives.behavior
-  (:require [clojure.test.check]
+  (:require [#?(:clj  clojure.test
+                :cljs cljs.test) :as test :include-macros true]
+            [cats.monad.maybe :as maybe]
+            [clojure.test.check]
             [clojure.test.check.clojure-test
              :as clojure-test
              :include-macros true]
@@ -8,8 +11,9 @@
             [nodp.helpers.frp :as frp]
             [nodp.helpers.tuple :as tuple]
             [nodp.helpers.unit :as unit]
-            [nodp.test.helpers :as test-helpers]
-            [cats.monad.maybe :as maybe]))
+            [nodp.test.helpers :as test-helpers]))
+
+(test/use-fixtures :each test-helpers/fixture)
 
 (clojure-test/defspec
   behavior-return
