@@ -24,10 +24,9 @@
             (test-helpers/events-tuple probabilities)
             [stepper-outer-any input-outer-any]
             (gen/vector test-helpers/any-equal 2)
-            outer-behavior
-            (gen/elements [(frp/stepper stepper-outer-any
-                                        fmapped-outer-event)
-                           frp/time])
+            outer-behavior (gen/elements [(frp/stepper stepper-outer-any
+                                                       fmapped-outer-event)
+                                          frp/time])
             stepper-inner-anys (gen/vector test-helpers/any-equal
                                            (count fmapped-inner-events))
             steps (gen/vector gen/boolean (count fmapped-inner-events))
