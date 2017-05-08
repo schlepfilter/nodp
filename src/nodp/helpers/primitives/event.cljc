@@ -292,9 +292,7 @@
 (defn make-set-modify-modify
   [modify*]
   [(fn [id network]
-     (set-modify id
-                 (modify* false id)
-                 network))
+     (set-modify id (modify* false id) network))
    (modify* true)])
 
 (defn merge-one
