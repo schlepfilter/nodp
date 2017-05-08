@@ -8,6 +8,7 @@
             [clojure.test.check.generators :as gen]
             [nodp.helpers :as helpers :include-macros true]
             [nodp.helpers.frp :as frp]
+            [nodp.helpers.tuple :as tuple]
             [nodp.helpers.unit :as unit]
             [nodp.test.helpers :as test-helpers :include-macros true]))
 
@@ -35,7 +36,18 @@
       (advance2)
       (<= @t @@frp/time))))
 
-;TODO test stepper
+(clojure-test/defspec
+  stepper
+  test-helpers/cljc-num-tests
+  (test-helpers/restart-for-all
+    [a test-helpers/any-equal
+     as (gen/vector test-helpers/any-equal)
+     e test-helpers/event]
+    (let [b (frp/stepper a e)
+          occurrences (concat [a] (map tuple/snd @e) as)]
+      (frp/activate)
+      (run! e as)
+      (= @b (last occurrences)))))
 
 (def behavior->>=
   ;TODO refactor
