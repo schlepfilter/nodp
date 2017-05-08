@@ -19,8 +19,10 @@
   IDeref
   (#?(:clj  deref
       :cljs -deref) [_]
-    ((id (:function @event/network-state))
-      (:time @event/network-state)))
+    ((helpers/<*> (comp id
+                        :function)
+                  :time)
+      @event/network-state))
   protocols/Printable
   (-repr [_]
     (str "#[behavior " id "]")))
