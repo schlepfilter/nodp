@@ -43,6 +43,19 @@
                    as)))
 
 (clojure-test/defspec
+  event-on
+  test-helpers/cljc-num-tests
+  (test-helpers/restart-for-all
+    [e test-helpers/event
+     as (gen/vector test-helpers/any-equal)]
+    (= (into [] (concat (map tuple/snd @e)
+                        as))
+       (with-exitv exit
+                   (frp/on exit e)
+                   (frp/activate)
+                   (run! e as)))))
+
+(clojure-test/defspec
   behavior-on
   test-helpers/cljc-num-tests
   (test-helpers/restart-for-all

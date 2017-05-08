@@ -5,9 +5,10 @@
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
             [com.rpl.specter :as s]
+            [nodp.helpers :as helpers]
             [nodp.helpers.primitives.behavior :as behavior]
             [nodp.helpers.primitives.event :as event]
-            [nodp.helpers :as helpers])
+            [nodp.helpers.tuple :as tuple])
   #?(:cljs (:require-macros [nodp.helpers.io :refer [defcurriedmethod]])))
 
 (defn event
@@ -45,6 +46,12 @@
                   then-function
                   identity)
     else))
+
+(defcurriedmethod get-effect! :event
+                  [f! e network]
+                  (run! (comp f!
+                              tuple/snd)
+                        (event/get-latests (:id e) network)))
 
 (defmethod get-effect! :behavior
   [f! b]
