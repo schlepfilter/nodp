@@ -58,13 +58,15 @@
                        f
                        (get-value t @event/network-state)))))))
 
-;TODO make registration public
 (def registry
   (atom []))
 
 (def register*
   (comp (partial swap! registry)
-        ((helpers/curry 2 s/setval*) s/END)
+        ;TODO fix m/curry
+        ;((m/curry s/setval*) s/END)
+        ; ^--- The given function doesn't have arity metadata, provide an arity for currying.
+        ((helpers/curry 3 s/setval*) s/END)
         vector))
 
 #?(:clj (defmacro register
