@@ -43,6 +43,10 @@
   [b network]
   ((:id b) (:function network)))
 
+(defn get-value
+  [b t network]
+  ((get-function b network) t))
+
 (def context
   (helpers/reify-monad
     (comp behavior*
@@ -50,7 +54,9 @@
     ;TODO refactor
     (fn [ma f]
       (behavior* (fn [t]
-                   ((get-function (f ((get-function ma @event/network-state) t)) @event/network-state) t))))))
+                   (-> (get-value ma t @event/network-state)
+                       f
+                       (get-value t @event/network-state)))))))
 
 ;TODO make registration public
 (def registry
