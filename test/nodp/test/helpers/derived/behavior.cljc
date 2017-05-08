@@ -10,7 +10,7 @@
             [nodp.helpers :as helpers :include-macros true]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.tuple :as tuple]
-            [nodp.test.helpers :as test-helpers]))
+            [nodp.test.helpers :as test-helpers :include-macros true]))
 
 (test/use-fixtures :each test-helpers/fixture)
 
