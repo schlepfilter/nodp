@@ -39,6 +39,12 @@
                                                (fn ~bindings
                                                  ~@body)))))
 
+(defcurriedmethod get-effect! :event
+                  [f! e network]
+                  (run! (comp f!
+                              tuple/snd)
+                        (event/get-latests (:id e) network)))
+
 (defn if-then-else
   [if-function then-function else]
   ((helpers/build if
@@ -46,12 +52,6 @@
                   then-function
                   identity)
     else))
-
-(defcurriedmethod get-effect! :event
-                  [f! e network]
-                  (run! (comp f!
-                              tuple/snd)
-                        (event/get-latests (:id e) network)))
 
 (defmethod get-effect! :behavior
   [f! b]
