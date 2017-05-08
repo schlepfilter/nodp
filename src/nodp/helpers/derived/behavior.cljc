@@ -10,6 +10,6 @@
        nodp.helpers/pure
        (ctx/with-context behavior/context)))
 
-(defn switcher
-  [b e]
-  (helpers/join (behavior/stepper b e)))
+(def switcher
+  (comp helpers/join
+        behavior/stepper))
