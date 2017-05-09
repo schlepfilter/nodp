@@ -11,9 +11,8 @@
   occs\ (>>= e\ f) = foldr\ merge\ []\circ map\ delayOccs\circ map\ (\backslash(\hat{t}_a, a) \rightarrow (\hat{t}_a , f\ a))\ \$ \ occs\ e
 \end{align*}
 \begin{align*}
-  %TODO add mapcat and interpose
-  %TODO add cat
   %TODO add comp
+  %mapcat is composed of map and cat
   \mathbf{data}\ Xform\ a\ b\ c\ d\ e\ f\ g\ h\ i\ j\ k\ l\ m\ n\ o =&\ cat\\
   |\zeroarity{dedupe}\\
   |\zeroarity{distinct}\\
