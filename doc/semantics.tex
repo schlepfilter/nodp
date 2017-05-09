@@ -11,9 +11,8 @@
   occs\ (>>= e\ f) = foldr\ merge\ []\circ map\ delayOccs\circ map\ (\backslash(\hat{t}_a, a) \rightarrow (\hat{t}_a , f\ a))\ \$ \ occs\ e
 \end{align*}
 \begin{align*}
-  %TODO add comp
   %mapcat is composed of map and cat
-  \mathbf{data}\ Xform\ a\ b\ c\ d\ e\ f\ g\ h\ i\ j\ k\ l\ m\ n\ o =&\ cat\\
+  \mathbf{data}\ Xform{*}\ a\ b\ c\ d\ e\ f\ g\ h\ i\ j\ k\ l\ m\ n\ o =&\ cat\\
   |\zeroarity{dedupe}\\
   |\zeroarity{distinct}\\
   |\positive{take-nth}\\
@@ -32,29 +31,32 @@
   |&\ interpose\ o
 \end{align*}
 \begin{align*}
+  data\ Xform = foldl\ comp\ [Xform*]
+\end{align*}
+\begin{align*}
   %TODO add the 3 arity version of transduce
-  transduce :: Xform \rightarrow (a \rightarrow b \rightarrow a) \rightarrow a \rightarrow Event\ b \rightarrow Event\ a
+  transduce : Xform \rightarrow (a \rightarrow b \rightarrow a) \rightarrow a \rightarrow Event\ b \rightarrow Event\ a
 \end{align*}
 \begin{align*}
   &occs\ (transduce\ xform\ f\ a\ e)\\
   &\quad= scanl\ (liftA2\ f)\ a\ \$\ mapMaybe\ (unreduced\ .\ (xform\ (\backslash\_\ x\rightarrow just\ x))\ nothing)\ \$\ occs\ e
 \end{align*}
 \begin{align*}
-  >>= :: Behavior\ a \rightarrow f \rightarrow Behavior\ b
+  >>=\ : Behavior\ a \rightarrow f \rightarrow Behavior\ b
 \end{align*}
 \begin{align*}
   at\ \$>>= b\ f =\backslash t \rightarrow f\ (b\ `at` \ t)\ `at` \ t
 \end{align*}
 %TODO add toTime and fromTime
 \begin{align*}
-  calculus :: ((Real \rightarrow Real) \rightarrow Real \rightarrow Real \rightarrow Real) \rightarrow Time \rightarrow Behavior\ Real\rightarrow Behavior\ Real
+  calculus : ((Real \rightarrow Real) \rightarrow Real \rightarrow Real \rightarrow Real) \rightarrow Time \rightarrow Behavior\ Real\rightarrow Behavior\ Real
 \end{align*}
 \begin{align*}
   at\ \$\ calculus\ f\ x\ b = \backslash t\rightarrow f\ ((at\ b)\ .\ toTime)\ (fromTime\ x)\ \$\ fromTime\ t
 \end{align*}
 \begin{align*}
   &\mathbf{class}\ Entity\ e\ \mathbf{where}\\
-  &\quad on :: (a\rightarrow IO\ ())\rightarrow e \rightarrow IO\ ()
+  &\quad on : (a\rightarrow IO\ ())\rightarrow e \rightarrow IO\ ()
 \end{align*}
 \begin{align*}
   &\mathbf{instance_{sem}}\ Entity\ (Event\ a)\ \mathbf{where}\\
