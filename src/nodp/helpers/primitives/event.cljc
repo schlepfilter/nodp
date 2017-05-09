@@ -366,7 +366,7 @@
                                                      x
                                                      [((helpers/lift-a 2 f)
                                                         (last (if (empty? x)
-                                                                (concat [(tuple/tuple (time/time 0) init)] (get-occs child-id network))
+                                                                (concat [(get-unit init)] (get-occs child-id network))
                                                                 x))
                                                         y)]))
                                          []
