@@ -136,7 +136,9 @@
 
 (def xform*
   (gen/one-of
-    (concat (map gen/return [(dedupe) (distinct)])
+    (concat (map (comp gen/return
+                       helpers/funcall)
+                 [dedupe distinct])
             (get-generators (test-helpers/function gen/boolean)
                             [drop-while filter remove take-while])
             (get-generators gen/s-pos-int [take-nth partition-all])
