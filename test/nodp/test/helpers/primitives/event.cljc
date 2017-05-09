@@ -142,7 +142,8 @@
             (get-generators gen/s-pos-int [take-nth partition-all])
             (get-generators gen/int [drop take])
             [(gen/fmap replace (gen/map test-helpers/any-equal
-                                        test-helpers/any-equal))]
+                                        test-helpers/any-equal))
+             (gen/fmap interpose test-helpers/any-equal)]
             (get-generators (test-helpers/function gen/boolean)
                             [drop-while filter remove take-while])
             (get-generators (test-helpers/function test-helpers/any-equal)
