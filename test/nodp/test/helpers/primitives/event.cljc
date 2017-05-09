@@ -146,7 +146,10 @@
             (get-generators (test-helpers/function any-nilable-equal)
                             [keep keep-indexed])
             (get-generators (test-helpers/function test-helpers/any-equal)
-                            [map map-indexed partition-by]))))
+                            [map map-indexed partition-by])
+            ;Composing mapcat more than once seems to make the test to run longer than 10 seconds.
+            ;[(gen/fmap mapcat (test-helpers/function (gen/vector test-helpers/any-equal)))]
+            )))
 
 (def xform
   (->> xform*
