@@ -136,13 +136,13 @@
 
 (def xform*
   (gen/one-of
-    (concat (map gen/return [(distinct) (dedupe)])
-            [(gen/fmap replace (gen/map test-helpers/any-equal
-                                        test-helpers/any-equal))]
+    (concat (map gen/return [(dedupe) (distinct)])
             (get-generators (test-helpers/function gen/boolean)
                             [drop-while filter remove take-while])
             (get-generators gen/s-pos-int [take-nth partition-all])
             (get-generators gen/int [drop take])
+            [(gen/fmap replace (gen/map test-helpers/any-equal
+                                        test-helpers/any-equal))]
             (get-generators (test-helpers/function any-nilable-equal)
                             [keep keep-indexed])
             (get-generators (test-helpers/function test-helpers/any-equal)
