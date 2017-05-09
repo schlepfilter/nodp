@@ -1,21 +1,15 @@
 (ns nodp.hfdp.observer.core
   (:require [clojure.string :as str]
             [beicon.core :as rx]
-            [nodp.helpers :as helpers])
+            [nodp.helpers :as helpers]
+            [nodp.hfdp.observer.synchronization :as synchronization])
   (:import (rx.functions FuncN)
            (rx Observable)))
 
 (def measurement
-  (-> (rx/of {:temperature 80
-              :humidity    65
-              :pressure    (rationalize 30.4)}
-             {:temperature 82
-              :humidity    70
-              :pressure    (rationalize 29.2)}
-             {:temperature 78
-              :humidity    90
-              :pressure    (rationalize 29.2)})
-      .publish))
+  (->> synchronization/measurements
+       (apply rx/of)
+       .publish))
 
 (def pressure
   (rx/map :pressure measurement))
