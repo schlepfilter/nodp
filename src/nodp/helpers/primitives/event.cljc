@@ -360,7 +360,7 @@
   (let [step! (xform (comp maybe/just
                            second
                            vector))]
-    (helpers/curry 6 (fn [f init parent-id initial child-id network]
+    (helpers/curriedfn [f init parent-id initial child-id network]
                        (set-occs (reduce (fn [transduction element]
                                            (s/setval s/END
                                                      transduction
@@ -377,7 +377,7 @@
                                                              parent-id
                                                              network)))))
                                  child-id
-                                 network)))))
+                                 network))))
 
 (defn transduce
   [xform f init e]

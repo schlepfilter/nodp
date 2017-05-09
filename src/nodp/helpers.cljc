@@ -129,12 +129,19 @@
                          (fn [& inner-more]
                            (apply f (concat outer-more inner-more)))))))))
 
-#?(:clj (defmacro defcurried
-          [function-name bindings & body]
-          `(def ~function-name
-             (curry ~(count bindings)
-                    (fn ~bindings
-                      ~@body)))))
+#?(:clj
+   (do (defmacro curriedfn
+         [bindings & body]
+         `(curry ~(count bindings)
+                 (fn ~bindings
+                   ~@body)))
+
+       (defmacro defcurried
+         [function-name bindings & body]
+         `(def ~function-name
+            (curriedfn ~bindings
+                       ~@body)))))
+
 
 (def nop
   (constantly unit/unit))
