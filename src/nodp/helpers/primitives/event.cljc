@@ -389,11 +389,13 @@
                            second
                            vector))]
     (helpers/curriedfn [f init parent-id initial child-id network]
-                       (set-occs (reduce (get-accumulator f init child-id network)
-                                         []
-                                         (get-elements step! parent-id initial network))
-                                 child-id
-                                 network))))
+                       (-> (get-accumulator f init child-id network)
+                           (reduce []
+                                   (get-elements step!
+                                                 parent-id
+                                                 initial
+                                                 network))
+                           (set-occs child-id network)))))
 
 (defn transduce
   [xform f init e]
