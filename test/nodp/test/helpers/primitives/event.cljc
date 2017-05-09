@@ -178,5 +178,8 @@
           earliests @input-event]
       (frp/activate)
       (run! input-event as)
-      (= (map tuple/snd @transduced-event)
-         (rest (reductions f init (get-elements xf (map tuple/snd earliests) as)))))))
+      (->> as
+           (get-elements xf (map tuple/snd earliests))
+           (reductions f init)
+           rest
+           (= (map tuple/snd @transduced-event))))))
