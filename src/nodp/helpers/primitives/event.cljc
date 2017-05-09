@@ -367,7 +367,10 @@
 
 (defn get-transduction
   [init occs reduction]
-  (last (concat [(get-unit init)] occs reduction)))
+  (-> (get-unit init)
+      vector
+      (concat occs reduction)
+      last))
 
 (defn make-modify-transduce
   [xform]
