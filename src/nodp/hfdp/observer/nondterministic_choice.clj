@@ -1,7 +1,6 @@
 (ns nodp.hfdp.observer.nondterministic-choice
   (:require [clojure.string :as str]
             [beicon.core :as rx]
-            [incanter.distributions :as distributions]
             [nodp.helpers :as helpers])
   (:import (rx.functions FuncN)
            (rx Observable)))
@@ -49,18 +48,11 @@
 (def rx-min
   (partial rx/scan min))
 
-(def rx-average
-  (partial rx/scan (comp distributions/mean
-                         vector)))
-
 (def max-temperature
   (rx-max temperature))
 
 (def min-temperature
   (rx-min temperature))
-
-(def average-temperature
-  (rx-average temperature))
 
 (defn- rxfnn
   ^FuncN [f]
@@ -80,7 +72,7 @@
                         (partial interleave
                                  ["Avg/Max/Min temperature = " "/" "/"])
                         vector)
-                  average-temperature
+                  ;TODO combine average temperature
                   max-temperature
                   min-temperature))
 
