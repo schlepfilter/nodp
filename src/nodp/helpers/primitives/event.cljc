@@ -354,8 +354,6 @@
     (-mempty [_]
              (event* []))))
 
-(use 'spyscope.core)
-
 (defn make-modify-transduce
   [xform]
   ;TODO refactor
@@ -375,7 +373,8 @@
                                          (map (partial helpers/<$> deref)
                                               (filter (comp maybe/just?
                                                             tuple/snd)
-                                                      (map (partial s/transform* :snd (partial step! helpers/nothing))
+                                                      (map (partial s/transform* :snd (comp unreduced
+                                                                                            (partial step! helpers/nothing)))
                                                            ((make-get-occs-or-latests initial)
                                                              parent-id
                                                              network)))))
