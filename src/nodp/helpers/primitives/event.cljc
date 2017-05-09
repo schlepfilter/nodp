@@ -1,6 +1,8 @@
 ;event and behavior namespaces are separated to limit the impact of :refer-clojure :exclude for transduce
 (ns nodp.helpers.primitives.event
-  (:require [cats.protocols :as p]
+  (:refer-clojure :exclude [transduce])
+  (:require [cats.monad.maybe :as maybe]
+            [cats.protocols :as p]
             [cats.util :as util]
             [com.rpl.specter :as s]
             [linked.core :as linked]
@@ -351,6 +353,42 @@
     p/Monoid
     (-mempty [_]
              (event* []))))
+
+(use 'spyscope.core)
+
+(defn make-modify-transduce
+  [xform]
+  ;TODO refactor
+  (let [step! (xform (comp maybe/just
+                           second
+                           vector))]
+    (helpers/curry 6 (fn [f init parent-id initial child-id network]
+                       (set-occs (reduce (fn [x y]
+                                           (s/setval s/END
+                                                     x
+                                                     [((helpers/lift-a 2 f)
+                                                        (last (if (empty? x)
+                                                                (concat [(tuple/tuple (time/time 0) init)] (get-occs child-id network))
+                                                                x))
+                                                        y)]))
+                                         []
+                                         (map (partial helpers/<$> deref)
+                                              (filter (comp maybe/just?
+                                                            tuple/snd)
+                                                      (map (partial s/transform* :snd (partial step! helpers/nothing))
+                                                           ((make-get-occs-or-latests initial)
+                                                             parent-id
+                                                             network)))))
+                                 child-id
+                                 network)))))
+
+(defn transduce
+  [xform f init e]
+  ;TODO refactor
+  (->> ((make-modify-transduce xform) f init (:id e))
+       make-set-modify-modify
+       (cons (add-edge (:id e)))
+       event*))
 
 (defn run-network-state-effects!
   []

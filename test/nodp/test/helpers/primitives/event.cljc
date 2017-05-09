@@ -155,6 +155,15 @@
        gen/not-empty
        (gen/fmap (partial apply comp))))
 
+(defn get-elements
+  [xf earliests as]
+  (maybe/map-maybe (partial (comp unreduced
+                                  (xf (comp maybe/just
+                                            second
+                                            vector)))
+                            helpers/nothing)
+                   (concat earliests as)))
+
 (clojure-test/defspec
   transduce-identity
   test-helpers/cljc-num-tests
@@ -165,8 +174,9 @@
      f (test-helpers/function test-helpers/any-equal)
      init test-helpers/any-equal
      as (gen/vector test-helpers/any-equal)]
-    (let [earliest @input-event]
+    (let [transduced-event (frp/transduce xf f init input-event)
+          earliests @input-event]
       (frp/activate)
       (run! input-event as)
-      true)))
-
+      (= (map tuple/snd @transduced-event)
+         (rest (reductions f init (get-elements xf (map tuple/snd earliests) as)))))))
