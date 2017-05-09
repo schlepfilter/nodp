@@ -139,16 +139,16 @@
     (concat (map (comp gen/return
                        helpers/funcall)
                  [dedupe distinct])
-            (get-generators (test-helpers/function gen/boolean)
-                            [drop-while filter remove take-while])
             (get-generators gen/s-pos-int [take-nth partition-all])
             (get-generators gen/int [drop take])
             [(gen/fmap replace (gen/map test-helpers/any-equal
                                         test-helpers/any-equal))]
-            (get-generators (test-helpers/function any-nilable-equal)
-                            [keep keep-indexed])
+            (get-generators (test-helpers/function gen/boolean)
+                            [drop-while filter remove take-while])
             (get-generators (test-helpers/function test-helpers/any-equal)
                             [map map-indexed partition-by])
+            (get-generators (test-helpers/function any-nilable-equal)
+                            [keep keep-indexed])
             ;Composing mapcat more than once seems to make the test to run longer than 10 seconds.
             ;[(gen/fmap mapcat (test-helpers/function (gen/vector test-helpers/any-equal)))]
             )))
