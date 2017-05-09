@@ -361,12 +361,12 @@
                            second
                            vector))]
     (helpers/curry 6 (fn [f init parent-id initial child-id network]
-                       (set-occs (reduce (fn [x y]
+                       (set-occs (reduce (fn [transduction element]
                                            (s/setval s/END
-                                                     x
+                                                     transduction
                                                      [((helpers/lift-a 2 f)
-                                                        (last (concat [(get-unit init)] (get-occs child-id network) x))
-                                                        y)]))
+                                                        (last (concat [(get-unit init)] (get-occs child-id network) transduction))
+                                                        element)]))
                                          []
                                          (map (partial helpers/<$> deref)
                                               (filter (comp maybe/just?
