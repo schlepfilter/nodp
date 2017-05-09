@@ -372,6 +372,16 @@
       (concat occs reduction)
       last))
 
+(helpers/defcurried get-accumulator
+                    [f init id network reduction element]
+                    (s/setval s/END
+                              reduction
+                              [((helpers/lift-a 2 f)
+                                 (get-transduction init
+                                                   (get-occs id network)
+                                                   reduction)
+                                 element)]))
+
 (defn make-modify-transduce
   [xform]
   ;TODO refactor
@@ -379,14 +389,7 @@
                            second
                            vector))]
     (helpers/curriedfn [f init parent-id initial child-id network]
-                       (set-occs (reduce (fn [reduction element]
-                                           (s/setval s/END
-                                                     reduction
-                                                     [((helpers/lift-a 2 f)
-                                                        (get-transduction init
-                                                                          (get-occs child-id network)
-                                                                          reduction)
-                                                        element)]))
+                       (set-occs (reduce (get-accumulator f init child-id network)
                                          []
                                          (get-elements step! parent-id initial network))
                                  child-id
