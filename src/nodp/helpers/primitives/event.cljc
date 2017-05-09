@@ -354,6 +354,17 @@
     (-mempty [_]
              (event* []))))
 
+(defn get-elements
+  [step! id initial network]
+  (map (partial helpers/<$> deref)
+       (filter (comp maybe/just?
+                     tuple/snd)
+               (map (partial s/transform* :snd (comp unreduced
+                                                     (partial step! helpers/nothing)))
+                    ((make-get-occs-or-latests initial)
+                      id
+                      network)))))
+
 (defn make-modify-transduce
   [xform]
   ;TODO refactor
@@ -368,14 +379,7 @@
                                                         (last (concat [(get-unit init)] (get-occs child-id network) transduction))
                                                         element)]))
                                          []
-                                         (map (partial helpers/<$> deref)
-                                              (filter (comp maybe/just?
-                                                            tuple/snd)
-                                                      (map (partial s/transform* :snd (comp unreduced
-                                                                                            (partial step! helpers/nothing)))
-                                                           ((make-get-occs-or-latests initial)
-                                                             parent-id
-                                                             network)))))
+                                         (get-elements step! parent-id initial network))
                                  child-id
                                  network))))
 
