@@ -372,11 +372,11 @@
                            second
                            vector))]
     (helpers/curriedfn [f init parent-id initial child-id network]
-                       (set-occs (reduce (fn [transduction element]
+                       (set-occs (reduce (fn [reduction element]
                                            (s/setval s/END
-                                                     transduction
+                                                     reduction
                                                      [((helpers/lift-a 2 f)
-                                                        (last (concat [(get-unit init)] (get-occs child-id network) transduction))
+                                                        (last (concat [(get-unit init)] (get-occs child-id network) reduction))
                                                         element)]))
                                          []
                                          (get-elements step! parent-id initial network))
