@@ -365,9 +365,7 @@
                                            (s/setval s/END
                                                      x
                                                      [((helpers/lift-a 2 f)
-                                                        (last (if (empty? x)
-                                                                (concat [(get-unit init)] (get-occs child-id network))
-                                                                x))
+                                                        (last (concat [(get-unit init)] (get-occs child-id network) x))
                                                         y)]))
                                          []
                                          (map (partial helpers/<$> deref)
