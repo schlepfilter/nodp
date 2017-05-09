@@ -365,6 +365,10 @@
                       id
                       network)))))
 
+(defn get-transduction
+  [init occs reduction]
+  (last (concat [(get-unit init)] occs reduction)))
+
 (defn make-modify-transduce
   [xform]
   ;TODO refactor
@@ -376,7 +380,9 @@
                                            (s/setval s/END
                                                      reduction
                                                      [((helpers/lift-a 2 f)
-                                                        (last (concat [(get-unit init)] (get-occs child-id network) reduction))
+                                                        (get-transduction init
+                                                                          (get-occs child-id network)
+                                                                          reduction)
                                                         element)]))
                                          []
                                          (get-elements step! parent-id initial network))
