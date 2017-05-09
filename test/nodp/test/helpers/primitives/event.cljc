@@ -183,3 +183,27 @@
            (reductions f init)
            rest
            (= (map tuple/snd @transduced-event))))))
+
+(clojure-test/defspec
+  cat-identity
+  test-helpers/cljc-num-tests
+  ;TODO refactor
+  (test-helpers/restart-for-all
+    ;TODO generate an event with pure
+    [input-event (gen/fmap (fn [_]
+                             (frp/event))
+                           (gen/return unit/unit))
+     f (test-helpers/function test-helpers/any-equal)
+     init test-helpers/any-equal
+     ;TODO generate list
+     as (gen/vector (gen/vector test-helpers/any-equal))]
+    ;TODO compose xforms
+    (let [cat-event (frp/transduce cat f init input-event)
+          map-event (frp/transduce (comp (remove empty?)
+                                         (map last))
+                                   f
+                                   init
+                                   input-event)]
+      (frp/activate)
+      (run! input-event as)
+      (= @cat-event @map-event))))
