@@ -136,9 +136,8 @@
 
 (def xform*
   (gen/one-of
-    (concat [(gen/return (distinct))
-             (gen/return (dedupe))
-             (gen/fmap replace (gen/map test-helpers/any-equal
+    (concat (map gen/return [(distinct) (dedupe)])
+            [(gen/fmap replace (gen/map test-helpers/any-equal
                                         test-helpers/any-equal))]
             (get-generators (test-helpers/function gen/boolean)
                             [drop-while filter remove take-while])
