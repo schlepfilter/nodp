@@ -1,4 +1,4 @@
-(ns nodp.hfdp.observer.nondterministic-choice
+(ns nodp.hfdp.observer.core
   (:require [clojure.string :as str]
             [beicon.core :as rx]
             [nodp.helpers :as helpers])
