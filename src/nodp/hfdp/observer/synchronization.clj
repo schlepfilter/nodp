@@ -11,11 +11,14 @@
 (def temperature
   (helpers/<$> :temperature measurement-event))
 
-(def max-temperature
-  (core/max temperature))
-
 (def mean-temperature
   (frp/mean temperature))
+
+(def min-temperature
+  (core/min temperature))
+
+(def max-temperature
+  (core/max temperature))
 
 (frp/activate)
 

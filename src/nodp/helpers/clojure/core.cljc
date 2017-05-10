@@ -1,5 +1,5 @@
 (ns nodp.helpers.clojure.core
-  (:refer-clojure :exclude [+ count drop max reduce])
+  (:refer-clojure :exclude [+ count drop max min reduce])
   (:require [nodp.helpers :as helpers]
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.unit :as unit]))
@@ -29,6 +29,10 @@
 (def max
   (partial reduce clojure.core/max #?(:clj  Double/NEGATIVE_INFINITY
                                       :cljs js/Number.NEGATIVE_INFINITY)))
+
+(def min
+  (partial reduce clojure.core/min #?(:clj  Double/POSITIVE_INFINITY
+                                      :cljs js/Number.POSITIVE_INFINITY)))
 
 (def +
   (partial reduce clojure.core/+ 0))
