@@ -110,27 +110,32 @@
          behaviorize)
        arguments))
 
-#?(:clj
-   (do (defmacro transparent*
-         ;TODO refactor
-         [[f & more]]
-         `(let [arguments# [~@more]]
-            (if (xnor (some event? arguments#)
-                      (some behavior? arguments#))
-              (apply ~f arguments#)
-              (apply (if (some event? arguments#)
-                       (partial combine ~f)
-                       (helpers/lift-a ~(count more) ~f))
-                     (entitize arguments#)))))
+#?(:clj (defmacro transparent*
+          ;TODO refactor
+          [[f & more]]
+          `(let [arguments# [~@more]]
+             (if (xnor (some event? arguments#)
+                       (some behavior? arguments#))
+               (apply ~f arguments#)
+               (apply (if (some event? arguments#)
+                        (partial combine ~f)
+                        (helpers/lift-a ~(count more) ~f))
+                      (entitize arguments#))))))
 
-       (defmacro transparent
-         [expr]
-         (walk/postwalk (fn [x]
-                          ;TODO refactor
-                          (if (and (seq? x) (not= (count x) 1))
-                            `(transparent* ~x)
-                            x))
-                        (macroexpand expr)))))
+(def has-argument?
+  (helpers/build and
+                 seq?
+                 (comp (partial not= 1)
+                       count)))
+
+#?(:clj (defmacro transparent
+          [expr]
+          (walk/postwalk (fn [x]
+                           ;TODO refactor
+                           (if (has-argument? x)
+                             `(transparent* ~x)
+                             x))
+                         (macroexpand expr))))
 
 (def mean
   (helpers/build (partial combine /)
