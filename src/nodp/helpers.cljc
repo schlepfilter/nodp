@@ -86,8 +86,18 @@
        ;  [operator & fs]
        ;  `(comp (partial apply (functionize ~operator))
        ;         (juxt ~@fs)))
+       ))
 
-       (defn- get-required-arity
+(defn if-then-else
+  [if-function then-function else]
+  ((build if
+          if-function
+          then-function
+          identity)
+    else))
+
+#?(:clj
+   (do (defn- get-required-arity
          [f]
          (-> (exc/try-or-recover (-> f
                                      .getRequiredArity
@@ -116,14 +126,6 @@
          (comp (partial max 2)
                (partial apply min)
                get-arities))))
-
-(defn if-then-else
-  [if-function then-function else]
-  ((build if
-          if-function
-          then-function
-          identity)
-    else))
 
 (defn curry
   #?(:clj ([f]
