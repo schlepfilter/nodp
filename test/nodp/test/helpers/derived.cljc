@@ -1,4 +1,4 @@
-(ns nodp.test.helpers.derived.behavior
+(ns nodp.test.helpers.derived
   (:require [#?(:clj  clojure.test
                 :cljs cljs.test) :as test :include-macros true]
             [cats.monad.maybe :as maybe]
