@@ -102,9 +102,11 @@
 
 (defn entitize
   [arguments]
-  ;TODO refactor
   (map (if (some event? arguments)
-         (eventize (first (filter event? arguments)))
+         (->> arguments
+              (filter event?)
+              first
+              eventize)
          behaviorize)
        arguments))
 
