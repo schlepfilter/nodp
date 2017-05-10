@@ -72,12 +72,16 @@
        helpers/pure
        (ctx/with-context behavior/context)))
 
-(defn behaviorize
-  [a]
-  ;TODO refactor
-  (if (behavior? a)
-    a
-    (behavior a)))
+(defn if-not-then-else
+  [if-function then-function else]
+  (helpers/if-then-else (complement if-function)
+                        then-function
+                        else))
+
+(def behaviorize
+  (partial if-not-then-else
+           behavior?
+           behavior))
 
 (defn xor
   ;TODO support variadic arguments

@@ -44,25 +44,17 @@
                               tuple/snd)
                         (event/get-latests (:id e) network)))
 
-(defn if-then-else
-  [if-function then-function else]
-  ((helpers/build if
-                  if-function
-                  then-function
-                  identity)
-    else))
-
 (defmethod get-effect! :behavior
   [f! b]
   (let [past-latest-maybe-state (atom helpers/nothing)]
     (fn [network]
-      (if-then-else (partial not= @past-latest-maybe-state)
-                    (juxt (partial reset! past-latest-maybe-state)
-                          (comp f!
-                                deref))
-                    (maybe/just ((behavior/get-function b
-                                                        network)
-                                  (:time network)))))))
+      (helpers/if-then-else (partial not= @past-latest-maybe-state)
+                            (juxt (partial reset! past-latest-maybe-state)
+                                  (comp f!
+                                        deref))
+                            (maybe/just ((behavior/get-function b
+                                                                network)
+                                          (:time network)))))))
 
 (def on
   (comp (partial swap! event/network-state)

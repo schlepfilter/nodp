@@ -117,6 +117,14 @@
                (partial apply min)
                get-arities))))
 
+(defn if-then-else
+  [if-function then-function else]
+  ((build if
+          if-function
+          then-function
+          identity)
+    else))
+
 (defn curry
   #?(:clj ([f]
            (curry (get-currying-arity f) f)))
