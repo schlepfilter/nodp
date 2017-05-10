@@ -127,12 +127,9 @@
          [expr]
          (walk/postwalk (fn [x]
                           ;TODO refactor
-                          (cond (not (seq? x))
-                                x
-                                (= 1 (count x))
-                                x
-                                :else
-                                `(transparent* ~x)))
+                          (if (or (not (seq? x)) (= 1 (count x)))
+                            x
+                            `(transparent* ~x)))
                         (macroexpand expr)))))
 
 (def mean
