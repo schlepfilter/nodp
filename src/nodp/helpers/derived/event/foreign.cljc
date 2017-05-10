@@ -1,6 +1,6 @@
 (ns nodp.helpers.derived.event.foreign
   (:require [nodp.helpers :as helpers]
-            [nodp.helpers.derived.event.clojure.core :as core]
+            [nodp.helpers.clojure.core :as core]
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.tuple :as tuple]))
 

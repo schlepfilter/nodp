@@ -1,4 +1,4 @@
-(ns nodp.helpers.derived.event.clojure.core
+(ns nodp.helpers.clojure.core
   (:refer-clojure :exclude [+ count drop max reduce])
   (:require [nodp.helpers :as helpers]
             [nodp.helpers.primitives.event :as event]

@@ -1,8 +1,7 @@
 (ns nodp.helpers.frp
-  (:refer-clojure :exclude [max stepper time transduce])
+  (:refer-clojure :exclude [stepper time transduce])
   (:require [nodp.helpers.derived.behavior :as derived-behavior]
             [nodp.helpers.derived.event.foreign :as foreign]
-            [nodp.helpers.derived.event.clojure.core :as core]
             [nodp.helpers.primitives.behavior :as behavior :include-macros true]
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.io :as io]))
@@ -36,9 +35,6 @@
 
 (def on
   io/on)
-
-(def max
-  core/max)
 
 (def combine
   foreign/combine)

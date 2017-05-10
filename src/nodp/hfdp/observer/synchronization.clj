@@ -1,5 +1,6 @@
 (ns nodp.hfdp.observer.synchronization
   (:require [nodp.helpers.frp :as frp]
+            [nodp.helpers.clojure.core :as core]
             [nodp.helpers :as helpers]))
 
 (frp/restart)
@@ -11,7 +12,7 @@
   (helpers/<$> :temperature measurement-event))
 
 (def max-temperature
-  (frp/max temperature))
+  (core/max temperature))
 
 (def mean-temperature
   (frp/mean temperature))
