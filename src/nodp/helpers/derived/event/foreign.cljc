@@ -40,5 +40,9 @@
 
 (defn combine
   [f & parent-events]
-  (event/event* (cons (add-edges (map :id parent-events))
-                      (event/make-set-modify-modify (modify-combine f (map :id parent-events))))))
+  ((helpers/build (comp event/event*
+                        cons)
+                  add-edges
+                  (comp event/make-set-modify-modify
+                        (modify-combine f)))
+    (map :id parent-events)))
