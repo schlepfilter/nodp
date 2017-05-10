@@ -13,19 +13,30 @@
                                                  parents)
                                             network))
 
-(defn get-occs-or-latests
-  [initial parent-events network]
+(defn get-occs-or-latests-coll
+  [initial ids network]
   (map (partial (helpers/flip (event/make-get-occs-or-latests initial))
                 network)
-       parent-events))
+       ids))
+
+(defn make-combine-occs-or-latests
+  [f]
+  (comp (helpers/build tuple/tuple
+                       (comp tuple/fst first)
+                       (comp (partial apply f)
+                             (partial map tuple/snd)))
+        vector))
 
 (helpers/defcurried modify-combine
-                    [f parent-events initial child-event network]
-                    (event/set-occs (map tuple/tuple (map tuple/fst (first (get-occs-or-latests initial parent-events network)))
-                                         (apply (partial map f) (map (partial map tuple/snd)
-                                                                     (get-occs-or-latests initial parent-events network))))
-                                    child-event
+                    [f parents initial child network]
+                    (event/set-occs (apply (partial map
+                                                    (make-combine-occs-or-latests f))
+                                           (get-occs-or-latests-coll initial
+                                                                     parents
+                                                                     network))
+                                    child
                                     network))
+
 (defn combine
   [f & parent-events]
   ((helpers/build (comp event/event*
