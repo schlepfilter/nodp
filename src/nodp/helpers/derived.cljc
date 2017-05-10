@@ -27,13 +27,20 @@
                              (partial map tuple/snd)))
         vector))
 
+(defn get-combined-occs
+  [f parents initial network]
+  (apply (partial map
+                  (make-combine-occs-or-latests f))
+         (get-occs-or-latests-coll initial
+                                   parents
+                                   network)))
+
 (helpers/defcurried modify-combine
                     [f parents initial child network]
-                    (event/set-occs (apply (partial map
-                                                    (make-combine-occs-or-latests f))
-                                           (get-occs-or-latests-coll initial
-                                                                     parents
-                                                                     network))
+                    (event/set-occs (get-combined-occs f
+                                                       parents
+                                                       initial
+                                                       network)
                                     child
                                     network))
 
