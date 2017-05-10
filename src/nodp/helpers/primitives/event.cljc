@@ -398,12 +398,14 @@
                            (set-occs child-id network)))))
 
 (defn transduce
-  [xform f init e]
-  ;TODO refactor
-  (->> ((make-modify-transduce xform) f init (:id e))
-       make-set-modify-modify
-       (cons (add-edge (:id e)))
-       event*))
+  ([xform f e]
+   (transduce xform f (f) e))
+  ([xform f init e]
+    ;TODO refactor
+   (->> ((make-modify-transduce xform) f init (:id e))
+        make-set-modify-modify
+        (cons (add-edge (:id e)))
+        event*)))
 
 (defn run-network-state-effects!
   []
