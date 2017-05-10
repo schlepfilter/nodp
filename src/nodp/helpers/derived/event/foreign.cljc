@@ -1,5 +1,6 @@
 (ns nodp.helpers.derived.event.foreign
   (:require [nodp.helpers :as helpers]
+            [nodp.helpers.derived.event.clojure.core :as core]
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.tuple :as tuple]))
 
@@ -46,3 +47,8 @@
                   (comp event/make-set-modify-modify
                         (modify-combine f)))
     (map :id parent-events)))
+
+(def mean
+  (helpers/build (partial combine /)
+                 core/+
+                 core/count))

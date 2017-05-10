@@ -13,6 +13,9 @@
 (def max-temperature
   (frp/max temperature))
 
+(def mean-temperature
+  (frp/mean temperature))
+
 (frp/activate)
 
 (def measurements [{:temperature 80

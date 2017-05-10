@@ -43,5 +43,8 @@
 (def combine
   foreign/combine)
 
+(def mean
+  foreign/mean)
+
 (def switcher
   derived-behavior/switcher)
