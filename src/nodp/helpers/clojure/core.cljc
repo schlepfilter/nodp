@@ -27,7 +27,8 @@
    (event/transduce (clojure.core/drop 0) f val e)))
 
 (def max
-  (partial reduce clojure.core/max Double/NEGATIVE_INFINITY))
+  (partial reduce clojure.core/max #?(:clj  Double/NEGATIVE_INFINITY
+                                      :cljs js/Number.NEGATIVE_INFINITY)))
 
 (def +
   (partial reduce clojure.core/+ 0))
