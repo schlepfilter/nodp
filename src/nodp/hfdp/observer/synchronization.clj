@@ -10,6 +10,9 @@
 (def temperature
   (helpers/<$> :temperature measurement-event))
 
+(def max-temperature
+  (frp/max temperature))
+
 (frp/activate)
 
 (def measurements [{:temperature 80

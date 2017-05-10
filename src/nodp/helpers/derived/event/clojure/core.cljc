@@ -1,5 +1,5 @@
 (ns nodp.helpers.derived.event.clojure.core
-  (:refer-clojure :exclude [drop reduce])
+  (:refer-clojure :exclude [drop max reduce])
   (:require [nodp.helpers :as helpers]
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.unit :as unit]))
@@ -26,3 +26,6 @@
         (helpers/<$> :event-value)))
   ([f val e]
    (event/transduce (clojure.core/drop 0) f val e)))
+
+(def max
+  (partial reduce clojure.core/max Double/NEGATIVE_INFINITY))
