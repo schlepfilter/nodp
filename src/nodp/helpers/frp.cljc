@@ -1,6 +1,6 @@
 (ns nodp.helpers.frp
   (:refer-clojure :exclude [stepper time transduce])
-  (:require [nodp.helpers.derived.behavior :as derived-behavior]
+  (:require [nodp.helpers.derived :as derived]
             [nodp.helpers.derived.event.foreign :as foreign]
             [nodp.helpers.primitives.behavior :as behavior :include-macros true]
             [nodp.helpers.primitives.event :as event]
@@ -20,7 +20,7 @@
   io/event)
 
 (def behavior
-  derived-behavior/behavior)
+  derived/behavior)
 
 (declare time)
 
@@ -43,4 +43,4 @@
   foreign/mean)
 
 (def switcher
-  derived-behavior/switcher)
+  derived/switcher)
