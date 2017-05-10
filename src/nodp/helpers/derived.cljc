@@ -89,9 +89,6 @@
   (or (and p (not q))
       (and (not p) q)))
 
-(def xnor
-  (complement xor))
-
 (helpers/defcurried eventize
                     [e a]
                     ;TODO refactor
@@ -121,13 +118,13 @@
          ;TODO refactor
          [[f & more]]
          `(let [arguments# [~@more]]
-            (if (xnor (some event? arguments#)
-                      (some behavior? arguments#))
-              (apply ~f arguments#)
+            (if (xor (some event? arguments#)
+                     (some behavior? arguments#))
               (apply (if (some event? arguments#)
                        (partial combine ~f)
                        (helpers/lift-a ~(count more) ~f))
-                     (entitize arguments#)))))
+                     (entitize arguments#))
+              (apply ~f arguments#))))
 
        (defmacro transparent
          [expr]
