@@ -1,5 +1,6 @@
 (ns nodp.hfdp.observer.synchronization
-  (:require [nodp.helpers.frp :as frp]
+  (:require [clojure.string :as str]
+            [nodp.helpers.frp :as frp]
             [nodp.helpers.clojure.core :as core]
             [nodp.helpers :as helpers]))
 
@@ -19,6 +20,12 @@
 
 (def max-temperature
   (core/max temperature))
+
+(def statistics
+  (frp/transparent
+    (->> (vector mean-temperature max-temperature min-temperature)
+         (str/join "/")
+         (str "Avg/Max/Min temperature = "))))
 
 (frp/activate)
 

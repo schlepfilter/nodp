@@ -4,7 +4,9 @@
             [nodp.helpers.clojure.core :as core]
             [nodp.helpers.primitives.behavior :as behavior]
             [nodp.helpers.primitives.event :as event]
-            [nodp.helpers.tuple :as tuple]))
+            [nodp.helpers.tuple :as tuple]
+    #?(:clj
+            [clojure.walk :as walk])))
 
 (helpers/defcurried add-edges
                     [parents child network]
@@ -53,16 +55,84 @@
                         (modify-combine f)))
     (map :id parent-events)))
 
-(def mean
-  (helpers/build (partial combine /)
-                 core/+
-                 core/count))
+(defn make-entity?
+  [entity-type]
+  (comp (partial = entity-type)
+        type))
+
+(def event?
+  (make-entity? nodp.helpers.primitives.event.Event))
+
+(def behavior?
+  (make-entity? nodp.helpers.primitives.behavior.Behavior))
 
 (defn behavior
   [a]
   (->> a
-       nodp.helpers/pure
+       helpers/pure
        (ctx/with-context behavior/context)))
+
+(defn behaviorize
+  [a]
+  ;TODO refactor
+  (if (behavior? a)
+    a
+    (behavior a)))
+
+(defn xor
+  ;TODO support variadic arguments
+  [p q]
+  (or (and p (not q))
+      (and (not p) q)))
+
+(def xnor
+  (complement xor))
+
+(helpers/defcurried eventize
+                    [e a]
+                    ;TODO refactor
+                    (if (event? a)
+                      a
+                      (helpers/<$> (constantly a)
+                                   e)))
+
+(defn entitize
+  [arguments]
+  ;TODO refactor
+  (map (if (some event? arguments)
+         (eventize (first (filter event? arguments)))
+         behaviorize)
+       arguments))
+
+#?(:clj
+   (do (defmacro transparent*
+         ;TODO refactor
+         [[f & more]]
+         `(let [arguments# [~@more]]
+            (if (xnor (some event? arguments#)
+                      (some behavior? arguments#))
+              (apply ~f arguments#)
+              (apply (if (some event? arguments#)
+                       (partial combine ~f)
+                       (helpers/lift-a ~(count more) ~f))
+                     (entitize arguments#)))))
+
+       (defmacro transparent
+         [expr]
+         (walk/postwalk (fn [x]
+                          ;TODO refactor
+                          (cond (not (seq? x))
+                                x
+                                (= 1 (count x))
+                                x
+                                :else
+                                `(transparent* ~x)))
+                        (macroexpand expr)))))
+
+(def mean
+  (helpers/build (partial combine /)
+                 core/+
+                 core/count))
 
 (def switcher
   (comp helpers/join

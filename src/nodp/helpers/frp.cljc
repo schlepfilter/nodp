@@ -1,6 +1,6 @@
 (ns nodp.helpers.frp
   (:refer-clojure :exclude [stepper time transduce])
-  (:require [nodp.helpers.derived :as derived]
+  (:require [nodp.helpers.derived :as derived :include-macros true]
             [nodp.helpers.primitives.behavior :as behavior :include-macros true]
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.io :as io]))
@@ -37,6 +37,10 @@
 
 (def combine
   derived/combine)
+
+(defmacro transparent
+  [expr]
+  `(derived/transparent ~expr))
 
 (def mean
   derived/mean)
