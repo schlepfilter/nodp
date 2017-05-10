@@ -22,7 +22,6 @@
                             :start       false})
                          {:event-value unit/unit
                           :start       true})
-        (drop 1)
         (helpers/<$> :event-value)))
   ([f val e]
    (event/transduce (clojure.core/drop 0) f val e)))
