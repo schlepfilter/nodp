@@ -40,7 +40,7 @@
                         (str/join "/")
                         (str "Avg/Max/Min temperature = "))))
 
-(frp/on println statistics)
+(run! (partial frp/on println) [forecast-event statistics])
 
 (frp/activate)
 
