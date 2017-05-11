@@ -45,6 +45,9 @@
   [expr]
   `(derived/transparent ~expr))
 
+(def buffer
+  derived/buffer)
+
 (def mean
   derived/mean)
 

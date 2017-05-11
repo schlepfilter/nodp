@@ -1,15 +1,8 @@
 (ns nodp.helpers.clojure.core
-  (:refer-clojure :exclude [+ count drop max min reduce])
+  (:refer-clojure :exclude [+ count drop filter max min reduce])
   (:require [nodp.helpers :as helpers]
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.unit :as unit]))
-
-(defn drop
-  [n e]
-  (event/transduce (clojure.core/drop n)
-                   (comp second
-                         vector)
-                   e))
 
 (defn reduce
   ([f e]
@@ -26,6 +19,14 @@
   ([f val e]
    (event/transduce (clojure.core/drop 0) f val e)))
 
+(defn filter
+  [pred e]
+  (event/transduce (clojure.core/filter pred)
+                   (comp second
+                         vector)
+                   unit/unit
+                   e))
+
 (def max
   (partial reduce clojure.core/max #?(:clj  Double/NEGATIVE_INFINITY
                                       :cljs js/Number.NEGATIVE_INFINITY)))
@@ -39,3 +40,10 @@
 
 (def count
   (partial event/transduce (map (constantly 1)) clojure.core/+ 0))
+
+(defn drop
+  [n e]
+  (event/transduce (clojure.core/drop n)
+                   (comp second
+                         vector)
+                   e))

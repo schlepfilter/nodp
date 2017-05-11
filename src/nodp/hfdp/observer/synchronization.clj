@@ -13,6 +13,11 @@
 (def pressure
   (helpers/<$> :pressure measurement-event))
 
+(def delta
+  (helpers/<$> (comp (partial apply -)
+                     reverse)
+               (frp/buffer 2 1 pressure)))
+
 (def temperature
   (helpers/<$> :temperature measurement-event))
 
