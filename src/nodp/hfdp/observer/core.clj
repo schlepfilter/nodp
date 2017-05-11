@@ -5,20 +5,8 @@
   (:import (rx.functions FuncN)
            (rx Observable)))
 
-(def measurements [{:temperature 80
-                    :humidity    65
-                    :pressure    (rationalize 30.4)}
-                   {:temperature 82
-                    :humidity    70
-                    :pressure    (rationalize 29.2)}
-                   {:temperature 78
-                    :humidity    90
-                    :pressure    (rationalize 29.2)}])
-
 (def measurement-stream
-  (->> measurements
-       (apply rx/of)
-       .publish))
+  (rx/subject))
 
 (def pressure
   (rx/map :pressure measurement-stream))
@@ -26,7 +14,6 @@
 (def delta
   (->> pressure
        (rx/buffer 2 1)
-       (rx/skip 1)
        (rx/map (comp (partial apply -)
                      reverse))))
 
@@ -94,4 +81,16 @@
 
 (helpers/printstream weather-stream)
 
-(rx/connect! measurement-stream)
+(def measurements
+  [{:temperature 80
+    :humidity    65
+    :pressure    (rationalize 30.4)}
+   {:temperature 82
+    :humidity    70
+    :pressure    (rationalize 29.2)}
+   {:temperature 78
+    :humidity    90
+    :pressure    (rationalize 29.2)}])
+
+(run! (partial rx/push! measurement-stream)
+      measurements)
