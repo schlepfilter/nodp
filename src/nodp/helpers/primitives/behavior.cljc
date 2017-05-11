@@ -1,6 +1,7 @@
 (ns nodp.helpers.primitives.behavior
   (:refer-clojure :exclude [stepper time])
-  (:require [cats.protocols :as protocols]
+  (:require [cats.builtin]
+            [cats.protocols :as protocols]
             [cats.util :as util]
             [com.rpl.specter :as s]
             [nodp.helpers :as helpers]
