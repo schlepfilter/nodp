@@ -97,9 +97,12 @@
                       (helpers/<$> (constantly a)
                                    e)))
 
+(def has-event?
+  (partial some event?))
+
 (defn entitize
   [arguments]
-  (map (if (some event? arguments)
+  (map (if (has-event? arguments)
          (->> arguments
               (filter event?)
               first
@@ -118,9 +121,9 @@
          ;TODO refactor
          [[f & more]]
          `(let [arguments# [~@more]]
-            (if (xor (some event? arguments#)
+            (if (xor (has-event? arguments#)
                      (some behavior? arguments#))
-              (apply (if (some event? arguments#)
+              (apply (if (has-event? arguments#)
                        (partial combine ~f)
                        (helpers/lift-a ~(count more) ~f))
                      (entitize arguments#))
