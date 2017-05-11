@@ -40,7 +40,10 @@
                         (str/join "/")
                         (str "Avg/Max/Min temperature = "))))
 
-(run! (partial frp/on println) [forecast-event statistics])
+(def weather
+  (helpers/<$> observer-core/get-weather measurement-event))
+
+(run! (partial frp/on println) [forecast-event statistics weather])
 
 (frp/activate)
 

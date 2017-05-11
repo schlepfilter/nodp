@@ -68,7 +68,7 @@
 
 (helpers/printstream statistic-stream)
 
-(defn- get-weather
+(defn get-weather
   [{:keys [temperature humidity]}]
   (str "Current conditions: "
        temperature
