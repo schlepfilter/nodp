@@ -53,7 +53,6 @@
   (helpers/reify-monad
     (comp behavior*
           constantly)
-    ;TODO refactor
     (fn [ma f]
       (behavior* (fn [t]
                    (-> (get-value ma t @event/network-state)
