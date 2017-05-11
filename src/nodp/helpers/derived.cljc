@@ -137,18 +137,38 @@
                             x))
                         (macroexpand expr)))))
 
+;(defn buffer
+;  [size start e]
+;  (->> (combine vector
+;                (core/count e)
+;                (core/reduce (fn [x y]
+;                               (s/setval s/END
+;                                         [y]
+;                                         (if (= (count x) size)
+;                                           (rest x)
+;                                           x)))
+;                             (rest [])
+;                             e))
+;       (core/filter (fn [[n xs]]
+;                      (and (= (count xs) size)
+;                           (= (rem (- n size) start) 0))))
+;       (helpers/<$> second)))
+
 (defn buffer
   [size start e]
-  (->> (combine vector
+  (->> e
+       (core/reduce (fn [x y]
+                      (s/setval s/END
+                                [y]
+                                (helpers/if-then-else (comp (partial =
+                                                                     size)
+                                                            count)
+                                                      rest
+                                                      x)))
+                    (rest []))
+       (combine vector
                 (core/count e)
-                (core/reduce (fn [x y]
-                               (s/setval s/END
-                                         [y]
-                                         (if (= (count x) size)
-                                           (rest x)
-                                           x)))
-                             (rest [])
-                             e))
+                )
        (core/filter (fn [[n xs]]
                       (and (= (count xs) size)
                            (= (rem (- n size) start) 0))))
