@@ -10,6 +10,9 @@
 (def measurement-event
   (frp/event))
 
+(def pressure
+  (helpers/<$> :pressure measurement-event))
+
 (def temperature
   (helpers/<$> :temperature measurement-event))
 
