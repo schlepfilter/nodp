@@ -77,9 +77,9 @@
 
 (defn start
   ([]
-   (start {}))
-  ;TODO specify default sample-rate
-  ([{:keys [sample-rate]}]
+   (start #?(:clj  Double/POSITIVE_INFINITY
+             :cljs js/Number.POSITIVE_INFINITY)))
+  ([rate]
    (reset! event/network-state (event/get-initial-network))
    (def time
      (behavior* identity))
