@@ -27,6 +27,8 @@
          (str/join "/")
          (str "Avg/Max/Min temperature = "))))
 
+(frp/on println statistics)
+
 (frp/activate)
 
 (def measurements [{:temperature 80
