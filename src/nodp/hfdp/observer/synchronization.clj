@@ -2,7 +2,8 @@
   (:require [clojure.string :as str]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.clojure.core :as core]
-            [nodp.helpers :as helpers]))
+            [nodp.helpers :as helpers]
+            [nodp.hfdp.observer.core :as observer-core]))
 
 (frp/restart)
 
@@ -32,14 +33,4 @@
 
 (frp/activate)
 
-(def measurements [{:temperature 80
-                    :humidity    65
-                    :pressure    (rationalize 30.4)}
-                   {:temperature 82
-                    :humidity    70
-                    :pressure    (rationalize 29.2)}
-                   {:temperature 78
-                    :humidity    90
-                    :pressure    (rationalize 29.2)}])
-
-(run! measurement-event measurements)
+(run! measurement-event observer-core/measurements)

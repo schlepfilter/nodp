@@ -1,18 +1,27 @@
 (ns nodp.hfdp.observer.core
   (:require [clojure.string :as str]
             [beicon.core :as rx]
-            [nodp.helpers :as helpers]
-            [nodp.hfdp.observer.synchronization :as synchronization])
+            [nodp.helpers :as helpers])
   (:import (rx.functions FuncN)
            (rx Observable)))
 
-(def measurement
-  (->> synchronization/measurements
+(def measurements [{:temperature 80
+                    :humidity    65
+                    :pressure    (rationalize 30.4)}
+                   {:temperature 82
+                    :humidity    70
+                    :pressure    (rationalize 29.2)}
+                   {:temperature 78
+                    :humidity    90
+                    :pressure    (rationalize 29.2)}])
+
+(def measurement-stream
+  (->> measurements
        (apply rx/of)
        .publish))
 
 (def pressure
-  (rx/map :pressure measurement))
+  (rx/map :pressure measurement-stream))
 
 (def delta
   (->> pressure
@@ -34,7 +43,7 @@
 (helpers/printstream forecast-stream)
 
 (def temperature
-  (rx/map :temperature measurement))
+  (rx/map :temperature measurement-stream))
 
 (def rx-max
   (partial rx/scan max))
@@ -81,8 +90,8 @@
        "% humidity"))
 
 (def weather-stream
-  (rx/map get-weather measurement))
+  (rx/map get-weather measurement-stream))
 
 (helpers/printstream weather-stream)
 
-(rx/connect! measurement)
+(rx/connect! measurement-stream)
