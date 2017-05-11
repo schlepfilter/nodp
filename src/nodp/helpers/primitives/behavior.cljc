@@ -4,8 +4,13 @@
             [cats.protocols :as protocols]
             [cats.util :as util]
             [com.rpl.specter :as s]
+    #?@(:clj [
+            [chime :as chime]
+            [clj-time.core :as t]
+            [clj-time.periodic :as p]])
             [nodp.helpers :as helpers]
             [nodp.helpers.primitives.event :as event]
+            [nodp.helpers.time :as time]
             [nodp.helpers.tuple :as tuple])
   #?(:clj
      (:import [clojure.lang IDeref])))
@@ -75,19 +80,44 @@
           `(register* (fn []
                         ~@body))))
 
+(defn stop
+  []
+  ((:cancel @event/network-state)))
+
+#?(:clj (defn get-periods
+          ;TODO refactor
+          [rate]
+          (rest (p/periodic-seq (t/now) (t/millis rate)))))
+
+(defn handle
+  [_]
+  (when (:active @event/network-state)
+    (swap! event/network-state (partial s/setval* :time (event/get-new-time (time/now))))
+    (event/run-effects! @event/network-state)))
+
 (defn start
   ([]
    (start #?(:clj  Double/POSITIVE_INFINITY
              :cljs js/Number.POSITIVE_INFINITY)))
   ([rate]
    (reset! event/network-state (event/get-initial-network))
+   (swap! event/network-state
+          (partial s/setval*
+                   :cancel
+                   (if (= rate #?(:clj  Double/POSITIVE_INFINITY
+                                  :cljs js/Number.POSITIVE_INFINITY))
+                     helpers/nop
+                     #?(:clj  (chime/chime-at (get-periods rate) handle)
+                        :cljs (->> (js/setInterval handle rate)
+                                   (partial js/clearInterval))))))
    (def time
      (behavior* identity))
    (run! helpers/funcall @registry)))
 
-(def restart
-  ;TODO call stop
-  start)
+(defn restart
+  [& more]
+  (stop)
+  (apply start more))
 
 (defn get-middle
   [left right]

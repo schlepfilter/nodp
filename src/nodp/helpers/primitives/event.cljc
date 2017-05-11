@@ -19,7 +19,8 @@
 
 (defn get-initial-network
   []
-  {:dependency (graph/digraph)
+  {:cancel     helpers/nop
+   :dependency (graph/digraph)
    :function   (linked/map)
    :occs       (linked/map)
    :time       (time/time 0)})
