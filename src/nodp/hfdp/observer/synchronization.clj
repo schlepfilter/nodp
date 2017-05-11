@@ -14,8 +14,7 @@
   (helpers/<$> :pressure measurement-event))
 
 (def delta
-  (helpers/<$> (comp (partial apply -)
-                     reverse)
+  (helpers/<$> observer-core/get-delta
                (frp/buffer 2 1 pressure)))
 
 (def forecast-event

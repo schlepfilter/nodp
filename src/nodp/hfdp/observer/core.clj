@@ -11,11 +11,14 @@
 (def pressure
   (rx/map :pressure measurement-stream))
 
-(def delta
+(def get-delta
+  (comp (partial apply -)
+        reverse))
+
+(def delta-stream
   (->> pressure
        (rx/buffer 2 1)
-       (rx/map (comp (partial apply -)
-                     reverse))))
+       (rx/map get-delta)))
 
 (defn forecast
   [delta]
@@ -25,7 +28,7 @@
                  "Watch out for cooler, rainy weather"))
 
 (def forecast-stream
-  (rx/map forecast delta))
+  (rx/map forecast delta-stream))
 
 (helpers/printstream forecast-stream)
 
