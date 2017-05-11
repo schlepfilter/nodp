@@ -17,7 +17,7 @@
        (rx/map (comp (partial apply -)
                      reverse))))
 
-(defn- forecast
+(defn forecast
   [delta]
   (helpers/casep delta
                  pos? "Improving weather on the way!"

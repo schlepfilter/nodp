@@ -18,6 +18,9 @@
                      reverse)
                (frp/buffer 2 1 pressure)))
 
+(def forecast-event
+  (helpers/<$> observer-core/forecast delta))
+
 (def temperature
   (helpers/<$> :temperature measurement-event))
 
