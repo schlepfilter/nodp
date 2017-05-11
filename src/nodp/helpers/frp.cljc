@@ -26,6 +26,9 @@
 (def stepper
   behavior/stepper)
 
+(def time-transform
+  behavior/time-transform)
+
 (def transduce
   event/transduce)
 

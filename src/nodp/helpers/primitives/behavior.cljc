@@ -124,4 +124,17 @@
   (behavior* (fn [t]
                (get-stepper-value a e t @event/network-state))))
 
+(defn get-time-transform-function
+  ;TODO refactor
+  [any-behavior time-behavior network]
+  (comp (get-function any-behavior network)
+        (get-function time-behavior network)))
+
+(defn time-transform
+  ;TODO refactor
+  [any-behavior time-behavior]
+  (behavior* (get-time-transform-function any-behavior
+                                          time-behavior
+                                          @event/network-state)))
+
 ;TODO implement calculus after a Clojure/ClojureScript library for symbolic computation is released

@@ -92,3 +92,5 @@
       (frp/activate)
       (call)
       (= @bound-behavior @(get-behavior @outer-behavior)))))
+
+;TODO test time-transform
