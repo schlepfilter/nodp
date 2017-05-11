@@ -118,7 +118,6 @@
 
 #?(:clj
    (do (defmacro transparent*
-         ;TODO refactor
          [[f & more]]
          `(let [arguments# [~@more]]
             (if (xor (has-event? arguments#)
@@ -132,7 +131,6 @@
        (defmacro transparent
          [expr]
          (walk/postwalk (fn [x]
-                          ;TODO refactor
                           (if (has-argument? x)
                             `(transparent* ~x)
                             x))
