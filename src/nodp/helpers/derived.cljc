@@ -153,6 +153,16 @@
        (core/filter (fn [[n xs]]
                       (and (= (count xs) size)
                            (= (rem (- n size) start) 0))))
+       ;this is harder to read.
+       ;(core/filter (helpers/build and
+       ;                            (comp (partial = size)
+       ;                                  count
+       ;                                  last)
+       ;                            (comp (partial = 0)
+       ;                                  (partial (helpers/flip rem) start)
+       ;                                  (partial + size)
+       ;                                  -
+       ;                                  first)))
        (helpers/<$> second)))
 
 (def mean
