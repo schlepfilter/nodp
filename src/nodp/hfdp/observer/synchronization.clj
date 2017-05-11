@@ -22,10 +22,11 @@
   (core/max temperature))
 
 (def statistics
-  (frp/transparent
-    (->> (vector mean-temperature max-temperature min-temperature)
-         (str/join "/")
-         (str "Avg/Max/Min temperature = "))))
+  (frp/transparent (->> (vector mean-temperature
+                                max-temperature
+                                min-temperature)
+                        (str/join "/")
+                        (str "Avg/Max/Min temperature = "))))
 
 (frp/on println statistics)
 
