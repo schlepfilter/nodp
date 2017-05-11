@@ -85,9 +85,11 @@
   ((:cancel @event/network-state)))
 
 #?(:clj (defn get-periods
-          ;TODO refactor
           [rate]
-          (rest (p/periodic-seq (t/now) (t/millis rate)))))
+          (->> rate
+               t/millis
+               (p/periodic-seq (t/now))
+               rest)))
 
 (defn handle
   [_]
