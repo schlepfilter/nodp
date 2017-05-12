@@ -1,6 +1,7 @@
 (ns nodp.hfdp.command
   (:require [clojure.data :as data]
             [clojure.math.combinatorics :as combo]
+            [cats.builtin]
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
             [com.rpl.specter :as s]
@@ -14,13 +15,8 @@
         (apply s/multi-path))
    (s/multi-path :on :off)])
 
-(def nop
-  ;TODO replace nothing with unit
-  (-> (maybe/nothing)
-      constantly))
-
 (def control
-  (s/setval do-path nop []))
+  (s/setval do-path helpers/nop []))
 
 (def environment
   {:actions []
@@ -31,7 +27,8 @@
 (def add-undo
   (partial helpers/transfer* [:undos s/END] vector))
 
-(defmulti get-action (comp first keys))
+(defmulti get-action (comp first
+                           keys))
 
 (def get-percent
   (partial (helpers/flip str) "%"))
@@ -48,7 +45,7 @@
 (defn- get-preposition
   [light]
   (case light
-    :off (maybe/nothing)
+    :off helpers/nothing
     (maybe/just "on")))
 
 (def get-description
@@ -74,7 +71,7 @@
 
 (defmethod get-action :control
   [_]
-  (maybe/nothing))
+  helpers/nothing)
 
 ;This definition is harder to read.
 ;(helpers/defpfmethod get-action :control

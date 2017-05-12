@@ -36,22 +36,15 @@
 
 (defmethod greet false
   [_]
-  (maybe/nothing))
+  helpers/nothing)
 
-(defmacro defcurried
-  [f-name bindings body]
-  `(def ~f-name
-     (helpers/curry (fn ~bindings
-                      ~body)
-                    ~(count bindings))))
-
-(defcurried make-visit
-            [hierarchy target]
-            (maybe/map-maybe (comp greet
-                                   (fn [object]
-                                     {:target target
-                                      :object object}))
-                             (flatten hierarchy)))
+(helpers/defcurried make-visit
+                    [hierarchy target]
+                    (maybe/map-maybe (comp greet
+                                           (fn [object]
+                                             {:target target
+                                              :object object}))
+                                     (flatten hierarchy)))
 
 (def visit
   (make-visit default-hierarchy))
