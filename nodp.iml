@@ -26,6 +26,9 @@
     <orderEntry type="library" name="Leiningen: clj-time:0.11.0" level="project" />
     <orderEntry type="library" name="Leiningen: clj-tuple:0.2.2" level="project" />
     <orderEntry type="library" name="Leiningen: cljs-log:0.2.1" level="project" />
+    <orderEntry type="library" name="Leiningen: cljsjs/react-dom-server:15.4.0-0" level="project" />
+    <orderEntry type="library" name="Leiningen: cljsjs/react-dom:15.4.0-0" level="project" />
+    <orderEntry type="library" name="Leiningen: cljsjs/react:15.4.0-0" level="project" />
     <orderEntry type="library" name="Leiningen: clojure-complete:0.2.4" level="project" />
     <orderEntry type="library" name="Leiningen: clojureql:1.0.4" level="project" />
     <orderEntry type="library" name="Leiningen: clojurewerkz/money:1.9.0" level="project" />
@@ -150,6 +153,7 @@
     <orderEntry type="library" name="Leiningen: potemkin:0.4.3" level="project" />
     <orderEntry type="library" name="Leiningen: prismatic/plumbing:0.5.3" level="project" />
     <orderEntry type="library" name="Leiningen: prismatic/schema:1.0.1" level="project" />
+    <orderEntry type="library" name="Leiningen: reagent:0.6.1" level="project" />
     <orderEntry type="library" name="Leiningen: riddley:0.1.14" level="project" />
     <orderEntry type="library" name="Leiningen: ring-cors:0.1.8" level="project" />
     <orderEntry type="library" name="Leiningen: ring/ring-codec:1.0.1" level="project" />
