@@ -10,6 +10,7 @@
           `(behavior/register ~body)))
 
 (def restart
+  ;TODO don't define time
   (comp (fn [_]
           (def time
             behavior/time))
