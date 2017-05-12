@@ -357,14 +357,13 @@
 
 (defn get-elements
   [step! id initial network]
-  (map (partial helpers/<$> deref)
+  (->> network
+       ((make-get-occs-or-latests initial) id)
+       (map (partial s/transform* :snd (comp unreduced
+                                             (partial step! helpers/nothing))))
        (filter (comp maybe/just?
-                     tuple/snd)
-               (map (partial s/transform* :snd (comp unreduced
-                                                     (partial step! helpers/nothing)))
-                    ((make-get-occs-or-latests initial)
-                      id
-                      network)))))
+                     tuple/snd))
+       (map (partial helpers/<$> deref))))
 
 (defn get-transduction
   [init occs reduction]
