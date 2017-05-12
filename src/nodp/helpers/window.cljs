@@ -1,6 +1,8 @@
 (ns nodp.helpers.window
   (:require [nodp.helpers :as helpers]
-            [nodp.helpers.frp :as frp :include-macros true]))
+            [nodp.helpers.frp :as frp :include-macros true]
+            [com.rpl.specter :as s]
+            [nodp.helpers.primitives.event :as event]))
 
 (declare inner-height)
 
@@ -16,10 +18,15 @@
     (frp/stepper js/window.innerHeight
                  (helpers/<$> :inner-height resize)))
 
-  ;TODO remove listeners on stop
-  (js/addEventListener "resize"
-                       (fn []
-                         (resize {:inner-height js/window.innerHeight})))
+  (letfn [(add-resize []
+            (resize {:inner-height js/window.innerHeight}))]
+    (js/addEventListener "resize" add-resize)
+    (swap! event/network-state
+           (partial s/setval*
+                    :cancel
+                    (fn [_]
+                      (js/removeEventListener "resize" add-resize)))))
+
 
   (js/addEventListener
     "popstate"
