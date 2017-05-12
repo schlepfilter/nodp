@@ -7,7 +7,6 @@
 (declare pathname)
 
 (frp/register
-  ;TODO define a macro to define behaviors
   (def pathname
     (->> (helpers/<> window/popstate history/pushstate)
          (helpers/<$> (comp :pathname
