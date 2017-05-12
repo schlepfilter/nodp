@@ -1,6 +1,8 @@
 (ns nodp.helpers.history
   (:require [nodp.helpers.frp :as frp]))
 
+(declare pushstate)
+
 (frp/register
   (def pushstate
     (frp/event)))

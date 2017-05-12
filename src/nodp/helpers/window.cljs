@@ -4,6 +4,10 @@
             [com.rpl.specter :as s]
             [nodp.helpers.primitives.event :as event]))
 
+(declare popstate)
+
+(declare resize)
+
 (declare inner-height)
 
 (defn add-remove-listener
@@ -16,10 +20,10 @@
                     (js/removeEventListener event-type listener)))))
 
 (frp/register
-  (def resize
+  (def popstate
     (frp/event))
 
-  (def popstate
+  (def resize
     (frp/event))
 
   (def inner-height
@@ -27,7 +31,8 @@
                  (helpers/<$> :inner-height resize)))
 
   ;TODO define a macro to define behaviors and add and remove event listeners
-  (add-remove-listener "resize" #(resize {:inner-height js/window.innerHeight}))
-
   (add-remove-listener
-    "popstate" #(popstate {:location {:pathname js/location.pathname}})))
+    "popstate" #(popstate {:location {:pathname js/location.pathname}}))
+
+  (add-remove-listener "resize"
+                       #(resize {:inner-height js/window.innerHeight})))
