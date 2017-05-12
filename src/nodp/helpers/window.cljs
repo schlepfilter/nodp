@@ -16,6 +16,7 @@
     (frp/stepper js/window.innerHeight
                  (helpers/<$> :inner-height resize)))
 
+  ;TODO remove listeners on stop
   (js/addEventListener "resize"
                        (fn []
                          (resize {:inner-height js/window.innerHeight})))
