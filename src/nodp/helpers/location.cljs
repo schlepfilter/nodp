@@ -9,7 +9,7 @@
 (frp/register
   ;TODO define a macro to define behaviors
   (def pathname
-    (frp/stepper js/location.pathname
-                 (helpers/<$> (comp :pathname
-                                    :location)
-                              (helpers/<> window/popstate history/pushstate)))))
+    (->> (helpers/<> window/popstate history/pushstate)
+         (helpers/<$> (comp :pathname
+                            :location))
+         (frp/stepper js/location.pathname))))
