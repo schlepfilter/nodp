@@ -6,8 +6,16 @@
 
 (declare inner-height)
 
+(defn add-remove-listener
+  [event-type listener]
+  (js/addEventListener event-type listener)
+  (swap! event/network-state
+         (partial s/setval*
+                  :cancel
+                  (fn [_]
+                    (js/removeEventListener event-type listener)))))
+
 (frp/register
-  ;TODO define a macro to define behaviors and add and remove event listeners
   (def resize
     (frp/event))
 
@@ -18,21 +26,8 @@
     (frp/stepper js/window.innerHeight
                  (helpers/<$> :inner-height resize)))
 
-  (letfn [(add-resize []
-            (resize {:inner-height js/window.innerHeight}))]
-    (js/addEventListener "resize" add-resize)
-    (swap! event/network-state
-           (partial s/setval*
-                    :cancel
-                    (fn [_]
-                      (js/removeEventListener "resize" add-resize)))))
+  ;TODO define a macro to define behaviors and add and remove event listeners
+  (add-remove-listener "resize" #(resize {:inner-height js/window.innerHeight}))
 
-
-  (letfn [(pop-state []
-            (popstate {:location {:pathname js/location.pathname}}))]
-    (js/addEventListener "popstate" pop-state)
-    (swap! event/network-state
-           (partial s/setval*
-                    :cancel
-                    (fn [_]
-                      (js/removeEventListener "popstate" pop-state))))))
+  (add-remove-listener
+    "popstate" #(popstate {:location {:pathname js/location.pathname}})))
