@@ -28,7 +28,11 @@
                       (js/removeEventListener "resize" add-resize)))))
 
 
-  (js/addEventListener
-    "popstate"
-    (fn []
-      (popstate {:location {:pathname js/location.pathname}}))))
+  (letfn [(pop-state []
+            (popstate {:location {:pathname js/location.pathname}}))]
+    (js/addEventListener "popstate" pop-state)
+    (swap! event/network-state
+           (partial s/setval*
+                    :cancel
+                    (fn [_]
+                      (js/removeEventListener "popstate" pop-state))))))
