@@ -4,6 +4,7 @@
             [com.rpl.specter :as s]
             [nodp.helpers.primitives.event :as event]))
 
+;TODO specify an id
 (declare popstate)
 
 (declare resize)
@@ -20,6 +21,7 @@
                     (js/removeEventListener event-type listener)))))
 
 (frp/register
+  ;TODO rename id
   (def popstate
     (frp/event))
 
