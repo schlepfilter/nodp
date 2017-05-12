@@ -2,7 +2,6 @@
   (:require [nodp.helpers.frp :as frp]))
 
 (frp/register
-  ;TODO define a macro to define behaviors and add event listeners
   (def pushstate
     (frp/event)))
 
