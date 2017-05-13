@@ -102,24 +102,39 @@
 
 (util/make-printable Event)
 
-(def get-number
+(def parse-keyword
   (comp #?(:clj  read-string
            :cljs reader/read-string)
         (partial (helpers/flip subs) 1)
         str))
 
+(def get-last-key
+  (comp key
+        last))
+
+(def parse-last-key
+  (comp parse-keyword
+        get-last-key))
+
+(defn get-id-number*
+  [ordered-map]
+  (helpers/casep ordered-map
+                 empty? 0
+                 (comp number?
+                       parse-last-key)
+                 (-> ordered-map
+                     parse-last-key
+                     inc)
+                 (->> ordered-map
+                      get-last-key
+                      (dissoc ordered-map)
+                      recur)))
+
 (helpers/defcurried get-id-number
                     [k network]
-                    (if (-> network
-                            k
-                            empty?)
-                      0
-                      (-> network
-                          k
-                          last
-                          key
-                          get-number
-                          inc)))
+                    (-> network
+                        k
+                        get-id-number*))
 
 (def get-id
   (helpers/build (comp keyword
