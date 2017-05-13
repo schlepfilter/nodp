@@ -7,11 +7,16 @@
 
 (frp/restart)
 
+(def index
+  [:ul
+   [:a {:on-click #(history/push-state {} {} "/absolute")}
+    [:li "absolute"]]])
+
 (def app
   (helpers/<$> (fn [pathname*]
-                 [:ul
-                  [:a {:on-click #(history/push-state {} {} "absolute")}
-                   [:li "absolute"]]])
+                 (case pathname*
+                   "/absolute" [:div]
+                   index))
                location/pathname))
 
 (frp/on (partial (helpers/flip r/render) (js/document.getElementById "app"))
