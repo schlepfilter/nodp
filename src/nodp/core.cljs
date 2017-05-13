@@ -7,6 +7,7 @@
 
 (frp/restart)
 
+;TODO move index
 (def index
   [:ul
    [:a {:on-click #(history/push-state {} {} "/absolute")}
