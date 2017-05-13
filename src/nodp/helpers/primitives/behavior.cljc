@@ -94,15 +94,17 @@
                  (map s/must
                       [:dependency :function :modifies! :modified :occs])))
         (helpers/flip (m/curry set/rename-keys))
-        array-map))
+        (partial apply array-map)
+        reverse
+        vector))
 
 (def rename-id!
   (comp (partial swap! event/network-state)
         rename-id))
 
-(defn rename-entity!
-  [e id]
-  (rename-id! (:id e) id))
+(defn redef
+  [to from]
+  (rename-id! (:id to) (:id from)))
 
 (def time
   (Behavior. ::time))
@@ -138,7 +140,8 @@
                      #?(:clj  (chime/chime-at (get-periods rate) handle)
                         :cljs (->> (js/setInterval handle rate)
                                    (partial js/clearInterval))))))
-   (rename-entity! (behavior* identity) ::time)
+   (redef time
+          (behavior* identity))
    (run! helpers/funcall @registry)))
 
 (defn restart

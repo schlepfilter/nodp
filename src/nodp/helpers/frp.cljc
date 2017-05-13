@@ -15,8 +15,8 @@
 (def ->Behavior
   behavior/->Behavior)
 
-(def rename-entity!
-  behavior/rename-entity!)
+(def redef
+  behavior/redef)
 
 (def restart
   behavior/restart)
