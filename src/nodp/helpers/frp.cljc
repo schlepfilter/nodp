@@ -9,6 +9,15 @@
           [& body]
           `(behavior/register ~body)))
 
+(def ->Event
+  event/->Event)
+
+(def ->Behavior
+  behavior/->Behavior)
+
+(def rename-entity!
+  behavior/rename-entity!)
+
 (def restart
   behavior/restart)
 

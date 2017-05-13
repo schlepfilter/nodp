@@ -9,7 +9,8 @@
 
 (declare resize)
 
-(declare inner-height)
+(def inner-height
+  (frp/->Behavior ::inner-height))
 
 (defn add-remove-listener
   [event-type listener]
@@ -28,9 +29,9 @@
   (def resize
     (frp/event))
 
-  (def inner-height
-    (frp/stepper js/window.innerHeight
-                 (helpers/<$> :inner-height resize)))
+  (frp/rename-entity! (frp/stepper js/window.innerHeight
+                                   (helpers/<$> :inner-height resize))
+                      ::inner-height)
 
   ;TODO define a macro to define behaviors and add and remove event listeners
   (add-remove-listener
