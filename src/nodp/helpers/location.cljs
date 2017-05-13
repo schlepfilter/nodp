@@ -4,11 +4,12 @@
             [nodp.helpers.history :as history]
             [nodp.helpers.window :as window]))
 
-(declare pathname)
+(def pathname
+  (frp/->Behavior ::pathname))
 
 (frp/register
-  (def pathname
-    (->> (helpers/<> window/popstate history/pushstate)
-         (helpers/<$> (comp :pathname
-                            :location))
-         (frp/stepper js/location.pathname))))
+  (frp/redef pathname
+             (->> (helpers/<> window/popstate history/pushstate)
+                  (helpers/<$> (comp :pathname
+                                     :location))
+                  (frp/stepper js/location.pathname))))
