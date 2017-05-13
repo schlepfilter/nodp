@@ -2,7 +2,6 @@
   (:refer-clojure :exclude [stepper time])
   (:require [clojure.set :as set]
             [cats.builtin]
-            [cats.core :as m]
             [cats.protocols :as protocols]
             [cats.util :as util]
             [com.rpl.specter :as s]
@@ -89,11 +88,11 @@
     (event/run-effects! @event/network-state)))
 
 (def rename-id
-  (comp ((m/curry s/transform*)
+  (comp ((helpers/curry 3 s/transform*)
           (apply s/multi-path
                  (map s/must
                       [:dependency :function :modifies! :modified :occs])))
-        (helpers/flip (m/curry set/rename-keys))
+        (helpers/flip (helpers/curry 2 set/rename-keys))
         (partial apply array-map)
         reverse
         vector))
