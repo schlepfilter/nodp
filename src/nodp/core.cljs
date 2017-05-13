@@ -10,7 +10,7 @@
 (def app
   (helpers/<$> (fn [pathname*]
                  [:ul
-                  [:a {:on-click #(history/push-state {} {} "/absolute")}
+                  [:a {:on-click #(history/push-state {} {} "absolute")}
                    [:li "absolute"]]])
                location/pathname))
 

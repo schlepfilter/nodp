@@ -8,6 +8,7 @@
                  [aysylu/loom "1.0.0"]
                  [clojurewerkz/money "1.9.0"]
                  [com.andrewmcveigh/cljs-time "0.4.0"]
+                 [com.cemerick/url "0.1.1"]
                  [com.rpl/specter "1.0.0"]
                  [frankiesardo/linked "1.2.9"]
                  [funcool/beicon "2.7.0"]
