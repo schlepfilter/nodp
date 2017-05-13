@@ -72,6 +72,7 @@
   ((:cancel @event/network-state)))
 
 #?(:clj (defn get-periods
+          ;TODO extract a purely functional function
           [rate]
           (->> rate
                t/millis
