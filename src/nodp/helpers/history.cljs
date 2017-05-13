@@ -9,13 +9,7 @@
   (frp/redef pushstate
              (frp/event)))
 
-(def get-pathname
-  (comp :path
-        url/url))
-
 (defn push-state
   [state title url-string]
-  (->> url-string
-       get-pathname
-       (js/history.pushState state title))
-  (pushstate {:location {:pathname (get-pathname url-string)}}))
+  (js/history.pushState state title url-string)
+  (pushstate {:location {:pathname (:path (url/url url-string))}}))
