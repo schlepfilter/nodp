@@ -1,7 +1,7 @@
 (ns nodp.helpers.window
-  (:require [nodp.helpers :as helpers]
+  (:require [com.rpl.specter :as s]
+            [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp :include-macros true]
-            [com.rpl.specter :as s]
             [nodp.helpers.primitives.event :as event]))
 
 (def popstate
