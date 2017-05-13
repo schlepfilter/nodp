@@ -2,6 +2,7 @@
   (:refer-clojure :exclude [stepper time])
   (:require [clojure.set :as set]
             [cats.builtin]
+            [cats.core :as m]
             [cats.protocols :as protocols]
             [cats.util :as util]
             [com.rpl.specter :as s]
@@ -83,14 +84,13 @@
     (swap! event/network-state (partial s/setval* :time (event/get-new-time (time/now))))
     (event/run-effects! @event/network-state)))
 
-(defn rename-id
-  ;TODO refactor
-  [from to]
-  (partial s/transform*
-           (apply s/multi-path
-                  (map s/must
-                       [:dependency :function :modifies! :modified :occs]))
-           (partial (helpers/flip set/rename-keys) {from to})))
+(def rename-id
+  (comp ((m/curry s/transform*)
+          (apply s/multi-path
+                 (map s/must
+                      [:dependency :function :modifies! :modified :occs])))
+        (helpers/flip (m/curry set/rename-keys))
+        array-map))
 
 (def rename-id!
   (comp (partial swap! event/network-state)
