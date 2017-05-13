@@ -65,21 +65,6 @@
                        f
                        (get-value t @event/network-state)))))))
 
-(def registry
-  (atom []))
-
-(def register*
-  (comp (partial swap! registry)
-        ;TODO fix m/curry
-        ;((m/curry s/setval*) s/END)
-        ; ^--- The given function doesn't have arity metadata, provide an arity for currying.
-        ((helpers/curry 3 s/setval*) s/END)
-        vector))
-
-#?(:clj (defmacro register
-          [body]
-          `(register* (fn []
-                        ~@body))))
 
 (defn stop
   []
@@ -113,6 +98,22 @@
 
 (def time
   (Behavior. ::time))
+
+(def registry
+  (atom []))
+
+(def register*
+  (comp (partial swap! registry)
+        ;TODO fix m/curry
+        ;((m/curry s/setval*) s/END)
+        ; ^--- The given function doesn't have arity metadata, provide an arity for currying.
+        ((helpers/curry 3 s/setval*) s/END)
+        vector))
+
+#?(:clj (defmacro register
+          [body]
+          `(register* (fn []
+                        ~@body))))
 
 (defn start
   ([]
