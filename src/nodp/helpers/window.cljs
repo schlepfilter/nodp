@@ -7,7 +7,8 @@
 ;TODO specify an id
 (declare popstate)
 
-(declare resize)
+(def resize
+  (frp/->Event ::resize))
 
 (def inner-height
   (frp/->Behavior ::inner-height))
@@ -26,8 +27,8 @@
   (def popstate
     (frp/event))
 
-  (def resize
-    (frp/event))
+  (frp/redef resize
+             (frp/event))
 
   (frp/redef inner-height
              (frp/stepper js/window.innerHeight
