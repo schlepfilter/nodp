@@ -1,6 +1,7 @@
 (ns nodp.helpers.primitives.behavior
   (:refer-clojure :exclude [stepper time])
-  (:require [cats.builtin]
+  (:require [clojure.set :as set]
+            [cats.builtin]
             [cats.protocols :as protocols]
             [cats.util :as util]
             [com.rpl.specter :as s]
@@ -97,6 +98,21 @@
     (swap! event/network-state (partial s/setval* :time (event/get-new-time (time/now))))
     (event/run-effects! @event/network-state)))
 
+(defn rename-id
+  [from to network]
+  (s/transform (apply s/multi-path
+                      (map s/must
+                           [:dependency :function :modifies! :modified :occs]))
+               (partial (helpers/flip set/rename-keys) {from to})
+               network))
+
+(defn rename-id!
+  [from to]
+  (swap! event/network-state (partial rename-id from to)))
+
+(def time
+  (Behavior. ::time))
+
 (defn start
   ([]
    (start #?(:clj  Double/POSITIVE_INFINITY
@@ -112,8 +128,7 @@
                      #?(:clj  (chime/chime-at (get-periods rate) handle)
                         :cljs (->> (js/setInterval handle rate)
                                    (partial js/clearInterval))))))
-   (def time
-     (behavior* identity))
+   (rename-id! (:id (behavior* identity)) ::time)
    (run! helpers/funcall @registry)))
 
 (defn restart

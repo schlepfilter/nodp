@@ -10,11 +10,7 @@
           `(behavior/register ~body)))
 
 (def restart
-  ;TODO don't define time
-  (comp (fn [_]
-          (def time
-            behavior/time))
-        behavior/restart))
+  behavior/restart)
 
 (def event
   io/event)
@@ -22,7 +18,8 @@
 (def behavior
   derived/behavior)
 
-(declare time)
+(def time
+  behavior/time)
 
 (def stepper
   behavior/stepper)
