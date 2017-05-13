@@ -99,6 +99,7 @@
     (event/run-effects! @event/network-state)))
 
 (defn rename-id
+  ;TODO refactor
   [from to]
   (partial s/transform*
            (apply s/multi-path
