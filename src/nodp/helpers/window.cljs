@@ -30,8 +30,9 @@
              (frp/event))
 
   (frp/redef inner-height
-             (frp/stepper js/window.innerHeight
-                          (helpers/<$> :inner-height resize)))
+             (->> resize
+                  (helpers/<$> :inner-height)
+                  (frp/stepper js/window.innerHeight)))
 
   ;TODO define a macro to define behaviors and add and remove event listeners
   (add-remove-listener
