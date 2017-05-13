@@ -99,16 +99,16 @@
     (event/run-effects! @event/network-state)))
 
 (defn rename-id
-  [from to network]
-  (s/transform (apply s/multi-path
-                      (map s/must
-                           [:dependency :function :modifies! :modified :occs]))
-               (partial (helpers/flip set/rename-keys) {from to})
-               network))
-
-(defn rename-id!
   [from to]
-  (swap! event/network-state (partial rename-id from to)))
+  (partial s/transform*
+           (apply s/multi-path
+                  (map s/must
+                       [:dependency :function :modifies! :modified :occs]))
+           (partial (helpers/flip set/rename-keys) {from to})))
+
+(def rename-id!
+  (comp (partial swap! event/network-state)
+        rename-id))
 
 (def time
   (Behavior. ::time))
