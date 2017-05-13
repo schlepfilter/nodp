@@ -100,6 +100,10 @@
   (comp (partial swap! event/network-state)
         rename-id))
 
+(defn rename-entity!
+  [e id]
+  (rename-id! (:id e) id))
+
 (def time
   (Behavior. ::time))
 
@@ -134,7 +138,7 @@
                      #?(:clj  (chime/chime-at (get-periods rate) handle)
                         :cljs (->> (js/setInterval handle rate)
                                    (partial js/clearInterval))))))
-   (rename-id! (:id (behavior* identity)) ::time)
+   (rename-entity! (behavior* identity) ::time)
    (run! helpers/funcall @registry)))
 
 (defn restart
