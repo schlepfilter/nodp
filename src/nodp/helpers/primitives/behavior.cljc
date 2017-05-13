@@ -81,7 +81,10 @@
 (defn handle
   [_]
   (when (:active @event/network-state)
-    (swap! event/network-state (partial s/setval* :time (event/get-new-time (time/now))))
+    (->> (time/now)
+         event/get-new-time
+         (partial s/setval* :time)
+         (swap! event/network-state))
     (event/run-effects! @event/network-state)))
 
 (def rename-id
