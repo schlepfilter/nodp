@@ -1,11 +1,12 @@
 (ns nodp.helpers.history
   (:require [nodp.helpers.frp :as frp]))
 
-(declare pushstate)
+(def pushstate
+  (frp/->Event ::pushstate))
 
 (frp/register
-  (def pushstate
-    (frp/event)))
+  (frp/redef pushstate
+             (frp/event)))
 
 (defn push-state
   [state title url]
