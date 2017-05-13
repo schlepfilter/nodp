@@ -9,7 +9,8 @@
 (frp/on (fn [pathname*]
           (r/render [:ul
                      [:a {:on-click #(history/push-state {} {} "/absolute")}
-                      [:li "absolute"]]] (js/document.getElementById "app")))
+                      [:li "absolute"]]]
+                    (js/document.getElementById "app")))
         location/pathname)
 
 (frp/activate)
