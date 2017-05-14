@@ -22,19 +22,30 @@
                                         (bidi/path-for route :letter-count)))}
     [:li "lettercount"]]])
 
-(def letter-count
+(def length
+  (frp/event))
+
+(defn letter-count-component
+  [message]
   [:div
    [:h1 "Letter Counting Example"]
    [:p "Example to show getting the current length of the input."]
    [:div
     [:p
      "Text buffer: "
-     [:input]]
-    [:p "Start Typing!"]]])
+     [:input {:on-change (fn [event*]
+                           (length (.-target.value.length event*)))}]]
+    [:p message]]])
+
+(def letter-count-behavior
+  (->> length
+       (helpers/<$> (partial str "length: "))
+       (frp/stepper "Start Typing!")
+       (helpers/<$> letter-count-component)))
 
 (def app
-  (helpers/<$> (comp {:index        index
-                      :letter-count letter-count}
+  (helpers/=<< (comp {:index        (frp/behavior index)
+                      :letter-count letter-count-behavior}
                      :handler
                      (partial bidi/match-route route))
                location/pathname))
