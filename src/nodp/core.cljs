@@ -20,9 +20,7 @@
   [:a {:href     path
        :on-click (fn [event*]
                    (.preventDefault event*)
-                   (history/push-state {}
-                                       {}
-                                       path))}
+                   (history/push-state {} {} path))}
    [:li path]])
 
 (def index
