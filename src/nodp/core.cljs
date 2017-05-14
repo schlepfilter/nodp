@@ -12,6 +12,9 @@
         "lettercount"       :letter-count
         "simpledatabinding" :simple-data-binding}])
 
+(def route-keys
+  [:letter-count :simple-data-binding])
+
 (defn example
   [path]
   [:a {:href     path
@@ -23,8 +26,11 @@
    [:li path]])
 
 (def index
-  [:ul
-   [example (bidi/path-for route :letter-count)]])
+  (->> route-keys
+       (map (comp example
+                  (partial bidi/path-for route)))
+       (cons :ul)
+       (into [])))
 
 (def app
   (helpers/=<< (comp {:index        (frp/behavior index)
