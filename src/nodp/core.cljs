@@ -18,7 +18,9 @@
    [:a {:href     (bidi/path-for route :letter-count)
         :on-click (fn [event*]
                     (.preventDefault event*)
-                    (history/push-state {} {} (bidi/path-for route :letter-count)))}
+                    (history/push-state {}
+                                        {}
+                                        (bidi/path-for route :letter-count)))}
     [:li "lettercount"]]])
 
 (def app
