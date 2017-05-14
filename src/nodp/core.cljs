@@ -34,7 +34,9 @@
     [:p
      "Text buffer: "
      [:input {:on-change (fn [event*]
-                           (length (.-target.value.length event*)))}]]
+                           (-> event*
+                               .-target.value.length
+                               length))}]]
     [:p message]]])
 
 (def letter-count-behavior
