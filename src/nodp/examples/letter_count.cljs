@@ -25,4 +25,3 @@
        (helpers/<$> (partial str "length: "))
        (frp/stepper "Start Typing!")
        (helpers/<$> letter-count-component)))
-
