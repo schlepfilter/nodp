@@ -9,6 +9,7 @@
 (frp/restart)
 
 (def route
+  ;TODO use route-keywords
   ["/" {""                  :index
         "lettercount"       :letter-count
         "simpledatabinding" :simple-data-binding}])
