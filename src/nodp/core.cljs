@@ -22,9 +22,11 @@
 
 (def app
   (helpers/<$> (fn [pathname*]
-                 (case (:handler (bidi/match-route route pathname*))
-                   :index index
-                   :absolute [:div]))
+                 (->> pathname*
+                      (bidi/match-route route)
+                      :handler
+                      {:index    index
+                       :absolute [:div]}))
                location/pathname))
 
 (frp/on (partial (helpers/flip r/render) (js/document.getElementById "app"))
