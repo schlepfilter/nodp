@@ -24,12 +24,10 @@
     [:li "lettercount"]]])
 
 (def app
-  (helpers/<$> (fn [pathname*]
-                 (->> pathname*
-                      (bidi/match-route route)
-                      :handler
-                      {:index        index
-                       :letter-count letter-count/letter-count}))
+  (helpers/<$> (comp {:index        index
+                      :letter-count letter-count/letter-count}
+                     :handler
+                     (partial bidi/match-route route))
                location/pathname))
 
 (frp/on (partial (helpers/flip r/render) (js/document.getElementById "app"))
