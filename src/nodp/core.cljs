@@ -12,15 +12,19 @@
         "lettercount"       :letter-count
         "simpledatabinding" :simple-data-binding}])
 
+(defn example
+  [path]
+  [:a {:href     path
+       :on-click (fn [event*]
+                   (.preventDefault event*)
+                   (history/push-state {}
+                                       {}
+                                       path))}
+   [:li path]])
+
 (def index
   [:ul
-   [:a {:href     (bidi/path-for route :letter-count)
-        :on-click (fn [event*]
-                    (.preventDefault event*)
-                    (history/push-state {}
-                                        {}
-                                        (bidi/path-for route :letter-count)))}
-    [:li (bidi/path-for route :letter-count)]]])
+   [example (bidi/path-for route :letter-count)]])
 
 (def app
   (helpers/=<< (comp {:index        (frp/behavior index)
