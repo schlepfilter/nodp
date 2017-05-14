@@ -29,7 +29,8 @@
        (map (comp example
                   (partial bidi/path-for route)))
        (cons :ul)
-       (into [])))
+       (into [])
+       frp/behavior))
 
 (def length
   (frp/event))
@@ -58,7 +59,7 @@
 
 (def app
   (helpers/=<<
-    (comp {:index               (frp/behavior index)
+    (comp {:index               index
            :letter-count        letter-count-behavior
            :simple-data-binding simple-data-binding}
           :handler
