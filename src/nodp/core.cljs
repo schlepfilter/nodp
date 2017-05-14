@@ -1,5 +1,6 @@
 (ns nodp.core
-  (:require [reagent.core :as r]
+  (:require [bidi.bidi :as bidi]
+            [reagent.core :as r]
             [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.history :as history]
@@ -7,18 +8,22 @@
 
 (frp/restart)
 
+(def route
+  ["/" {""         :index
+        "absolute" :absolute}])
+
 (def index
   [:ul
-   [:a {:href     "/absolute"
+   [:a {:href     (bidi/path-for route :absolute)
         :on-click (fn [event*]
                     (.preventDefault event*)
-                    (history/push-state {} {} "/absolute"))}
+                    (history/push-state {} {} (bidi/path-for route :absolute)))}
     [:li "absolute"]]])
 
 (def app
   (helpers/<$> (fn [pathname*]
-                 (case pathname*
-                   "/absolute" [:div]
+                 (case (:handler (bidi/match-route route pathname*))
+                   :absolute [:div]
                    index))
                location/pathname))
 
