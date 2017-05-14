@@ -8,8 +8,9 @@
             [nodp.helpers.location :as location]))
 
 (def route
-  ["/" {""            :index
-        "lettercount" :letter-count}])
+  ["/" {""                  :index
+        "lettercount"       :letter-count
+        "simpledatabinding" :simple-data-binding}])
 
 (def index
   [:ul
@@ -19,7 +20,7 @@
                     (history/push-state {}
                                         {}
                                         (bidi/path-for route :letter-count)))}
-    [:li "lettercount"]]])
+    [:li (bidi/path-for route :letter-count)]]])
 
 (def app
   (helpers/=<< (comp {:index        (frp/behavior index)
