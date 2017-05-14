@@ -9,24 +9,24 @@
 (frp/restart)
 
 (def route
-  ["/" {""         :index
-        "absolute" :absolute}])
+  ["/" {""            :index
+        "lettercount" :letter-count}])
 
 (def index
   [:ul
-   [:a {:href     (bidi/path-for route :absolute)
+   [:a {:href     (bidi/path-for route :letter-count)
         :on-click (fn [event*]
                     (.preventDefault event*)
-                    (history/push-state {} {} (bidi/path-for route :absolute)))}
-    [:li "absolute"]]])
+                    (history/push-state {} {} (bidi/path-for route :letter-count)))}
+    [:li "lettercount"]]])
 
 (def app
   (helpers/<$> (fn [pathname*]
                  (->> pathname*
                       (bidi/match-route route)
                       :handler
-                      {:index    index
-                       :absolute [:div]}))
+                      {:index        index
+                       :letter-count [:div]}))
                location/pathname))
 
 (frp/on (partial (helpers/flip r/render) (js/document.getElementById "app"))
