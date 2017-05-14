@@ -7,10 +7,12 @@
 
 (frp/restart)
 
-;TODO move index
 (def index
   [:ul
-   [:a {:on-click #(history/push-state {} {} "/absolute")}
+   [:a {:href     "/absolute"
+        :on-click (fn [event*]
+                    (.preventDefault event*)
+                    (history/push-state {} {} "/absolute"))}
     [:li "absolute"]]])
 
 (def app
