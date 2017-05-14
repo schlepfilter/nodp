@@ -9,11 +9,17 @@
           [& body]
           `(behavior/register ~body)))
 
+(def ->Event
+  event/->Event)
+
+(def ->Behavior
+  behavior/->Behavior)
+
+(def redef
+  behavior/redef)
+
 (def restart
-  (comp (fn [_]
-          (def time
-            behavior/time))
-        behavior/restart))
+  behavior/restart)
 
 (def event
   io/event)
@@ -21,7 +27,8 @@
 (def behavior
   derived/behavior)
 
-(declare time)
+(def time
+  behavior/time)
 
 (def stepper
   behavior/stepper)

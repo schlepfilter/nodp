@@ -1,6 +1,7 @@
 (ns nodp.helpers.primitives.behavior
   (:refer-clojure :exclude [stepper time])
-  (:require [cats.builtin]
+  (:require [clojure.set :as set]
+            [cats.builtin]
             [cats.protocols :as protocols]
             [cats.util :as util]
             [com.rpl.specter :as s]
@@ -64,6 +65,49 @@
                        f
                        (get-value t @event/network-state)))))))
 
+
+(defn stop
+  []
+  ((:cancel @event/network-state)))
+
+#?(:clj (defn get-periods
+          ;TODO extract a purely functional function
+          [rate]
+          (->> rate
+               t/millis
+               (p/periodic-seq (t/now))
+               rest)))
+
+(defn handle
+  [_]
+  (when (:active @event/network-state)
+    (->> (time/now)
+         event/get-new-time
+         (partial s/setval* :time)
+         (swap! event/network-state))
+    (event/run-effects! @event/network-state)))
+
+(def rename-id
+  (comp ((helpers/curry 3 s/transform*)
+          (apply s/multi-path
+                 (map s/must
+                      [:dependency :function :modifies! :modified :occs])))
+        (helpers/flip (helpers/curry 2 set/rename-keys))
+        (partial apply array-map)
+        reverse
+        vector))
+
+(def rename-id!
+  (comp (partial swap! event/network-state)
+        rename-id))
+
+(defn redef
+  [to from]
+  (rename-id! (:id to) (:id from)))
+
+(def time
+  (Behavior. ::time))
+
 (def registry
   (atom []))
 
@@ -80,23 +124,6 @@
           `(register* (fn []
                         ~@body))))
 
-(defn stop
-  []
-  ((:cancel @event/network-state)))
-
-#?(:clj (defn get-periods
-          [rate]
-          (->> rate
-               t/millis
-               (p/periodic-seq (t/now))
-               rest)))
-
-(defn handle
-  [_]
-  (when (:active @event/network-state)
-    (swap! event/network-state (partial s/setval* :time (event/get-new-time (time/now))))
-    (event/run-effects! @event/network-state)))
-
 (defn start
   ([]
    (start #?(:clj  Double/POSITIVE_INFINITY
@@ -112,8 +139,8 @@
                      #?(:clj  (chime/chime-at (get-periods rate) handle)
                         :cljs (->> (js/setInterval handle rate)
                                    (partial js/clearInterval))))))
-   (def time
-     (behavior* identity))
+   (redef time
+          (behavior* identity))
    (run! helpers/funcall @registry)))
 
 (defn restart

@@ -1,14 +1,15 @@
 (ns nodp.helpers.location
   (:require [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp :include-macros true]
+            [nodp.helpers.history :as history]
             [nodp.helpers.window :as window]))
 
-(declare pathname)
+(def pathname
+  (frp/->Behavior ::pathname))
 
 (frp/register
-  ;TODO define a macro to define behaviors and add event listeners
-  (def pathname
-    (frp/stepper js/location.pathname
-                 (helpers/<$> (comp :pathname
-                                    :location)
-                              window/popstate))))
+  (frp/redef pathname
+             (->> (helpers/<> window/popstate history/pushstate)
+                  (helpers/<$> (comp :pathname
+                                     :location))
+                  (frp/stepper js/location.pathname))))

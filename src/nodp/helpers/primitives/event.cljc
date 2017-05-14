@@ -102,24 +102,39 @@
 
 (util/make-printable Event)
 
-(def get-number
+(def parse-keyword
   (comp #?(:clj  read-string
            :cljs reader/read-string)
         (partial (helpers/flip subs) 1)
         str))
 
+(def get-last-key
+  (comp key
+        last))
+
+(def parse-last-key
+  (comp parse-keyword
+        get-last-key))
+
+(defn get-id-number*
+  [ordered-map]
+  (helpers/casep ordered-map
+                 empty? 0
+                 (comp number?
+                       parse-last-key)
+                 (-> ordered-map
+                     parse-last-key
+                     inc)
+                 (->> ordered-map
+                      get-last-key
+                      (dissoc ordered-map)
+                      recur)))
+
 (helpers/defcurried get-id-number
                     [k network]
-                    (if (-> network
-                            k
-                            empty?)
-                      0
-                      (-> network
-                          k
-                          last
-                          key
-                          get-number
-                          inc)))
+                    (-> network
+                        k
+                        get-id-number*))
 
 (def get-id
   (helpers/build (comp keyword
@@ -357,14 +372,13 @@
 
 (defn get-elements
   [step! id initial network]
-  (map (partial helpers/<$> deref)
+  (->> network
+       ((make-get-occs-or-latests initial) id)
+       (map (partial s/transform* :snd (comp unreduced
+                                             (partial step! helpers/nothing))))
        (filter (comp maybe/just?
-                     tuple/snd)
-               (map (partial s/transform* :snd (comp unreduced
-                                                     (partial step! helpers/nothing)))
-                    ((make-get-occs-or-latests initial)
-                      id
-                      network)))))
+                     tuple/snd))
+       (map (partial helpers/<$> deref))))
 
 (defn get-transduction
   [init occs reduction]
@@ -416,9 +430,8 @@
   (juxt (partial swap! network-state (partial s/setval* :active true))
         run-network-state-effects!
         time/start
-        (fn []
-          (->> (time/now)
-               get-new-time
-               (partial s/setval* :time)
-               (swap! network-state)))
+        #(->> (time/now)
+              get-new-time
+              (partial s/setval* :time)
+              (swap! network-state))
         run-network-state-effects!))

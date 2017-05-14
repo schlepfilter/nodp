@@ -67,12 +67,10 @@
             [input-outer-anys input-inner-anys]
             (gen/vector (gen/vector test-helpers/any-equal) 2)
             calls (gen/shuffle (concat (map (fn [a]
-                                              (fn []
-                                                (input-outer-event a)))
+                                              #(input-outer-event a))
                                             input-outer-anys)
                                        (map (fn [a]
-                                              (fn []
-                                                (input-inner-event a)))
+                                              #(input-inner-event a))
                                             input-inner-anys)))
             invocations (gen/vector gen/boolean (count calls))]
            (gen/tuple (gen/return outer-behavior)

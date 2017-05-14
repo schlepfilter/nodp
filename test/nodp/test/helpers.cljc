@@ -128,6 +128,5 @@
 (def advance
   (gen/let [n gen/pos-int]
            (let [e (frp/event)]
-             (fn []
-               (dotimes [_ n]
-                 (e unit/unit))))))
+             #(dotimes [_ n]
+               (e unit/unit)))))

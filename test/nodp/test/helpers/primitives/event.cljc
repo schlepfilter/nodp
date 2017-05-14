@@ -63,10 +63,9 @@
                     (concat (map (helpers/curry 2 outer-input-event)
                                  input-event-anys)
                             (map (fn [inner-input-event as]
-                                   (fn []
-                                     (if (not= inner-input-event
-                                               outer-input-event)
-                                       (run! inner-input-event as))))
+                                   #(if (not= inner-input-event
+                                              outer-input-event)
+                                     (run! inner-input-event as)))
                                  inner-input-events
                                  (gen/vector (gen/vector test-helpers/any-equal)
                                              (count inner-input-events)))))]
