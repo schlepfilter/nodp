@@ -2,7 +2,6 @@
   (:require [bidi.bidi :as bidi]
             [reagent.core :as r]
             [nodp.helpers :as helpers]
-            [nodp.helpers.examples.letter-count :as letter-count]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.history :as history]
             [nodp.helpers.location :as location]))
@@ -23,9 +22,19 @@
                                         (bidi/path-for route :letter-count)))}
     [:li "lettercount"]]])
 
+(def letter-count
+  [:div
+   [:h1 "Letter Counting Example"]
+   [:p "Example to show getting the current length of the input."]
+   [:div
+    [:p
+     "Text buffer: "
+     [:input]]
+    [:p "Start Typing!"]]])
+
 (def app
   (helpers/<$> (comp {:index        index
-                      :letter-count letter-count/letter-count}
+                      :letter-count letter-count}
                      :handler
                      (partial bidi/match-route route))
                location/pathname))
