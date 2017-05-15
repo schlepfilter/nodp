@@ -15,32 +15,15 @@
 (def drag-n-drop
   (frp/behavior drag-n-drop/drag-n-drop-component))
 
-(def first-name
-  (frp/event))
-
-(def last-name
-  (frp/event))
-
-(def full-name
-  ((helpers/lift-a 3 str)
-    (frp/stepper "" first-name)
-    (frp/behavior " ")
-    (frp/stepper "" last-name)))
-
-(def simple-data-binding
-  (helpers/<$>
-    (simple-data-binding/simple-data-binding-component {:first-name first-name
-                                                        :last-name  last-name})
-    full-name))
-
 (def app
-  (helpers/=<< (comp {:index               index
-                      :drag-n-drop         drag-n-drop
-                      :letter-count        letter-count/letter-count
-                      :simple-data-binding simple-data-binding}
-                     :handler
-                     (partial bidi/match-route index/route))
-               location/pathname))
+  (helpers/=<<
+    (comp {:index               index
+           :drag-n-drop         drag-n-drop
+           :letter-count        letter-count/letter-count
+           :simple-data-binding simple-data-binding/simple-data-binding}
+          :handler
+          (partial bidi/match-route index/route))
+    location/pathname))
 
 (frp/on (partial (helpers/flip r/render) (js/document.getElementById "app"))
         app)
