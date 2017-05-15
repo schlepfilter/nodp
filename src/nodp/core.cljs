@@ -1,6 +1,7 @@
 (ns nodp.core
   (:require [bidi.bidi :as bidi]
             [reagent.core :as r]
+            [nodp.examples.letter-count :as letter-count]
             [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.history :as history]
@@ -36,24 +37,11 @@
 (def length
   (frp/event))
 
-(defn letter-count-component
-  [message]
-  [:div
-   [:h1 "Letter Counting Example"]
-   [:p "Example to show getting the current length of the input."]
-   [:div [:p
-          "Text buffer: "
-          [:input {:on-change (fn [event*]
-                                (-> event*
-                                    .-target.value.length
-                                    length))}]]
-    [:p message]]])
-
-(def letter-count-behavior
+(def letter-count
   (->> length
        (helpers/<$> (partial str "length: "))
        (frp/stepper "Start Typing!")
-       (helpers/<$> letter-count-component)))
+       (helpers/<$> (letter-count/letter-count-component length))))
 
 (def simple-data-binding
   (frp/behavior [:div]))
@@ -61,7 +49,7 @@
 (def app
   (helpers/=<<
     (comp {:index               index
-           :letter-count        letter-count-behavior
+           :letter-count        letter-count
            :simple-data-binding simple-data-binding}
           :handler
           (partial bidi/match-route route))
