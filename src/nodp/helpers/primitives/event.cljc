@@ -2,12 +2,16 @@
 (ns nodp.helpers.primitives.event
   (:refer-clojure :exclude [transduce])
   (:require [cats.monad.maybe :as maybe]
-            [cats.protocols :as p]
+            [cats.protocols :as protocols]
             [cats.util :as util]
             [com.rpl.specter :as s]
             [linked.core :as linked]
             [loom.alg :as alg]
             [loom.graph :as graph]
+    #?@(:clj [
+            [chime :as chime]
+            [clj-time.core :as t]
+            [clj-time.periodic :as periodic]])
     #?(:cljs [cljs.reader :as reader])
             [nodp.helpers :as helpers]
             [nodp.helpers.time :as time]
@@ -72,7 +76,7 @@
 
 (defrecord Event
   [id]
-  p/Contextual
+  protocols/Contextual
   (-get-context [_]
     ;If context is inlined, the following error seems to occur.
     ;java.lang.LinkageError: loader (instance of clojure/lang/DynamicClassLoader): attempted duplicate class definition for name: "nodp/helpers/primitives/event/Event"
@@ -96,7 +100,7 @@
   (#?(:clj  deref
       :cljs -deref) [_]
     (get-occs id @network-state))
-  p/Printable
+  protocols/Printable
   (-repr [_]
     (str "#[event " id "]")))
 
@@ -357,7 +361,7 @@
            make-set-modify-modify
            (cons (add-edge (:id ma)))
            event*))
-    p/Semigroup
+    protocols/Semigroup
     (-mappend [_ left-event right-event]
               (-> (modify-<> (:id left-event)
                              (:id right-event))
@@ -366,7 +370,7 @@
                                      :id)
                                [left-event right-event]))
                   event*))
-    p/Monoid
+    protocols/Monoid
     (-mempty [_]
              (event* []))))
 
@@ -426,12 +430,42 @@
   []
   (run-effects! @network-state))
 
-(def activate
-  (juxt (partial swap! network-state (partial s/setval* :active true))
-        run-network-state-effects!
-        time/start
-        #(->> (time/now)
-              get-new-time
-              (partial s/setval* :time)
-              (swap! network-state))
-        run-network-state-effects!))
+#?(:clj (defn get-periods
+          ;TODO extract a purely functional function
+          [rate]
+          (->> rate
+               t/millis
+               (periodic/periodic-seq (t/now))
+               rest)))
+
+(defn handle
+  [_]
+  (when (:active @network-state)
+    (->> (time/now)
+         get-new-time
+         (partial s/setval* :time)
+         (swap! network-state))
+    (run-effects! @network-state)))
+
+(defn activate
+  ([]
+   (activate #?(:clj  Double/POSITIVE_INFINITY
+                :cljs js/Number.POSITIVE_INFINITY)))
+  ([rate]
+   (swap! network-state
+          (partial s/setval*
+                   :cancel
+                   (if (= rate #?(:clj  Double/POSITIVE_INFINITY
+                                  :cljs js/Number.POSITIVE_INFINITY))
+                     helpers/nop
+                     #?(:clj  (chime/chime-at (get-periods rate) handle)
+                        :cljs (->> (js/setInterval handle rate)
+                                   (partial js/clearInterval))))))
+   (swap! network-state (partial s/setval* :active true))
+   (run-network-state-effects!)
+   (time/start)
+   (->> (time/now)
+        get-new-time
+        (partial s/setval* :time)
+        (swap! network-state))
+   (run-network-state-effects!)))
