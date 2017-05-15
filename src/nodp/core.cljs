@@ -2,6 +2,7 @@
   (:require [bidi.bidi :as bidi]
             [reagent.core :as r]
             [nodp.examples.index :as index]
+            [nodp.examples.drag-n-drop :as drag-n-drop]
             [nodp.examples.letter-count :as letter-count]
             [nodp.examples.simple-data-binding :as simple-data-binding]
             [nodp.helpers :as helpers]
@@ -12,6 +13,9 @@
 
 (def index
   (frp/behavior index/index-component))
+
+(def drag-n-drop
+  (frp/behavior drag-n-drop/drag-n-drop-component))
 
 (def length
   (frp/event))
@@ -37,11 +41,12 @@
 (def simple-data-binding
   (helpers/<$>
     (simple-data-binding/simple-data-binding-component {:first-name first-name
-                                                        :last-name last-name})
+                                                        :last-name  last-name})
     full-name))
 
 (def app
   (helpers/=<< (comp {:index               index
+                      :drag-n-drop         drag-n-drop
                       :letter-count        letter-count
                       :simple-data-binding simple-data-binding}
                      :handler

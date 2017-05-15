@@ -5,7 +5,7 @@
             [nodp.helpers.history :as history]))
 
 (def route-keywords
-  [:letter-count :simple-data-binding])
+  [:drag-n-drop :letter-count :simple-data-binding])
 
 (defn unkebab
   [s]
