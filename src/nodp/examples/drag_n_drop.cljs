@@ -1,6 +1,7 @@
 (ns ^:figwheel-always nodp.examples.drag-n-drop
-  (:require [nodp.helpers.frp :as frp]
-            [nodp.helpers :as helpers]))
+  (:require [nodp.helpers :as helpers]
+            [nodp.helpers.frp :as frp]
+            [nodp.helpers.unit :as unit]))
 
 (def black "hsl(0, 0%, 0%)")
 
@@ -18,12 +19,10 @@
 
 (def drag-n-drop-component
   [:div
-   [:div {:on-mouse-down (fn [event*]
-                           (offset {:x (.-nativeEvent.offsetX event*)
-                                    :y (.-nativeEvent.offsetY event*)}))
-          :on-mouse-up   (fn [event*]
-                           (client {:x (.-clientX event*)
-                                    :y (.-clientY event*)}))
+   [:div {:on-mouse-down (fn [_]
+                           (offset unit/unit))
+          :on-mouse-up   (fn [_]
+                           (client unit/unit))
           :style         {:background-image    "url(/img/logo.png)"
                           :background-repeat   "no-repeat"
                           :background-position "center"
