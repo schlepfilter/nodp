@@ -1,32 +1,23 @@
-(ns nodp.core
+(ns ^:figwheel-always nodp.core
   (:require [bidi.bidi :as bidi]
             [reagent.core :as r]
+            [nodp.examples.drag-n-drop :as drag-n-drop]
+            [nodp.examples.index :as index]
             [nodp.examples.letter-count :as letter-count]
+            [nodp.examples.simple-data-binding :as simple-data-binding]
             [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]
-            [nodp.helpers.history :as history]
             [nodp.helpers.location :as location]))
 
-(def route
-  ["/" {""            :index
-        "lettercount" :letter-count}])
-
-(def index
-  [:ul
-   [:a {:href     (bidi/path-for route :letter-count)
-        :on-click (fn [event*]
-                    (.preventDefault event*)
-                    (history/push-state {}
-                                        {}
-                                        (bidi/path-for route :letter-count)))}
-    [:li "lettercount"]]])
-
 (def app
-  (helpers/=<< (comp {:index        (frp/behavior index)
-                      :letter-count letter-count/letter-count-behavior}
-                     :handler
-                     (partial bidi/match-route route))
-               location/pathname))
+  (helpers/=<<
+    (comp {:index               index/index
+           :drag-n-drop         drag-n-drop/drag-n-drop
+           :letter-count        letter-count/letter-count
+           :simple-data-binding simple-data-binding/simple-data-binding}
+          :handler
+          (partial bidi/match-route index/route))
+    location/pathname))
 
 (frp/on (partial (helpers/flip r/render) (js/document.getElementById "app"))
         app)

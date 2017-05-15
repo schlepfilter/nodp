@@ -5,13 +5,8 @@
             [cats.protocols :as protocols]
             [cats.util :as util]
             [com.rpl.specter :as s]
-    #?@(:clj [
-            [chime :as chime]
-            [clj-time.core :as t]
-            [clj-time.periodic :as p]])
             [nodp.helpers :as helpers]
             [nodp.helpers.primitives.event :as event]
-            [nodp.helpers.time :as time]
             [nodp.helpers.tuple :as tuple])
   #?(:clj
      (:import [clojure.lang IDeref])))
@@ -70,23 +65,6 @@
   []
   ((:cancel @event/network-state)))
 
-#?(:clj (defn get-periods
-          ;TODO extract a purely functional function
-          [rate]
-          (->> rate
-               t/millis
-               (p/periodic-seq (t/now))
-               rest)))
-
-(defn handle
-  [_]
-  (when (:active @event/network-state)
-    (->> (time/now)
-         event/get-new-time
-         (partial s/setval* :time)
-         (swap! event/network-state))
-    (event/run-effects! @event/network-state)))
-
 (def rename-id
   (comp ((helpers/curry 3 s/transform*)
           (apply s/multi-path
@@ -120,33 +98,20 @@
         vector))
 
 #?(:clj (defmacro register
-          [body]
+          [& body]
           `(register* (fn []
                         ~@body))))
 
 (defn start
-  ([]
-   (start #?(:clj  Double/POSITIVE_INFINITY
-             :cljs js/Number.POSITIVE_INFINITY)))
-  ([rate]
-   (reset! event/network-state (event/get-initial-network))
-   (swap! event/network-state
-          (partial s/setval*
-                   :cancel
-                   (if (= rate #?(:clj  Double/POSITIVE_INFINITY
-                                  :cljs js/Number.POSITIVE_INFINITY))
-                     helpers/nop
-                     #?(:clj  (chime/chime-at (get-periods rate) handle)
-                        :cljs (->> (js/setInterval handle rate)
-                                   (partial js/clearInterval))))))
-   (redef time
-          (behavior* identity))
-   (run! helpers/funcall @registry)))
+  []
+  (reset! event/network-state (event/get-initial-network))
+  (redef time
+         (behavior* identity))
+  (run! helpers/funcall @registry))
 
-(defn restart
-  [& more]
-  (stop)
-  (apply start more))
+(def restart
+  (juxt stop
+        start))
 
 (defn get-middle
   [left right]

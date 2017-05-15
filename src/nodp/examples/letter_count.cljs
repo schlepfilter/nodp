@@ -1,7 +1,7 @@
-(ns nodp.examples.letter-count
+(ns ^:figwheel-always nodp.examples.letter-count
   (:require [nodp.helpers :as helpers]
-            [nodp.helpers.frp :as frp]
-            [nodp.restart]))
+            [nodp.helpers.frp :as frp]))
+
 
 (def length
   (frp/event))
@@ -19,7 +19,7 @@
                                     length))}]]
     [:p message]]])
 
-(def letter-count-behavior
+(def letter-count
   (->> length
        (helpers/<$> (partial str "length: "))
        (frp/stepper "Start Typing!")
