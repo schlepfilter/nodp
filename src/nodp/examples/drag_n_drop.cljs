@@ -8,11 +8,17 @@
 (def offset
   (frp/event))
 
+(def client
+  (frp/event))
+
 (def drag-n-drop-component
   [:div
    [:div {:on-mouse-down (fn [event*]
                            (offset {:x (.-nativeEvent.offsetX event*)
                                     :y (.-nativeEvent.offsetY event*)}))
+          :on-mouse-up   (fn [event*]
+                           (client {:x (.-clientX event*)
+                                    :y (.-clientY event*)}))
           :style         {:background-image    "url(/img/logo.png)"
                           :background-repeat   "no-repeat"
                           :background-position "center"
