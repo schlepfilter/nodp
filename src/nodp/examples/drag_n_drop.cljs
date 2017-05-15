@@ -1,5 +1,6 @@
 (ns ^:figwheel-always nodp.examples.drag-n-drop
-  (:require [nodp.helpers.frp :as frp]))
+  (:require [nodp.helpers.frp :as frp]
+            [nodp.helpers :as helpers]))
 
 (def black "hsl(0, 0%, 0%)")
 
@@ -10,6 +11,10 @@
 
 (def client
   (frp/event))
+
+(def drag
+  (frp/stepper false (helpers/<> (helpers/<$> (constantly true) offset)
+                                 (helpers/<$> (constantly false) client))))
 
 (def drag-n-drop-component
   [:div
