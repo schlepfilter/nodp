@@ -1,50 +1,16 @@
 (ns nodp.core
   (:require [bidi.bidi :as bidi]
-            [clojure.string :as str]
             [reagent.core :as r]
+            [nodp.examples.index :as index]
             [nodp.examples.letter-count :as letter-count]
             [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]
-            [nodp.helpers.history :as history]
             [nodp.helpers.location :as location]))
 
 (frp/restart)
 
-(def route-keywords
-  [:letter-count :simple-data-binding])
-
-(defn unkebab
-  [s]
-  (str/replace s #"-" ""))
-
-(def example-route
-  (zipmap (map (comp unkebab
-                     (partial (helpers/flip subs) 1)
-                     str)
-               route-keywords)
-          route-keywords))
-
-(def route
-  ["/" (merge {"" :index}
-              example-route)])
-
-(defn example-component
-  [path]
-  [:a {:href     path
-       :on-click (fn [event*]
-                   (.preventDefault event*)
-                   (history/push-state {} {} path))}
-   [:li path]])
-
-(def index-component
-  (->> route-keywords
-       (map (comp example-component
-                  (partial bidi/path-for route)))
-       (cons :ul)
-       (into [])))
-
 (def index
-  (frp/behavior index-component))
+  (frp/behavior index/index-component))
 
 (def length
   (frp/event))
@@ -59,13 +25,12 @@
   (frp/behavior [:div]))
 
 (def app
-  (helpers/=<<
-    (comp {:index               index
-           :letter-count        letter-count
-           :simple-data-binding simple-data-binding}
-          :handler
-          (partial bidi/match-route route))
-    location/pathname))
+  (helpers/=<< (comp {:index               index
+                      :letter-count        letter-count
+                      :simple-data-binding simple-data-binding}
+                     :handler
+                     (partial bidi/match-route index/route))
+               location/pathname))
 
 (frp/on (partial (helpers/flip r/render) (js/document.getElementById "app"))
         app)
