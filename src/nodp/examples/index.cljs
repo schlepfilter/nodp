@@ -28,7 +28,7 @@
        :on-click (fn [event*]
                    (.preventDefault event*)
                    (history/push-state {} {} path))}
-   [:li path]])
+   [:li (subs path 1)]])
 
 (def index-component
   (->> route-keywords
