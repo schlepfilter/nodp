@@ -7,6 +7,9 @@
              :include-macros true]
             [nodp.helpers.primitives.event :as event]))
 
+(def mousemove
+  (event/->Event ::mousemove))
+
 (def popstate
   (event/->Event ::popstate))
 
@@ -26,7 +29,7 @@
                     (js/removeEventListener event-type listener)))))
 
 (behavior/register
-  (io/redef-events [popstate resize])
+  (io/redef-events [popstate resize mousemove])
 
   (behavior/redef inner-height
                   (->> resize
@@ -39,4 +42,9 @@
     #(popstate {:location {:pathname js/location.pathname}}))
 
   (add-remove-listener "resize"
-                       #(resize {:inner-height js/innerHeight})))
+                       #(resize {:inner-height js/innerHeight}))
+
+  (add-remove-listener "mousemove"
+                       (fn [event*]
+                         (mousemove {:movement-x (.-movementX event*)
+                                     :movement-y (.-movementY event*)}))))
