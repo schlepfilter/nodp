@@ -1,15 +1,16 @@
 (ns nodp.helpers.history
-  (:require [nodp.helpers.frp :as frp]
+  (:require [nodp.helpers.io :as io]
             [nodp.helpers.primitives.behavior
              :as behavior
-             :include-macros true]))
+             :include-macros true]
+            [nodp.helpers.primitives.event :as event]))
 
 (def pushstate
-  (frp/->Event ::pushstate))
+  (event/->Event ::pushstate))
 
 (behavior/register
-  (frp/redef pushstate
-             (frp/event)))
+  (behavior/redef pushstate
+                  (io/event)))
 
 (defn push-state
   [state title url-string]
