@@ -31,7 +31,7 @@
   (behavior/redef inner-height
                   (->> resize
                        (helpers/<$> :inner-height)
-                       (behavior/stepper js/window.innerHeight)))
+                       (behavior/stepper js/innerHeight)))
 
   ;TODO define a macro to define behaviors and add and remove event listeners
   (add-remove-listener
@@ -39,4 +39,4 @@
     #(popstate {:location {:pathname js/location.pathname}}))
 
   (add-remove-listener "resize"
-                       #(resize {:inner-height js/window.innerHeight})))
+                       #(resize {:inner-height js/innerHeight})))
