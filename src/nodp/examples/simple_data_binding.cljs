@@ -37,6 +37,4 @@
     (frp/stepper "" last-name)))
 
 (def simple-data-binding
-  (helpers/<$> (simple-data-binding-component {:first-name first-name
-                                               :last-name  last-name})
-               full-name))
+  (helpers/<$> simple-data-binding-component full-name))
