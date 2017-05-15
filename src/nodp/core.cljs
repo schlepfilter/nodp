@@ -22,8 +22,23 @@
        (frp/stepper "Start Typing!")
        (helpers/<$> (letter-count/letter-count-component length))))
 
+(def first-name
+  (frp/event))
+
+(def last-name
+  (frp/event))
+
+(def full-name
+  ((helpers/lift-a 3 str)
+    (frp/stepper "" first-name)
+    (frp/behavior " ")
+    (frp/stepper "" last-name)))
+
 (def simple-data-binding
-  (frp/behavior simple-data-binding/simple-data-binding-component))
+  (helpers/<$>
+    (simple-data-binding/simple-data-binding-component {:first-name first-name
+                                                        :last-name last-name})
+    full-name))
 
 (def app
   (helpers/=<< (comp {:index               index
