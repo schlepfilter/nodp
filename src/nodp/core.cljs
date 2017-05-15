@@ -1,8 +1,8 @@
 (ns nodp.core
   (:require [bidi.bidi :as bidi]
             [reagent.core :as r]
-            [nodp.examples.index :as index]
             [nodp.examples.drag-n-drop :as drag-n-drop]
+            [nodp.examples.index :as index]
             [nodp.examples.letter-count :as letter-count]
             [nodp.examples.simple-data-binding :as simple-data-binding]
             [nodp.helpers :as helpers]
