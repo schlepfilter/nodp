@@ -1,5 +1,6 @@
 (ns nodp.core
   (:require [bidi.bidi :as bidi]
+            [clojure.string :as str]
             [reagent.core :as r]
             [nodp.examples.letter-count :as letter-count]
             [nodp.helpers :as helpers]
@@ -9,16 +10,25 @@
 
 (frp/restart)
 
-(def route
-  ;TODO use route-keywords
-  ["/" {""                  :index
-        "lettercount"       :letter-count
-        "simpledatabinding" :simple-data-binding}])
-
 (def route-keywords
   [:letter-count :simple-data-binding])
 
-(defn example
+(defn unkebab
+  [s]
+  (str/replace s #"-" ""))
+
+(def example-route
+  (zipmap (map (comp unkebab
+                     (partial (helpers/flip subs) 1)
+                     str)
+               route-keywords)
+          route-keywords))
+
+(def route
+  ["/" (merge {"" :index}
+              example-route)])
+
+(defn example-component
   [path]
   [:a {:href     path
        :on-click (fn [event*]
@@ -28,7 +38,7 @@
 
 (def index
   (->> route-keywords
-       (map (comp example
+       (map (comp example-component
                   (partial bidi/path-for route)))
        (cons :ul)
        (into [])
