@@ -1,5 +1,7 @@
-(ns nodp.examples.letter-count
-  (:require [nodp.helpers :as helpers :include-macros true]))
+(ns ^:figwheel-always nodp.examples.letter-count
+  (:require [nodp.helpers :as helpers :include-macros true]
+            [nodp.restart]
+            [nodp.helpers.frp :as frp]))
 
 (helpers/defcurried letter-count-component
                     [e message]
@@ -13,3 +15,12 @@
                                                       .-target.value.length
                                                       e))}]]
                       [:p message]]])
+
+(def length
+  (frp/event))
+
+(def letter-count
+  (->> length
+       (helpers/<$> (partial str "length: "))
+       (frp/stepper "Start Typing!")
+       (helpers/<$> (letter-count-component length))))

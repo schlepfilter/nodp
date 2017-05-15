@@ -1,4 +1,4 @@
-(ns nodp.core
+(ns ^:figwheel-always nodp.core
   (:require [bidi.bidi :as bidi]
             [reagent.core :as r]
             [nodp.examples.drag-n-drop :as drag-n-drop]
@@ -7,24 +7,14 @@
             [nodp.examples.simple-data-binding :as simple-data-binding]
             [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]
-            [nodp.helpers.location :as location]))
-
-(frp/restart)
+            [nodp.helpers.location :as location]
+            [nodp.restart]))
 
 (def index
   (frp/behavior index/index-component))
 
 (def drag-n-drop
   (frp/behavior drag-n-drop/drag-n-drop-component))
-
-(def length
-  (frp/event))
-
-(def letter-count
-  (->> length
-       (helpers/<$> (partial str "length: "))
-       (frp/stepper "Start Typing!")
-       (helpers/<$> (letter-count/letter-count-component length))))
 
 (def first-name
   (frp/event))
@@ -47,7 +37,7 @@
 (def app
   (helpers/=<< (comp {:index               index
                       :drag-n-drop         drag-n-drop
-                      :letter-count        letter-count
+                      :letter-count        letter-count/letter-count
                       :simple-data-binding simple-data-binding}
                      :handler
                      (partial bidi/match-route index/route))
