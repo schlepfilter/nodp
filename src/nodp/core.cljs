@@ -9,15 +9,12 @@
             [nodp.helpers.frp :as frp]
             [nodp.helpers.location :as location]))
 
-(def index
-  (frp/behavior index/index-component))
-
 (def drag-n-drop
   (frp/behavior drag-n-drop/drag-n-drop-component))
 
 (def app
   (helpers/=<<
-    (comp {:index               index
+    (comp {:index               index/index
            :drag-n-drop         drag-n-drop
            :letter-count        letter-count/letter-count
            :simple-data-binding simple-data-binding/simple-data-binding}

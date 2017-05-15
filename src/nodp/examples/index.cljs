@@ -1,7 +1,8 @@
-(ns nodp.examples.index
+(ns ^:figwheel-always nodp.examples.index
   (:require [bidi.bidi :as bidi]
             [clojure.string :as str]
             [nodp.helpers :as helpers]
+            [nodp.helpers.frp :as frp]
             [nodp.helpers.history :as history]))
 
 (def route-keywords
@@ -36,3 +37,6 @@
                   (partial bidi/path-for route)))
        (cons :ul)
        (into [])))
+
+(def index
+  (frp/behavior index-component))
