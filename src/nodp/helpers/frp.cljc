@@ -1,18 +1,9 @@
 (ns nodp.helpers.frp
   (:refer-clojure :exclude [stepper time transduce])
   (:require [nodp.helpers.derived :as derived :include-macros true]
+            [nodp.helpers.io :as io]
             [nodp.helpers.primitives.behavior :as behavior :include-macros true]
-            [nodp.helpers.primitives.event :as event]
-            [nodp.helpers.io :as io]))
-
-(def ->Event
-  event/->Event)
-
-(def ->Behavior
-  behavior/->Behavior)
-
-(def redef
-  behavior/redef)
+            [nodp.helpers.primitives.event :as event]))
 
 (def restart
   behavior/restart)
