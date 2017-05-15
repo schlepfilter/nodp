@@ -36,13 +36,15 @@
                    (history/push-state {} {} path))}
    [:li path]])
 
-(def index
+(def index-component
   (->> route-keywords
        (map (comp example-component
                   (partial bidi/path-for route)))
        (cons :ul)
-       (into [])
-       frp/behavior))
+       (into [])))
+
+(def index
+  (frp/behavior index-component))
 
 (def length
   (frp/event))
