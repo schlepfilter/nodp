@@ -39,7 +39,8 @@
 
   ;TODO define a macro to define behaviors and add and remove event listeners
   (add-remove-listener
-    "popstate" #(popstate {:location {:pathname js/location.pathname}}))
+    "popstate"
+    #(popstate {:location {:pathname js/location.pathname}}))
 
   (add-remove-listener "resize"
                        #(resize {:inner-height js/window.innerHeight})))
