@@ -7,8 +7,7 @@
             [nodp.examples.simple-data-binding :as simple-data-binding]
             [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]
-            [nodp.helpers.location :as location]
-            [nodp.restart]))
+            [nodp.helpers.location :as location]))
 
 (def index
   (frp/behavior index/index-component))

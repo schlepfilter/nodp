@@ -1,9 +1,10 @@
-(ns nodp.helpers.frp
+(ns ^:figwheel-always nodp.helpers.frp
   (:refer-clojure :exclude [stepper time transduce])
   (:require [nodp.helpers.derived :as derived :include-macros true]
             [nodp.helpers.io :as io]
             [nodp.helpers.primitives.behavior :as behavior :include-macros true]
-            [nodp.helpers.primitives.event :as event]))
+            [nodp.helpers.primitives.event :as event]
+    #?(:cljs [nodp.helpers.location])))
 
 (def restart
   behavior/restart)
@@ -47,3 +48,5 @@
 
 (def switcher
   derived/switcher)
+
+(restart)

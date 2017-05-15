@@ -1,6 +1,5 @@
 (ns ^:figwheel-always nodp.examples.letter-count
   (:require [nodp.helpers :as helpers :include-macros true]
-            [nodp.restart]
             [nodp.helpers.frp :as frp]))
 
 (helpers/defcurried letter-count-component
