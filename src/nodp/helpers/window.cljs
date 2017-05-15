@@ -26,11 +26,7 @@
                     (js/removeEventListener event-type listener)))))
 
 (behavior/register
-  (behavior/redef popstate
-                  (io/event))
-
-  (behavior/redef resize
-                  (io/event))
+  (io/redef-events [popstate resize])
 
   (behavior/redef inner-height
                   (->> resize
