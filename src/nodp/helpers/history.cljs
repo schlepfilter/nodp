@@ -1,10 +1,13 @@
 (ns nodp.helpers.history
-  (:require [nodp.helpers.frp :as frp]))
+  (:require [nodp.helpers.frp :as frp]
+            [nodp.helpers.primitives.behavior
+             :as behavior
+             :include-macros true]))
 
 (def pushstate
   (frp/->Event ::pushstate))
 
-(frp/register
+(behavior/register
   (frp/redef pushstate
              (frp/event)))
 

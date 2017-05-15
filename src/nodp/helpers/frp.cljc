@@ -5,10 +5,6 @@
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.io :as io]))
 
-#?(:clj (defmacro register
-          [& body]
-          `(behavior/register ~body)))
-
 (def ->Event
   event/->Event)
 

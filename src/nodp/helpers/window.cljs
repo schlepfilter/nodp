@@ -2,6 +2,9 @@
   (:require [com.rpl.specter :as s]
             [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp :include-macros true]
+            [nodp.helpers.primitives.behavior
+             :as behavior
+             :include-macros true]
             [nodp.helpers.primitives.event :as event]))
 
 (def popstate
@@ -22,7 +25,7 @@
                   (fn [_]
                     (js/removeEventListener event-type listener)))))
 
-(frp/register
+(behavior/register
   (frp/redef popstate
              (frp/event))
 

@@ -98,7 +98,7 @@
         vector))
 
 #?(:clj (defmacro register
-          [body]
+          [& body]
           `(register* (fn []
                         ~@body))))
 
