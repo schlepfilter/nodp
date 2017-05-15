@@ -3,6 +3,7 @@
             [reagent.core :as r]
             [nodp.examples.index :as index]
             [nodp.examples.letter-count :as letter-count]
+            [nodp.examples.simple-data-binding :as simple-data-binding]
             [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.location :as location]))
@@ -22,7 +23,7 @@
        (helpers/<$> (letter-count/letter-count-component length))))
 
 (def simple-data-binding
-  (frp/behavior [:div]))
+  (frp/behavior simple-data-binding/simple-data-binding-component))
 
 (def app
   (helpers/=<< (comp {:index               index
