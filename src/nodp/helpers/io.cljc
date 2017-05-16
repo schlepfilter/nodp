@@ -1,7 +1,6 @@
 ;primitives.event and io namespaces are separated to limit the impact of :refer-clojure :exclude for transduce
 (ns nodp.helpers.io
-  (:require [clojure.string :as str]
-            [cats.context :as ctx]
+  (:require [cats.context :as ctx]
             [cats.monad.maybe :as maybe]
             [com.rpl.specter :as s]
             [nodp.helpers :as helpers]
