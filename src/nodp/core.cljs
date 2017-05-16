@@ -8,11 +8,10 @@
             [nodp.helpers.location :as location]))
 
 (def app
-  (helpers/=<<
-    (comp (s/setval :index index/index index/route-function)
-          :handler
-          (partial bidi/match-route index/route))
-    location/pathname))
+  (helpers/=<< (comp (s/setval :index index/index index/route-function)
+                     :handler
+                     (partial bidi/match-route index/route))
+               location/pathname))
 
 (frp/on (partial (helpers/flip r/render) (js/document.getElementById "app"))
         app)
