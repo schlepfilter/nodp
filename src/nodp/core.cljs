@@ -1,22 +1,15 @@
 (ns ^:figwheel-always nodp.core
   (:require [bidi.bidi :as bidi]
             [reagent.core :as r]
-            [nodp.examples.drag-n-drop :as drag-n-drop]
+            [com.rpl.specter :as s]
             [nodp.examples.index :as index]
-            [nodp.examples.intro :as intro]
-            [nodp.examples.letter-count :as letter-count]
-            [nodp.examples.simple-data-binding :as simple-data-binding]
             [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.location :as location]))
 
 (def app
   (helpers/=<<
-    (comp {:index               index/index
-           :drag-n-drop         drag-n-drop/drag-n-drop
-           :intro               intro/intro
-           :letter-count        letter-count/letter-count
-           :simple-data-binding simple-data-binding/simple-data-binding}
+    (comp (s/setval :index index/index index/route-function)
           :handler
           (partial bidi/match-route index/route))
     location/pathname))
