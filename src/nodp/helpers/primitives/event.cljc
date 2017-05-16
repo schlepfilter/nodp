@@ -426,6 +426,12 @@
         (cons (add-edge (:id e)))
         event*)))
 
+(defn snapshot
+  [e b]
+  (helpers/<$> (fn [x]
+                 [x @b])
+               e))
+
 (defn run-network-state-effects!
   []
   (run-effects! @network-state))

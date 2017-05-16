@@ -1,7 +1,8 @@
 (ns ^:figwheel-always nodp.examples.drag-n-drop
   (:require [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]
-            [nodp.helpers.unit :as unit]))
+            [nodp.helpers.unit :as unit]
+            [nodp.helpers.window :as window]))
 
 (def black "hsl(0, 0%, 0%)")
 

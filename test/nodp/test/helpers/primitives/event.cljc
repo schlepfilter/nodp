@@ -211,3 +211,5 @@
       (frp/activate)
       (run! input-event as)
       (= @cat-event @map-event))))
+
+;TODO test snapshot
