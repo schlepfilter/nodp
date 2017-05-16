@@ -6,6 +6,7 @@
             [nodp.helpers :as helpers]
             [nodp.helpers.primitives.behavior :as behavior]
             [nodp.helpers.primitives.event :as event]
+            [nodp.helpers.protocols :as protocols]
             [nodp.helpers.tuple :as tuple])
   #?(:cljs (:require-macros [nodp.helpers.io :refer [defcurriedmethod]])))
 
@@ -14,7 +15,7 @@
   (->> (nodp.helpers/mempty)
        (ctx/with-context event/context)))
 
-(defmulti get-effect! (comp helpers/infer
+(defmulti get-effect! (comp protocols/-get-keyword
                             second
                             vector))
 
@@ -25,13 +26,13 @@
                                                (fn ~bindings
                                                  ~@body)))))
 
-(defcurriedmethod get-effect! event/context
+(defcurriedmethod get-effect! :event
                   [f! e network]
                   (run! (comp f!
                               tuple/snd)
                         (event/get-latests (:id e) network)))
 
-(defmethod get-effect! behavior/context
+(defmethod get-effect! :behavior
   [f! b]
   (let [past-latest-maybe-state (atom helpers/nothing)]
     (fn [network]
