@@ -19,6 +19,13 @@
                             second
                             vector))
 
+;This definition of get-effect! produces the following failure in :advanced.
+;Reloading Clojure file "/nodp/hfdp/observer/synchronization.clj" failed.
+;clojure.lang.Compiler$CompilerException: java.lang.IllegalArgumentException: No method in multimethod 'get-effect!' for dispatch value
+;(defmulti get-effect! (comp helpers/infer
+;                            second
+;                            vector))
+
 #?(:clj (defmacro defcurriedmethod
           [multifn dispatch-val bindings & body]
           `(helpers/defpfmethod ~multifn ~dispatch-val
