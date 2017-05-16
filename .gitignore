@@ -99,3 +99,4 @@ jspm_packages
 resources/public/js
 resources/public/test/js
 doc/auto
+dist/js

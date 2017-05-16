@@ -32,11 +32,18 @@
   :clean-targets ^{:protect false} [:target-path
                                     "resources/public/js"
                                     "resources/public/test/js"]
+  :plugins [[com.jakemccrary/lein-test-refresh "0.19.0"]
+            [lein-ancient "0.6.10"]
+            [lein-cljsbuild "1.1.3"]]
+  :cljsbuild {:builds
+              {:prod
+               {:source-paths ["src"]
+                :compiler     {:output-to     "dist/js/main.js"
+                               :main          nodp.core
+                               :optimizations :advanced}}}}
   :profiles
   {:dev {:dependencies [[binaryage/devtools "0.9.2"]
                         [com.taoensso/encore "2.90.1"]
                         [figwheel-sidecar "0.5.9"]
                         [org.clojure/tools.namespace "0.2.11"]
-                        [spyscope "0.1.6"]]
-         :plugins      [[com.jakemccrary/lein-test-refresh "0.19.0"]
-                        [lein-ancient "0.6.10"]]}})
+                        [spyscope "0.1.6"]]}})
