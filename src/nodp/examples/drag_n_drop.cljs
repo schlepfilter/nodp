@@ -25,11 +25,16 @@
        (core/filter second)
        (helpers/<$> first)))
 
+(def get-one-dimension
+  (comp (partial frp/stepper 0)
+        core/+
+        (partial (helpers/flip helpers/<$>) movement)))
+
 (def left
-  (frp/stepper 0 (core/+ (helpers/<$> :movement-x movement))))
+  (get-one-dimension :movement-x))
 
 (def top
-  (frp/stepper 0 (core/+ (helpers/<$> :movement-y movement))))
+  (get-one-dimension :movement-y))
 
 (def origin
   ((helpers/lift-a 2 (fn [left* top*]
