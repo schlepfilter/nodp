@@ -1,6 +1,7 @@
 (ns ^:figwheel-always nodp.examples.intro
-  (:require [nodp.helpers.frp :as frp]
-            [ajax.core :refer [GET POST]]))
+  (:require [clojure.walk :as walk]
+            [ajax.core :refer [GET POST]]
+            [nodp.helpers.frp :as frp]))
 
 (def response
   (frp/event))
@@ -13,5 +14,6 @@
           :on-click (fn [event*]
                       (.preventDefault event*)
                       (GET (str "https://api.github.com/users?since=" 0)
-                           {:handler response}))}
+                           {:handler (comp response
+                                           walk/keywordize-keys)}))}
       "refresh"]]))
