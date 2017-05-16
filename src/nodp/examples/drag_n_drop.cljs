@@ -1,5 +1,6 @@
 (ns ^:figwheel-always nodp.examples.drag-n-drop
-  (:require [nodp.helpers :as helpers]
+  (:require [nodp.helpers.clojure.core :as core]
+            [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.unit :as unit]
             [nodp.helpers.window :as window]))
@@ -17,6 +18,12 @@
 (def drag
   (frp/stepper false (helpers/<> (helpers/<$> (constantly true) offset)
                                  (helpers/<$> (constantly false) client))))
+
+(def movement
+  (->> drag
+       (frp/snapshot window/mousemove)
+       (core/filter second)
+       (helpers/<$> first)))
 
 (def drag-n-drop-component
   [:div
