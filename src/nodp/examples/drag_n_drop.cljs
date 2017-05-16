@@ -25,7 +25,21 @@
        (core/filter second)
        (helpers/<$> first)))
 
-(def drag-n-drop-component
+(def left
+  (frp/stepper 0 (core/+ (helpers/<$> :movement-x movement))))
+
+(def top
+  (frp/stepper 0 (core/+ (helpers/<$> :movement-y movement))))
+
+(def origin
+  ((helpers/lift-a 2 (fn [left* top*]
+                       {:left left*
+                        :top  top*}))
+    left
+    top))
+
+(defn drag-n-drop-component
+  [{:keys [left top]}]
   [:div
    [:div {:on-mouse-down (fn [_]
                            (offset unit/unit))
@@ -37,10 +51,13 @@
                           :background-color    black
                           :color               white
                           :height              200
+                          :left                left
+                          :position            "absolute"
+                          :top                 top
                           :width               200}}
     "Drag Me!"]
    [:h1 "Drag and Drop Example"]
    [:p "Example to show coordinating events to perform drag and drop"]])
 
 (def drag-n-drop
-  (frp/behavior drag-n-drop-component))
+  (helpers/<$> drag-n-drop-component origin))
