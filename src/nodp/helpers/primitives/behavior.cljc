@@ -7,6 +7,7 @@
             [com.rpl.specter :as s]
             [nodp.helpers :as helpers]
             [nodp.helpers.primitives.event :as event]
+            [nodp.helpers.protocols :as entity-protocols]
             [nodp.helpers.tuple :as tuple])
   #?(:clj
      (:import [clojure.lang IDeref])))
@@ -18,6 +19,9 @@
   protocols/Contextual
   (-get-context [_]
     context)
+  entity-protocols/Entity
+  (-get-keyword [_]
+    :behavior)
   IDeref
   (#?(:clj  deref
       :cljs -deref) [_]

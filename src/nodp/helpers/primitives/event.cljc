@@ -14,6 +14,7 @@
             [clj-time.periodic :as periodic]])
     #?(:cljs [cljs.reader :as reader])
             [nodp.helpers :as helpers]
+            [nodp.helpers.protocols :as entity-protocols]
             [nodp.helpers.time :as time]
             [nodp.helpers.tuple :as tuple])
   #?(:clj
@@ -96,6 +97,9 @@
         (->> (partial s/setval* :time current)
              (swap! network-state))
         (run-effects! @network-state))))
+  entity-protocols/Entity
+  (-get-keyword [_]
+    :event)
   IDeref
   (#?(:clj  deref
       :cljs -deref) [_]
@@ -425,6 +429,12 @@
         make-set-modify-modify
         (cons (add-edge (:id e)))
         event*)))
+
+(defn snapshot
+  [e b]
+  (helpers/<$> (fn [x]
+                 [x @b])
+               e))
 
 (defn run-network-state-effects!
   []

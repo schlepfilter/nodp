@@ -1,12 +1,12 @@
 ;primitives.event and io namespaces are separated to limit the impact of :refer-clojure :exclude for transduce
 (ns nodp.helpers.io
-  (:require [clojure.string :as str]
-            [cats.context :as ctx]
+  (:require [cats.context :as ctx]
             [cats.monad.maybe :as maybe]
             [com.rpl.specter :as s]
             [nodp.helpers :as helpers]
             [nodp.helpers.primitives.behavior :as behavior]
             [nodp.helpers.primitives.event :as event]
+            [nodp.helpers.protocols :as protocols]
             [nodp.helpers.tuple :as tuple])
   #?(:cljs (:require-macros [nodp.helpers.io :refer [defcurriedmethod]])))
 
@@ -15,21 +15,16 @@
   (->> (nodp.helpers/mempty)
        (ctx/with-context event/context)))
 
-(def get-keyword
-  (comp keyword
-        str/lower-case
-        last
-        (partial (helpers/flip str/split) #?(:clj  #"\."
-                                             :cljs #"/"))
-        ;JavaScript doesn't seem to implement lookbehind.
-        ;=> (partial re-find #"(?<=\.)\w*$")
-        ;#object[SyntaxError SyntaxError: Invalid regular expression: /(?<=\.)\w*$/: Invalid group]
-        pr-str
-        type))
-
-(defmulti get-effect! (comp get-keyword
+(defmulti get-effect! (comp protocols/-get-keyword
                             second
                             vector))
+
+;This definition of get-effect! produces the following failure in :advanced.
+;Reloading Clojure file "/nodp/hfdp/observer/synchronization.clj" failed.
+;clojure.lang.Compiler$CompilerException: java.lang.IllegalArgumentException: No method in multimethod 'get-effect!' for dispatch value
+;(defmulti get-effect! (comp helpers/infer
+;                            second
+;                            vector))
 
 #?(:clj (defmacro defcurriedmethod
           [multifn dispatch-val bindings & body]
@@ -61,3 +56,8 @@
         ((helpers/curry 3 s/setval*) [:effects s/END])
         vector
         get-effect!))
+
+(def redef-events
+  (partial run! (fn [from]
+                  (behavior/redef from
+                                  (event)))))

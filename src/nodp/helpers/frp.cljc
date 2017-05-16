@@ -27,6 +27,9 @@
 (def transduce
   event/transduce)
 
+(def snapshot
+  event/snapshot)
+
 (def activate
   event/activate)
 

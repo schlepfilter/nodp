@@ -7,6 +7,12 @@
              :include-macros true]
             [nodp.helpers.primitives.event :as event]))
 
+(def mousemove
+  (event/->Event ::mousemove))
+
+(def mouseup
+  (event/->Event ::mouseup))
+
 (def popstate
   (event/->Event ::popstate))
 
@@ -26,16 +32,12 @@
                     (js/removeEventListener event-type listener)))))
 
 (behavior/register
-  (behavior/redef popstate
-                  (io/event))
-
-  (behavior/redef resize
-                  (io/event))
+  (io/redef-events [popstate resize mousemove mouseup])
 
   (behavior/redef inner-height
                   (->> resize
                        (helpers/<$> :inner-height)
-                       (behavior/stepper js/window.innerHeight)))
+                       (behavior/stepper js/innerHeight)))
 
   ;TODO define a macro to define behaviors and add and remove event listeners
   (add-remove-listener
@@ -43,4 +45,14 @@
     #(popstate {:location {:pathname js/location.pathname}}))
 
   (add-remove-listener "resize"
-                       #(resize {:inner-height js/window.innerHeight})))
+                       #(resize {:inner-height js/innerHeight}))
+
+  (add-remove-listener "mousemove"
+                       (fn [event*]
+                         ;(.-movementX event*) is undefined in :advanced.
+                         (mousemove {:movement-x (aget event* "movementX")
+                                     :movement-y (aget event* "movementY")})))
+
+  (add-remove-listener "mouseup"
+                       (fn [event*]
+                         (mouseup {}))))

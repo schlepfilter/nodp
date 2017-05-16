@@ -1,39 +1,64 @@
 (ns ^:figwheel-always nodp.examples.drag-n-drop
-  (:require [nodp.helpers.frp :as frp]
-            [nodp.helpers :as helpers]))
+  (:require [nodp.helpers.clojure.core :as core]
+            [nodp.helpers :as helpers]
+            [nodp.helpers.frp :as frp]
+            [nodp.helpers.unit :as unit]
+            [nodp.helpers.window :as window]))
 
 (def black "hsl(0, 0%, 0%)")
 
 (def white "hsl(0, 0%, 100%)")
 
-(def offset
-  (frp/event))
-
-(def client
+(def mousedown
   (frp/event))
 
 (def drag
-  (frp/stepper false (helpers/<> (helpers/<$> (constantly true) offset)
-                                 (helpers/<$> (constantly false) client))))
+  (frp/stepper false (helpers/<> (helpers/<$> (constantly true) mousedown)
+                                 (helpers/<$> (constantly false)
+                                              window/mouseup))))
 
-(def drag-n-drop-component
+(def movement
+  (->> drag
+       (frp/snapshot window/mousemove)
+       (core/filter second)
+       (helpers/<$> first)))
+
+(def get-one-dimension
+  (comp (partial frp/stepper 0)
+        core/+
+        (partial (helpers/flip helpers/<$>) movement)))
+
+(def left
+  (get-one-dimension :movement-x))
+
+(def top
+  (get-one-dimension :movement-y))
+
+(def origin
+  ((helpers/lift-a 2 (fn [left* top*]
+                       {:left left*
+                        :top  top*}))
+    left
+    top))
+
+(defn drag-n-drop-component
+  [{:keys [left top]}]
   [:div
-   [:div {:on-mouse-down (fn [event*]
-                           (offset {:x (.-nativeEvent.offsetX event*)
-                                    :y (.-nativeEvent.offsetY event*)}))
-          :on-mouse-up   (fn [event*]
-                           (client {:x (.-clientX event*)
-                                    :y (.-clientY event*)}))
+   [:div {:on-mouse-down (fn [_]
+                           (mousedown unit/unit))
           :style         {:background-image    "url(/img/logo.png)"
                           :background-repeat   "no-repeat"
                           :background-position "center"
                           :background-color    black
                           :color               white
                           :height              200
+                          :left                left
+                          :position            "absolute"
+                          :top                 top
                           :width               200}}
     "Drag Me!"]
    [:h1 "Drag and Drop Example"]
    [:p "Example to show coordinating events to perform drag and drop"]])
 
 (def drag-n-drop
-  (frp/behavior drag-n-drop-component))
+  (helpers/<$> drag-n-drop-component origin))
