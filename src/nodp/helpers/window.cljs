@@ -46,5 +46,6 @@
 
   (add-remove-listener "mousemove"
                        (fn [event*]
-                         (mousemove {:movement-x (.-movementX event*)
-                                     :movement-y (.-movementY event*)}))))
+                         ;(.-movementX event*) is undefined in :advanced.
+                         (mousemove {:movement-x (aget event* "movementX")
+                                     :movement-y (aget event* "movementY")}))))
