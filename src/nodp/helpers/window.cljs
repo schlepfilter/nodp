@@ -10,6 +10,9 @@
 (def mousemove
   (event/->Event ::mousemove))
 
+(def mouseup
+  (event/->Event ::mouseup))
+
 (def popstate
   (event/->Event ::popstate))
 
@@ -29,7 +32,7 @@
                     (js/removeEventListener event-type listener)))))
 
 (behavior/register
-  (io/redef-events [popstate resize mousemove])
+  (io/redef-events [popstate resize mousemove mouseup])
 
   (behavior/redef inner-height
                   (->> resize
@@ -48,4 +51,8 @@
                        (fn [event*]
                          ;(.-movementX event*) is undefined in :advanced.
                          (mousemove {:movement-x (aget event* "movementX")
-                                     :movement-y (aget event* "movementY")}))))
+                                     :movement-y (aget event* "movementY")})))
+
+  (add-remove-listener "mouseup"
+                       (fn [event*]
+                         (mouseup {}))))

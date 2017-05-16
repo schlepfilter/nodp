@@ -9,15 +9,13 @@
 
 (def white "hsl(0, 0%, 100%)")
 
-(def mouse-down
-  (frp/event))
-
-(def mouse-up
+(def mousedown
   (frp/event))
 
 (def drag
-  (frp/stepper false (helpers/<> (helpers/<$> (constantly true) mouse-down)
-                                 (helpers/<$> (constantly false) mouse-up))))
+  (frp/stepper false (helpers/<> (helpers/<$> (constantly true) mousedown)
+                                 (helpers/<$> (constantly false)
+                                              window/mouseup))))
 
 (def movement
   (->> drag
@@ -47,9 +45,7 @@
   [{:keys [left top]}]
   [:div
    [:div {:on-mouse-down (fn [_]
-                           (mouse-down unit/unit))
-          :on-mouse-up   (fn [_]
-                           (mouse-up unit/unit))
+                           (mousedown unit/unit))
           :style         {:background-image    "url(/img/logo.png)"
                           :background-repeat   "no-repeat"
                           :background-position "center"
