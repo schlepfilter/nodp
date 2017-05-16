@@ -3,6 +3,7 @@
             [reagent.core :as r]
             [nodp.examples.drag-n-drop :as drag-n-drop]
             [nodp.examples.index :as index]
+            [nodp.examples.intro :as intro]
             [nodp.examples.letter-count :as letter-count]
             [nodp.examples.simple-data-binding :as simple-data-binding]
             [nodp.helpers :as helpers]
@@ -13,6 +14,7 @@
   (helpers/=<<
     (comp {:index               index/index
            :drag-n-drop         drag-n-drop/drag-n-drop
+           :intro               intro/intro
            :letter-count        letter-count/letter-count
            :simple-data-binding simple-data-binding/simple-data-binding}
           :handler
