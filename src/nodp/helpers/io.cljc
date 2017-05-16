@@ -15,19 +15,7 @@
   (->> (nodp.helpers/mempty)
        (ctx/with-context event/context)))
 
-(def get-keyword
-  (comp keyword
-        str/lower-case
-        last
-        (partial (helpers/flip str/split) #?(:clj  #"\."
-                                             :cljs #"/"))
-        ;JavaScript doesn't seem to implement lookbehind.
-        ;=> (partial re-find #"(?<=\.)\w*$")
-        ;#object[SyntaxError SyntaxError: Invalid regular expression: /(?<=\.)\w*$/: Invalid group]
-        pr-str
-        type))
-
-(defmulti get-effect! (comp get-keyword
+(defmulti get-effect! (comp helpers/infer
                             second
                             vector))
 
@@ -38,13 +26,13 @@
                                                (fn ~bindings
                                                  ~@body)))))
 
-(defcurriedmethod get-effect! :event
+(defcurriedmethod get-effect! event/context
                   [f! e network]
                   (run! (comp f!
                               tuple/snd)
                         (event/get-latests (:id e) network)))
 
-(defmethod get-effect! :behavior
+(defmethod get-effect! behavior/context
   [f! b]
   (let [past-latest-maybe-state (atom helpers/nothing)]
     (fn [network]
