@@ -2,6 +2,7 @@
   (:require [clojure.walk :as walk]
             [ajax.core :refer [GET POST]]
             [com.rpl.specter :as s]
+            [nodp.helpers.clojure.core :as core]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.unit :as unit]))
 
@@ -13,6 +14,11 @@
 
 (def clicks
   (repeatedly suggestion-number frp/event))
+
+(def click-counts
+  (map (comp (partial frp/stepper 0)
+             core/count)
+       clicks))
 
 (def click-components
   (map (fn [click]
