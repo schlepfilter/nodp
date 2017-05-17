@@ -35,6 +35,7 @@
   (get-one-dimension :movement-y))
 
 (def origin
+  ;TODO infer the number of arguments from fn
   ((helpers/lift-a 2 (fn [left* top*]
                        {:left left*
                         :top  top*}))
