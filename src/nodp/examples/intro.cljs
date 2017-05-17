@@ -38,7 +38,10 @@
   [:li {:style {:visibility (helpers/casep user*
                                            empty? "hidden"
                                            "visible")}}
-   [:img {:src (:avatar_url user*)}]
+   [:img {:src   (:avatar_url user*)
+          :style {:border-radius 20
+                  :height        40
+                  :width         40}}]
    [:a {:href (:html_url user*)} (:login user*)]
    [:a {:href     "#"
         :on-click (fn [event*]
