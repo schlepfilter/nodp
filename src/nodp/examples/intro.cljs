@@ -83,7 +83,8 @@
                  users*
                  clicks)
             [:div
-             [:div {:style {:background-color "hsl(0, 0%, 93%)"}}
+             [:div {:style {:background-color "hsl(0, 0%, 93%)"
+                            :padding          5}}
               [:h2 {:style {:display "inline-block"}}
                "Who to follow"]
               [:a {:href     "#"
