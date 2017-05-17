@@ -42,17 +42,19 @@
                "x"]])
        clicks))
 
+(defn intro-component
+  [users*]
+  (s/setval s/END
+            click-components
+            [:div
+             [:h2 "Who to follow"]
+             [:a {:href     "#"
+                  :on-click (fn [event*]
+                              (.preventDefault event*)
+                              (GET (str "https://api.github.com/users?since=" 0)
+                                   {:handler (comp response
+                                                   walk/keywordize-keys)}))}
+              "refresh"]]))
+
 (def intro
-  (frp/behavior
-    (s/setval
-      s/END
-      click-components
-      [:div
-       [:h2 "Who to follow"]
-       [:a {:href     "#"
-            :on-click (fn [event*]
-                        (.preventDefault event*)
-                        (GET (str "https://api.github.com/users?since=" 0)
-                             {:handler (comp response
-                                             walk/keywordize-keys)}))}
-        "refresh"]])))
+  (helpers/<$> intro-component users))
