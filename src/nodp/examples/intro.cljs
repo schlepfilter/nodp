@@ -43,12 +43,13 @@
 
 (def link-style
   {:display     "inline-block"
-   :margin-left "0.3em"})
+   :margin-left "0.313em"})
 
 (defn get-user-component
   [user* click]
   [:li {:style {:align-items "center"
                 :display     "flex"
+                :padding     "0.313em"
                 :visibility  (helpers/casep user*
                                             empty? "hidden"
                                             "visible")}}
@@ -87,7 +88,7 @@
                  clicks)
             [:div {:style {:border (str "0.125em solid " grey)}}
              [:div {:style {:background-color grey
-                            :padding          "0.3em"}}
+                            :padding          "0.313em"}}
               [:h2 {:style {:display "inline-block"}}
                "Who to follow"]
               [:a {:href     "#"
