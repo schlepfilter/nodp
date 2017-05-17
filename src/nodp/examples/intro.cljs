@@ -5,11 +5,14 @@
             [nodp.helpers.frp :as frp]
             [nodp.helpers.unit :as unit]))
 
+(def suggestion-number
+  3)
+
 (def response
   (frp/event))
 
 (def clicks
-  (repeatedly 3 frp/event))
+  (repeatedly suggestion-number frp/event))
 
 (def click-components
   (map (fn [click]
