@@ -2,6 +2,7 @@
   (:require [clojure.walk :as walk]
             [ajax.core :refer [GET POST]]
             [com.rpl.specter :as s]
+            [nodp.helpers :as helpers]
             [nodp.helpers.clojure.core :as core]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.unit :as unit]))
@@ -19,6 +20,12 @@
   (map (comp (partial frp/stepper 0)
              core/count)
        clicks))
+
+(def users
+  (apply (helpers/lift-a (fn [response* & click-counts]
+                           (map (partial nth (cycle response*))
+                                click-counts)))
+         (frp/stepper (repeat {}) response) click-counts))
 
 (def click-components
   (map (fn [click]
