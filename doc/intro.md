@@ -43,3 +43,8 @@ First, let's make a counter event that indicates how many times a button was cli
 ```
 
 TODO: write [great documentation](http://jacobian.org/writing/what-to-write/)
+
+---
+
+### Legal
+Based on a work at https://gist.github.com/staltz/868e7e9bc2a7b8c1f754 by Andre Medeiros at http://andre.staltz.com
