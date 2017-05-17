@@ -47,9 +47,11 @@
 
 (defn get-user-component
   [user* click]
-  [:li {:style {:visibility (helpers/casep user*
-                                           empty? "hidden"
-                                           "visible")}}
+  [:li {:style {:align-items "center"
+                :display     "flex"
+                :visibility  (helpers/casep user*
+                                            empty? "hidden"
+                                            "visible")}}
    [:img {:src   (:avatar_url user*)
           :style {:border-radius 20
                   :height        size
