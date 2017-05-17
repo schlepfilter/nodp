@@ -2,7 +2,6 @@
   (:require [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]))
 
-
 (def length
   (frp/event))
 

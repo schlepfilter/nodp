@@ -94,10 +94,10 @@
                     [e a]
                     ;TODO refactor
                     ;TODO use casep
-                    (if (event? a)
-                      a
-                      (helpers/<$> (constantly a)
-                                   e)))
+                    (helpers/casep a
+                                   event? a
+                                   (helpers/<$> (constantly a)
+                                                e)))
 
 (def has-event?
   (partial some event?))
@@ -133,9 +133,9 @@
        (defmacro transparent
          [expr]
          (walk/postwalk (fn [x]
-                          (if (has-argument? x)
-                            `(transparent* ~x)
-                            x))
+                          (helpers/casep x
+                                         has-argument? `(transparent* ~x)
+                                         x))
                         (macroexpand expr)))))
 
 (defn buffer

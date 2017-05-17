@@ -48,9 +48,9 @@
                           (test-helpers/make-iterate inner-behaviors)
                           fmapped-switching-event))
             input-event-anys (gen/vector test-helpers/any-equal
-                                         ((if (empty? @switching-event)
-                                            identity
-                                            dec)
+                                         ((helpers/casep @switching-event
+                                                         empty? identity
+                                                         dec)
                                            (count fmapped-inner-events)))
             input-events-anys (gen/vector test-helpers/any-equal
                                           (count input-event-anys))
