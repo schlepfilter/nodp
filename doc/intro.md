@@ -43,6 +43,13 @@ First, let's make a counter event that indicates how many times a button was cli
   (reduce g))
 ```
 
+```
+  click-event: ---c----c--c----c------c-->
+               vvvv <$> (c becomes 1) vvvv
+               ---1----1--1----1------1-->
+               vvvvvvvvv reduce + vvvvvvvv
+counter-event: ---1----2--3----4------5-->
+```
 
 TODO: write [great documentation](http://jacobian.org/writing/what-to-write/)
 
