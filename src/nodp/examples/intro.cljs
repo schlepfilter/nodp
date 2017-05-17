@@ -39,11 +39,11 @@
          (frp/stepper (repeat {}) response) offset-counts))
 
 (def size
-  40)
+  "2.5em")
 
 (def link-style
   {:display     "inline-block"
-   :margin-left 5})
+   :margin-left "0.3em"})
 
 (defn get-user-component
   [user* click]
@@ -53,7 +53,7 @@
                                             empty? "hidden"
                                             "visible")}}
    [:img {:src   (:avatar_url user*)
-          :style {:border-radius 20
+          :style {:border-radius "1.25em"
                   :height        size
                   :width         size}}]
    [:a {:href  (:html_url user*)
@@ -84,12 +84,12 @@
                  clicks)
             [:div
              [:div {:style {:background-color "hsl(0, 0%, 93%)"
-                            :padding          5}}
+                            :padding          "0.3em"}}
               [:h2 {:style {:display "inline-block"}}
                "Who to follow"]
               [:a {:href     "#"
                    :on-click handle-click
-                   :style    {:margin-left 20}}
+                   :style    {:margin-left "1.25em"}}
                "refresh"]]]))
 
 (def intro
