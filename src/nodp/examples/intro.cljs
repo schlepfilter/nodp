@@ -33,19 +33,22 @@
                                 click-counts)))
          (frp/stepper (repeat {}) response) offset-counts))
 
-(def click-components
-  (map (fn [click]
-         [:li [:a {:href     "#"
-                   :on-click (fn [event*]
-                               (.preventDefault event*)
-                               (click unit/unit))}
-               "x"]])
-       clicks))
+(defn get-user-component
+  [user* click]
+  [:li
+   [:a (:login user*)]
+   [:a {:href     "#"
+        :on-click (fn [event*]
+                    (.preventDefault event*)
+                    (click unit/unit))}
+    "x"]])
 
 (defn intro-component
   [users*]
   (s/setval s/END
-            click-components
+            (map get-user-component
+                 users*
+                 clicks)
             [:div
              [:h2 "Who to follow"]
              [:a {:href     "#"
