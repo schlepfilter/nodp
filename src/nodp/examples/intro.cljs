@@ -83,12 +83,13 @@
                  users*
                  clicks)
             [:div
-             [:h2 {:style {:display "inline-block"}}
-              "Who to follow"]
-             [:a {:href     "#"
-                  :on-click handle-click
-                  :style    {:margin-left 20}}
-              "refresh"]]))
+             [:div {:style {:background-color "hsl(0, 0%, 93%)"}}
+              [:h2 {:style {:display "inline-block"}}
+               "Who to follow"]
+              [:a {:href     "#"
+                   :on-click handle-click
+                   :style    {:margin-left 20}}
+               "refresh"]]]))
 
 (def intro
   (helpers/<$> intro-component users))
