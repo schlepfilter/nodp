@@ -38,9 +38,6 @@
                                 click-counts)))
          (frp/stepper (repeat {}) response) offset-counts))
 
-(def size
-  "2.5em")
-
 (def link-style
   {:display     "inline-block"
    :margin-left "0.313em"})
@@ -55,8 +52,8 @@
                                             "visible")}}
    [:img {:src   (:avatar_url user*)
           :style {:border-radius "1.25em"
-                  :height        size
-                  :width         size}}]
+                  :height        "2.5em"
+                  :width         "2.5em"}}]
    [:a {:href  (:html_url user*)
         :style link-style}
     (:login user*)]
