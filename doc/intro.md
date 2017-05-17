@@ -51,6 +51,10 @@ First, let's make a counter event that indicates how many times a button was cli
 counter-event: ---1----2--3----4------5-->
 ```
 
+The `<$> f` replaces (into the new event) each emitted vlue according to a function `f` you provide.  In our case, we fmapped to the number 1 on each click.  The `reduce g` aggregates all previous values on the event, producing value `(g accumulated current)`, where `g` was simply the add function in this example.  Then, `counter-event` emits the total number of clicks whenever a click happens.
+
+I hope you enjoy the beauty of this approach.  This example is just the tip of the iceberg: you can apply the same operations on different kinds of streams, for instance, on an event of API responses; on the other hand, there are many other functions available.
+
 TODO: write [great documentation](http://jacobian.org/writing/what-to-write/)
 
 ---
