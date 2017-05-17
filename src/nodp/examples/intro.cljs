@@ -57,6 +57,16 @@
                     (click unit/unit))}
     "x"]])
 
+(defn handle-click
+  [event*]
+  (.preventDefault event*)
+  (GET (->> (js/Math.random)
+            (* 500)
+            int
+            (str "https://api.github.com/users?since="))
+       {:handler (comp response
+                       walk/keywordize-keys)}))
+
 (defn intro-component
   [users*]
   (s/setval s/END
@@ -66,11 +76,7 @@
             [:div
              [:h2 "Who to follow"]
              [:a {:href     "#"
-                  :on-click (fn [event*]
-                              (.preventDefault event*)
-                              (GET (str "https://api.github.com/users?since=" 0)
-                                   {:handler (comp response
-                                                   walk/keywordize-keys)}))}
+                  :on-click handle-click}
               "refresh"]]))
 
 (def intro
