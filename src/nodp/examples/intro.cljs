@@ -41,6 +41,10 @@
 (def size
   40)
 
+(def link-style
+  {:display     "inline-block"
+   :margin-left 5})
+
 (defn get-user-component
   [user* click]
   [:li {:style {:visibility (helpers/casep user*
@@ -50,11 +54,14 @@
           :style {:border-radius 20
                   :height        size
                   :width         size}}]
-   [:a {:href (:html_url user*)} (:login user*)]
+   [:a {:href  (:html_url user*)
+        :style link-style}
+    (:login user*)]
    [:a {:href     "#"
         :on-click (fn [event*]
                     (.preventDefault event*)
-                    (click unit/unit))}
+                    (click unit/unit))
+        :style    link-style}
     "x"]])
 
 (defn handle-click
