@@ -399,7 +399,7 @@
                     [f init id network reduction element]
                     (s/setval s/END
                               reduction
-                              [((helpers/lift-a 2 f)
+                              [((helpers/lift-a f)
                                  (get-transduction init
                                                    (get-occs id network)
                                                    reduction)

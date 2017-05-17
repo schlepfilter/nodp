@@ -126,7 +126,7 @@
                      (some behavior? arguments#))
               (apply (if (has-event? arguments#)
                        (partial combine ~f)
-                       (helpers/lift-a ~(count more) ~f))
+                       (helpers/lift-a ~f))
                      (entitize arguments#))
               (apply ~f arguments#))))
 

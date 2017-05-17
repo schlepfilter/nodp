@@ -31,7 +31,7 @@
    [:div full-name]])
 
 (def full-name
-  ((helpers/lift-a 3 str)
+  ((helpers/lift-a str)
     (frp/stepper "" first-name)
     (frp/behavior " ")
     (frp/stepper "" last-name)))
