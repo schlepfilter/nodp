@@ -93,6 +93,7 @@
 (helpers/defcurried eventize
                     [e a]
                     ;TODO refactor
+                    ;TODO use casep
                     (if (event? a)
                       a
                       (helpers/<$> (constantly a)
