@@ -1,4 +1,4 @@
-(ns ^:figwheel-always nodp.core
+(ns nodp.core
   (:require [bidi.bidi :as bidi]
             [reagent.core :as r]
             [com.rpl.specter :as s]
