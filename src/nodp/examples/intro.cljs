@@ -21,11 +21,14 @@
              core/count)
        clicks))
 
+(def user-number
+  30)
+
 (def offset-counts
   (map (fn [click-count offset]
          (helpers/<$> (partial + offset) click-count))
        click-counts
-       (range 0 30 10)))
+       (range 0 user-number (quot user-number suggestion-number))))
 
 (def users
   (apply (helpers/lift-a (fn [response* & click-counts]
