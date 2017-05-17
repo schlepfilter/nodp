@@ -10,7 +10,7 @@ The hardest part of a learning journey is **thinking in Functional Reactive**.  
 
 #### Functional Reactive programming is programming with events and behaviors.
 
-But that only begs more questions.
+But that only begs the question.
 
 ##### What are events?
 
