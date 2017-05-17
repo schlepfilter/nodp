@@ -83,9 +83,11 @@
                  users*
                  clicks)
             [:div
-             [:h2 "Who to follow"]
+             [:h2 {:style {:display "inline-block"}}
+              "Who to follow"]
              [:a {:href     "#"
-                  :on-click handle-click}
+                  :on-click handle-click
+                  :style    {:margin-left 20}}
               "refresh"]]))
 
 (def intro
