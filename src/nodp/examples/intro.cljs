@@ -76,14 +76,17 @@
        {:handler (comp response
                        walk/keywordize-keys)}))
 
+(def grey
+  "hsl(0, 0%, 93%)")
+
 (defn intro-component
   [users*]
   (s/setval s/END
             (map get-user-component
                  users*
                  clicks)
-            [:div
-             [:div {:style {:background-color "hsl(0, 0%, 93%)"
+            [:div {:style {:border (str "0.125em solid " grey)}}
+             [:div {:style {:background-color grey
                             :padding          "0.3em"}}
               [:h2 {:style {:display "inline-block"}}
                "Who to follow"]
