@@ -21,11 +21,17 @@
              core/count)
        clicks))
 
+(def offset-counts
+  (map (fn [click-count offset]
+         (helpers/<$> (partial + offset) click-count))
+       click-counts
+       (range 0 30 10)))
+
 (def users
   (apply (helpers/lift-a (fn [response* & click-counts]
                            (map (partial nth (cycle response*))
                                 click-counts)))
-         (frp/stepper (repeat {}) response) click-counts))
+         (frp/stepper (repeat {}) response) offset-counts))
 
 (def click-components
   (map (fn [click]
