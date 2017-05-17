@@ -33,6 +33,9 @@
                                 click-counts)))
          (frp/stepper (repeat {}) response) offset-counts))
 
+(def size
+  40)
+
 (defn get-user-component
   [user* click]
   [:li {:style {:visibility (helpers/casep user*
@@ -40,8 +43,8 @@
                                            "visible")}}
    [:img {:src   (:avatar_url user*)
           :style {:border-radius 20
-                  :height        40
-                  :width         40}}]
+                  :height        size
+                  :width         size}}]
    [:a {:href (:html_url user*)} (:login user*)]
    [:a {:href     "#"
         :on-click (fn [event*]
