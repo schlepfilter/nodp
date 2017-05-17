@@ -1,4 +1,4 @@
-(ns ^:figwheel-always nodp.examples.index
+(ns nodp.examples.index
   (:require [bidi.bidi :as bidi]
             [clojure.string :as str]
             [nodp.examples.drag-n-drop :as drag-n-drop]

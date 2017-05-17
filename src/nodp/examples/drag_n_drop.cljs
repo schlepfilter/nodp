@@ -1,4 +1,4 @@
-(ns ^:figwheel-always nodp.examples.drag-n-drop
+(ns nodp.examples.drag-n-drop
   (:require [nodp.helpers.clojure.core :as core]
             [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]

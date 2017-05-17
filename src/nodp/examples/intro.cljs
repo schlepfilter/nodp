@@ -1,4 +1,4 @@
-(ns ^:figwheel-always nodp.examples.intro
+(ns nodp.examples.intro
   (:require [clojure.walk :as walk]
             [ajax.core :refer [GET POST]]
             [com.rpl.specter :as s]
