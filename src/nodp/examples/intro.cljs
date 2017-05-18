@@ -10,6 +10,9 @@
 (def suggestion-number
   3)
 
+(def request
+  (frp/event "https://api.github.com/users"))
+
 (def response
   (frp/event))
 
@@ -67,12 +70,11 @@
 (defn handle-click
   [event*]
   (.preventDefault event*)
-  (GET (->> (js/Math.random)
-            (* 500)
-            int
-            (str "https://api.github.com/users?since="))
-       {:handler (comp response
-                       walk/keywordize-keys)}))
+  (->> (js/Math.random)
+       (* 500)
+       int
+       (str "https://api.github.com/users?since=")
+       request))
 
 (def grey
   "hsl(0, 0%, 93%)")
@@ -95,3 +97,8 @@
 
 (def intro
   (helpers/<$> intro-component users))
+
+(frp/on (partial (helpers/flip GET)
+                 {:handler (comp response
+                                 walk/keywordize-keys)})
+        request)

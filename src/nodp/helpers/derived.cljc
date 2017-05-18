@@ -10,9 +10,13 @@
             [clojure.walk :as walk])))
 
 (defn event
-  []
-  (->> (nodp.helpers/mempty)
-       (ctx/with-context event/context)))
+  ([]
+   (->> (nodp.helpers/mempty)
+        (ctx/with-context event/context)))
+  ([a]
+   (-> (event)
+       helpers/infer
+       (nodp.helpers/return a))))
 
 (helpers/defcurried add-edges
                     [parents child network]
