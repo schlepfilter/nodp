@@ -10,8 +10,11 @@
 (def suggestion-number
   3)
 
+(def endpoint
+  "https://api.github.com/users")
+
 (def request
-  (frp/event "https://api.github.com/users"))
+  (frp/event endpoint))
 
 (def response
   (frp/event))
@@ -73,7 +76,7 @@
   (->> (js/Math.random)
        (* 500)
        int
-       (str "https://api.github.com/users?since=")
+       (str endpoint "?since=")
        request))
 
 (def grey
