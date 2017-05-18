@@ -42,7 +42,8 @@
   (apply (helpers/lift-a (fn [response* & click-counts]
                            (map (partial nth (cycle response*))
                                 click-counts)))
-         (frp/stepper (repeat {}) response) offset-counts))
+         (frp/stepper (repeat {}) response)
+         offset-counts))
 
 (def link-style
   {:display     "inline-block"
