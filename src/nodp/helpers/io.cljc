@@ -1,19 +1,14 @@
 ;primitives.event and io namespaces are separated to limit the impact of :refer-clojure :exclude for transduce
 (ns nodp.helpers.io
-  (:require [cats.context :as ctx]
-            [cats.monad.maybe :as maybe]
+  (:require [cats.monad.maybe :as maybe]
             [com.rpl.specter :as s]
             [nodp.helpers :as helpers]
+            [nodp.helpers.derived :as derived]
             [nodp.helpers.primitives.behavior :as behavior]
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.protocols :as protocols]
             [nodp.helpers.tuple :as tuple])
   #?(:cljs (:require-macros [nodp.helpers.io :refer [defcurriedmethod]])))
-
-(defn event
-  []
-  (->> (nodp.helpers/mempty)
-       (ctx/with-context event/context)))
 
 (defmulti get-effect! (comp protocols/-get-keyword
                             second
@@ -60,4 +55,4 @@
 (def redef-events
   (partial run! (fn [from]
                   (behavior/redef from
-                                  (event)))))
+                                  (derived/event)))))

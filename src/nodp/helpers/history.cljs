@@ -1,5 +1,5 @@
 (ns nodp.helpers.history
-  (:require [nodp.helpers.io :as io]
+  (:require [nodp.helpers.derived :as derived]
             [nodp.helpers.primitives.behavior
              :as behavior
              :include-macros true]
@@ -10,7 +10,7 @@
 
 (behavior/register
   (behavior/redef pushstate
-                  (io/event)))
+                  (derived/event)))
 
 (defn push-state
   [state title url-string]

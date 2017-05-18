@@ -10,7 +10,7 @@
   behavior/restart)
 
 (def event
-  io/event)
+  derived/event)
 
 (def behavior
   derived/behavior)

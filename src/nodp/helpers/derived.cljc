@@ -9,6 +9,11 @@
     #?(:clj
             [clojure.walk :as walk])))
 
+(defn event
+  []
+  (->> (nodp.helpers/mempty)
+       (ctx/with-context event/context)))
+
 (helpers/defcurried add-edges
                     [parents child network]
                     (helpers/call-functions (map ((helpers/flip event/add-edge)
