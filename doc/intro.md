@@ -20,7 +20,6 @@ In a way, this isn't anything new.  Event buses or your typical click events are
 
 If events are so central to FRP, let's take a careful look at them, starting with our familiar "clicks on a button" event.
 
-<!--TODO add a diagram-->
 An event is a list of **ongoing occurrences ordered in time**.  I can emit only one thing: a value (of some type).
 
 We capture these emitted occurrences only **asynchronously**, by defining a side-effecting function that will execute when a value is emitted.  The "listening" to the event is called subscribing.  The functions we are defining are observers.  The event is the subject being observed.  This is precisely the [Observer Design Pattern](https://en.wikipedia.org/wiki/Observer_pattern).
@@ -43,6 +42,8 @@ Let's make a counter event that indicates how many times a button was clicked.  
   (reduce g))
 ```
 
+<!-- TODO add a graph -->
+
 ```
   click-event: ---c----c--c----c------c-->
                vvvv <$> (c becomes 1) vvvv
@@ -54,6 +55,9 @@ counter-event: ---1----2--3----4------5-->
 The `<$> f` replaces (into the new event) each emitted vlue according to a function `f` you provide.  In our case, we fmapped to the number 1 on each click.  The `reduce g` aggregates all previous values on the event, producing value `(g accumulated current)`, where `g` was simply the add function in this example.  Then, `counter-event` emits the total number of clicks whenever a click happens.
 
 I hope you enjoy the beauty of this approach.  This example is just the tip of the iceberg: you can apply the same operations on different kinds of streams, for instance, on an event of API responses; on the other hand, there are many other functions available.
+
+#### "What are behaviors?"
+<!-- TODO describe behaviors -->
 
 ## "Why should I consider adopting FRP?"
 
