@@ -22,7 +22,7 @@ If events are so central to FRP, let's take a careful look at them, starting wit
 
 An event is a list of **ongoing occurrences ordered in time**.  I can emit only one thing: a value (of some type).
 
-We capture these emitted occurrences only **asynchronously**, by defining a side-effecting function that will execute when a value is emitted.  The "listening" to the event is called subscribing.  The functions we are defining are observers.  The event is the subject being observed.  This is precisely the [Observer Design Pattern](https://en.wikipedia.org/wiki/Observer_pattern).
+We capture these emitted occurrences only **asynchronously**, by defining a side-effecting operation that will execute when a value is emitted.  The "listening" to the event is called subscribing.  The operations we are defining are observers.  The event is the subject being observed.  This is precisely the [Observer Design Pattern](https://en.wikipedia.org/wiki/Observer_pattern).
 
 ```
 --a---b-c---d---->
