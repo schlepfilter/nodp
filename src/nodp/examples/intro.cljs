@@ -19,13 +19,13 @@
 (def response
   (frp/event))
 
-(def clicks
+(def closings
   (repeatedly suggestion-number frp/event))
 
-(def click-counts
+(def closing-counts
   (map (comp (partial frp/stepper 0)
              core/count)
-       clicks))
+       closings))
 
 (def user-number
   30)
@@ -36,7 +36,7 @@
        (range 0 user-number)
        (map (fn [click-count offset]
               (helpers/<$> (partial + offset) click-count))
-            click-counts)))
+            closing-counts)))
 
 (def users
   (apply (helpers/lift-a (fn [response* & click-counts]
@@ -88,7 +88,7 @@
   (s/setval s/END
             (map get-user-component
                  users*
-                 clicks)
+                 closings)
             [:div {:style {:border (str "0.125em solid " grey)}}
              [:div {:style {:background-color grey
                             :padding          "0.313em"}}
