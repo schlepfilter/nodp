@@ -92,7 +92,6 @@
       :cljs -invoke) [_ a]
     ;e stands for an event, and a stands for any as in Push-Pull Functional Reactive Programming.
     (when (:active @network-state)
-      ;TODO call run-effects! twice with different times
       (let [[past current] (get-times)]
         (reset! network-state
                 (modify-network! (tuple/tuple past a)
