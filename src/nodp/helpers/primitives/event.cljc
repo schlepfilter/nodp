@@ -76,6 +76,10 @@
                  :effects
                  identity))
 
+(defn run-network-state-effects!
+  []
+  (swap! network-state run-effects!))
+
 (defrecord Event
   [id]
   protocols/Contextual
@@ -90,14 +94,14 @@
     (when (:active @network-state)
       ;TODO call run-effects! twice with different times
       (let [[past current] (get-times)]
-        ((juxt (partial reset! network-state)
-               run-effects!)
-          (modify-network! (tuple/tuple past a)
-                           id
-                           @network-state))
+        (reset! network-state
+                (modify-network! (tuple/tuple past a)
+                                 id
+                                 @network-state))
+        (run-network-state-effects!)
         (->> (partial s/setval* :time current)
              (swap! network-state))
-        (run-effects! @network-state))))
+        (run-network-state-effects!))))
   entity-protocols/Entity
   (-get-keyword [_]
     :event)
@@ -436,10 +440,6 @@
   (helpers/<$> (fn [x]
                  [x @b])
                e))
-
-(defn run-network-state-effects!
-  []
-  (run-effects! @network-state))
 
 #?(:clj (defn get-periods
           ;TODO extract a purely functional function
