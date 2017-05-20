@@ -26,6 +26,7 @@
   []
   {:cancel     helpers/nop
    :dependency (graph/digraph)
+   :effects    []
    :function   (linked/map)
    :occs       (linked/map)
    :time       (time/time 0)})
@@ -71,9 +72,9 @@
     network))
 
 (def run-effects!
-  (helpers/build run!
-                 (helpers/curry 2 (helpers/flip helpers/funcall))
-                 :effects))
+  (helpers/build helpers/call-functions
+                 :effects
+                 identity))
 
 (defrecord Event
   [id]

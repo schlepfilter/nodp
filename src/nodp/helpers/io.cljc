@@ -32,7 +32,8 @@
                   [f! e network]
                   (run! (comp f!
                               tuple/snd)
-                        (event/get-latests (:id e) network)))
+                        (event/get-latests (:id e) network))
+                  network)
 
 (defmethod get-effect! :behavior
   [f! b]
@@ -45,7 +46,8 @@
                                         deref))
                             (maybe/just ((behavior/get-function b
                                                                 network)
-                                          (:time network)))))))
+                                          (:time network))))
+      network)))
 
 (def on
   (comp (partial swap! event/network-state)
