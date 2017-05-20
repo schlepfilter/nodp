@@ -269,6 +269,7 @@
              p/Context
              p/Functor
              (~'-fmap [_# f# fa#]
+               ;TODO remove 1
                ((nodp.helpers/lift-m 1 f#) fa#))
              p/Applicative
              (~'-pure [_# v#]
