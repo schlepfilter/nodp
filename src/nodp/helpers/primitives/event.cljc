@@ -76,9 +76,8 @@
                  :effects
                  identity))
 
-(defn run-network-state-effects!
-  []
-  (swap! network-state run-effects!))
+(def run-network-state-effects!
+  (partial swap! network-state run-effects!))
 
 (defrecord Event
   [id]
