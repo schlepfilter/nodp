@@ -36,6 +36,7 @@
 
 (defmethod get-effect! :behavior
   [f! b]
+  ;TODO set cache in network-state
   (let [past-latest-maybe-state (atom helpers/nothing)]
     (fn [network]
       (helpers/if-then-else (partial not= @past-latest-maybe-state)
