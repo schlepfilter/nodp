@@ -35,19 +35,19 @@
                         (event/get-latests (:id e) network))
                   network)
 
-(defmethod get-effect! :behavior
-  [f! b]
-  ;TODO set cache in network-state
-  (let [past-latest-maybe-state (atom helpers/nothing)]
-    (fn [network]
-      (helpers/if-then-else (partial not= @past-latest-maybe-state)
-                            (juxt (partial reset! past-latest-maybe-state)
-                                  (comp f!
-                                        deref))
-                            (maybe/just ((behavior/get-function b
-                                                                network)
-                                          (:time network))))
-      network)))
+(defn get-network-value
+  [b network]
+  (behavior/get-value b (:time network) network))
+
+(defcurriedmethod get-effect! :behavior
+                  [f! b network]
+                  (if (not= (maybe/just (get-network-value b network))
+                            ((:id b) (:cache network)))
+                    (do (f! (get-network-value b network))
+                        (s/setval [:cache (:id b)]
+                                  (maybe/just (get-network-value b network))
+                                  network))
+                    network))
 
 (def on
   (comp (partial swap! event/network-state)
