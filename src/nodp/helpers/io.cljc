@@ -41,13 +41,13 @@
 
 (defcurriedmethod get-effect! :behavior
                   [f! b network]
-                  (if (not= (maybe/just (get-network-value b network))
-                            ((:id b) (:cache network)))
+                  (if (= (maybe/just (get-network-value b network))
+                         ((:id b) (:cache network)))
+                    network
                     (do (f! (get-network-value b network))
                         (s/setval [:cache (:id b)]
                                   (maybe/just (get-network-value b network))
-                                  network))
-                    network))
+                                  network))))
 
 (def on
   (comp (partial swap! event/network-state)
