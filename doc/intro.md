@@ -1,4 +1,4 @@
-# The introduction to Functional Reactive Programming you've been messing
+# The introduction to Functional Reactive Programming you've been missing
 
 ---
 
@@ -20,7 +20,7 @@ In a way, this isn't anything new.  Event buses or your typical click events are
 
 If events are so central to FRP, let's take a careful look at them, starting with our familiar "clicks on a button" event.
 
-An event is a list of **ongoing occurrences ordered in time**.  I can emit only one thing: a value (of some type).
+An event is a list of **ongoing occurrences ordered in time**.  It can emit only one thing: a value.
 
 We capture these emitted occurrences only **asynchronously**, by defining a side-effecting operation that will execute when a value is emitted.  The "listening" to the event is called subscribing.  The operations we are defining are observers.  The event is the subject being observed.  This is precisely the [Observer Design Pattern](https://en.wikipedia.org/wiki/Observer_pattern).
 
@@ -32,9 +32,11 @@ a, b, c, d are emitted values
 ---> is the timeline
 ```
 
-Since this feels so familiar already, and I don't want you to get bored, let's do something new: we are going to create new click events transformed out of the original click event.
+Since this feels so familiar already, let's do something new: we are going to create new click events transformed out of the original click event.
 
 Let's make a counter event that indicates how many times a button was clicked.  In common FRP libraries, each event has many functions attached to it, such as `<$>`, `filter`, `reduce`, etc.  When you call one of these functions, such as `(<$> f click-event)`, it returns a **new event** based on the click event.  It does not modify the original click event in any way.  This is a property called **immutability**, and it goes together with FRP events just like pancakes are good with syrup.  This allows us to chain functions like `(reduce g (<$> f click-event))`, or with a threading macro,
+
+<!-- TODO define <$> -->
 
 ```clojure
 (->> click-event
