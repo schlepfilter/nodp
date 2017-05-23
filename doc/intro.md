@@ -63,9 +63,9 @@ I hope you enjoy the beauty of this approach.  This example is just the tip of t
 
 ## "Why should I consider adopting FRP?"
 
-FRP raises the level of abstraction of your code so you can focus on the interdependences of event occurrences that define the business logic, rather than having so constantly fiddle with a large amount of implementation details.  Code in FRP will likely be more concise.
+FRP raises the level of abstraction of your code so you can focus on the interdependences of event occurrences that define the business logic, rather than having to constantly fiddle with a large amount of implementation details.  Code in FRP will likely be more concise.
 
-The benefit is more evident in modern webapps and mobile apps that are highly interactive with a multitude of UI event occurrences related to data event occurrences.  10 years ago, interaction with web pages was basically about submitting a long form to the backend and performing simple rendering to the frontend.  Aps have evolved to be more real-time: modifying a single form field can automatically trigger a save to the backend, "likes" to some content can be reflected in real time to other connected users, and so forth.
+The benefit is more evident in modern webapps and mobile apps that are highly interactive with a multitude of UI event occurrences related to data event occurrences.  10 years ago, interaction with web pages was basically about submitting a long form to the backend and performing simple rendering to the frontend.  Apps have evolved to be more real-time: modifying a single form field can automatically trigger a save to the backend, "likes" to some content can be reflected in real time to other connected users, and so forth.
 
 Apps nowadays have an abundancy of real-time events of every kind that enable a highly interactive experience to the user.  We need tools for properly dealing with that and FRP is an answer.
 
