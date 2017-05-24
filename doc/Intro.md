@@ -71,11 +71,11 @@ a, b, c, d are return values
 
 An alternative way to represent behavior is a graph.  The horizontal axis is time.  Behavior takes time and returns some value.  Notice that behavior is defined on every point in time because it is a function.
 
-![Behavior](Behavior.png)
+![Behavior](img/Behavior.png)
 
 Compare this with an event.  If we were to represent an event on a graph like this, it would be a bunch of points.  At any given point in time, an event may or may not have a value.
 
-![Event](Event.png)
+![Event](img/Event.png)
 
 Let's make sure that this difference sinks in.  Take a click event for example.  Each individual click occurs instantly.  But other than those exact moments on which clicks happen, there's no click occurrence.
 
@@ -144,6 +144,12 @@ We can leave out the other features and buttons because they are minor.  And ins
 The demo for this is listed as "intro" at https://nodpexamples.github.io in case you want to take a peak already.
 
 ![GitHub Who to follow suggestions box](WhoToFollow.png)
+
+## Programming with a graph
+
+We'll build the suggestion box by defining events and behaviors in terms of other events and behaviors.  If you think of events and behaviors as nodes, we are programming a graph of connected events and behaviors in mind.  Conceptually, we will build a graph like this:
+
+![Graph](img/Graph.png)
 
 ## Request and response
 
