@@ -157,8 +157,6 @@ TODO: write [great documentation](http://jacobian.org/writing/what-to-write/)
 
 On startup we need to do only one request, so if we model it as an event, it will be an event with only one occurrence.  Later, we know we will have many requests happening, but for now, it is just one.
 
-On startup we need to do only one request, so if we model it as an event, it will be an event with only one occurrence.  Later, we know we will have many requests happening, but for now, it is just one.
-
 ```
 --a------->
 
@@ -186,6 +184,22 @@ Notice we are using a [cljs-ajax](https://github.com/JulianBirch/cljs-ajax) Ajax
 
 What {:handler response-event} does is to feed response-data into response-event.  We can use an event as a callback function.  This is pretty nice, and shows how events can be used to bridge the imperative world and FRP world.
 
+## The refresh button
+
+Every time the refresh button is clicked, the request event should have an occurrence of a new URL, so that we can get a new response.  We need to generate a random request.  Random number generation is done outside of the FRP world because getting a random value is impure.
+
+```
+(defn handle-click
+  [event*]
+  (.preventDefault event*)
+  (->> (js/Math.random)
+       (* 500)
+       int
+       (str endpoint "?since=")
+       request-event))
+
+;handle-click function will be used in :on-click in a view component
+```
 
 ### Legal
 Based on a work at https://gist.github.com/staltz/868e7e9bc2a7b8c1f754 by Andre Medeiros at http://andre.staltz.com
