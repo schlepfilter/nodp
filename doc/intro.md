@@ -59,7 +59,21 @@ The `<$> f` replaces (into the new event) each emitted vlue according to a funct
 I hope you enjoy the beauty of this approach.  This example is just the tip of the iceberg: you can apply the same operations on different kinds of events, for instance, on an event of API responses; on the other hand, there are many other functions available.
 
 #### "What are behaviors?"
-<!-- TODO describe behaviors -->
+This isn't anything new, either.  Behaviors are states, roughly speaking.  A global app state or current time are really behaviors, on which you can observe and do some side effects.  FRP is that idea on steroids.  You are able to create behaviors of anything not just from current time and mouse positions.  Behaviors are cheap and ubiquitous, anything can be a observer: user inputs, properties, caches, data structures, etc.  For example imagine your Facebook relationship status would be a behavior in the same fashion that mouse positions are.  You can listen to that behavior and react accordingly.
+
+If behaviors are so central to FRP, let's take a careful look at them.
+
+We capture these return values only **asynchronously** by defining a side-effecting operation that will execute when the behavior is sampled.  The "listening" to the behavior is called subscribing.  The operations we are defining are observers.  The behavior is the subject being observed.  This is precisely the [Observer Design Pattern](https://en.wikipedia.org/wiki/Observer_pattern).
+
+aaabbbbccccddddd>
+
+a, b, c, d are return values
+
+> is the time line
+
+An alternative way to represent behavior is a graph.  The horizontal axis is time.  Behavior takes time and returns some value.  Notice that behavior is defined on every point in time because it is a function.
+
+![Behavior](Behavior.png)
 
 ## "Why should I consider adopting FRP?"
 
