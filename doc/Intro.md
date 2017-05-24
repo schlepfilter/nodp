@@ -136,6 +136,16 @@ In Twitter there is this UI element that suggests other accounts you could follo
 
 ![Twitter Who to follow suggestions box](http://i.imgur.com/eAlNb0j.png)
 
+* On startup, load accounts data from the API and display 3 suggestions
+* On clicking "Refresh", load 3 other account suggestions into the 3 rows
+* On click 'x' button on an account row, clear only that current account and display another
+* Each row displays the account's avatar and links to their page
+
+We can leave out the other features and buttons because they are minor.  And instead of Twitter which recently closed its API to the unauthorized public, let's build that UI for following people on GitHub.  There's a [GitHub API for getting users](https://developer.github.com/v3/users/#get-all-users).
+
+The demo for this is listed as "intro" at https://nodpexamples.github.io in case you want to take a peak already.
+
+![GitHub Who to follow suggestions box](WhoToFollow.png)
 
 TODO: write [great documentation](http://jacobian.org/writing/what-to-write/)
 
