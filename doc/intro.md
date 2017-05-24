@@ -130,6 +130,13 @@ The benefit is more evident in modern webapps and mobile apps that are highly in
 
 Apps nowadays have an abundancy of real-time events of every kind that enable a highly interactive experience to the user.  We need tools for properly dealing with that and FRP is an answer.
 
+## Implementing a "Who to follow" suggestion box
+
+In Twitter there is this UI element that suggests other accounts you could follow:
+
+![Twitter Who to follow suggestions box](http://i.imgur.com/eAlNb0j.png)
+
+
 TODO: write [great documentation](http://jacobian.org/writing/what-to-write/)
 
 ---
