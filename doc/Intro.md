@@ -151,5 +151,41 @@ TODO: write [great documentation](http://jacobian.org/writing/what-to-write/)
 
 ---
 
+## Request and response
+
+**How do you approach this problem with FRP?**  Well, to start with, (almost) everything can be an event or behavior.  That's the FRP mantra.  Let's start with the easiest feature: "on startup, load 3 accounts data from the API".  There is nothing special here.  This is simply about (1) sending a request, (2) getting a response, and (3) rendering the response.  So let's go ahead and represent our request as an event.  At first this will feel like overkill, but we need to start from the basics, right?
+
+On startup we need to do only one request, so if we model it as an event, it will be an event with only one occurrence.  Later, we know we will have many requests happening, but for now, it is just one.
+
+On startup we need to do only one request, so if we model it as an event, it will be an event with only one occurrence.  Later, we know we will have many requests happening, but for now, it is just one.
+
+```
+--a------->
+
+Where a is the string 'https://api.github.com/users'
+```
+
+This is an event of URLs that we want to request.  Whenever a request occurs, it tells us two thing: when and what.  "When" the request should be executed is when the event occurs.  "What" should be requested is the occurrence's value: a string containing the URL.
+
+To create such an event with an occurrence is very simple.
+
+```clojure
+(def request-event
+  (event "https://api.github.com/users"))
+```
+
+But now, that is just an event of strings, doing no operation.  So, we need to somehow make something happen when the event occurs.  That's done by subscribing the event.
+
+(on (fn [request-url]
+      (GET request-url
+       {:handler ;...
+       }))
+    request-event)
+
+Notice we are using a [cljs-ajax](https://github.com/JulianBirch/cljs-ajax) Ajax callback (which we assume you should know already) to handle the asynchrony of the request operation.  Because performing a request is impure, we want to do it with `on`, which is used for performing side effects.  After performing the request, we want to feed the response back into an event.
+
+What {:handler response-event} does is to feed response-data into response-event.  We can use an event as a callback function.  This is pretty nice, and shows how events can be used to bridge the imperative world and FRP world.
+
+
 ### Legal
 Based on a work at https://gist.github.com/staltz/868e7e9bc2a7b8c1f754 by Andre Medeiros at http://andre.staltz.com
