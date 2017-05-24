@@ -176,11 +176,13 @@ To create such an event with an occurrence is very simple.
 
 But now, that is just an event of strings, doing no operation.  So, we need to somehow make something happen when the event occurs.  That's done by subscribing the event.
 
+```clojure
 (on (fn [request-url]
       (GET request-url
        {:handler ;...
        }))
     request-event)
+```
 
 Notice we are using a [cljs-ajax](https://github.com/JulianBirch/cljs-ajax) Ajax callback (which we assume you should know already) to handle the asynchrony of the request operation.  Because performing a request is impure, we want to do it with `on`, which is used for performing side effects.  After performing the request, we want to feed the response back into an event.
 
