@@ -12,7 +12,7 @@ The hardest part of a learning journey is **thinking in FRP**.  It's a lot about
 
 But that only begs the question.
 
-#### What are events?
+#### "What are events?"
 
 In a way, this isn't anything new.  Event buses or your typical click events are really events, on which you can observe and do some side effects.  FRP is that idea on steroids.  You are able to create events of anything, not just from click and hover events.  Events are cheap and ubiquitous, anything can be an event: user inputs, properties, caches, data structures, etc.  For example imagine your Twitter feed would be an event in the same fashion that click events are.  You can listen to that event and react accordingly.
 
