@@ -147,7 +147,7 @@ The demo for this is listed as "intro" at https://nodpexamples.github.io in case
 
 ## Programming with a graph
 
-We'll build the suggestion box by defining events and behaviors in terms of other events and behaviors.  If you think of events and behaviors as nodes, we are programming a graph of connected events and behaviors in mind.  Conceptually, we will build a graph like this:
+We'll build the suggestion box by defining events and behaviors in terms of other events and behaviors.  If you think of events and behaviors as nodes, we are programming with a graph of connected events and behaviors in mind.  Conceptually, we will build a graph like this:
 
 ![Graph](img/Graph.png)
 
