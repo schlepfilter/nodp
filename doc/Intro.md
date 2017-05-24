@@ -235,11 +235,11 @@ where `E` stands for `(repeat user-number {})`, a sequence of empty maps.
 Events are not intuitive to combine.  So we first want to convert events to behaviors by using stepper.  As such:
 
 ```
-   response-event: ------R----------->
-response-behavior: EEEEEEERRRRRRRRRRR>
+       response-event: ------R----------->
+(response-behavior t): EEEEEEERRRRRRRRRRR>
 
-   closing-click-1-event: ------------c----->
-closing-count-1-behavior: 000000000000011111>
+       closing-click-1-event: ------------c----->
+(closing-count-1-behavior t): 000000000000011111>
 ```
 
 Now we can combine behaviors using `lift-a`.  We can lift a function and call it on `response-behavior` and `closing-count-1-behavior`, so that whenever the 'close 1' button is clicked, we get the latest response emitted and produce a new value of user.
