@@ -75,6 +75,53 @@ An alternative way to represent behavior is a graph.  The horizontal axis is tim
 
 ![Behavior](Behavior.png)
 
+Compare this with an event.  If we were to represent an event on a graph like this, it would be a bunch of points.  At any given point in time, an event may or may not have a value.
+
+![Event](Event.png)
+
+Let's make sure that this difference sinks in.  Take a click event for example.  Each individual click occurs instantly.  But other than those exact moments on which clicks happen, there's no click occurrence.
+
+In contrast, a mouse position can be modeled with a behavior.  At any given point in time, a mouse cursor exists somewhere in a screen.  So a mouse position is defined at any time.
+
+But do we really need behaviors?  We already have events.  Aren't they sufficient?  Actually, yes.  We can do pretty much everything behaviors can do with events for most practical purposes.  In fact, popular non-FRP libraries don't have behaviors.
+
+So, what's the point of a behavior?  One answer is that a behavior gives us more explicit abstraction.  Let me illustrate this point with an example.
+
+We have two counter events.  We want to combine those two to get their product.  If those two events have occurrences at the same point in time, it's easy to combine them.  We can just take a product of those two occurrences.  But what if there's an occurrence for one event but not for the other?
+
+```
+counter-1-event : -----1-----2--3------------->
+counter-2-event : -------1------2-------3----->
+product-event   : -----?-?---?--6-------?----->
+```
+
+The problem is that an event may or may not have a value at a point in time. This is where a behavior comes in handy.  Because behaviors are defined on every point in time, it's straightforward to combine them.
+
+In our example, we first want to convert the event into behaviors using `stepper`.  `(stepper default-value event)` returns a behavior, which is a function of time.  This function either returns the last value of event occurrences or the default value if there's no event occurrence yet.
+
+```
+counter-1-event        : -----1-----2--3------------->
+                         v(stepper 0 counter-1-event)v
+(counter-1-behavior t) : 0000001111112223333333333333>
+
+counter-2-event        : -------1------2-------3----->
+                         v(stepper 0 counter-1-event)v
+(counter-2-behavior t) : 0000000011111112222222233333>
+```
+
+Now we are ready to compose two behaviors.  * function works on numbers, but not on behaviors.  In order to make * work on behaviors, we lift *.  That's what (lift-a *) does.
+
+```
+(counter-1-behavior t) : 0000001111112223333333333333>
+(counter-2-behavior t) : 0000000011111112222222233333>
+                         vvvv((lift-a *)          vvvv
+                         vvvv  counter-1-behavior vvvv
+                         vvvv  counter-2-behavior)vvvv
+(product-behavior t)   : 0000000011112226666666699999>
+```
+
+Non-FRP libraries can do similar things without explicitly using behaviors.  FRP decomplects the complected and makes behaviors explicit.
+
 ## "Why should I consider adopting FRP?"
 
 FRP raises the level of abstraction of your code so you can focus on the interdependences of event occurrences that define the business logic, rather than having to constantly fiddle with a large amount of implementation details.  Code in FRP will likely be more concise.
