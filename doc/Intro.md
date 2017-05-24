@@ -36,8 +36,6 @@ Since this feels so familiar already, let's do something new: we are going to cr
 
 Let's make a counter event that indicates how many times a button was clicked.  In common FRP libraries, each event has many functions attached to it, such as `<$>`, `filter`, `reduce`, etc.  When you call one of these functions, such as `(<$> f click-event)`, it returns a **new event** based on the click event.  It does not modify the original click event in any way.  This is a property called **immutability**, and it goes together with FRP events just like pancakes are good with syrup.  This allows us to chain functions like `(reduce g (<$> f click-event))`, or with a threading macro,
 
-<!-- TODO define <$> -->
-
 ```clojure
 (->> click-event
   (<$> f)
@@ -54,7 +52,7 @@ Let's make a counter event that indicates how many times a button was clicked.  
 counter-event: ---1----2--3----4------5-->
 ```
 
-The `<$> f` replaces (into the new event) each emitted vlue according to a function `f` you provide.  In our case, we fmapped to the number 1 on each click.  The `reduce g` aggregates all previous values on the event, producing value `(g accumulated current)`, where `g` was simply the add function in this example.  Then, `counter-event` emits the total number of clicks whenever a click happens.
+The `<$> f` replaces (into the new event) each occurrence value according to a function `f` you provide.  In our case, we fmapped to the number 1 on each click.  The `reduce g` aggregates all previous values on the event, producing value `(g accumulated current)`, where `g` was simply the add function in this example.  Then, `counter-event` emits the total number of clicks whenever a click happens.
 
 I hope you enjoy the beauty of this approach.  This example is just the tip of the iceberg: you can apply the same operations on different kinds of events, for instance, on an event of API responses; on the other hand, there are many other functions available.
 
