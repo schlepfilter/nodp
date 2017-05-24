@@ -147,10 +147,6 @@ The demo for this is listed as "intro" at https://nodpexamples.github.io in case
 
 ![GitHub Who to follow suggestions box](WhoToFollow.png)
 
-TODO: write [great documentation](http://jacobian.org/writing/what-to-write/)
-
----
-
 ## Request and response
 
 **How do you approach this problem with FRP?**  Well, to start with, (almost) everything can be an event or behavior.  That's the FRP mantra.  Let's start with the easiest feature: "on startup, load 3 accounts data from the API".  There is nothing special here.  This is simply about (1) sending a request, (2) getting a response, and (3) rendering the response.  So let's go ahead and represent our request as an event.  At first this will feel like overkill, but we need to start from the basics, right?
@@ -200,6 +196,170 @@ Every time the refresh button is clicked, the request event should have an occur
 
 ;handle-click function will be used in :on-click in a view component
 ```
+
+## Clearing the UI
+
+Until now, we have only touched a suggestion UI element on the rendering step that happens in the event's on.  Now with the refresh button, we have a problem: when you click "refresh", the current 3 suggestions are not cleared right away.  New suggestions come in only after a response has arrived.  But to make the UI look nice, we need to clean out the current suggestions when clicks happen on the refresh.
+
+```
+(def user-number
+  30)
+
+(defn handle-click
+  [event*]
+  (.preventDefault event*)
+  (response-event (repeat user-number {})) ;This line is added.
+  (->> (js/Math.random)
+       (* 500)
+       int
+       (str endpoint "?since=")
+       request-event))
+```
+
+We are simply making response-event emit `(repeat user-number {})` occurrence.  When rendering, we interpret `{}` as "no data", hence hiding its UI element.
+
+```
+The big picture is now:
+
+ refresh-event: ----------o---------o---->
+ request-event: -r--------r---------r---->
+response-event: -E--R-----E----R----E-R-->
+```
+
+where E stands for `(repeat user-number {})`, a sequence of empty maps.
+
+Events are not intuitive to combine.  So we first want to convert events to behaviors by using stepper.  As such:
+
+   response-event: ------R----------->
+response-behavior: EEEEEEERRRRRRRRRRR>
+
+   closing-click-1-event: ------------c----->
+closing-count-1-behavior: 000000000000011111>
+
+Now we can combine behaviors using `lift-a`.  We can lift a function and call it on response-behavior and closing-count-1-behavior, so that whenever the 'close 1' button is clicked, we get the latest response emitted and produce a new value of user.
+
+```
+(def user-1-behavior
+  ((helpers/lift-a (fn [response* & closing-count-1]
+                     (nth (cycle response*) closing-count-1)))
+    (frp/stepper (repeat user-number {}) response)
+    closing-count-1-behavior))
+```
+
+## Wrapping up
+And we're done.  With some refactoring, the complete code for all this was:
+
+```
+(def suggestion-number
+  3)
+
+(def endpoint
+  "https://api.github.com/users")
+
+(def request
+  (frp/event endpoint))
+
+(def response
+  (frp/event))
+
+(def closings
+  (repeatedly suggestion-number frp/event))
+
+(def closing-counts
+  (map (comp (partial frp/stepper 0)
+             core/count)
+       closings))
+
+(def user-number
+  30)
+
+(def offset-counts
+  (->> suggestion-number
+       (quot user-number)
+       (range 0 user-number)
+       (map (fn [click-count offset]
+              (helpers/<$> (partial + offset) click-count))
+            closing-counts)))
+
+(def users
+  (apply (helpers/lift-a (fn [response* & offset-counts*]
+                           (map (partial nth (cycle response*))
+                                offset-counts*)))
+         (frp/stepper (repeat user-number {}) response)
+         offset-counts))
+
+(def link-style
+  {:display     "inline-block"
+   :margin-left "0.313em"})
+
+(defn get-user-component
+  [user* click]
+  [:li {:style {:align-items "center"
+                :display     "flex"
+                :padding     "0.313em"
+                :visibility  (helpers/casep user*
+                                            empty? "hidden"
+                                            "visible")}}
+   [:img {:src   (:avatar_url user*)
+          :style {:border-radius "1.25em"
+                  :height        "2.5em"
+                  :width         "2.5em"}}]
+   [:a {:href  (:html_url user*)
+        :style link-style}
+    (:login user*)]
+   [:a {:href     "#"
+        :on-click (fn [event*]
+                    (.preventDefault event*)
+                    (click unit/unit))
+        :style    link-style}
+    "x"]])
+
+(defn handle-click
+  [event*]
+  (.preventDefault event*)
+  (response (repeat user-number {}))
+  (->> (js/Math.random)
+       (* 500)
+       int
+       (str endpoint "?since=")
+       request))
+
+(def grey
+  "hsl(0, 0%, 93%)")
+
+(defn intro-component
+  [users*]
+  (s/setval s/END
+            (map get-user-component
+                 users*
+                 closings)
+            [:div {:style {:border (str "0.125em solid " grey)}}
+             [:div {:style {:background-color grey
+                            :padding          "0.313em"}}
+              [:h2 {:style {:display "inline-block"}}
+               "Who to follow"]
+              [:a {:href     "#"
+                   :on-click handle-click
+                   :style    {:margin-left "1.25em"}}
+               "refresh"]]]))
+
+(def intro
+  (helpers/<$> intro-component users))
+
+(frp/on (partial (helpers/flip GET) {:handler (comp response
+                                                    walk/keywordize-keys)})
+        request)
+```
+
+You can see this working example listed as "intro" at https://nodpexamples.github.io
+
+That piece of code is small but dense: it features management of multiple events and behaviors with proper separation of concerns and even caching of responses.  The functional style made the code look more declarative than imperative.  We are not giving a sequence of instructions to execute, but we are just telling what something is by defining relationships among events and behaviors.  For instance, we told the computer that users is the offset-counts behavior combined with the latest response behavior.
+
+Notice also the impressive absence of control flow elements such as if, for and while.  Instead, we have event functions such as filter, reduce, <> and many more to control the flow of an event-driven program.  This toolset of functions gives you more power in less code.
+
+<!-- TODO add "What comes next" section -->
+
+---
 
 ### Legal
 Based on a work at https://gist.github.com/staltz/868e7e9bc2a7b8c1f754 by Andre Medeiros at http://andre.staltz.com
