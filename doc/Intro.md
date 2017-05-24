@@ -244,9 +244,9 @@ Now we can combine behaviors using `lift-a`.  We can lift a function and call it
 
 ```
 (def user-1-behavior
-  ((helpers/lift-a (fn [response* & closing-count-1]
+  ((lift-a (fn [response* & closing-count-1]
                      (nth (cycle response*) closing-count-1)))
-    (frp/stepper (repeat user-number {}) response)
+    (stepper (repeat user-number {}) response)
     closing-count-1-behavior))
 ```
 
