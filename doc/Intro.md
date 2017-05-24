@@ -178,7 +178,7 @@ But now, that is just an event of strings, doing no operation.  So, we need to s
 
 Notice we are using a [cljs-ajax](https://github.com/JulianBirch/cljs-ajax) Ajax callback (which we assume you should know already) to handle the asynchrony of the request operation.  Because performing a request is impure, we want to do it with `on`, which is used for performing side effects.  After performing the request, we want to feed the response back into an event.
 
-What {:handler response-event} does is to feed response-data into response-event.  We can use an event as a callback function.  This is pretty nice, and shows how events can be used to bridge the imperative world and FRP world.
+What `{:handler response-event}` does is to feed response data into `response-event`.  We can use an event as a callback function.  This is pretty nice, and shows how events can be used to bridge the imperative world and FRP world.
 
 ## The refresh button
 
@@ -226,7 +226,7 @@ The big picture is now:
 response-event: -E--R-----E----R----E-R-->
 ```
 
-where E stands for `(repeat user-number {})`, a sequence of empty maps.
+where `E` stands for `(repeat user-number {})`, a sequence of empty maps.
 
 Events are not intuitive to combine.  So we first want to convert events to behaviors by using stepper.  As such:
 
@@ -236,7 +236,7 @@ response-behavior: EEEEEEERRRRRRRRRRR>
    closing-click-1-event: ------------c----->
 closing-count-1-behavior: 000000000000011111>
 
-Now we can combine behaviors using `lift-a`.  We can lift a function and call it on response-behavior and closing-count-1-behavior, so that whenever the 'close 1' button is clicked, we get the latest response emitted and produce a new value of user.
+Now we can combine behaviors using `lift-a`.  We can lift a function and call it on `response-behavior` and `closing-count-1-behavior`, so that whenever the 'close 1' button is clicked, we get the latest response emitted and produce a new value of user.
 
 ```
 (def user-1-behavior
@@ -353,9 +353,9 @@ And we're done.  With some refactoring, the complete code for all this was:
 
 You can see this working example listed as "intro" at https://nodpexamples.github.io
 
-That piece of code is small but dense: it features management of multiple events and behaviors with proper separation of concerns and even caching of responses.  The functional style made the code look more declarative than imperative.  We are not giving a sequence of instructions to execute, but we are just telling what something is by defining relationships among events and behaviors.  For instance, we told the computer that users is the offset-counts behavior combined with the latest response behavior.
+That piece of code is small but dense: it features management of multiple events and behaviors with proper separation of concerns and even caching of responses.  The functional style made the code look more declarative than imperative.  We are not giving a sequence of instructions to execute, but we are just telling what something is by defining relationships among events and behaviors.  For instance, we told the computer that users is the `offset-counts` behavior combined with the `response` behavior.
 
-Notice also the impressive absence of control flow elements such as if, for and while.  Instead, we have event functions such as filter, reduce, <> and many more to control the flow of an event-driven program.  This toolset of functions gives you more power in less code.
+Notice also the impressive absence of control flow elements such as `if`, `for` and `while`.  Instead, we have event functions such as `filter`, `reduce`, `<>` and many more to control the flow of an event-driven program.  This toolset of functions gives you more power in less code.
 
 <!-- TODO add "What comes next" section -->
 
