@@ -39,10 +39,10 @@
             closing-counts)))
 
 (def users
-  (apply (helpers/lift-a (fn [response* & click-counts]
+  (apply (helpers/lift-a (fn [response* & offset-counts*]
                            (map (partial nth (cycle response*))
-                                click-counts)))
-         (frp/stepper (repeat {}) response)
+                                offset-counts*)))
+         (frp/stepper (repeat user-number {}) response)
          offset-counts))
 
 (def link-style
