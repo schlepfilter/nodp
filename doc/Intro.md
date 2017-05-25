@@ -2,7 +2,7 @@
 
 ---
 
-So you're curious in learning this new thing called Functional Reactive Programming (FRP), particularly its variant comprising of Sodium, Reflex, Reactive Banana, Flapjax and others.
+So you're interested in learning about this new thing called Functional Reactive Programming (FRP), particularly its variant comprising of Sodium, Reflex, Reactive Banana, Flapjax and others.
 
 The hardest part of a learning journey is **thinking in FRP**.  It's a lot about letting go of old imperative and stateful habits of typical programming, forcing your brain to work in a different paradigm.  I hope this helps you.
 
