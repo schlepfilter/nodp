@@ -21,7 +21,7 @@ and couldn't find one.  Here's an outline of some of the motivating ideas.
 * Behavior obeys type class morphism
 
 ## (Pseudo) transparent reactivity is a good thing
-* Seq functions emulated by Event functions
+* Event functions emulating Seq functions
 * Implicit lifting for behaviors
 * Implicit combining for events
 * Native events packaged via Events and Behaviors
