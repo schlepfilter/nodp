@@ -1,6 +1,7 @@
 (ns nodp.examples.index
   (:require [bidi.bidi :as bidi]
             [clojure.string :as str]
+            [nodp.examples.cycle.counter :as counter]
             [nodp.examples.drag-n-drop :as drag-n-drop]
             [nodp.examples.intro :as intro]
             [nodp.examples.letter-count :as letter-count]
@@ -10,7 +11,8 @@
             [nodp.helpers.history :as history]))
 
 (def route-function
-  {:drag-n-drop         drag-n-drop/drag-n-drop
+  {:counter             counter/counter
+   :drag-n-drop         drag-n-drop/drag-n-drop
    :intro               intro/intro
    :letter-count        letter-count/letter-count
    :simple-data-binding simple-data-binding/simple-data-binding})
