@@ -2,10 +2,10 @@
   (:require [bidi.bidi :as bidi]
             [clojure.string :as str]
             [nodp.examples.cycle.counter :as counter]
-            [nodp.examples.drag-n-drop :as drag-n-drop]
             [nodp.examples.intro :as intro]
-            [nodp.examples.letter-count :as letter-count]
-            [nodp.examples.simple-data-binding :as simple-data-binding]
+            [nodp.examples.rx.drag-n-drop :as drag-n-drop]
+            [nodp.examples.rx.letter-count :as letter-count]
+            [nodp.examples.rx.simple-data-binding :as simple-data-binding]
             [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.history :as history]))
