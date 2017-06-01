@@ -1,6 +1,7 @@
 (ns nodp.examples.index
   (:require [bidi.bidi :as bidi]
             [clojure.string :as str]
+            [com.rpl.specter :as s]
             [nodp.examples.cycle.counter :as counter]
             [nodp.examples.intro :as intro]
             [nodp.examples.rx.drag-n-drop :as drag-n-drop]
@@ -45,10 +46,9 @@
 
 (def index-component
   (->> route-keywords
-       (map (comp example-component
-                  (partial bidi/path-for route)))
-       (cons :ul)
-       (into [])))
+       (mapv (comp example-component
+                   (partial bidi/path-for route)))
+       (s/setval s/BEGINNING [:ul])))
 
 (def index
   (frp/behavior index-component))
