@@ -1,4 +1,4 @@
-(ns nodp.examples.simple-data-binding
+(ns nodp.examples.rx.simple-data-binding
   (:require [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]))
 
