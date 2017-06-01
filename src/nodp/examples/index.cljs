@@ -2,6 +2,7 @@
   (:require [bidi.bidi :as bidi]
             [clojure.string :as str]
             [com.rpl.specter :as s]
+            [nodp.examples.cycle.checkbox :as checkbox]
             [nodp.examples.cycle.counter :as counter]
             [nodp.examples.intro :as intro]
             [nodp.examples.rx.drag-n-drop :as drag-n-drop]
@@ -12,7 +13,8 @@
             [nodp.helpers.history :as history]))
 
 (def route-function
-  {:counter             counter/counter
+  {:checkbox            checkbox/checkbox
+   :counter             counter/counter
    :drag-n-drop         drag-n-drop/drag-n-drop
    :intro               intro/intro
    :letter-count        letter-count/letter-count
