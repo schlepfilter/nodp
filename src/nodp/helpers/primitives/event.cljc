@@ -26,6 +26,7 @@
   []
   {:cancel     helpers/nop
    :dependency (graph/digraph)
+   :effects    []
    :function   (linked/map)
    :occs       (linked/map)
    :time       (time/time 0)})
@@ -71,9 +72,12 @@
     network))
 
 (def run-effects!
-  (helpers/build run!
-                 (helpers/curry 2 (helpers/flip helpers/funcall))
-                 :effects))
+  (helpers/build helpers/call-functions
+                 :effects
+                 identity))
+
+(def run-network-state-effects!
+  (partial swap! network-state run-effects!))
 
 (defrecord Event
   [id]
@@ -87,16 +91,15 @@
       :cljs -invoke) [_ a]
     ;e stands for an event, and a stands for any as in Push-Pull Functional Reactive Programming.
     (when (:active @network-state)
-      ;TODO call run-effects! twice with different times
       (let [[past current] (get-times)]
-        ((juxt (partial reset! network-state)
-               run-effects!)
-          (modify-network! (tuple/tuple past a)
-                           id
-                           @network-state))
+        (reset! network-state
+                (modify-network! (tuple/tuple past a)
+                                 id
+                                 @network-state))
+        (run-network-state-effects!)
         (->> (partial s/setval* :time current)
              (swap! network-state))
-        (run-effects! @network-state))))
+        (run-network-state-effects!))))
   entity-protocols/Entity
   (-get-keyword [_]
     :event)
@@ -399,7 +402,7 @@
                     [f init id network reduction element]
                     (s/setval s/END
                               reduction
-                              [((helpers/lift-a 2 f)
+                              [((helpers/lift-a f)
                                  (get-transduction init
                                                    (get-occs id network)
                                                    reduction)
@@ -435,10 +438,6 @@
   (helpers/<$> (fn [x]
                  [x @b])
                e))
-
-(defn run-network-state-effects!
-  []
-  (run-effects! @network-state))
 
 #?(:clj (defn get-periods
           ;TODO extract a purely functional function

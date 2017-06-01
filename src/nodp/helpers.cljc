@@ -229,12 +229,6 @@
     (apply m/join more)))
 
 ;TODO remove this macro after cats.context is fixed
-#?(:clj (defmacro lift-a
-          [& more]
-          `(with-redefs [cats.context/infer infer]
-             (m/lift-a ~@more))))
-
-;TODO remove this macro after cats.context is fixed
 #?(:clj (defmacro lift-m
           [& more]
           `(with-redefs [cats.context/infer infer]
@@ -252,6 +246,17 @@
           `(with-redefs [cats.context/infer infer]
              (m/->= ~@more))))
 
+(defn lift-a*
+  [x ys]
+  (casep ys
+         empty? x
+         (recur (<*> x (first ys)) (rest ys))))
+
+(defn lift-a
+  [f]
+  (fn [& more]
+    (lift-a* (<$> (curry (count more) f) (first more)) (rest more))))
+
 (defn ap
   [m1 m2]
   (mlet [x1 m1
@@ -264,6 +269,7 @@
              p/Context
              p/Functor
              (~'-fmap [_# f# fa#]
+               ;TODO remove 1
                ((nodp.helpers/lift-m 1 f#) fa#))
              p/Applicative
              (~'-pure [_# v#]

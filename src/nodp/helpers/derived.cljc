@@ -9,6 +9,15 @@
     #?(:clj
             [clojure.walk :as walk])))
 
+(defn event
+  ([]
+   (->> (nodp.helpers/mempty)
+        (ctx/with-context event/context)))
+  ([a]
+   (-> (event)
+       helpers/infer
+       (nodp.helpers/return a))))
+
 (helpers/defcurried add-edges
                     [parents child network]
                     (helpers/call-functions (map ((helpers/flip event/add-edge)
@@ -93,10 +102,11 @@
 (helpers/defcurried eventize
                     [e a]
                     ;TODO refactor
-                    (if (event? a)
-                      a
-                      (helpers/<$> (constantly a)
-                                   e)))
+                    ;TODO use casep
+                    (helpers/casep a
+                                   event? a
+                                   (helpers/<$> (constantly a)
+                                                e)))
 
 (def has-event?
   (partial some event?))
@@ -125,19 +135,20 @@
                      (some behavior? arguments#))
               (apply (if (has-event? arguments#)
                        (partial combine ~f)
-                       (helpers/lift-a ~(count more) ~f))
+                       (helpers/lift-a ~f))
                      (entitize arguments#))
               (apply ~f arguments#))))
 
        (defmacro transparent
          [expr]
          (walk/postwalk (fn [x]
-                          (if (has-argument? x)
-                            `(transparent* ~x)
-                            x))
+                          (helpers/casep x
+                                         has-argument? `(transparent* ~x)
+                                         x))
                         (macroexpand expr)))))
 
 (defn buffer
+  ;TODO accept different types of arguments like http://reactivex.io/documentation/operators/buffer.html
   ;https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/bufferwithcount.md
   ([size e]
    (buffer size size e))

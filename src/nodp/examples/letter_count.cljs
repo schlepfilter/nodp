@@ -1,7 +1,6 @@
-(ns ^:figwheel-always nodp.examples.letter-count
+(ns nodp.examples.letter-count
   (:require [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]))
-
 
 (def length
   (frp/event))

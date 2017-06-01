@@ -1,12 +1,22 @@
-(ns ^:figwheel-always nodp.examples.index
+(ns nodp.examples.index
   (:require [bidi.bidi :as bidi]
             [clojure.string :as str]
+            [nodp.examples.drag-n-drop :as drag-n-drop]
+            [nodp.examples.intro :as intro]
+            [nodp.examples.letter-count :as letter-count]
+            [nodp.examples.simple-data-binding :as simple-data-binding]
             [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.history :as history]))
 
+(def route-function
+  {:drag-n-drop         drag-n-drop/drag-n-drop
+   :intro               intro/intro
+   :letter-count        letter-count/letter-count
+   :simple-data-binding simple-data-binding/simple-data-binding})
+
 (def route-keywords
-  [:drag-n-drop :letter-count :simple-data-binding])
+  (keys route-function))
 
 (defn unkebab
   [s]

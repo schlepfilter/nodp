@@ -1,4 +1,4 @@
-(ns ^:figwheel-always nodp.examples.drag-n-drop
+(ns nodp.examples.drag-n-drop
   (:require [nodp.helpers.clojure.core :as core]
             [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]
@@ -35,9 +35,10 @@
   (get-one-dimension :movement-y))
 
 (def origin
-  ((helpers/lift-a 2 (fn [left* top*]
-                       {:left left*
-                        :top  top*}))
+  ;TODO infer the number of arguments from fn
+  ((helpers/lift-a (fn [left* top*]
+                     {:left left*
+                      :top  top*}))
     left
     top))
 

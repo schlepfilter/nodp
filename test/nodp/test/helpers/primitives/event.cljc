@@ -55,9 +55,9 @@
             fs (gen/vector (test-helpers/function gen/uuid)
                            (count input-events))
             input-event-anys (gen/vector gen/uuid
-                                         ((if (empty? @outer-input-event)
-                                            identity
-                                            dec)
+                                         ((helpers/casep @outer-input-event
+                                                         empty? identity
+                                                         dec)
                                            (dec (count input-events))))
             calls (gen/shuffle
                     (concat (map (helpers/curry 2 outer-input-event)

@@ -1,19 +1,14 @@
 ;primitives.event and io namespaces are separated to limit the impact of :refer-clojure :exclude for transduce
 (ns nodp.helpers.io
-  (:require [cats.context :as ctx]
-            [cats.monad.maybe :as maybe]
+  (:require [cats.monad.maybe :as maybe]
             [com.rpl.specter :as s]
             [nodp.helpers :as helpers]
+            [nodp.helpers.derived :as derived]
             [nodp.helpers.primitives.behavior :as behavior]
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.protocols :as protocols]
             [nodp.helpers.tuple :as tuple])
   #?(:cljs (:require-macros [nodp.helpers.io :refer [defcurriedmethod]])))
-
-(defn event
-  []
-  (->> (nodp.helpers/mempty)
-       (ctx/with-context event/context)))
 
 (defmulti get-effect! (comp protocols/-get-keyword
                             second
@@ -37,19 +32,22 @@
                   [f! e network]
                   (run! (comp f!
                               tuple/snd)
-                        (event/get-latests (:id e) network)))
+                        (event/get-latests (:id e) network))
+                  network)
 
-(defmethod get-effect! :behavior
-  [f! b]
-  (let [past-latest-maybe-state (atom helpers/nothing)]
-    (fn [network]
-      (helpers/if-then-else (partial not= @past-latest-maybe-state)
-                            (juxt (partial reset! past-latest-maybe-state)
-                                  (comp f!
-                                        deref))
-                            (maybe/just ((behavior/get-function b
-                                                                network)
-                                          (:time network)))))))
+(defn get-network-value
+  [b network]
+  (behavior/get-value b (:time network) network))
+
+(defcurriedmethod get-effect! :behavior
+                  [f! b network]
+                  (if (= (maybe/just (get-network-value b network))
+                         ((:id b) (:cache network)))
+                    network
+                    (do (f! (get-network-value b network))
+                        (s/setval [:cache (:id b)]
+                                  (maybe/just (get-network-value b network))
+                                  network))))
 
 (def on
   (comp (partial swap! event/network-state)
@@ -60,4 +58,4 @@
 (def redef-events
   (partial run! (fn [from]
                   (behavior/redef from
-                                  (event)))))
+                                  (derived/event)))))

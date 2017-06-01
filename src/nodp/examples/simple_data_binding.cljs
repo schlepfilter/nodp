@@ -1,4 +1,4 @@
-(ns ^:figwheel-always nodp.examples.simple-data-binding
+(ns nodp.examples.simple-data-binding
   (:require [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]))
 
@@ -31,7 +31,7 @@
    [:div full-name]])
 
 (def full-name
-  ((helpers/lift-a 3 str)
+  ((helpers/lift-a str)
     (frp/stepper "" first-name)
     (frp/behavior " ")
     (frp/stepper "" last-name)))

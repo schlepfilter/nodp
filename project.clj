@@ -7,6 +7,7 @@
                  [org.clojure/clojurescript "1.9.494"]
                  [aysylu/loom "1.0.0"]
                  [bidi "2.1.0"]
+                 [cljs-ajax "0.6.0"]
                  [clojurewerkz/money "1.9.0"]
                  [com.andrewmcveigh/cljs-time "0.4.0"]
                  [com.rpl/specter "1.0.0"]
