@@ -54,6 +54,9 @@
 (def query-input
   (helpers/<$> query-input-component query))
 
+(def suggestions
+  (frp/stepper [] (helpers/<$> second response)))
+
 (def autocomplete-search
   ;TODO display suggestions
   ((helpers/lift-a autocomplete-search-component) query-input))
@@ -65,8 +68,7 @@
   (->> typing
        (core/remove empty?)
        (helpers/<$> (partial assoc-in
-                             {:handler (comp response
-                                             walk/keywordize-keys)
+                             {:handler response
                               :params  {:action "opensearch"
                                         ;https://www.mediawiki.org/wiki/Manual:CORS#Description
                                         ;For anonymous requests, origin query string parameter can be set to * which will allow requests from anywhere.
