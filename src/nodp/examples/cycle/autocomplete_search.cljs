@@ -1,6 +1,6 @@
 (ns nodp.examples.cycle.autocomplete-search
-  (:require [clojure.walk :as walk]
-            [ajax.core :refer [GET]]
+  (:require [ajax.core :refer [GET]]
+            [com.rpl.specter :as s]
             [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.clojure.core :as core]))
@@ -15,14 +15,15 @@
   (frp/event))
 
 (def number
-  (frp/accum 0
-             (helpers/<> (helpers/<$> (constantly inc)
-                                      (core/filter (partial = "ArrowDown")
-                                                   key-down))
-                         (helpers/<$> (constantly dec)
-                                      (core/filter (partial = "ArrowUp")
-                                                   key-down))
-                         (helpers/<$> (constantly (constantly 0)) response))))
+  (->> (helpers/<> (helpers/<$> (constantly inc)
+                                (core/filter (partial = "ArrowDown")
+                                             key-down))
+                   (helpers/<$> (constantly dec)
+                                (core/filter (partial = "ArrowUp")
+                                             key-down))
+                   (helpers/<$> (constantly (constantly 0)) response))
+       (frp/accum 0)
+       (frp/stepper 0)))
 
 (defn query-input-component
   [query*]
@@ -39,11 +40,12 @@
 
 (defn autocomplete-search-component
   ;TODO display suggestions
-  [query-input*]
+  [query-input* suggestion-list*]
   [:div
    [:section
     [:label "Query:"]
-    query-input*]
+    query-input*
+    suggestion-list*]
    [:section
     [:label "Some field:"]
     [:input {:type "text"}]]])
@@ -57,9 +59,30 @@
 (def suggestions
   (frp/stepper [] (helpers/<$> second response)))
 
+(def green
+  "hsl(120, 100%, 50%)")
+
+(defn suggestion-list-component
+  ;TODO don't highlight a suggestion after response occurs
+  [suggestions* number*]
+  (->> suggestions*
+       (map (partial vector :li))
+       ((fn [lis]
+          (if (empty? lis)
+            []
+            (s/transform (s/srange number* (inc number*))
+                         (fn [[[_ s]]]
+                           [[:li {:style {:background-color green}} s]])
+                         lis))))
+       (concat [:ul {:display "inline-block"}])
+       vec))
+
+(def suggestion-list
+  ((helpers/lift-a suggestion-list-component) suggestions number))
+
 (def autocomplete-search
   ;TODO display suggestions
-  ((helpers/lift-a autocomplete-search-component) query-input))
+  ((helpers/lift-a autocomplete-search-component) query-input suggestion-list))
 
 (def endpoint
   "https://en.wikipedia.org/w/api.php")
