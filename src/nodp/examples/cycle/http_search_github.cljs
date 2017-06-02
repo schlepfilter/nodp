@@ -13,8 +13,7 @@
 
 (def option
   (->> term
-       (core/filter (comp pos?
-                          count))
+       (core/remove empty?)
        (helpers/<$> (partial assoc-in
                              {:handler (comp response
                                              walk/keywordize-keys)}
