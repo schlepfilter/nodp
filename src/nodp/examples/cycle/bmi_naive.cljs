@@ -1,6 +1,5 @@
 (ns nodp.examples.cycle.bmi-naive
-  (:require [nodp.helpers :as helpers]
-            [nodp.helpers.frp :as frp :include-macros true]))
+  (:require [nodp.helpers.frp :as frp :include-macros true]))
 
 (def weight-event
   (frp/event))
