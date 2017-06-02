@@ -10,14 +10,18 @@
 (def suggestion-number
   3)
 
-(def endpoint
-  "https://api.github.com/users")
-
-(def request
-  (frp/event endpoint))
-
 (def response
   (frp/event))
+
+(def beginning
+  (frp/event 0))
+
+(def option
+  (helpers/<$> (partial assoc-in
+                        {:handler (comp response
+                                        walk/keywordize-keys)}
+                        [:params :since])
+               beginning))
 
 (def closings
   (repeatedly suggestion-number frp/event))
@@ -78,8 +82,7 @@
   (->> (js/Math.random)
        (* 500)
        int
-       (str endpoint "?since=")
-       request))
+       beginning))
 
 (def grey
   "hsl(0, 0%, 93%)")
@@ -103,8 +106,7 @@
 (def intro
   (helpers/<$> intro-component users))
 
-(def option {:handler (comp response
-                            walk/keywordize-keys)})
+(def endpoint
+  "https://api.github.com/users")
 
-(frp/on (partial (helpers/flip GET) option)
-        request)
+(frp/on (partial GET endpoint) option)
