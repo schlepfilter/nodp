@@ -11,15 +11,6 @@
 (def response
   (frp/event))
 
-(def option
-  (->> term
-       (core/filter (comp pos?
-                          count))
-       (helpers/<$> (partial assoc-in
-                             {:handler (comp response
-                                             walk/keywordize-keys)}
-                             [:params :q]))))
-
 (def users
   (->> response
        (helpers/<$> :items)
@@ -47,5 +38,13 @@
 
 (def endpoint
   "https://api.github.com/search/repositories")
+
+(def option
+  (->> term
+       (core/remove empty?)
+       (helpers/<$> (partial assoc-in
+                             {:handler (comp response
+                                             walk/keywordize-keys)}
+                             [:params :q]))))
 
 (frp/on (partial GET endpoint) option)

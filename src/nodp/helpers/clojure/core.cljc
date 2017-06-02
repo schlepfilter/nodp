@@ -1,5 +1,5 @@
 (ns nodp.helpers.clojure.core
-  (:refer-clojure :exclude [+ count drop filter max min reduce])
+  (:refer-clojure :exclude [+ count drop filter max min reduce remove])
   (:require [nodp.helpers :as helpers]
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.unit :as unit]))
@@ -26,6 +26,10 @@
                          vector)
                    unit/unit
                    e))
+
+(defn remove
+  [pred e]
+  (filter (complement pred) e))
 
 (def max
   (partial reduce clojure.core/max #?(:clj  Double/NEGATIVE_INFINITY

@@ -7,8 +7,34 @@
             [nodp.helpers.frp :as frp]
             [nodp.helpers.unit :as unit]))
 
-(def suggestion-number
-  3)
+(def link-style
+  {:display     "inline-block"
+   :margin-left "0.313em"})
+
+(defn get-user-component
+  [user* click]
+  [:li {:style {:align-items "center"
+                :display     "flex"
+                :padding     "0.313em"
+                :visibility  (helpers/casep user*
+                                            empty? "hidden"
+                                            "visible")}}
+   [:img {:src   (:avatar_url user*)
+          :style {:border-radius "1.25em"
+                  :height        "2.5em"
+                  :width         "2.5em"}}]
+   [:a {:href  (:html_url user*)
+        :style link-style}
+    (:login user*)]
+   [:a {:href     "#"
+        :on-click (fn [event*]
+                    (.preventDefault event*)
+                    (click unit/unit))
+        :style    link-style}
+    "x"]])
+
+(def grey
+  "hsl(0, 0%, 93%)")
 
 (def response
   (frp/event))
@@ -16,12 +42,8 @@
 (def beginning
   (frp/event 0))
 
-(def option
-  (helpers/<$> (partial assoc-in
-                        {:handler (comp response
-                                        walk/keywordize-keys)}
-                        [:params :since])
-               beginning))
+(def suggestion-number
+  3)
 
 (def closings
   (repeatedly suggestion-number frp/event))
@@ -49,32 +71,6 @@
          (frp/stepper (repeat user-number {}) response)
          offset-counts))
 
-(def link-style
-  {:display     "inline-block"
-   :margin-left "0.313em"})
-
-(defn get-user-component
-  [user* click]
-  [:li {:style {:align-items "center"
-                :display     "flex"
-                :padding     "0.313em"
-                :visibility  (helpers/casep user*
-                                            empty? "hidden"
-                                            "visible")}}
-   [:img {:src   (:avatar_url user*)
-          :style {:border-radius "1.25em"
-                  :height        "2.5em"
-                  :width         "2.5em"}}]
-   [:a {:href  (:html_url user*)
-        :style link-style}
-    (:login user*)]
-   [:a {:href     "#"
-        :on-click (fn [event*]
-                    (.preventDefault event*)
-                    (click unit/unit))
-        :style    link-style}
-    "x"]])
-
 (defn handle-click
   [event*]
   (.preventDefault event*)
@@ -83,9 +79,6 @@
        (* 500)
        int
        beginning))
-
-(def grey
-  "hsl(0, 0%, 93%)")
 
 (defn intro-component
   [users*]
@@ -108,5 +101,12 @@
 
 (def endpoint
   "https://api.github.com/users")
+
+(def option
+  (helpers/<$> (partial assoc-in
+                        {:handler (comp response
+                                        walk/keywordize-keys)}
+                        [:params :since])
+               beginning))
 
 (frp/on (partial GET endpoint) option)
