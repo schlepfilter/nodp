@@ -14,6 +14,16 @@
 (def key-down
   (frp/event))
 
+(def number
+  (frp/accum 0
+             (helpers/<> (helpers/<$> (constantly inc)
+                                      (core/filter (partial = "ArrowDown")
+                                                   key-down))
+                         (helpers/<$> (constantly dec)
+                                      (core/filter (partial = "ArrowUp")
+                                                   key-down))
+                         (helpers/<$> (constantly (constantly 0)) response))))
+
 (defn query-input-component
   [query*]
   [:input {:on-change   (fn [event*]

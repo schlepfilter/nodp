@@ -147,6 +147,9 @@
                                          x))
                         (macroexpand expr)))))
 
+(def accum
+  (partial core/reduce (helpers/flip helpers/funcall)))
+
 (defn buffer
   ;TODO accept different types of arguments like http://reactivex.io/documentation/operators/buffer.html
   ;https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/bufferwithcount.md
