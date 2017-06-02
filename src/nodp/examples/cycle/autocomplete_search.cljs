@@ -14,7 +14,7 @@
 (def key-down
   (frp/event))
 
-(def number
+(def relative-number
   (->> (helpers/<> (helpers/<$> (constantly inc)
                                 (core/filter (partial = "ArrowDown")
                                              key-down))
@@ -24,6 +24,17 @@
                    (helpers/<$> (constantly (constantly 0)) response))
        (frp/accum 0)
        (frp/stepper 0)))
+
+(def suggestions
+  (frp/stepper [] (helpers/<$> second response)))
+
+(def valid-number
+  ((helpers/lift-a (fn [relative-number* total-number]
+                     (if (zero? total-number)
+                       0
+                       (mod relative-number* total-number))))
+    relative-number
+    (helpers/<$> count suggestions)))
 
 (defn query-input-component
   [query*]
@@ -56,9 +67,6 @@
 (def query-input
   (helpers/<$> query-input-component query))
 
-(def suggestions
-  (frp/stepper [] (helpers/<$> second response)))
-
 (def green
   "hsl(120, 100%, 50%)")
 
@@ -78,7 +86,7 @@
        vec))
 
 (def suggestion-list
-  ((helpers/lift-a suggestion-list-component) suggestions number))
+  ((helpers/lift-a suggestion-list-component) suggestions valid-number))
 
 (def autocomplete-search
   ;TODO display suggestions
