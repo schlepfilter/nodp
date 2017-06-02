@@ -4,6 +4,7 @@
             [com.rpl.specter :as s]
             [nodp.examples.cycle.checkbox :as checkbox]
             [nodp.examples.cycle.counter :as counter]
+            [nodp.examples.cycle.http-search-github :as http-search-github]
             [nodp.examples.intro :as intro]
             [nodp.examples.rx.drag-n-drop :as drag-n-drop]
             [nodp.examples.rx.letter-count :as letter-count]
@@ -16,6 +17,7 @@
   {:checkbox            checkbox/checkbox
    :counter             counter/counter
    :drag-n-drop         drag-n-drop/drag-n-drop
+   :http-search-github  http-search-github/http-search-github
    :intro               intro/intro
    :letter-count        letter-count/letter-count
    :simple-data-binding simple-data-binding/simple-data-binding})
