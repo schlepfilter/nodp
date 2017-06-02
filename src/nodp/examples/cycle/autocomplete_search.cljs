@@ -11,14 +11,21 @@
 (def response
   (frp/event))
 
+(def key-down
+  (frp/event))
+
 (defn query-input-component
   [query*]
-  [:input {:on-change (fn [event*]
-                        (-> event*
-                            .-target.value
-                            typing))
-           :type      "text"
-           :value     query*}])
+  [:input {:on-change   (fn [event*]
+                          (-> event*
+                              .-target.value
+                              typing))
+           :on-key-down (fn [event*]
+                          (-> event*
+                              .-key
+                              key-down))
+           :type        "text"
+           :value       query*}])
 
 (defn autocomplete-search-component
   ;TODO display suggestions
