@@ -2,6 +2,7 @@
   (:require [bidi.bidi :as bidi]
             [clojure.string :as str]
             [com.rpl.specter :as s]
+            [nodp.examples.cycle.bmi-naive :as bmi-naive]
             [nodp.examples.cycle.checkbox :as checkbox]
             [nodp.examples.cycle.counter :as counter]
             [nodp.examples.cycle.http-search-github :as http-search-github]
@@ -14,7 +15,8 @@
             [nodp.helpers.history :as history]))
 
 (def route-function
-  {:checkbox            checkbox/checkbox
+  {:bmi-naive           bmi-naive/bmi-naive
+   :checkbox            checkbox/checkbox
    :counter             counter/counter
    :drag-n-drop         drag-n-drop/drag-n-drop
    :http-search-github  http-search-github/http-search-github
