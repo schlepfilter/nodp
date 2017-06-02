@@ -103,6 +103,8 @@
 (def intro
   (helpers/<$> intro-component users))
 
-(frp/on (partial (helpers/flip GET) {:handler (comp response
-                                                    walk/keywordize-keys)})
+(def option {:handler (comp response
+                            walk/keywordize-keys)})
+
+(frp/on (partial (helpers/flip GET) option)
         request)

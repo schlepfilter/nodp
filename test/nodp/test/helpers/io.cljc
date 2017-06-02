@@ -48,8 +48,8 @@
   (test-helpers/restart-for-all
     [e test-helpers/event
      as (gen/vector test-helpers/any-equal)]
-    (= (into [] (concat (map tuple/snd @e)
-                        as))
+    (= (vec (concat (map tuple/snd @e)
+                    as))
        (with-exitv exit
                    (frp/on exit e)
                    (frp/activate)
@@ -63,10 +63,10 @@
      a test-helpers/any-equal
      as (gen/vector test-helpers/any-equal)]
     (let [b (frp/stepper a e)]
-      (= (into [] (dedupe (concat [a]
-                                  (remove (partial = a)
-                                          (map tuple/snd @e))
-                                  as)))
+      (= (vec (dedupe (concat [a]
+                              (remove (partial = a)
+                                      (map tuple/snd @e))
+                              as)))
          (with-exitv exit
                      (frp/on exit b)
                      (frp/activate)
