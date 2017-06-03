@@ -87,6 +87,9 @@
 (def green
   "hsl(145, 66%, 74%)")
 
+(def border
+  "1px solid hsl(0, 0%, 80%)")
+
 (defn suggestion-list-component
   ;TODO don't highlight a suggestion after response occurs
   [suggested* suggestions* number*]
@@ -94,7 +97,9 @@
        (map-indexed (fn [index x]
                       [:li {:on-click       #(completion x)
                             :on-mouse-enter #(relative-number index)
-                            :style          {:list-style "none"}}
+                            :style          {:border        border
+                                             :border-bottom "0px"
+                                             :list-style    "none"}}
                        x]))
        ((fn [lis]
           (if (empty? lis)
@@ -105,6 +110,7 @@
                              s]])
                          lis))))
        (concat [:ul {:style    {:background-color "white"
+                                :border-bottom    border
                                 :display          (if suggested*
                                                     "block"
                                                     "none")
