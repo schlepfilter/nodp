@@ -1,6 +1,7 @@
 (ns nodp.sdp.monad
-  (:require [nodp.helpers :as helpers]
-            [cats.core :as m]))
+  (:require [cats.builtin]
+            [cats.core :as m]
+            [nodp.helpers :as helpers]))
 
 (defn ap
   ([f x]
