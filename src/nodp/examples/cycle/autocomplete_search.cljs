@@ -71,7 +71,8 @@
 (defn autocomplete-search-component
   ;TODO display suggestions
   [query-input* suggestion-list*]
-  [:div {:style {:padding 5}}
+  [:div {:style {:background "hsl(0, 0%, 94%)"
+                 :padding    5}}
    [:section
     [:label {:style label-style}
      "Query:"]
