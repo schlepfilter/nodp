@@ -102,12 +102,14 @@
                            [[:li (s/setval [:style :background-color] green m)
                              s]])
                          lis))))
-       (concat [:ul {:style    {:display  (if suggested*
-                                            "block"
-                                            "none")
-                                :margin   0
-                                :padding  0
-                                :position "absolute"}
+       (concat [:ul {:style    {:background-color "white"
+                                :display          (if suggested*
+                                                    "block"
+                                                    "none")
+                                :margin           0
+                                :padding          0
+                                :position         "absolute"
+                                :width            "100%"}
                      :on-click #(suggested false)}])
        vec))
 
