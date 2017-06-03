@@ -2,7 +2,7 @@
   (:require [cats.protocols :as p]
             [cats.util :as util]
             [help.core :as help]
-            [nodp.helpers :as helpers]))
+            [nodp.helpers :as helpers :include-macros true]))
 
 (declare ->Tuple)
 ;In ClojureScript declare works around the following warning:

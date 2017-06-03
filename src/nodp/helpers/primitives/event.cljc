@@ -14,7 +14,7 @@
             [clj-time.core :as t]
             [clj-time.periodic :as periodic]])
     #?(:cljs [cljs.reader :as reader])
-            [nodp.helpers :as helpers]
+            [nodp.helpers :as helpers :include-macros true]
             [nodp.helpers.protocols :as entity-protocols]
             [nodp.helpers.time :as time]
             [nodp.helpers.tuple :as tuple])
