@@ -63,19 +63,26 @@
            :style       {:width "100%"}
            :value       query*}])
 
+(def label-style
+  {:display    "inline-block"
+   :text-align "right"
+   :width      100})
+
 (defn autocomplete-search-component
   ;TODO display suggestions
   [query-input* suggestion-list*]
   [:div
    [:section
-    [:label "Query:"]
+    [:label {:style label-style}
+     "Query:"]
     [:div {:style {:display  "inline-block"
                    :position "relative"
                    :width    300}}
      query-input*
      suggestion-list*]]
    [:section
-    [:label "Some field:"]
+    [:label {:style label-style}
+     "Some field:"]
     [:input {:type "text"}]]])
 
 (def query
