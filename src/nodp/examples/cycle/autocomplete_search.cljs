@@ -88,8 +88,8 @@
   [suggested* suggestions* number*]
   (->> suggestions*
        (map-indexed (fn [index x]
-                      [:li {:on-mouse-enter #(relative-number index)
-                            :on-click       #(completion x)
+                      [:li {:on-click       #(completion x)
+                            :on-mouse-enter #(relative-number index)
                             :style          {:list-style "none"}}
                        x]))
        ((fn [lis]
