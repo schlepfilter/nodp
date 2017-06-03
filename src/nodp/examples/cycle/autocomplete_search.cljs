@@ -91,7 +91,6 @@
   "1px solid hsl(0, 0%, 80%)")
 
 (defn suggestion-list-component
-  ;TODO don't highlight a suggestion after response occurs
   [suggested* suggestions* number*]
   (->> suggestions*
        (map-indexed (fn [index x]
@@ -128,7 +127,6 @@
     valid-number))
 
 (def autocomplete-search
-  ;TODO display suggestions
   ((helpers/lift-a autocomplete-search-component) query-input suggestion-list))
 
 (def endpoint
@@ -146,4 +144,3 @@
                              [:params :search]))))
 
 (frp/on (partial GET endpoint) option)
-
