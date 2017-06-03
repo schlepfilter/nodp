@@ -1,8 +1,7 @@
 (ns nodp.hfdp.proxy
   (:require [com.rpl.specter :as s]
             [incanter.distributions :as distributions]
-            [nodp.helpers :as helpers]
-            [cats.core :as m]))
+            [nodp.helpers :as helpers]))
 
 (defn- get-ratings-path
   [object]
