@@ -71,7 +71,7 @@
 (defn autocomplete-search-component
   ;TODO display suggestions
   [query-input* suggestion-list*]
-  [:div
+  [:div {:style {:padding 5}}
    [:section
     [:label {:style label-style}
      "Query:"]
@@ -112,21 +112,21 @@
             []
             (s/transform (s/srange number* (inc number*))
                          (fn [[[_ m s]]]
-                           [[:li (s/setval [:style :background-color] green m)
+                           [[:li (s/setval [:style :background] green m)
                              s]])
                          lis))))
        (concat [:ul
-                {:style    {:background-color "white"
-                            :border           border
-                            :border-bottom    "0px"
-                            :box-shadow       "0px 4px 4px hsl(0, 0%, 86.3%)"
-                            :display          (if suggested*
-                                                "block"
-                                                "none")
-                            :margin           0
-                            :padding          0
-                            :position         "absolute"
-                            :width            "100%"}
+                {:style    {:background    "white"
+                            :border        border
+                            :border-bottom "0px"
+                            :box-shadow    "0px 4px 4px hsl(0, 0%, 86.3%)"
+                            :display       (if suggested*
+                                             "block"
+                                             "none")
+                            :margin        0
+                            :padding       0
+                            :position      "absolute"
+                            :width         "100%"}
                  :on-click #(suggested false)}])
        vec))
 
