@@ -96,8 +96,7 @@
        (map-indexed (fn [index x]
                       [:li {:on-click       #(completion x)
                             :on-mouse-enter #(relative-number index)
-                            :style          {:border        border
-                                             :border-bottom "0px"
+                            :style          {:border-bottom border
                                              :list-style    "none"}}
                        x]))
        ((fn [lis]
@@ -109,7 +108,8 @@
                              s]])
                          lis))))
        (concat [:ul {:style    {:background-color "white"
-                                :border-bottom    border
+                                :border           border
+                                :border-bottom    "0px"
                                 :display          (if suggested*
                                                     "block"
                                                     "none")
