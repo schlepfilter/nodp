@@ -60,6 +60,7 @@
                               .-key
                               key-down))
            :type        "text"
+           :style       {:width "100%"}
            :value       query*}])
 
 (defn autocomplete-search-component
@@ -69,7 +70,8 @@
    [:section
     [:label "Query:"]
     [:div {:style {:display  "inline-block"
-                   :position "relative"}}
+                   :position "relative"
+                   :width    300}}
      query-input*
      suggestion-list*]]
    [:section
