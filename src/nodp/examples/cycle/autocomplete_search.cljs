@@ -66,8 +66,11 @@
     [:label "Some field:"]
     [:input {:type "text"}]]])
 
+(def completion
+  (frp/event))
+
 (def query
-  (frp/stepper "" typing))
+  (frp/stepper "" (helpers/<> typing completion)))
 
 (def query-input
   (helpers/<$> query-input-component query))
@@ -80,7 +83,8 @@
   [suggested* suggestions* number*]
   (->> suggestions*
        (map-indexed (fn [index x]
-                      [:li {:on-mouse-enter #(relative-number index)}
+                      [:li {:on-mouse-enter #(relative-number index)
+                            :on-click       #(completion x)}
                        x]))
        ((fn [lis]
           (if (empty? lis)
