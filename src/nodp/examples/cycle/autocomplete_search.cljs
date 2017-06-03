@@ -24,16 +24,15 @@
 
 (def relative-number
   (->> (helpers/<> (helpers/<$> (constantly inc)
-                                (core/filter (partial = "ArrowDown")
-                                             key-down))
+                                (core/filter (partial = "ArrowDown") key-down))
                    (helpers/<$> (constantly dec)
-                                (core/filter (partial = "ArrowUp")
-                                             key-down))
+                                (core/filter (partial = "ArrowUp") key-down))
                    (helpers/<$> (constantly (constantly 0)) response))
        (frp/accum 0)))
 
 (def suggestions
-  (frp/stepper [] (helpers/<$> second response)))
+  (->> (helpers/<$> second response)
+       (frp/stepper [])))
 
 (def valid-number
   ((helpers/lift-a (fn [relative-number* total-number]
