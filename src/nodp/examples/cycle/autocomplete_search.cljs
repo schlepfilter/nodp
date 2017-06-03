@@ -81,7 +81,8 @@
             []
             (s/transform (s/srange number* (inc number*))
                          (fn [[[_ m s]]]
-                           [[:li (merge m {:style {:background-color green}}) s]])
+                           [[:li (merge m {:style {:background-color green}})
+                             s]])
                          lis))))
        (concat [:ul {:display "inline-block"}])
        vec))
