@@ -77,7 +77,7 @@
 
 (defn suggestion-list-component
   ;TODO don't highlight a suggestion after response occurs
-  [suggestions* number*]
+  [suggested* suggestions* number*]
   (->> suggestions*
        (map-indexed (fn [index x]
                       [:li {:on-mouse-enter #(relative-number index)}
@@ -90,11 +90,17 @@
                            [[:li (merge m {:style {:background-color green}})
                              s]])
                          lis))))
-       (concat [:ul {:on-click #(suggested false)}])
+       (concat [:ul {:style    {:display (if suggested*
+                                           "block"
+                                           "none")}
+                     :on-click #(suggested false)}])
        vec))
 
 (def suggestion-list
-  ((helpers/lift-a suggestion-list-component) suggestions valid-number))
+  ((helpers/lift-a suggestion-list-component)
+    (frp/stepper false suggested)
+    suggestions
+    valid-number))
 
 (def autocomplete-search
   ;TODO display suggestions
@@ -115,3 +121,4 @@
                              [:params :search]))))
 
 (frp/on (partial GET endpoint) option)
+
