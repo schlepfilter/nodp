@@ -89,14 +89,15 @@
   (->> suggestions*
        (map-indexed (fn [index x]
                       [:li {:on-mouse-enter #(relative-number index)
-                            :on-click       #(completion x)}
+                            :on-click       #(completion x)
+                            :style          {:list-style "none"}}
                        x]))
        ((fn [lis]
           (if (empty? lis)
             []
             (s/transform (s/srange number* (inc number*))
                          (fn [[[_ m s]]]
-                           [[:li (merge m {:style {:background-color green}})
+                           [[:li (s/setval [:style :background-color] green m)
                              s]])
                          lis))))
        (concat [:ul {:style    {:display (if suggested*
