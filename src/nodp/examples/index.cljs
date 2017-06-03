@@ -2,6 +2,7 @@
   (:require [bidi.bidi :as bidi]
             [clojure.string :as str]
             [com.rpl.specter :as s]
+            [nodp.examples.cycle.autocomplete-search :as autocomplete-search]
             [nodp.examples.cycle.bmi-naive :as bmi-naive]
             [nodp.examples.cycle.checkbox :as checkbox]
             [nodp.examples.cycle.counter :as counter]
@@ -15,7 +16,8 @@
             [nodp.helpers.history :as history]))
 
 (def route-function
-  {:bmi-naive           bmi-naive/bmi-naive
+  {:autocomplete-search autocomplete-search/autocomplete-search
+   :bmi-naive           bmi-naive/bmi-naive
    :checkbox            checkbox/checkbox
    :counter             counter/counter
    :drag-n-drop         drag-n-drop/drag-n-drop

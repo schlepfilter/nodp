@@ -43,6 +43,9 @@
   [expr]
   `(derived/transparent ~expr))
 
+(def accum
+  derived/accum)
+
 (def buffer
   derived/buffer)
 

@@ -1,9 +1,9 @@
 (ns nodp.examples.cycle.http-search-github
   (:require [clojure.walk :as walk]
             [ajax.core :refer [GET]]
-            [nodp.helpers.frp :as frp]
             [nodp.helpers :as helpers]
-            [nodp.helpers.clojure.core :as core]))
+            [nodp.helpers.clojure.core :as core]
+            [nodp.helpers.frp :as frp]))
 
 (def term
   (frp/event))

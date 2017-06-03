@@ -18,10 +18,8 @@
                  [incanter "1.5.7"]
                  [inflections "0.12.2"]
                  [jarohen/chime "0.2.1"]
-                 [org.clojure/core.async "0.3.442"]
                  [org.clojure/math.combinatorics "0.1.3"]
                  [org.clojure/math.numeric-tower "0.0.4"]
-                 [org.clojure/test.check "0.9.0"]
                  [org.flatland/ordered "1.5.4"]
                  [potemkin "0.4.3"]
                  [prismatic/plumbing "0.5.3"]
@@ -42,9 +40,9 @@
                 :compiler     {:output-to     "dist/js/main.js"
                                :main          nodp.core
                                :optimizations :advanced}}}}
-  :profiles
-  {:dev {:dependencies [[binaryage/devtools "0.9.2"]
-                        [com.taoensso/encore "2.90.1"]
-                        [figwheel-sidecar "0.5.9"]
-                        [org.clojure/tools.namespace "0.2.11"]
-                        [spyscope "0.1.6"]]}})
+  :profiles {:dev {:dependencies [[binaryage/devtools "0.9.2"]
+                                  [com.taoensso/encore "2.90.1"]
+                                  [figwheel-sidecar "0.5.9"]
+                                  [org.clojure/test.check "0.9.0"]
+                                  [org.clojure/tools.namespace "0.2.11"]
+                                  [spyscope "0.1.6"]]}})
