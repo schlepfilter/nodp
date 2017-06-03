@@ -14,6 +14,12 @@
 (def key-down
   (frp/event))
 
+(def suggested
+  (helpers/<> (helpers/<$> (constantly true) response)
+              (helpers/<$> (constantly false)
+                           (core/filter (partial = "Enter")
+                                        key-down))))
+
 (def relative-number
   (->> (helpers/<> (helpers/<$> (constantly inc)
                                 (core/filter (partial = "ArrowDown")
@@ -84,7 +90,7 @@
                            [[:li (merge m {:style {:background-color green}})
                              s]])
                          lis))))
-       (concat [:ul {:display "inline-block"}])
+       (concat [:ul {:on-click #(suggested false)}])
        vec))
 
 (def suggestion-list
