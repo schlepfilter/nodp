@@ -5,6 +5,7 @@
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
             [com.rpl.specter :as s]
+            [help]
             [nodp.helpers :as helpers]))
 
 (def slot-n 2)
@@ -16,7 +17,7 @@
    (s/multi-path :on :off)])
 
 (def control
-  (s/setval do-path helpers/nop []))
+  (s/setval do-path help/nop []))
 
 (def environment
   {:actions []
@@ -31,13 +32,13 @@
                            keys))
 
 (def get-percent
-  (partial (helpers/flip str) "%"))
+  (partial (help/flip str) "%"))
 
-(helpers/defpfmethod get-action :light
-                     (comp maybe/just
-                           (partial str "Light is dimmed to ")
-                           get-percent
-                           :light))
+(help/defpfmethod get-action :light
+                  (comp maybe/just
+                        (partial str "Light is dimmed to ")
+                        get-percent
+                        :light))
 
 (def location
   "Living Room")
@@ -45,7 +46,7 @@
 (defn- get-preposition
   [light]
   (case light
-    :off helpers/nothing
+    :off help/nothing
     (maybe/just "on")))
 
 (def get-description
@@ -63,15 +64,15 @@
 ;              :off ""
 ;              "on "))))
 
-(helpers/defpfmethod get-action :fan
-                     (helpers/comp-just helpers/space-join
-                                        (partial conj [location "ceiling fan is"])
-                                        get-description
-                                        :fan))
+(help/defpfmethod get-action :fan
+                  (helpers/comp-just helpers/space-join
+                                     (partial conj [location "ceiling fan is"])
+                                     get-description
+                                     :fan))
 
 (defmethod get-action :control
   [_]
-  helpers/nothing)
+  help/nothing)
 
 ;This definition is harder to read.
 ;(helpers/defpfmethod get-action :control
@@ -103,20 +104,20 @@
 (defn- get-actions
   [& commands]
   (-> environment
-      ((apply comp (map (partial m/<*> (helpers/curry add-action)) commands)))
+      ((apply comp (map (partial m/<*> (help/curry add-action)) commands)))
       :actions
       maybe/cat-maybes))
 
 (def undo
-  (helpers/build (partial s/setval* :actions)
-                 :actions
-                 (comp last
-                       :undos)))
+  (help/build (partial s/setval* :actions)
+              :actions
+              (comp last
+                    :undos)))
 
 (def make-set-button
-  (helpers/build (helpers/curry s/setval*)
-                 (comp (partial conj [:now :control]) s/keypath :slot)
-                 ((helpers/flip select-keys) [:on :off])))
+  (help/build (help/curry s/setval*)
+              (comp (partial conj [:now :control]) s/keypath :slot)
+              ((help/flip select-keys) [:on :off])))
 
 (defn make-push-button
   [{:keys [slot on]}]
@@ -127,7 +128,7 @@
         add-undo))
 
 (def make-make-change
-  (comp (helpers/curry s/setval*)
+  (comp (help/curry s/setval*)
         (partial conj [:now])))
 
 (def make-change-light
@@ -143,11 +144,11 @@
   (make-make-change :fan))
 
 (def defset-fan
-  (helpers/build (partial intern *ns*)
-                 (comp symbol
-                       (partial str "set-fan-")
-                       name)
-                 make-set-fan))
+  (help/build (partial intern *ns*)
+              (comp symbol
+                    (partial str "set-fan-")
+                    name)
+              make-set-fan))
 
 (def defsets-fan
   (comp (partial run! defset-fan)
@@ -165,8 +166,8 @@
           (make-push-button m)))
 
 (def map-key
-  (comp (helpers/curry map)
-        (helpers/curry array-map)))
+  (comp (help/curry map)
+        (help/curry array-map)))
 
 (def get-buttons
   (comp (partial map (partial apply merge))

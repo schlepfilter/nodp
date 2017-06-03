@@ -1,12 +1,12 @@
 (ns nodp.jdp.half-sync-half-async
   (:require [cats.core :as m]
-            [nodp.helpers :as helpers]))
+            [help]))
 
 (def sum-arithmetic
-  (m/<*> (helpers/curry *) inc))
+  (m/<*> (help/curry *) inc))
 
 (def print-sum
-  (juxt (helpers/functionize Thread/sleep)
+  (juxt (help/functionize Thread/sleep)
         (comp println
               sum-arithmetic)))
 

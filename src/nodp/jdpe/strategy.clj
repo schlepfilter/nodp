@@ -1,16 +1,16 @@
 (ns nodp.jdpe.strategy
   (:require [clojure.string :as str]
-            [nodp.helpers :as helpers]))
+            [help]))
 
-(helpers/defcurried make-change-speed
-                    [gear speed]
-                    (str "Working out correct gear at "
-                         speed
-                         "mph for a "
-                         (-> gear
-                             name
-                             str/upper-case)
-                         " gearbox"))
+(help/defcurried make-change-speed
+                 [gear speed]
+                 (str "Working out correct gear at "
+                      speed
+                      "mph for a "
+                      (-> gear
+                          name
+                          str/upper-case)
+                      " gearbox"))
 
 (def change-standard-speed
   (make-change-speed :standard))

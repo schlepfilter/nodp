@@ -1,8 +1,8 @@
 (ns nodp.examples.rx.drag-n-drop
-  (:require [nodp.helpers.clojure.core :as core]
-            [nodp.helpers :as helpers]
+  (:require [help]
+            [help.unit :as unit]
+            [nodp.helpers.clojure.core :as core]
             [nodp.helpers.frp :as frp]
-            [nodp.helpers.unit :as unit]
             [nodp.helpers.window :as window]))
 
 (def black "hsl(0, 0%, 0%)")
@@ -13,20 +13,20 @@
   (frp/event))
 
 (def drag
-  (frp/stepper false (helpers/<> (helpers/<$> (constantly true) mousedown)
-                                 (helpers/<$> (constantly false)
-                                              window/mouseup))))
+  (->> (help/<> (help/<$> (constantly true) mousedown)
+                (help/<$> (constantly false) window/mouseup))
+       (frp/stepper false)))
 
 (def movement
   (->> drag
        (frp/snapshot window/mousemove)
        (core/filter second)
-       (helpers/<$> first)))
+       (help/<$> first)))
 
 (def get-one-dimension
   (comp (partial frp/stepper 0)
         core/+
-        (partial (helpers/flip helpers/<$>) movement)))
+        (partial (help/flip help/<$>) movement)))
 
 (def left
   (get-one-dimension :movement-x))
@@ -36,9 +36,9 @@
 
 (def origin
   ;TODO infer the number of arguments from fn
-  ((helpers/lift-a (fn [left* top*]
-                     {:left left*
-                      :top  top*}))
+  ((help/lift-a (fn [left* top*]
+                  {:left left*
+                   :top  top*}))
     left
     top))
 
@@ -62,4 +62,4 @@
    [:p "Example to show coordinating events to perform drag and drop"]])
 
 (def drag-n-drop
-  (helpers/<$> drag-n-drop-component origin))
+  (help/<$> drag-n-drop-component origin))

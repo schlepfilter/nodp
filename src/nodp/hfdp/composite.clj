@@ -2,6 +2,7 @@
   (:require [clojurewerkz.money.format :as format]
             [com.rpl.specter :as s]
             [flatland.ordered.set :refer [ordered-set]]
+            [help]
             [nodp.helpers :as helpers]
             [nodp.hfdp.helpers :as hfdp-helpers]))
 
@@ -40,24 +41,24 @@
                                  map? s/STAY)))
 
 (def get-item
-  (helpers/build str
-                 :title
-                 (constantly "(v), ")
-                 (comp format/format
+  (help/build str
+              :title
+              (constantly "(v), ")
+              (comp format/format
                        :price)
-                 (constantly "\n -- ")
-                 :description))
+              (constantly "\n -- ")
+              :description))
 
 (def get-items
   (comp (partial apply str) (partial map get-item)))
 
 (def get-menu
-  (helpers/build str
-                 :title
-                 (constantly ", ")
-                 :description
-                 (constantly "\n---------------------\n")
-                 (comp get-items
+  (help/build str
+              :title
+              (constantly ", ")
+              :description
+              (constantly "\n---------------------\n")
+              (comp get-items
                        :items)))
 
 (def get-menus

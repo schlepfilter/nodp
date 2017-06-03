@@ -1,5 +1,5 @@
 (ns nodp.examples.rx.letter-count
-  (:require [nodp.helpers :as helpers]
+  (:require [help]
             [nodp.helpers.frp :as frp]))
 
 (def length
@@ -20,6 +20,6 @@
 
 (def letter-count
   (->> length
-       (helpers/<$> (partial str "length: "))
+       (help/<$> (partial str "length: "))
        (frp/stepper "Start Typing!")
-       (helpers/<$> letter-count-component)))
+       (help/<$> letter-count-component)))

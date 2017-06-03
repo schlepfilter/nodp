@@ -1,6 +1,6 @@
 (ns nodp.jdp.visitor
   (:require [cats.monad.maybe :as maybe]
-            [nodp.helpers :as helpers]))
+            [help]))
 
 (def default-hierarchy
   [:commander
@@ -14,13 +14,13 @@
     :soldier]])
 
 (def target?
-  (helpers/build =
-                 :target
-                 :object))
+  (help/build =
+              :target
+              :object))
 
-(defmulti greet (helpers/build and
-                               target?
-                               :target))
+(defmulti greet (help/build and
+                            target?
+                            :target))
 
 (defmethod greet :commander
   [_]
@@ -36,15 +36,15 @@
 
 (defmethod greet false
   [_]
-  helpers/nothing)
+  help/nothing)
 
-(helpers/defcurried make-visit
-                    [hierarchy target]
-                    (maybe/map-maybe (comp greet
-                                           (fn [object]
-                                             {:target target
-                                              :object object}))
-                                     (flatten hierarchy)))
+(help/defcurried make-visit
+                 [hierarchy target]
+                 (maybe/map-maybe (comp greet
+                                        (fn [object]
+                                          {:target target
+                                           :object object}))
+                                  (flatten hierarchy)))
 
 (def visit
   (make-visit default-hierarchy))

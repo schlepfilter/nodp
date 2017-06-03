@@ -1,8 +1,8 @@
 (ns nodp.examples.cycle.checkbox
-  (:require [nodp.helpers :as helpers]
+  (:require [help]
+            [help.unit :as unit]
             [nodp.helpers.clojure.core :as core]
-            [nodp.helpers.frp :as frp]
-            [nodp.helpers.unit :as unit]))
+            [nodp.helpers.frp :as frp]))
 
 (def check
   (frp/event))
@@ -10,7 +10,7 @@
 (def checked
   (->> check
        core/count
-       (helpers/<$> odd?)
+       (help/<$> odd?)
        (frp/stepper false)))
 
 (defn checkbox-component
@@ -24,4 +24,4 @@
          "off")]])
 
 (def checkbox
-  (helpers/<$> checkbox-component checked))
+  (help/<$> checkbox-component checked))

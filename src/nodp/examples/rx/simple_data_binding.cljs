@@ -1,5 +1,5 @@
 (ns nodp.examples.rx.simple-data-binding
-  (:require [nodp.helpers :as helpers]
+  (:require [help]
             [nodp.helpers.frp :as frp]))
 
 (defn partial-name
@@ -31,10 +31,10 @@
    [:div full-name]])
 
 (def full-name
-  ((helpers/lift-a str)
+  ((help/lift-a str)
     (frp/stepper "" first-name)
     (frp/behavior " ")
     (frp/stepper "" last-name)))
 
 (def simple-data-binding
-  (helpers/<$> simple-data-binding-component full-name))
+  (help/<$> simple-data-binding-component full-name))

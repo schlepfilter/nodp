@@ -3,10 +3,10 @@
             [clojure.test.check.properties :as prop]
             [clojure.test.check.random :as random]
             [clojure.test.check.rose-tree :as rose]
-            [nodp.helpers :as helpers]
+            [help :as help]
+            [help.unit :as unit]
             [nodp.helpers.frp :as frp]
-            [nodp.helpers.primitives.event :as event]
-            [nodp.helpers.unit :as unit]))
+            [nodp.helpers.primitives.event :as event]))
 
 (defn fixture
   [f]
@@ -89,8 +89,8 @@
   ;=> (0.8163040448517938 0.8830449199816961)
   (gen/let [a any-equal]
            (gen/one-of [(gen/return (frp/event))
-                        (gen/return (nodp.helpers/pure
-                                      (helpers/infer (frp/event))
+                        (gen/return (help/pure
+                                      (help/infer (frp/event))
                                       a))])))
 
 (defn conj-event
@@ -123,10 +123,10 @@
             fs (gen/vector (function any-equal)
                            (count input-events))]
            (gen/tuple (gen/return input-events)
-                      (gen/return (doall (map helpers/<$> fs input-events))))))
+                      (gen/return (doall (map help/<$> fs input-events))))))
 
 (def advance
   (gen/let [n gen/pos-int]
            (let [e (frp/event)]
              #(dotimes [_ n]
-               (e unit/unit)))))
+                (e unit/unit)))))

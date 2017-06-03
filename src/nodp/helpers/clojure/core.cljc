@@ -1,8 +1,8 @@
 (ns nodp.helpers.clojure.core
   (:refer-clojure :exclude [+ count drop filter max min reduce remove])
-  (:require [nodp.helpers :as helpers]
-            [nodp.helpers.primitives.event :as event]
-            [nodp.helpers.unit :as unit]))
+  (:require [help]
+            [help.unit :as unit]
+            [nodp.helpers.primitives.event :as event]))
 
 (defn reduce
   ([f e]
@@ -15,7 +15,7 @@
                             :start       false})
                          {:event-value unit/unit
                           :start       true})
-        (helpers/<$> :event-value)))
+        (help/<$> :event-value)))
   ([f val e]
    (event/transduce (clojure.core/drop 0) f val e)))
 

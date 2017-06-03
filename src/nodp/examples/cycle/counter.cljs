@@ -1,8 +1,8 @@
 (ns nodp.examples.cycle.counter
-  (:require [nodp.helpers :as helpers]
+  (:require [help]
+            [help.unit :as unit]
             [nodp.helpers.clojure.core :as core]
-            [nodp.helpers.frp :as frp]
-            [nodp.helpers.unit :as unit]))
+            [nodp.helpers.frp :as frp]))
 
 (def increment
   (frp/event))
@@ -20,8 +20,8 @@
    [:p (str "Counter: " total)]])
 
 (def counter
-  (->> (helpers/<> (helpers/<$> (constantly 1) increment)
-                   (helpers/<$> (constantly -1) decrement))
+  (->> (help/<> (help/<$> (constantly 1) increment)
+                (help/<$> (constantly -1) decrement))
        core/+
        (frp/stepper 0)
-       (helpers/<$> counter-component)))
+       (help/<$> counter-component)))

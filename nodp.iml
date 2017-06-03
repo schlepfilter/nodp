@@ -82,6 +82,7 @@
     <orderEntry type="library" name="Leiningen: funcool/cats:2.0.0" level="project" />
     <orderEntry type="library" name="Leiningen: funcool/cuerdas:2.0.2" level="project" />
     <orderEntry type="library" name="Leiningen: hawk:0.2.11" level="project" />
+    <orderEntry type="library" name="Leiningen: help:0.1.0" level="project" />
     <orderEntry type="library" name="Leiningen: hiccup:1.0.5" level="project" />
     <orderEntry type="library" name="Leiningen: http-kit:2.2.0" level="project" />
     <orderEntry type="library" name="Leiningen: incanter/incanter-charts:1.5.7" level="project" />

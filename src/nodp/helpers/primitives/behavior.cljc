@@ -5,6 +5,7 @@
             [cats.protocols :as protocols]
             [cats.util :as util]
             [com.rpl.specter :as s]
+            [help]
             [nodp.helpers :as helpers]
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.protocols :as entity-protocols]
@@ -25,7 +26,7 @@
   IDeref
   (#?(:clj  deref
       :cljs -deref) [_]
-    ((helpers/<*> (comp id
+    ((help/<*> (comp id
                         :function)
                   :time)
       @event/network-state))
@@ -70,11 +71,11 @@
   ((:cancel @event/network-state)))
 
 (def rename-id
-  (comp ((helpers/curry 3 s/transform*)
+  (comp ((help/curry 3 s/transform*)
           (apply s/multi-path
                  (map s/must
                       [:dependency :function :modifies! :modified :occs])))
-        (helpers/flip (helpers/curry 2 set/rename-keys))
+        (help/flip (help/curry 2 set/rename-keys))
         (partial apply array-map)
         reverse
         vector))
@@ -98,7 +99,7 @@
         ;TODO fix m/curry
         ;((m/curry s/setval*) s/END)
         ; ^--- The given function doesn't have arity metadata, provide an arity for currying.
-        ((helpers/curry 3 s/setval*) s/END)
+        ((help/curry 3 s/setval*) s/END)
         vector))
 
 #?(:clj (defmacro register
@@ -111,7 +112,7 @@
   (reset! event/network-state (event/get-initial-network))
   (redef time
          (behavior* identity))
-  (run! helpers/funcall @registry))
+  (run! help/funcall @registry))
 
 (def restart
   (juxt stop

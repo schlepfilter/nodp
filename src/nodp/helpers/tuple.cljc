@@ -1,6 +1,7 @@
 (ns nodp.helpers.tuple
   (:require [cats.protocols :as p]
             [cats.util :as util]
+            [help]
             [nodp.helpers :as helpers]))
 
 (declare ->Tuple)
@@ -13,13 +14,13 @@
   (-get-context [_]
     (helpers/reify-monad
       (partial ->Tuple (-> fst
-                           helpers/infer
-                           nodp.helpers/mempty))
+                           help/infer
+                           help/mempty))
       (fn [_ f]
         (Tuple. (->> snd
                      f
                      :fst
-                     (nodp.helpers/<> fst))
+                     (help/<> fst))
                 (-> snd
                     f
                     :snd)))))

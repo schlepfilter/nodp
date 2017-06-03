@@ -3,12 +3,12 @@
             [cats.builtin]
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
-            [nodp.helpers :as helpers]
+            [help]
             [nodp.rmp.helpers :as rmp-helpers]))
 
 (defn- make-kind?
   [kind]
-  (comp (partial (helpers/flip str/starts-with?) kind)
+  (comp (partial (help/flip str/starts-with?) kind)
         :kind))
 
 ; This definition is less readable.
@@ -23,7 +23,7 @@
     (-> kind
         make-kind?
         (some items)
-        (helpers/maybe-if (rmp-helpers/handle-items items)))))
+        (help/maybe-if (rmp-helpers/handle-items items)))))
 
 (def handle
   (comp maybe/cat-maybes

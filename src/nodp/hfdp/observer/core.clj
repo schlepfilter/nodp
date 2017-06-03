@@ -1,6 +1,7 @@
 (ns nodp.hfdp.observer.core
   (:require [clojure.string :as str]
             [beicon.core :as rx]
+            [help]
             [nodp.helpers :as helpers])
   (:import (rx.functions FuncN)
            (rx Observable)))
@@ -22,10 +23,10 @@
 
 (defn forecast
   [delta]
-  (helpers/casep delta
-                 pos? "Improving weather on the way!"
-                 zero? "More of the same"
-                 "Watch out for cooler, rainy weather"))
+  (help/casep delta
+              pos? "Improving weather on the way!"
+              zero? "More of the same"
+              "Watch out for cooler, rainy weather"))
 
 (def forecast-stream
   (rx/map forecast delta-stream))
@@ -55,9 +56,9 @@
 
 (defn- combine-latest
   [x & more]
-  (helpers/casep x
-                 rx/observable? (apply combine-latest vector x more)
-                 (Observable/combineLatest more (rxfnn x))))
+  (help/casep x
+              rx/observable? (apply combine-latest vector x more)
+              (Observable/combineLatest more (rxfnn x))))
 
 (def statistic-stream
   ;TODO use a glitch-free library

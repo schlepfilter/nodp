@@ -2,6 +2,7 @@
   (:require [cats.core :as m]
             [cats.monad.maybe :as maybe]
             [cuerdas.core :as cuerdas]
+            [help]
             [nodp.helpers :as helpers]))
 
 (defn get-head-or-hair
@@ -12,13 +13,13 @@
 
 (defn- describe-hair-type
   [hair-type-maybe]
-  (helpers/casep hair-type-maybe
-                 maybe/nothing? "hair"
-                 (-> hair-type-maybe
-                     m/join
-                     ((juxt cuerdas/human
-                            get-head-or-hair))
-                     helpers/space-join)))
+  (help/casep hair-type-maybe
+              maybe/nothing? "hair"
+              (-> hair-type-maybe
+                  m/join
+                  ((juxt cuerdas/human
+                         get-head-or-hair))
+                  helpers/space-join)))
 
 (defn- make-get-fragment
   [& fs]
@@ -36,11 +37,11 @@
 (def describe-hair
   (make-get-fragment (constantly (maybe/just "with"))
                      (comp (partial m/<$> name)
-                           helpers/maybe*
+                           help/maybe*
                            :hair-color)
                      (helpers/comp-just describe-hair-type
-                                        helpers/maybe*
-                                        :hair-type)))
+                                     help/maybe*
+                                     :hair-type)))
 
 (defn- make-describe-keyword
   [s]
@@ -66,16 +67,16 @@
 
 (def get-hero
   (make-get-fragment (helpers/comp-just describe-profession
-                                        :profession)
+                                     :profession)
                      (helpers/comp-just describe-first-name
-                                        :first-name)
+                                     :first-name)
                      (helpers/comp-just describe-hair
-                                        (partial (helpers/flip select-keys)
-                                                 [:hair-type :hair-color]))
+                                     (partial (help/flip select-keys)
+                                              [:hair-type :hair-color]))
                      (helpers/comp-just describe-weapon
-                                        :weapon)
+                                     :weapon)
                      (comp (partial m/<$> describe-armor)
-                           helpers/maybe*
+                           help/maybe*
                            :armor)))
 
 (get-hero {:first-name "Riobard"

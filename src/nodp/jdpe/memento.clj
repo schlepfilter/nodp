@@ -1,16 +1,17 @@
 (ns nodp.jdpe.memento
   (:require [clojure.set :as set]
             [com.rpl.specter :as s]
+            [help]
             [nodp.helpers :as helpers]))
 
 (def environment
   {:actions []})
 
 (def set-before
-  (partial (helpers/flip set/rename-keys) {:now :before}))
+  (partial (help/flip set/rename-keys) {:now :before}))
 
 (def make-set-now*
-  ((helpers/curry s/setval*) :now))
+  ((help/curry s/setval*) :now))
 
 (defn- make-set-now
   [n]
@@ -36,7 +37,7 @@
         get-now))
 
 (def get-memento
-  (partial (helpers/flip select-keys) [:now :before]))
+  (partial (help/flip select-keys) [:now :before]))
 
 (def save
   (partial helpers/transfer* :memento get-memento))

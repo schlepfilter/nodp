@@ -1,5 +1,6 @@
 (ns nodp.jdpe.abstract-factory
-  (:require [nodp.helpers :as helpers]))
+  (:require [help]
+            [nodp.helpers :as helpers]))
 
 (def description
   {:body    "Body shell parts"
@@ -9,7 +10,7 @@
 (defn make-get-parts
   [vehicle]
   (comp helpers/space-join
-        (partial (helpers/flip concat) ["for a" (name vehicle)])
+        (partial (help/flip concat) ["for a" (name vehicle)])
         vector
         description))
 

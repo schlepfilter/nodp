@@ -1,6 +1,7 @@
 (ns nodp.jdp.decorator
   (:require [clojure.string :as str]
             [plumbing.map :as map]
+            [help]
             [nodp.helpers :as helpers]))
 
 (def troll
@@ -39,7 +40,7 @@
 (defmacro defpfmethods
   [multifn dispatch-vals f]
   `(run! (fn [dispatch-val#]
-           (helpers/defpfmethod ~multifn dispatch-val# ~f))
+           (help/defpfmethod ~multifn dispatch-val# ~f))
          ~dispatch-vals))
 
 (defpfmethods decorate* [:attack :flee]
@@ -47,14 +48,14 @@
                     (partial drop 1)
                     vector))
 
-(helpers/defpfmethod decorate* :kind
-                     (comp last
-                           vector))
+(help/defpfmethod decorate* :kind
+                  (comp last
+                        vector))
 
-(helpers/defpfmethod decorate* :power
-                     (comp (partial apply +)
-                           (partial drop 1)
-                           vector))
+(help/defpfmethod decorate* :power
+                  (comp (partial apply +)
+                        (partial drop 1)
+                        vector))
 
 (def decorate
   (partial map/merge-with-key decorate*))

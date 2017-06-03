@@ -2,6 +2,7 @@
   (:require [bidi.bidi :as bidi]
             [clojure.string :as str]
             [com.rpl.specter :as s]
+            [help]
             [nodp.examples.cycle.autocomplete-search :as autocomplete-search]
             [nodp.examples.cycle.bmi-naive :as bmi-naive]
             [nodp.examples.cycle.checkbox :as checkbox]
@@ -11,7 +12,6 @@
             [nodp.examples.rx.drag-n-drop :as drag-n-drop]
             [nodp.examples.rx.letter-count :as letter-count]
             [nodp.examples.rx.simple-data-binding :as simple-data-binding]
-            [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.history :as history]))
 
@@ -35,7 +35,7 @@
 
 (def example-route
   (zipmap (map (comp unkebab
-                     (partial (helpers/flip subs) 1)
+                     (partial (help/flip subs) 1)
                      str)
                route-keywords)
           route-keywords))
