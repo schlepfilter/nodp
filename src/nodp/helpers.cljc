@@ -14,8 +14,7 @@
             [clojurewerkz.money.currencies :as mc]
             [potemkin]])
             [nodp.helpers.unit :as unit])
-  #?(:cljs (:require-macros [cljs.core.async.macros :as async]
-             [nodp.helpers :refer [build case-eval casep defcurried mlet]])))
+  #?(:cljs (:require-macros [nodp.helpers :refer [build case-eval casep defcurried mlet]])))
 
 (defn call-pred
   ([_]
