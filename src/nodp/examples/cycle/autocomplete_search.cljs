@@ -20,8 +20,7 @@
 
 (def suggested
   (helpers/<> (helpers/<$> (constantly true) response)
-              (helpers/<$> (constantly false)
-                           enter)))
+              (helpers/<$> (constantly false) enter)))
 
 (def relative-number
   (->> (helpers/<> (helpers/<$> (constantly inc)
@@ -90,7 +89,8 @@
     [:input {:type "text"}]]])
 
 (def query
-  (frp/stepper "" (helpers/<> typing completion)))
+  (->> (helpers/<> typing completion)
+       (frp/stepper "")))
 
 (def query-input
   (helpers/<$> query-input-component query))
