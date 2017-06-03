@@ -1,5 +1,5 @@
 (ns nodp.examples.rx.simple-data-binding
-  (:require [help]
+  (:require [help.core :as help]
             [nodp.helpers.frp :as frp]))
 
 (defn partial-name

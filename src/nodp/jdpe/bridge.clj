@@ -1,6 +1,6 @@
 (ns nodp.jdpe.bridge
   (:require [com.rpl.specter :as s]
-            [help]
+            [help.core :as help]
             [nodp.helpers :as helpers]))
 
 (def verb

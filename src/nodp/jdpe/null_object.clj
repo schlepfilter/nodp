@@ -2,7 +2,7 @@
   (:require [clojure.string :as str]
             [com.rpl.specter :as s]
             [cuerdas.core :as cuerdas]
-            [help]
+            [help.core :as help]
             [nodp.helpers :as helpers]))
 
 (defn- make-get-turn-action

@@ -1,7 +1,7 @@
 (ns nodp.helpers.tuple
   (:require [cats.protocols :as p]
             [cats.util :as util]
-            [help]
+            [help.core :as help]
             [nodp.helpers :as helpers]))
 
 (declare ->Tuple)

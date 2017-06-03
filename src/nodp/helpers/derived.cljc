@@ -1,7 +1,7 @@
 (ns nodp.helpers.derived
   (:require [cats.context :as ctx]
             [com.rpl.specter :as s]
-            [help :as help]
+            [help.core :as help]
             [nodp.helpers :as helpers]
             [nodp.helpers.clojure.core :as core]
             [nodp.helpers.primitives.behavior :as behavior]

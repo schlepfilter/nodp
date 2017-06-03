@@ -1,7 +1,7 @@
 (ns nodp.hfdp.iterator
   (:require [clojurewerkz.money.format :as format]
             [flatland.ordered.set :refer [ordered-set]]
-            [help]
+            [help.core :as help]
             [nodp.hfdp.helpers :as hfdp-helpers]))
 
 (def get-item

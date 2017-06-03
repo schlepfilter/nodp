@@ -1,5 +1,5 @@
 (ns nodp.jdp.thread-pool
-  (:require [help :as help]
+  (:require [help.core :as help]
             [nodp.helpers :as helpers]))
 
 (def make-postfix
@@ -12,7 +12,7 @@
                      get-time-per   200})
 
 (helpers/defmethods :coffee
-                 {get-short-name "CoffeeMaking"
+                    {get-short-name "CoffeeMaking"
                      get-time-per   100})
 
 (def get-name

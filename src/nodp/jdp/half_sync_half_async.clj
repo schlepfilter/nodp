@@ -1,6 +1,6 @@
 (ns nodp.jdp.half-sync-half-async
   (:require [cats.core :as m]
-            [help]))
+            [help.core :as help]))
 
 (def sum-arithmetic
   (m/<*> (help/curry *) inc))

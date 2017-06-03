@@ -1,5 +1,5 @@
 (ns nodp.rmp.routing-slip
-  (:require [help]))
+  (:require [help.core :as help]))
 
 (def customer
   {:name    "ABC Inc."

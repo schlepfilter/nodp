@@ -1,6 +1,6 @@
 (ns nodp.jdp.double-dispatch
   (:require [clojure.math.combinatorics :as combo]
-            [help]
+            [help.core :as help]
             [thi.ng.geom.core.intersect :as intersect]
             [thi.ng.geom.rect :as rect]))
 

@@ -1,7 +1,7 @@
 (ns nodp.examples.cycle.http-search-github
   (:require [clojure.walk :as walk]
             [ajax.core :refer [GET]]
-            [help]
+            [help.core :as help]
             [nodp.helpers.clojure.core :as core]
             [nodp.helpers.frp :as frp]))
 

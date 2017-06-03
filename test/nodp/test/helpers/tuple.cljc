@@ -12,7 +12,7 @@
              :include-macros true]
             [clojure.test.check.generators :as gen]
             [clojure.test.check.properties :as prop :include-macros true]
-            [help]
+            [help.core :as help]
             [help.unit :as unit]
             [nodp.helpers.tuple :as tuple]
             [nodp.test.helpers :as test-helpers]))

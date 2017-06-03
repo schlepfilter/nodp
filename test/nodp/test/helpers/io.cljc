@@ -8,7 +8,7 @@
             [#?(:clj  clojure.test
                 :cljs cljs.test) :as test :include-macros true]
             [com.rpl.specter :as s]
-            [help :as help]
+            [help.core :as help]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.tuple :as tuple]
             [nodp.test.helpers :as test-helpers :include-macros true]

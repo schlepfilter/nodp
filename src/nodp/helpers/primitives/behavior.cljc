@@ -5,7 +5,7 @@
             [cats.protocols :as protocols]
             [cats.util :as util]
             [com.rpl.specter :as s]
-            [help]
+            [help.core :as help]
             [nodp.helpers :as helpers]
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.protocols :as entity-protocols]

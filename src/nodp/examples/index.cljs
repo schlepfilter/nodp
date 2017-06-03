@@ -2,7 +2,7 @@
   (:require [bidi.bidi :as bidi]
             [clojure.string :as str]
             [com.rpl.specter :as s]
-            [help]
+            [help.core :as help]
             [nodp.examples.cycle.autocomplete-search :as autocomplete-search]
             [nodp.examples.cycle.bmi-naive :as bmi-naive]
             [nodp.examples.cycle.checkbox :as checkbox]

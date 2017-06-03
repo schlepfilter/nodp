@@ -1,7 +1,7 @@
 (ns nodp.examples.cycle.autocomplete-search
   (:require [ajax.core :refer [GET]]
             [com.rpl.specter :as s]
-            [help]
+            [help.core :as help]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.clojure.core :as core]))
 

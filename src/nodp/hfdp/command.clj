@@ -5,7 +5,7 @@
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
             [com.rpl.specter :as s]
-            [help]
+            [help.core :as help]
             [nodp.helpers :as helpers]))
 
 (def slot-n 2)

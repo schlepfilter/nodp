@@ -1,5 +1,5 @@
 (ns nodp.helpers.location
-  (:require [help]
+  (:require [help.core :as help]
             [nodp.helpers.history :as history]
             [nodp.helpers.primitives.behavior
              :as behavior

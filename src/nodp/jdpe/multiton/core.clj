@@ -1,5 +1,5 @@
 (ns nodp.jdpe.multiton.core
-  (:require [help]))
+  (:require [help.core :as help]))
 
 (def make-describe
   ((help/flip ((help/curry 4 str) "next ")) ": "))

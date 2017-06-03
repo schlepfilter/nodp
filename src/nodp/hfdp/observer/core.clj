@@ -1,7 +1,7 @@
 (ns nodp.hfdp.observer.core
   (:require [clojure.string :as str]
             [beicon.core :as rx]
-            [help]
+            [help.core :as help]
             [nodp.helpers :as helpers])
   (:import (rx.functions FuncN)
            (rx Observable)))

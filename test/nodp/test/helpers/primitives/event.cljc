@@ -8,7 +8,7 @@
              :as clojure-test
              :include-macros true]
             [clojure.test.check.generators :as gen]
-            [help]
+            [help.core :as help]
             [help.unit :as unit]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.primitives.event :as event]

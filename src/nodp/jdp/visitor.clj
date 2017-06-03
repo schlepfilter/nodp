@@ -1,6 +1,6 @@
 (ns nodp.jdp.visitor
   (:require [cats.monad.maybe :as maybe]
-            [help]))
+            [help.core :as help]))
 
 (def default-hierarchy
   [:commander

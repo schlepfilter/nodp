@@ -1,6 +1,6 @@
 (ns nodp.helpers.clojure.core
   (:refer-clojure :exclude [+ count drop filter max min reduce remove])
-  (:require [help]
+  (:require [help.core :as help]
             [help.unit :as unit]
             [nodp.helpers.primitives.event :as event]))
 

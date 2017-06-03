@@ -1,5 +1,5 @@
 (ns nodp.hfdp.template-method
-  (:require [help :as help]
+  (:require [help.core :as help]
             [nodp.helpers :as helpers]))
 
 (helpers/defmultis-identity brew add-condiments)
@@ -9,8 +9,8 @@
                      add-condiments "Adding Sugar and Milk"})
 
 (helpers/defmethods :tea
-                 {brew           "Steeping the tea"
-                  add-condiments "Adding Lemon"})
+                    {brew           "Steeping the tea"
+                     add-condiments "Adding Lemon"})
 
 (def prepare
   (help/build vector

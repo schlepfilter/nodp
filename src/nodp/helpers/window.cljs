@@ -1,6 +1,6 @@
 (ns nodp.helpers.window
   (:require [com.rpl.specter :as s]
-            [help]
+            [help.core :as help]
             [nodp.helpers.io :as io]
             [nodp.helpers.primitives.behavior
              :as behavior

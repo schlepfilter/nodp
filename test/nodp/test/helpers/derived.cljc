@@ -7,7 +7,7 @@
              :as clojure-test
              :include-macros true]
             [clojure.test.check.generators :as gen]
-            [help :include-macros true]
+            [help.core :as help :include-macros true]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.tuple :as tuple]
             [nodp.test.helpers :as test-helpers :include-macros true]))

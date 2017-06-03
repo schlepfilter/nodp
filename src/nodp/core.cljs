@@ -1,7 +1,7 @@
 (ns nodp.core
   (:require [bidi.bidi :as bidi]
             [com.rpl.specter :as s]
-            [help]
+            [help.core :as help]
             [reagent.core :as r]
             [nodp.examples.index :as index]
             [nodp.helpers.frp :as frp]

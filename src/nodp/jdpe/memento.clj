@@ -1,7 +1,7 @@
 (ns nodp.jdpe.memento
   (:require [clojure.set :as set]
             [com.rpl.specter :as s]
-            [help]
+            [help.core :as help]
             [nodp.helpers :as helpers]))
 
 (def environment

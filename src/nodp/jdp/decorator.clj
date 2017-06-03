@@ -1,7 +1,7 @@
 (ns nodp.jdp.decorator
   (:require [clojure.string :as str]
             [plumbing.map :as map]
-            [help]
+            [help.core :as help]
             [nodp.helpers :as helpers]))
 
 (def troll

@@ -2,7 +2,7 @@
   (:require [cats.builtin]
             [cats.core :as m]
             [cats.monad.either :as either]
-            [help]))
+            [help.core :as help]))
 
 (defn- make-have-word?
   [words]

@@ -2,7 +2,7 @@
 (ns nodp.helpers.io
   (:require [cats.monad.maybe :as maybe]
             [com.rpl.specter :as s]
-            [help]
+            [help.core :as help]
             [nodp.helpers.derived :as derived]
             [nodp.helpers.primitives.behavior :as behavior]
             [nodp.helpers.primitives.event :as event]
@@ -24,9 +24,9 @@
 #?(:clj (defmacro defcurriedmethod
           [multifn dispatch-val bindings & body]
           `(help/defpfmethod ~multifn ~dispatch-val
-                                (help/curry ~(count bindings)
+                             (help/curry ~(count bindings)
                                          (fn ~bindings
-                                                 ~@body)))))
+                                           ~@body)))))
 
 (defcurriedmethod get-effect! :event
                   [f! e network]

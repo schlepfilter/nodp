@@ -1,5 +1,5 @@
 (ns nodp.jdpe.abstract-factory
-  (:require [help]
+  (:require [help.core :as help]
             [nodp.helpers :as helpers]))
 
 (def description

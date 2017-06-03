@@ -1,5 +1,5 @@
 (ns nodp.hfdp.facade
-  (:require [help]
+  (:require [help.core :as help]
             [nodp.helpers :as helpers]))
 
 (def amp)

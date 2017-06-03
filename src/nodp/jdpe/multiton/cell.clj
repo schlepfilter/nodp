@@ -1,6 +1,6 @@
 (ns nodp.jdpe.multiton.cell
   (:require [com.rpl.specter :as s]
-            [help]))
+            [help.core :as help]))
 
 (def generator
   (atom {:engine  0

@@ -3,7 +3,7 @@
             [clojure.test.check.properties :as prop]
             [clojure.test.check.random :as random]
             [clojure.test.check.rose-tree :as rose]
-            [help :as help]
+            [help.core :as help]
             [help.unit :as unit]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.primitives.event :as event]))

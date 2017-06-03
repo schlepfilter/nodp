@@ -1,6 +1,6 @@
 (ns nodp.sdp.monad
   (:require [cats.builtin]
-            [help]))
+            [help.core :as help]))
 
 (def prefix
   (partial str "The result is: "))

@@ -1,5 +1,5 @@
 (ns nodp.examples.rx.letter-count
-  (:require [help]
+  (:require [help.core :as help]
             [nodp.helpers.frp :as frp]))
 
 (def length
