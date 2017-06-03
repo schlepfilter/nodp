@@ -107,17 +107,19 @@
                            [[:li (s/setval [:style :background-color] green m)
                              s]])
                          lis))))
-       (concat [:ul {:style    {:background-color "white"
-                                :border           border
-                                :border-bottom    "0px"
-                                :display          (if suggested*
-                                                    "block"
-                                                    "none")
-                                :margin           0
-                                :padding          0
-                                :position         "absolute"
-                                :width            "100%"}
-                     :on-click #(suggested false)}])
+       (concat [:ul
+                {:style    {:background-color "white"
+                            :border           border
+                            :border-bottom    "0px"
+                            :box-shadow       "0px 4px 4px hsl(0, 0%, 86.3%)"
+                            :display          (if suggested*
+                                                "block"
+                                                "none")
+                            :margin           0
+                            :padding          0
+                            :position         "absolute"
+                            :width            "100%"}
+                 :on-click #(suggested false)}])
        vec))
 
 (def suggestion-list
