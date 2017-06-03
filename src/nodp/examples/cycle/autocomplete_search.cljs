@@ -97,7 +97,8 @@
                       [:li {:on-click       #(completion x)
                             :on-mouse-enter #(relative-number index)
                             :style          {:border-bottom border
-                                             :list-style    "none"}}
+                                             :list-style    "none"
+                                             :padding       "3px 0px 3px 8px"}}
                        x]))
        ((fn [lis]
           (if (empty? lis)
