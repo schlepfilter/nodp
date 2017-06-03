@@ -14,11 +14,14 @@
 (def key-down
   (frp/event))
 
+(def enter
+  (core/filter (partial = "Enter")
+               key-down))
+
 (def suggested
   (helpers/<> (helpers/<$> (constantly true) response)
               (helpers/<$> (constantly false)
-                           (core/filter (partial = "Enter")
-                                        key-down))))
+                           enter)))
 
 (def relative-number
   (->> (helpers/<> (helpers/<$> (constantly inc)
@@ -40,6 +43,11 @@
                        (mod relative-number* total-number))))
     (frp/stepper 0 relative-number)
     (helpers/<$> count suggestions)))
+
+(def completion
+  (->> valid-number ((helpers/lift-a nth) suggestions)
+       (frp/snapshot enter)
+       (helpers/<$> second)))
 
 (defn query-input-component
   [query*]
@@ -65,9 +73,6 @@
    [:section
     [:label "Some field:"]
     [:input {:type "text"}]]])
-
-(def completion
-  (frp/event))
 
 (def query
   (frp/stepper "" (helpers/<> typing completion)))
