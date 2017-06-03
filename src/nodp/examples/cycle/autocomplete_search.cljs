@@ -67,7 +67,7 @@
   (helpers/<$> query-input-component query))
 
 (def green
-  "hsl(120, 100%, 50%)")
+  "hsl(145, 66%, 74%)")
 
 (defn suggestion-list-component
   ;TODO don't highlight a suggestion after response occurs
