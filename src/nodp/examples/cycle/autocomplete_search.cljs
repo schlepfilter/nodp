@@ -22,8 +22,7 @@
                                 (core/filter (partial = "ArrowUp")
                                              key-down))
                    (helpers/<$> (constantly (constantly 0)) response))
-       (frp/accum 0)
-       (frp/stepper 0)))
+       (frp/accum 0)))
 
 (def suggestions
   (frp/stepper [] (helpers/<$> second response)))
@@ -33,7 +32,7 @@
                      (if (zero? total-number)
                        0
                        (mod relative-number* total-number))))
-    relative-number
+    (frp/stepper 0 relative-number)
     (helpers/<$> count suggestions)))
 
 (defn query-input-component
@@ -74,13 +73,15 @@
   ;TODO don't highlight a suggestion after response occurs
   [suggestions* number*]
   (->> suggestions*
-       (map (partial vector :li))
+       (map-indexed (fn [index x]
+                      [:li {:on-mouse-enter #(relative-number index)}
+                       x]))
        ((fn [lis]
           (if (empty? lis)
             []
             (s/transform (s/srange number* (inc number*))
-                         (fn [[[_ s]]]
-                           [[:li {:style {:background-color green}} s]])
+                         (fn [[[_ m s]]]
+                           [[:li (merge m {:style {:background-color green}}) s]])
                          lis))))
        (concat [:ul {:display "inline-block"}])
        vec))
