@@ -42,9 +42,8 @@
                 :compiler     {:output-to     "dist/js/main.js"
                                :main          nodp.core
                                :optimizations :advanced}}}}
-  :profiles
-  {:dev {:dependencies [[binaryage/devtools "0.9.2"]
-                        [com.taoensso/encore "2.90.1"]
-                        [figwheel-sidecar "0.5.9"]
-                        [org.clojure/tools.namespace "0.2.11"]
-                        [spyscope "0.1.6"]]}})
+  :profiles {:dev {:dependencies [[binaryage/devtools "0.9.2"]
+                                  [com.taoensso/encore "2.90.1"]
+                                  [figwheel-sidecar "0.5.9"]
+                                  [org.clojure/tools.namespace "0.2.11"]
+                                  [spyscope "0.1.6"]]}})
