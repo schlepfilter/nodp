@@ -68,8 +68,10 @@
   [:div
    [:section
     [:label "Query:"]
-    query-input*
-    suggestion-list*]
+    [:div {:style {:display  "inline-block"
+                   :position "relative"}}
+     query-input*
+     suggestion-list*]]
    [:section
     [:label "Some field:"]
     [:input {:type "text"}]]])
@@ -100,9 +102,12 @@
                            [[:li (s/setval [:style :background-color] green m)
                              s]])
                          lis))))
-       (concat [:ul {:style    {:display (if suggested*
-                                           "block"
-                                           "none")}
+       (concat [:ul {:style    {:display  (if suggested*
+                                            "block"
+                                            "none")
+                                :margin   0
+                                :padding  0
+                                :position "absolute"}
                      :on-click #(suggested false)}])
        vec))
 
