@@ -68,12 +68,15 @@
    :text-align "right"
    :width      100})
 
+(def section-style
+  {:margin-bottom 10})
+
 (defn autocomplete-search-component
   ;TODO display suggestions
   [query-input* suggestion-list*]
   [:div {:style {:background "hsl(0, 0%, 94%)"
                  :padding    5}}
-   [:section
+   [:section {:style section-style}
     [:label {:style label-style}
      "Query:"]
     [:div {:style {:display  "inline-block"
@@ -81,7 +84,7 @@
                    :width    300}}
      query-input*
      suggestion-list*]]
-   [:section
+   [:section {:style section-style}
     [:label {:style label-style}
      "Some field:"]
     [:input {:type "text"}]]])
