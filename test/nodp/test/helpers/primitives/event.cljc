@@ -8,12 +8,12 @@
              :as clojure-test
              :include-macros true]
             [clojure.test.check.generators :as gen]
-            [nodp.helpers :as helpers]
+            [help.core :as help]
+            [help.unit :as unit]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.primitives.event :as event]
             [nodp.helpers.time :as time]
             [nodp.helpers.tuple :as tuple]
-            [nodp.helpers.unit :as unit]
             [nodp.test.helpers :as test-helpers :include-macros true]))
 
 (test/use-fixtures :each test-helpers/fixture)
@@ -40,8 +40,8 @@
   test-helpers/cljc-num-tests
   (test-helpers/restart-for-all [a test-helpers/any-equal]
                                 (= (last @(-> (frp/event)
-                                              helpers/infer
-                                              (nodp.helpers/return a)))
+                                              help/infer
+                                              (help/return a)))
                                    (-> 0
                                        time/time
                                        (tuple/tuple a)))))
@@ -55,24 +55,24 @@
             fs (gen/vector (test-helpers/function gen/uuid)
                            (count input-events))
             input-event-anys (gen/vector gen/uuid
-                                         ((helpers/casep @outer-input-event
-                                                         empty? identity
-                                                         dec)
+                                         ((help/casep @outer-input-event
+                                                      empty? identity
+                                                      dec)
                                            (dec (count input-events))))
             calls (gen/shuffle
-                    (concat (map (helpers/curry 2 outer-input-event)
+                    (concat (map (help/curry 2 outer-input-event)
                                  input-event-anys)
                             (map (fn [inner-input-event as]
                                    #(if (not= inner-input-event
                                               outer-input-event)
-                                     (run! inner-input-event as)))
+                                      (run! inner-input-event as)))
                                  inner-input-events
                                  (gen/vector (gen/vector test-helpers/any-equal)
                                              (count inner-input-events)))))]
-           (gen/tuple (gen/return (doall (map nodp.helpers/<$>
+           (gen/tuple (gen/return (doall (map help/<$>
                                               fs
                                               input-events)))
-                      (gen/return (partial doall (map helpers/funcall
+                      (gen/return (partial doall (map help/funcall
                                                       calls))))))
 
 (defn delay-inner-occs
@@ -87,8 +87,8 @@
   test-helpers/cljc-num-tests
   (test-helpers/restart-for-all
     [[[outer-event & inner-events] call] (gen/no-shrink event->>=)]
-    (let [bound-event (helpers/>>= outer-event
-                                   (test-helpers/make-iterate inner-events))]
+    (let [bound-event (help/>>= outer-event
+                                (test-helpers/make-iterate inner-events))]
       (frp/activate)
       (call)
       (->> inner-events
@@ -110,9 +110,9 @@
                                        ns
                                        input-events))]
            (gen/tuple (gen/return fmapped-events)
-                      (gen/return (apply helpers/<> fmapped-events))
+                      (gen/return (apply help/<> fmapped-events))
                       (gen/return (partial run!
-                                           helpers/funcall
+                                           help/funcall
                                            calls)))))
 
 (clojure-test/defspec
@@ -128,7 +128,7 @@
 
 (defn get-generators
   [generator xforms**]
-  (map (partial (helpers/flip gen/fmap) generator) xforms**))
+  (map (partial (help/flip gen/fmap) generator) xforms**))
 
 (def any-nilable-equal
   (gen/one-of [test-helpers/any-equal (gen/return nil)]))
@@ -136,7 +136,7 @@
 (def xform*
   (gen/one-of
     (concat (map (comp gen/return
-                       helpers/funcall)
+                       help/funcall)
                  [dedupe distinct])
             (get-generators gen/s-pos-int [take-nth partition-all])
             (get-generators gen/int [drop take])
@@ -165,7 +165,7 @@
                                   (xf (comp maybe/just
                                             second
                                             vector)))
-                            helpers/nothing)
+                            help/nothing)
                    (concat earliests as)))
 
 (clojure-test/defspec

@@ -1,6 +1,7 @@
 (ns nodp.jdp.mutex
   (:require [clojure.string :as str]
             [beicon.core :as rx]
+            [help.core :as help]
             [nodp.helpers :as helpers]))
 
 (def bean-n 1000)
@@ -14,7 +15,7 @@
   (partial map get-thief))
 
 (def publish
-  (helpers/functionize .publish))
+  (help/functionize .publish))
 
 (def get-successful-thief-from-thieves
   (comp publish
@@ -30,7 +31,7 @@
 
 (def describe-theft
   (comp str/capitalize
-        (partial (helpers/flip str) " took a bean.")
+        (partial (help/flip str) " took a bean.")
         name))
 
 (def get-theft
@@ -47,11 +48,11 @@
 
 (defn- make-get-total
   [successful-thief-stream]
-  (helpers/build rx/map
-                 make-describe-total
-                 (comp (helpers/functionize .count)
-                       (partial (helpers/flip rx/filter) successful-thief-stream)
-                       (helpers/curry =))))
+  (help/build rx/map
+              make-describe-total
+              (comp (help/functionize .count)
+                    (partial (help/flip rx/filter) successful-thief-stream)
+                    (help/curry =))))
 
 (def get-total
   (make-get-total successful-thief))

@@ -1,6 +1,6 @@
 (ns nodp.helpers.window
   (:require [com.rpl.specter :as s]
-            [nodp.helpers :as helpers]
+            [help.core :as help]
             [nodp.helpers.io :as io]
             [nodp.helpers.primitives.behavior
              :as behavior
@@ -36,7 +36,7 @@
 
   (behavior/redef inner-height
                   (->> resize
-                       (helpers/<$> :inner-height)
+                       (help/<$> :inner-height)
                        (behavior/stepper js/innerHeight)))
 
   ;TODO define a macro to define behaviors and add and remove event listeners

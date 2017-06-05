@@ -1,5 +1,6 @@
 (ns nodp.hfdp.decorator
-  (:require [nodp.helpers :as helpers]))
+  (:require [help.core :as help]
+            [nodp.helpers :as helpers]))
 
 (def dark-roast
   {:name  "Dark Roast Coffee"
@@ -17,11 +18,11 @@
                     first
                     vector))
 
-(helpers/defpfmethod add String
-                     (comp helpers/comma-join
-                           vector))
+(help/defpfmethod add String
+                  (comp helpers/comma-join
+                        vector))
 
-(helpers/defpfmethod add Number
-                     +)
+(help/defpfmethod add Number
+                  +)
 
 (merge-with add dark-roast mocha mocha whip)

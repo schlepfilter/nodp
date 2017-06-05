@@ -1,19 +1,19 @@
 (ns nodp.core
   (:require [bidi.bidi :as bidi]
             [com.rpl.specter :as s]
+            [help.core :as help]
             [reagent.core :as r]
             [nodp.examples.index :as index]
-            [nodp.helpers :as helpers]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.location :as location]))
 
 (def app
-  (helpers/=<< (comp (s/setval :index index/index index/route-function)
-                     :handler
-                     (partial bidi/match-route index/route))
-               location/pathname))
+  (help/=<< (comp (s/setval :index index/index index/route-function)
+                  :handler
+                  (partial bidi/match-route index/route))
+            location/pathname))
 
-(frp/on (partial (helpers/flip r/render) (js/document.getElementById "app"))
+(frp/on (partial (help/flip r/render) (js/document.getElementById "app"))
         app)
 
 (frp/activate)

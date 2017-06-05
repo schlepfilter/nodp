@@ -2,10 +2,10 @@
   (:require [clojure.walk :as walk]
             [ajax.core :refer [GET POST]]
             [com.rpl.specter :as s]
-            [nodp.helpers :as helpers]
+            [help.core :as help :include-macros true]
+            [help.unit :as unit]
             [nodp.helpers.clojure.core :as core]
-            [nodp.helpers.frp :as frp]
-            [nodp.helpers.unit :as unit]))
+            [nodp.helpers.frp :as frp]))
 
 (def link-style
   {:display     "inline-block"
@@ -16,9 +16,9 @@
   [:li {:style {:align-items "center"
                 :display     "flex"
                 :padding     "0.313em"
-                :visibility  (helpers/casep user*
-                                            empty? "hidden"
-                                            "visible")}}
+                :visibility  (help/casep user*
+                                         empty? "hidden"
+                                         "visible")}}
    [:img {:src   (:avatar_url user*)
           :style {:border-radius "1.25em"
                   :height        "2.5em"
@@ -61,13 +61,13 @@
        (quot user-number)
        (range 0 user-number)
        (map (fn [click-count offset]
-              (helpers/<$> (partial + offset) click-count))
+              (help/<$> (partial + offset) click-count))
             closing-counts)))
 
 (def users
-  (apply (helpers/lift-a (fn [response* & offset-counts*]
-                           (map (partial nth (cycle response*))
-                                offset-counts*)))
+  (apply (help/lift-a (fn [response* & offset-counts*]
+                        (map (partial nth (cycle response*))
+                             offset-counts*)))
          (frp/stepper (repeat user-number {}) response)
          offset-counts))
 
@@ -97,16 +97,16 @@
                "refresh"]]]))
 
 (def intro
-  (helpers/<$> intro-component users))
+  (help/<$> intro-component users))
 
 (def endpoint
   "https://api.github.com/users")
 
 (def option
-  (helpers/<$> (partial assoc-in
-                        {:handler (comp response
-                                        walk/keywordize-keys)}
-                        [:params :since])
-               beginning))
+  (help/<$> (partial assoc-in
+                     {:handler (comp response
+                                     walk/keywordize-keys)}
+                     [:params :since])
+            beginning))
 
 (frp/on (partial GET endpoint) option)

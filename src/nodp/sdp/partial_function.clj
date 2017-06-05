@@ -2,12 +2,12 @@
   (:require [cats.core :as m]
             [cats.monad.maybe :as maybe]
             [clojure.math.numeric-tower :as math]
-            [nodp.helpers :as helpers]))
+            [help.core :as help]))
 
 (defn- sqrt
   [x]
-  (helpers/maybe-if-not (neg? x)
-                        (math/sqrt x)))
+  (help/maybe-if-not (neg? x)
+                     (math/sqrt x)))
 
 (defn- get-sqrt-defined
   [x]
@@ -39,12 +39,12 @@
   [then else]
   `(fn [x#]
      (let [then-result# (~then x#)]
-       (helpers/casep then-result#
-                      maybe/just? (m/join then-result#)
-                      (~else x#)))))
+       (help/casep then-result#
+                   maybe/just? (m/join then-result#)
+                   (~else x#)))))
 
 (def square
-  (partial (helpers/flip math/expt) 2))
+  (partial (help/flip math/expt) 2))
 
 (def get-sqrt-squares
   (comp (partial str "Square roots or squares: ")

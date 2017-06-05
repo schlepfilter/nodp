@@ -2,14 +2,15 @@
   (:require [clojure.string :as str]
             [com.rpl.specter :as s]
             [cuerdas.core :as cuerdas]
+            [help.core :as help]
             [nodp.helpers :as helpers]))
 
 (defn- make-get-turn-action
   [on]
-  (comp (partial (helpers/flip str) (->> (if on
-                                           "ON"
-                                           "OFF")
-                                         (str " light ")))
+  (comp (partial (help/flip str) (->> (if on
+                                        "ON"
+                                        "OFF")
+                                      (str " light ")))
         str/capitalize
         cuerdas/human))
 

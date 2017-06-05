@@ -1,5 +1,5 @@
 (ns nodp.helpers.location
-  (:require [nodp.helpers :as helpers]
+  (:require [help.core :as help]
             [nodp.helpers.history :as history]
             [nodp.helpers.primitives.behavior
              :as behavior
@@ -11,7 +11,7 @@
 
 (behavior/register
   (behavior/redef pathname
-                  (->> (helpers/<> window/popstate history/pushstate)
-                       (helpers/<$> (comp :pathname
-                                          :location))
+                  (->> (help/<> window/popstate history/pushstate)
+                       (help/<$> (comp :pathname
+                                       :location))
                        (behavior/stepper js/location.pathname))))

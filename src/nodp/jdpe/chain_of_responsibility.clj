@@ -2,12 +2,12 @@
   (:require [cats.builtin]
             [cats.core :as m]
             [cats.monad.either :as either]
-            [nodp.helpers :as helpers]))
+            [help.core :as help]))
 
 (defn- make-have-word?
   [words]
   (fn [email]
-    (some (partial (helpers/flip re-find) email) (map re-pattern words))))
+    (some (partial (help/flip re-find) email) (map re-pattern words))))
 
 ;This definition is harder to read.
 ;(defn- make-have-word?
@@ -18,9 +18,9 @@
 (defn- make-handle
   [{:keys [words action]}]
   (fn [email]
-    (helpers/casep email
-                   (make-have-word? words) (either/left action)
-                   (either/right email))))
+    (help/casep email
+                (make-have-word? words) (either/left action)
+                (either/right email))))
 
 (defmacro defhandle
   [f-name m]
@@ -46,7 +46,7 @@
 (defn- comp->>=
   [& fs]
   (->> fs
-       (map (helpers/flip (helpers/curry m/>>=)))
+       (map (help/flip (help/curry m/>>=)))
        (apply comp)))
 
 (def handle

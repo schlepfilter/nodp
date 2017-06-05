@@ -1,8 +1,7 @@
 (ns nodp.hfdp.proxy
   (:require [com.rpl.specter :as s]
-            [incanter.distributions :as distributions]
-            [nodp.helpers :as helpers]
-            [cats.core :as m]))
+            [help.core :as help]
+            [incanter.distributions :as distributions]))
 
 (defn- get-ratings-path
   [object]
@@ -16,23 +15,23 @@
   [{:keys [object rating]}]
   (partial s/transform*
            (get-ratings-path object)
-           (partial (helpers/flip conj) rating)))
+           (partial (help/flip conj) rating)))
 
 (defn- proxy-make-set-rating
   [{:keys [subject object] :as m}]
-  (helpers/case-eval subject
-                     object identity
-                     (-> m
+  (help/case-eval subject
+                  object identity
+                  (-> m
                          (dissoc :subject)
                          make-set-rating)))
 
 (def get-rating
   (comp (partial str "Rating is ")
         distributions/mean
-        (helpers/build s/select-one*
-                       (comp get-ratings-path
+        (help/build s/select-one*
+                    (comp get-ratings-path
                              :object)
-                       :person)))
+                    :person)))
 
 (defn- run-commands
   [{:keys [commands person]}]

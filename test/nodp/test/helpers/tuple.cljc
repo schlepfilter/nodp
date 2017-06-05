@@ -12,15 +12,15 @@
              :include-macros true]
             [clojure.test.check.generators :as gen]
             [clojure.test.check.properties :as prop :include-macros true]
-            [nodp.helpers :as helpers]
+            [help.core :as help]
+            [help.unit :as unit]
             [nodp.helpers.tuple :as tuple]
-            [nodp.helpers.unit :as unit]
             [nodp.test.helpers :as test-helpers]))
 
 (def maybe
-  (partial (helpers/flip gen/bind)
+  (partial (help/flip gen/bind)
            (comp gen/elements
-                 (partial vector helpers/nothing)
+                 (partial vector help/nothing)
                  maybe/just)))
 
 (def scalar-monoids
@@ -39,12 +39,12 @@
                (gen/recursive-gen maybe scalar-monoid)]))
 
 (def mempty
-  (gen/fmap (comp nodp.helpers/mempty helpers/infer)
+  (gen/fmap (comp help/mempty help/infer)
             monoid))
 
 (defn scalar-monoid-vector
   [n]
-  (gen/one-of (map (partial (helpers/flip gen/vector) n)
+  (gen/one-of (map (partial (help/flip gen/vector) n)
                    scalar-monoids)))
 
 (clojure-test/defspec
@@ -52,7 +52,7 @@
   test-helpers/cljc-num-tests
   (prop/for-all [a test-helpers/any-equal
                  mempty* mempty]
-                (= (nodp.helpers/>>= (tuple/tuple mempty* a) nodp.helpers/return)
+                (= (help/>>= (tuple/tuple mempty* a) help/return)
                    (tuple/tuple mempty* a))))
 
 (clojure-test/defspec
@@ -63,11 +63,11 @@
                  monoid* monoid]
                 (let [f (comp (partial tuple/tuple monoid*)
                               f*)]
-                  (= (nodp.helpers/>>= (tuple/tuple (-> monoid*
-                                                        helpers/infer
-                                                        nodp.helpers/mempty)
-                                                    a)
-                                       f)
+                  (= (help/>>= (tuple/tuple (-> monoid*
+                                                help/infer
+                                                help/mempty)
+                                            a)
+                               f)
                      (f a)))))
 
 (clojure-test/defspec
@@ -82,6 +82,6 @@
                       g (comp (partial tuple/tuple (last monoids))
                               g*)
                       ma (tuple/tuple (first monoids) a)]
-                  (= (nodp.helpers/->= ma f g)
-                     (nodp.helpers/>>= ma (comp (partial nodp.helpers/=<< g)
-                                                f))))))
+                  (= (help/->= ma f g)
+                     (help/>>= ma (comp (partial help/=<< g)
+                                        f))))))

@@ -1,7 +1,7 @@
 (ns nodp.examples.cycle.autocomplete-search
   (:require [ajax.core :refer [GET]]
             [com.rpl.specter :as s]
-            [nodp.helpers :as helpers]
+            [help.core :as help]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.clojure.core :as core]))
 
@@ -19,33 +19,33 @@
                key-down))
 
 (def suggested
-  (helpers/<> (helpers/<$> (constantly true) response)
-              (helpers/<$> (constantly false) enter)))
+  (help/<> (help/<$> (constantly true) response)
+           (help/<$> (constantly false) enter)))
 
 (def relative-number
-  (->> (helpers/<> (helpers/<$> (constantly inc)
-                                (core/filter (partial = "ArrowDown") key-down))
-                   (helpers/<$> (constantly dec)
-                                (core/filter (partial = "ArrowUp") key-down))
-                   (helpers/<$> (constantly (constantly 0)) response))
+  (->> (help/<> (help/<$> (constantly inc)
+                          (core/filter (partial = "ArrowDown") key-down))
+                (help/<$> (constantly dec)
+                          (core/filter (partial = "ArrowUp") key-down))
+                (help/<$> (constantly (constantly 0)) response))
        (frp/accum 0)))
 
 (def suggestions
-  (->> (helpers/<$> second response)
+  (->> (help/<$> second response)
        (frp/stepper [])))
 
 (def valid-number
-  ((helpers/lift-a (fn [relative-number* total-number]
-                     (if (zero? total-number)
-                       0
-                       (mod relative-number* total-number))))
+  ((help/lift-a (fn [relative-number* total-number]
+                  (if (zero? total-number)
+                    0
+                    (mod relative-number* total-number))))
     (frp/stepper 0 relative-number)
-    (helpers/<$> count suggestions)))
+    (help/<$> count suggestions)))
 
 (def completion
-  (->> valid-number ((helpers/lift-a nth) suggestions)
+  (->> valid-number ((help/lift-a nth) suggestions)
        (frp/snapshot enter)
-       (helpers/<$> second)))
+       (help/<$> second)))
 
 (defn query-input-component
   [query*]
@@ -88,11 +88,11 @@
     [:input {:type "text"}]]])
 
 (def query
-  (->> (helpers/<> typing completion)
+  (->> (help/<> typing completion)
        (frp/stepper "")))
 
 (def query-input
-  (helpers/<$> query-input-component query))
+  (help/<$> query-input-component query))
 
 (def green
   "hsl(145, 66%, 74%)")
@@ -134,13 +134,13 @@
        vec))
 
 (def suggestion-list
-  ((helpers/lift-a suggestion-list-component)
+  ((help/lift-a suggestion-list-component)
     (frp/stepper false suggested)
     suggestions
     valid-number))
 
 (def autocomplete-search
-  ((helpers/lift-a autocomplete-search-component) query-input suggestion-list))
+  ((help/lift-a autocomplete-search-component) query-input suggestion-list))
 
 (def endpoint
   "https://en.wikipedia.org/w/api.php")
@@ -148,12 +148,12 @@
 (def option
   (->> typing
        (core/remove empty?)
-       (helpers/<$> (partial assoc-in
-                             {:handler response
-                              :params  {:action "opensearch"
-                                        ;https://www.mediawiki.org/wiki/Manual:CORS#Description
-                                        ;For anonymous requests, origin query string parameter can be set to * which will allow requests from anywhere.
-                                        :origin "*"}}
-                             [:params :search]))))
+       (help/<$> (partial assoc-in
+                          {:handler response
+                           :params  {:action "opensearch"
+                                     ;https://www.mediawiki.org/wiki/Manual:CORS#Description
+                                     ;For anonymous requests, origin query string parameter can be set to * which will allow requests from anywhere.
+                                     :origin "*"}}
+                          [:params :search]))))
 
 (frp/on (partial GET endpoint) option)

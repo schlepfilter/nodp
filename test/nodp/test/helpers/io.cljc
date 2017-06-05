@@ -8,7 +8,7 @@
             [#?(:clj  clojure.test
                 :cljs cljs.test) :as test :include-macros true]
             [com.rpl.specter :as s]
-            [nodp.helpers :as helpers]
+            [help.core :as help]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.tuple :as tuple]
             [nodp.test.helpers :as test-helpers :include-macros true]
@@ -26,7 +26,7 @@
                   (partial = exit-name)
                   (fn [_#]
                     `(comp (partial swap! exits-state##)
-                           (helpers/curry 2 (helpers/flip conj))))
+                           (help/curry 2 (help/flip conj))))
                   (cons `do body))
                @exits-state##))))
 

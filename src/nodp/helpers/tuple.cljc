@@ -1,7 +1,8 @@
 (ns nodp.helpers.tuple
   (:require [cats.protocols :as p]
             [cats.util :as util]
-            [nodp.helpers :as helpers]))
+            [help.core :as help]
+            [nodp.helpers :as helpers :include-macros true]))
 
 (declare ->Tuple)
 ;In ClojureScript declare works around the following warning:
@@ -13,13 +14,13 @@
   (-get-context [_]
     (helpers/reify-monad
       (partial ->Tuple (-> fst
-                           helpers/infer
-                           nodp.helpers/mempty))
+                           help/infer
+                           help/mempty))
       (fn [_ f]
         (Tuple. (->> snd
                      f
                      :fst
-                     (nodp.helpers/<> fst))
+                     (help/<> fst))
                 (-> snd
                     f
                     :snd)))))

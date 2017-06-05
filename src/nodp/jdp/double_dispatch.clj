@@ -1,8 +1,8 @@
 (ns nodp.jdp.double-dispatch
   (:require [clojure.math.combinatorics :as combo]
+            [help.core :as help]
             [thi.ng.geom.core.intersect :as intersect]
-            [thi.ng.geom.rect :as rect]
-            [nodp.helpers :as helpers]))
+            [thi.ng.geom.rect :as rect]))
 
 (def position-m
   {:flaming-asteroid  (rect/rect [0 0] [5 5])
@@ -15,7 +15,7 @@
                               (partial map first)))
         (partial filter (comp (partial apply intersect/intersect-rect-rect?)
                               (partial map last)))
-        (partial (helpers/flip combo/combinations) 2)))
+        (partial (help/flip combo/combinations) 2)))
 
 (get-collisions position-m)
 

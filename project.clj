@@ -15,6 +15,7 @@
                  [funcool/beicon "2.7.0"]
                  [funcool/cats "2.0.0"]
                  [funcool/cuerdas "2.0.2"]
+                 [help "0.1.0"]
                  [incanter "1.5.7"]
                  [inflections "0.12.2"]
                  [jarohen/chime "0.2.1"]

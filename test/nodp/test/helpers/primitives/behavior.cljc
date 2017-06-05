@@ -6,10 +6,10 @@
              :as clojure-test
              :include-macros true]
             [clojure.test.check.generators :as gen]
-            [nodp.helpers :as helpers :include-macros true]
+            [help.core :as help :include-macros true]
+            [help.unit :as unit]
             [nodp.helpers.frp :as frp]
             [nodp.helpers.tuple :as tuple]
-            [nodp.helpers.unit :as unit]
             [nodp.test.helpers :as test-helpers :include-macros true]))
 
 (test/use-fixtures :each test-helpers/fixture)
@@ -20,8 +20,8 @@
   (test-helpers/restart-for-all [a test-helpers/any-equal]
                                 (= @(-> unit/unit
                                         frp/behavior
-                                        helpers/infer
-                                        (nodp.helpers/return a))
+                                        help/infer
+                                        (help/return a))
                                    a)))
 
 (clojure-test/defspec
@@ -86,7 +86,7 @@
   test-helpers/cljc-num-tests
   (test-helpers/restart-for-all
     [[outer-behavior get-behavior call] behavior->>=]
-    (let [bound-behavior (helpers/>>= outer-behavior get-behavior)]
+    (let [bound-behavior (help/>>= outer-behavior get-behavior)]
       (frp/activate)
       (call)
       (= @bound-behavior @(get-behavior @outer-behavior)))))
