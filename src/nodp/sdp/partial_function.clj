@@ -2,7 +2,7 @@
   (:require [cats.core :as m]
             [cats.monad.maybe :as maybe]
             [clojure.math.numeric-tower :as math]
-            [help.core :as help]))
+            [aid.core :as help]))
 
 (defn- sqrt
   [x]

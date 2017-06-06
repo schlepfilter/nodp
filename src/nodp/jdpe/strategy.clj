@@ -1,6 +1,6 @@
 (ns nodp.jdpe.strategy
   (:require [clojure.string :as str]
-            [help.core :as help]))
+            [aid.core :as help]))
 
 (help/defcurried make-change-speed
                  [gear speed]

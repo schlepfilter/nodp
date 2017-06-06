@@ -3,7 +3,7 @@
             [cats.builtin]
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
-            [help.core :as help]
+            [aid.core :as help]
             [nodp.rmp.helpers :as rmp-helpers]))
 
 (defn- make-kind?

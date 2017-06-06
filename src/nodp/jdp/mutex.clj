@@ -1,7 +1,7 @@
 (ns nodp.jdp.mutex
   (:require [clojure.string :as str]
             [beicon.core :as rx]
-            [help.core :as help]
+            [aid.core :as help]
             [nodp.helpers :as helpers]))
 
 (def bean-n 1000)

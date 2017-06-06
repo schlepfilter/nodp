@@ -1,5 +1,5 @@
 (ns nodp.hfdp.abstract-factory
-  (:require [help.core :as help]
+  (:require [aid.core :as help]
             [nodp.helpers :as helpers]))
 
 (helpers/defmultis-identity get-kind-ingredients

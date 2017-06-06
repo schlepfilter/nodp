@@ -2,7 +2,7 @@
   (:require [clojurewerkz.money.format :as format]
             [com.rpl.specter :as s]
             [flatland.ordered.set :refer [ordered-set]]
-            [help.core :as help]
+            [aid.core :as help]
             [nodp.helpers :as helpers]
             [nodp.hfdp.helpers :as hfdp-helpers]))
 

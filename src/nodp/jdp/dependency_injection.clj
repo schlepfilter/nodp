@@ -1,5 +1,5 @@
 (ns nodp.jdp.dependency-injection
-  (:require [help.core :as help]))
+  (:require [aid.core :as help]))
 
 (def make-smoke
   ((help/flip (help/curry 3 str)) " smoking "))

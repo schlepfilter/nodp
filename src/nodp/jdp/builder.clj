@@ -2,7 +2,7 @@
   (:require [cats.core :as m]
             [cats.monad.maybe :as maybe]
             [cuerdas.core :as cuerdas]
-            [help.core :as help]
+            [aid.core :as help]
             [nodp.helpers :as helpers]))
 
 (defn get-head-or-hair

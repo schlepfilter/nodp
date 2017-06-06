@@ -1,5 +1,5 @@
 (ns nodp.jdp.thread-pool
-  (:require [help.core :as help]
+  (:require [aid.core :as help]
             [nodp.helpers :as helpers]))
 
 (def make-postfix

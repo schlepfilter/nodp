@@ -1,6 +1,6 @@
 (ns nodp.hfdp.state
   (:require [com.rpl.specter :as s]
-            [help.core :as help]
+            [aid.core :as help]
             [nodp.helpers :as helpers]))
 
 (defmacro defmultis

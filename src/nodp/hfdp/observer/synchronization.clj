@@ -1,6 +1,6 @@
 (ns nodp.hfdp.observer.synchronization
   (:require [clojure.string :as str]
-            [help.core :as help]
+            [aid.core :as help]
             [frp.core :as frp]
             [frp.clojure.core :as core]
             [nodp.hfdp.observer.core :as observer-core]))

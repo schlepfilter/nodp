@@ -1,5 +1,5 @@
 (ns nodp.jdpe.mediator
-  (:require [help.core :as help]
+  (:require [aid.core :as help]
             [nodp.helpers :as helpers]))
 
 (defn- notify-gearbox-enabled

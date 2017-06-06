@@ -1,5 +1,5 @@
 (ns nodp.hfdp.template-method
-  (:require [help.core :as help]
+  (:require [aid.core :as help]
             [nodp.helpers :as helpers]))
 
 (helpers/defmultis-identity brew add-condiments)

@@ -1,6 +1,6 @@
 (ns nodp.rmp.content-based-router
   (:require [clojure.string :as str]
-            [help.core :as help]
+            [aid.core :as help]
             [nodp.rmp.helpers :as rmp-helpers]))
 
 (def split-dot

@@ -5,7 +5,7 @@
             [cats.monad.maybe :as maybe]
             [cats.protocols :as p]
             [com.rpl.specter :as s]
-            [help.core :as help]
+            [aid.core :as help]
     #?@(:clj [
             [clojurewerkz.money.amounts :as ma]
             [clojurewerkz.money.currencies :as mc]
