@@ -1,6 +1,6 @@
 (ns nodp.jdp.asynchronous-method-invocation
-  (:require [nodp.helpers :as helpers]
-            [clojure.string :as str]))
+  (:require [clojure.string :as str]
+            [nodp.helpers :as helpers]))
 
 (defn- get-thread-prefix
   []

@@ -1,5 +1,5 @@
 (ns nodp.hfdp.abstract-factory
-  (:require [help.core :as help]
+  (:require [aid.core :as aid]
             [nodp.helpers :as helpers]))
 
 (helpers/defmultis-identity get-kind-ingredients
@@ -42,10 +42,10 @@
 
 (def get-ingredients
   (comp vals
-        (help/build select-keys
-                    (comp get-regional-ingredient
+        (aid/build select-keys
+                   (comp get-regional-ingredient
                           :region)
-                    (comp get-kind-ingredients
+                   (comp get-kind-ingredients
                           :kind))))
 
 (def prepare

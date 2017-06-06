@@ -96,7 +96,3 @@ jspm_packages
 
 ### nodp
 .idea/replstate.xml
-resources/public/js
-resources/public/test/js
-doc/auto
-dist/js

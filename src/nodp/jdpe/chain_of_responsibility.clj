@@ -1,13 +1,13 @@
 (ns nodp.jdpe.chain-of-responsibility
-  (:require [cats.builtin]
+  (:require [aid.core :as aid]
+            [cats.builtin]
             [cats.core :as m]
-            [cats.monad.either :as either]
-            [help.core :as help]))
+            [cats.monad.either :as either]))
 
 (defn- make-have-word?
   [words]
   (fn [email]
-    (some (partial (help/flip re-find) email) (map re-pattern words))))
+    (some (partial (aid/flip re-find) email) (map re-pattern words))))
 
 ;This definition is harder to read.
 ;(defn- make-have-word?
@@ -18,9 +18,9 @@
 (defn- make-handle
   [{:keys [words action]}]
   (fn [email]
-    (help/casep email
-                (make-have-word? words) (either/left action)
-                (either/right email))))
+    (aid/casep email
+               (make-have-word? words) (either/left action)
+               (either/right email))))
 
 (defmacro defhandle
   [f-name m]
@@ -46,7 +46,7 @@
 (defn- comp->>=
   [& fs]
   (->> fs
-       (map (help/flip (help/curry m/>>=)))
+       (map (aid/flip (aid/curry m/>>=)))
        (apply comp)))
 
 (def handle

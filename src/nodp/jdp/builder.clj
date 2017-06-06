@@ -1,8 +1,8 @@
 (ns nodp.jdp.builder
-  (:require [cats.core :as m]
+  (:require [aid.core :as aid]
+            [cats.core :as m]
             [cats.monad.maybe :as maybe]
             [cuerdas.core :as cuerdas]
-            [help.core :as help]
             [nodp.helpers :as helpers]))
 
 (defn get-head-or-hair
@@ -13,9 +13,9 @@
 
 (defn- describe-hair-type
   [hair-type-maybe]
-  (help/casep hair-type-maybe
-              maybe/nothing? "hair"
-              (-> hair-type-maybe
+  (aid/casep hair-type-maybe
+             maybe/nothing? "hair"
+             (-> hair-type-maybe
                   m/join
                   ((juxt cuerdas/human
                          get-head-or-hair))
@@ -37,11 +37,11 @@
 (def describe-hair
   (make-get-fragment (constantly (maybe/just "with"))
                      (comp (partial m/<$> name)
-                           help/maybe*
+                           aid/maybe*
                            :hair-color)
                      (helpers/comp-just describe-hair-type
-                                     help/maybe*
-                                     :hair-type)))
+                                        aid/maybe*
+                                        :hair-type)))
 
 (defn- make-describe-keyword
   [s]
@@ -71,12 +71,12 @@
                      (helpers/comp-just describe-first-name
                                      :first-name)
                      (helpers/comp-just describe-hair
-                                     (partial (help/flip select-keys)
+                                     (partial (aid/flip select-keys)
                                               [:hair-type :hair-color]))
                      (helpers/comp-just describe-weapon
                                      :weapon)
                      (comp (partial m/<$> describe-armor)
-                           help/maybe*
+                           aid/maybe*
                            :armor)))
 
 (get-hero {:first-name "Riobard"

@@ -1,5 +1,5 @@
 (ns nodp.jdpe.mediator
-  (:require [help.core :as help]
+  (:require [aid.core :as aid]
             [nodp.helpers :as helpers]))
 
 (defn- notify-gearbox-enabled
@@ -30,10 +30,10 @@
             notify-brake-enabled "Brakes enabled")
 
 (def notify-ignition-turned-on
-  (help/build concat
-              enable-gearbox
-              enable-accelerator
-              enable-brake))
+  (aid/build concat
+             enable-gearbox
+             enable-accelerator
+             enable-brake))
 
 (defcommand start-ignition
             notify-ignition-turned-on "Ignition turned on")

@@ -1,5 +1,5 @@
 (ns nodp.rmp.routing-slip
-  (:require [help.core :as help]))
+  (:require [aid.core :as aid]))
 
 (def customer
   {:name    "ABC Inc."
@@ -19,7 +19,7 @@
 
 (def create-customer
   (make-operate "create a new custoner"
-                (partial (help/flip select-keys) #{:name :tax-id})))
+                (partial (aid/flip select-keys) #{:name :tax-id})))
 
 (def keep-contact
   (make-operate "keep contact information" :contact))

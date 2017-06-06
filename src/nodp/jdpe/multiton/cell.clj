@@ -1,6 +1,6 @@
 (ns nodp.jdpe.multiton.cell
-  (:require [com.rpl.specter :as s]
-            [help.core :as help]))
+  (:require [aid.core :as aid]
+            [com.rpl.specter :as s]))
 
 (def generator
   (atom {:engine  0
@@ -8,16 +8,16 @@
 
 (def get-set-next-serial!
   (comp (partial swap! generator)
-        ((help/flip (help/curry s/transform*)) inc)))
+        ((aid/flip (aid/curry s/transform*)) inc)))
 
 (def label
-  (comp ((help/flip ((help/curry 3 str) "next ")) ":")
+  (comp ((aid/flip ((aid/curry 3 str) "next ")) ":")
         name))
 
 (def print-next-serial
-  (help/build println
-              label
-              get-set-next-serial!))
+  (aid/build println
+             label
+             get-set-next-serial!))
 
 (dotimes [_ 3]
   (print-next-serial :engine))

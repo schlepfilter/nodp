@@ -1,11 +1,11 @@
 (ns nodp.hfdp.command
   (:require [clojure.data :as data]
-            [clojure.math.combinatorics :as combo]
+            [aid.core :as aid]
             [cats.builtin]
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
+            [clojure.math.combinatorics :as combo]
             [com.rpl.specter :as s]
-            [help.core :as help]
             [nodp.helpers :as helpers]))
 
 (def slot-n 2)
@@ -17,7 +17,7 @@
    (s/multi-path :on :off)])
 
 (def control
-  (s/setval do-path help/nop []))
+  (s/setval do-path aid/nop []))
 
 (def environment
   {:actions []
@@ -32,10 +32,10 @@
                            keys))
 
 (def get-percent
-  (partial (help/flip str) "%"))
+  (partial (aid/flip str) "%"))
 
-(help/defpfmethod get-action :light
-                  (comp maybe/just
+(aid/defpfmethod get-action :light
+                 (comp maybe/just
                         (partial str "Light is dimmed to ")
                         get-percent
                         :light))
@@ -46,7 +46,7 @@
 (defn- get-preposition
   [light]
   (case light
-    :off help/nothing
+    :off aid/nothing
     (maybe/just "on")))
 
 (def get-description
@@ -64,15 +64,15 @@
 ;              :off ""
 ;              "on "))))
 
-(help/defpfmethod get-action :fan
-                  (helpers/comp-just helpers/space-join
+(aid/defpfmethod get-action :fan
+                 (helpers/comp-just helpers/space-join
                                      (partial conj [location "ceiling fan is"])
                                      get-description
                                      :fan))
 
 (defmethod get-action :control
   [_]
-  help/nothing)
+  aid/nothing)
 
 ;This definition is harder to read.
 ;(helpers/defpfmethod get-action :control
@@ -104,20 +104,20 @@
 (defn- get-actions
   [& commands]
   (-> environment
-      ((apply comp (map (partial m/<*> (help/curry add-action)) commands)))
+      ((apply comp (map (partial m/<*> (aid/curry add-action)) commands)))
       :actions
       maybe/cat-maybes))
 
 (def undo
-  (help/build (partial s/setval* :actions)
-              :actions
-              (comp last
+  (aid/build (partial s/setval* :actions)
+             :actions
+             (comp last
                     :undos)))
 
 (def make-set-button
-  (help/build (help/curry s/setval*)
-              (comp (partial conj [:now :control]) s/keypath :slot)
-              ((help/flip select-keys) [:on :off])))
+  (aid/build (aid/curry s/setval*)
+             (comp (partial conj [:now :control]) s/keypath :slot)
+             ((aid/flip select-keys) [:on :off])))
 
 (defn make-push-button
   [{:keys [slot on]}]
@@ -128,7 +128,7 @@
         add-undo))
 
 (def make-make-change
-  (comp (help/curry s/setval*)
+  (comp (aid/curry s/setval*)
         (partial conj [:now])))
 
 (def make-change-light
@@ -144,11 +144,11 @@
   (make-make-change :fan))
 
 (def defset-fan
-  (help/build (partial intern *ns*)
-              (comp symbol
+  (aid/build (partial intern *ns*)
+             (comp symbol
                     (partial str "set-fan-")
                     name)
-              make-set-fan))
+             make-set-fan))
 
 (def defsets-fan
   (comp (partial run! defset-fan)
@@ -166,8 +166,8 @@
           (make-push-button m)))
 
 (def map-key
-  (comp (help/curry map)
-        (help/curry array-map)))
+  (comp (aid/curry map)
+        (aid/curry array-map)))
 
 (def get-buttons
   (comp (partial map (partial apply merge))

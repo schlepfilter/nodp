@@ -1,13 +1,13 @@
 (ns nodp.sdp.partial-function
-  (:require [cats.core :as m]
+  (:require [aid.core :as aid]
+            [cats.core :as m]
             [cats.monad.maybe :as maybe]
-            [clojure.math.numeric-tower :as math]
-            [help.core :as help]))
+            [clojure.math.numeric-tower :as math]))
 
 (defn- sqrt
   [x]
-  (help/maybe-if-not (neg? x)
-                     (math/sqrt x)))
+  (aid/maybe-if-not (neg? x)
+                    (math/sqrt x)))
 
 (defn- get-sqrt-defined
   [x]
@@ -39,12 +39,12 @@
   [then else]
   `(fn [x#]
      (let [then-result# (~then x#)]
-       (help/casep then-result#
-                   maybe/just? (m/join then-result#)
-                   (~else x#)))))
+       (aid/casep then-result#
+                  maybe/just? (m/join then-result#)
+                  (~else x#)))))
 
 (def square
-  (partial (help/flip math/expt) 2))
+  (partial (aid/flip math/expt) 2))
 
 (def get-sqrt-squares
   (comp (partial str "Square roots or squares: ")

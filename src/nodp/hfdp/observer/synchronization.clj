@@ -1,8 +1,8 @@
 (ns nodp.hfdp.observer.synchronization
   (:require [clojure.string :as str]
-            [help.core :as help]
-            [nodp.helpers.frp :as frp]
-            [nodp.helpers.clojure.core :as core]
+            [aid.core :as aid]
+            [frp.core :as frp]
+            [frp.clojure.core :as core]
             [nodp.hfdp.observer.core :as observer-core]))
 
 (frp/restart)
@@ -11,18 +11,18 @@
   (frp/event))
 
 (def pressure
-  (help/<$> :pressure measurement-event))
+  (aid/<$> :pressure measurement-event))
 
 (def delta
   (->> pressure
        (frp/buffer 2 1)
-       (help/<$> observer-core/get-delta)))
+       (aid/<$> observer-core/get-delta)))
 
 (def forecast-event
-  (help/<$> observer-core/forecast delta))
+  (aid/<$> observer-core/forecast delta))
 
 (def temperature
-  (help/<$> :temperature measurement-event))
+  (aid/<$> :temperature measurement-event))
 
 (def mean-temperature
   (frp/mean temperature))
@@ -41,7 +41,7 @@
                         (str "Avg/Max/Min temperature = "))))
 
 (def weather
-  (help/<$> observer-core/get-weather measurement-event))
+  (aid/<$> observer-core/get-weather measurement-event))
 
 (run! (partial frp/on println) [forecast-event statistics weather])
 

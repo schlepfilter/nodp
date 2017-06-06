@@ -1,6 +1,6 @@
 (ns nodp.jdp.double-dispatch
-  (:require [clojure.math.combinatorics :as combo]
-            [help.core :as help]
+  (:require [aid.core :as aid]
+            [clojure.math.combinatorics :as combo]
             [thi.ng.geom.core.intersect :as intersect]
             [thi.ng.geom.rect :as rect]))
 
@@ -15,7 +15,7 @@
                               (partial map first)))
         (partial filter (comp (partial apply intersect/intersect-rect-rect?)
                               (partial map last)))
-        (partial (help/flip combo/combinations) 2)))
+        (partial (aid/flip combo/combinations) 2)))
 
 (get-collisions position-m)
 
