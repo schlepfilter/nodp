@@ -3,7 +3,6 @@
   (:require [clojure.string :as str]
             [beicon.core :as rx]
             [cats.monad.maybe :as maybe]
-            [cats.protocols :as p]
             [com.rpl.specter :as s]
             [aid.core :as help]
     #?@(:clj [
@@ -11,39 +10,8 @@
             [clojurewerkz.money.currencies :as mc]
             [potemkin]])))
 
-(defn if-then-else
-  [if-function then-function else]
-  ((help/build if
-               if-function
-               then-function
-               identity)
-    else))
-
-#?(:clj (defmacro reify-monad
-          [pure mbind & more]
-          `(reify
-             p/Context
-             p/Functor
-             (~'-fmap [_# f# fa#]
-               ;TODO remove 1
-               ((help/lift-m 1 f#) fa#))
-             p/Applicative
-             (~'-pure [_# v#]
-               (~pure v#))
-             (~'-fapply [_# fab# fa#]
-               (help/ap fab# fa#))
-             p/Monad
-             (~'-mreturn [_# a#]
-               (~pure a#))
-             (~'-mbind [_# ma# f#]
-               (~mbind ma# f#))
-             ~@more)))
-
 (def comp-just
   (partial comp maybe/just))
-
-(def call-functions
-  (help/flip (partial reduce (help/flip help/funcall))))
 
 #?(:clj
    (defmacro defdefs
