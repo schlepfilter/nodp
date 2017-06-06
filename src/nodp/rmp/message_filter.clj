@@ -1,14 +1,14 @@
 (ns nodp.rmp.message-filter
   (:require [clojure.string :as str]
+            [aid.core :as aid]
             [cats.builtin]
             [cats.core :as m]
             [cats.monad.maybe :as maybe]
-            [aid.core :as help]
             [nodp.rmp.helpers :as rmp-helpers]))
 
 (defn- make-kind?
   [kind]
-  (comp (partial (help/flip str/starts-with?) kind)
+  (comp (partial (aid/flip str/starts-with?) kind)
         :kind))
 
 ; This definition is less readable.
@@ -23,7 +23,7 @@
     (-> kind
         make-kind?
         (some items)
-        (help/maybe-if (rmp-helpers/handle-items items)))))
+        (aid/maybe-if (rmp-helpers/handle-items items)))))
 
 (def handle
   (comp maybe/cat-maybes

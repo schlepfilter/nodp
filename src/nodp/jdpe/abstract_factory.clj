@@ -1,5 +1,5 @@
 (ns nodp.jdpe.abstract-factory
-  (:require [aid.core :as help]
+  (:require [aid.core :as aid]
             [nodp.helpers :as helpers]))
 
 (def description
@@ -10,7 +10,7 @@
 (defn make-get-parts
   [vehicle]
   (comp helpers/space-join
-        (partial (help/flip concat) ["for a" (name vehicle)])
+        (partial (aid/flip concat) ["for a" (name vehicle)])
         vector
         description))
 

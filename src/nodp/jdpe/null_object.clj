@@ -1,16 +1,16 @@
 (ns nodp.jdpe.null-object
-  (:require [clojure.string :as str]
+  (:require [aid.core :as aid]
+            [clojure.string :as str]
             [com.rpl.specter :as s]
             [cuerdas.core :as cuerdas]
-            [aid.core :as help]
             [nodp.helpers :as helpers]))
 
 (defn- make-get-turn-action
   [on]
-  (comp (partial (help/flip str) (->> (if on
+  (comp (partial (aid/flip str) (->> (if on
                                         "ON"
                                         "OFF")
-                                      (str " light ")))
+                                     (str " light ")))
         str/capitalize
         cuerdas/human))
 

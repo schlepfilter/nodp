@@ -1,8 +1,8 @@
 (ns nodp.jdpe.multiton.core
-  (:require [aid.core :as help]))
+  (:require [aid.core :as aid]))
 
 (def make-describe
-  ((help/flip ((help/curry 4 str) "next ")) ": "))
+  ((aid/flip ((aid/curry 4 str) "next ")) ": "))
 
 (map (make-describe "engine") (range 3))
 

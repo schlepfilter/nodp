@@ -1,8 +1,8 @@
 (ns nodp.hfdp.composite
-  (:require [clojurewerkz.money.format :as format]
+  (:require [aid.core :as aid]
+            [clojurewerkz.money.format :as format]
             [com.rpl.specter :as s]
             [flatland.ordered.set :refer [ordered-set]]
-            [aid.core :as help]
             [nodp.helpers :as helpers]
             [nodp.hfdp.helpers :as hfdp-helpers]))
 
@@ -41,24 +41,24 @@
                                  map? s/STAY)))
 
 (def get-item
-  (help/build str
-              :title
-              (constantly "(v), ")
-              (comp format/format
+  (aid/build str
+             :title
+             (constantly "(v), ")
+             (comp format/format
                        :price)
-              (constantly "\n -- ")
-              :description))
+             (constantly "\n -- ")
+             :description))
 
 (def get-items
   (comp (partial apply str) (partial map get-item)))
 
 (def get-menu
-  (help/build str
-              :title
-              (constantly ", ")
-              :description
-              (constantly "\n---------------------\n")
-              (comp get-items
+  (aid/build str
+             :title
+             (constantly ", ")
+             :description
+             (constantly "\n---------------------\n")
+             (comp get-items
                        :items)))
 
 (def get-menus

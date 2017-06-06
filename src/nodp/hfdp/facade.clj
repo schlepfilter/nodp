@@ -1,5 +1,5 @@
 (ns nodp.hfdp.facade
-  (:require [aid.core :as help]
+  (:require [aid.core :as aid]
             [nodp.helpers :as helpers]))
 
 (def amp)
@@ -14,17 +14,17 @@
         vector))
 
 (def get-device-actions
-  (help/build map
-              (comp (help/curry get-action) first)
-              rest))
+  (aid/build map
+             (comp (aid/curry get-action) first)
+             rest))
 
 (def get-actions
   (partial mapcat get-device-actions))
 
 (def get-outputs
-  (help/build cons
-              :description
-              (comp get-actions :device-commands)))
+  (aid/build cons
+             :description
+             (comp get-actions :device-commands)))
 
 (def print-outputs
   (comp helpers/printall

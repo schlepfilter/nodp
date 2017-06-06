@@ -1,17 +1,17 @@
 (ns nodp.hfdp.iterator
-  (:require [clojurewerkz.money.format :as format]
+  (:require [aid.core :as aid]
+            [clojurewerkz.money.format :as format]
             [flatland.ordered.set :refer [ordered-set]]
-            [aid.core :as help]
             [nodp.hfdp.helpers :as hfdp-helpers]))
 
 (def get-item
-  (help/build str
-              :title
-              (constantly ", ")
-              (comp format/format
+  (aid/build str
+             :title
+             (constantly ", ")
+             (comp format/format
                     :price)
-              (constantly " -- ")
-              :description))
+             (constantly " -- ")
+             :description))
 
 (def get-items
   (comp (partial map get-item)

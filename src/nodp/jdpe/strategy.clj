@@ -1,10 +1,10 @@
 (ns nodp.jdpe.strategy
-  (:require [clojure.string :as str]
-            [aid.core :as help]))
+  (:require [aid.core :as aid]
+            [clojure.string :as str]))
 
-(help/defcurried make-change-speed
-                 [gear speed]
-                 (str "Working out correct gear at "
+(aid/defcurried make-change-speed
+                [gear speed]
+                (str "Working out correct gear at "
                       speed
                       "mph for a "
                       (-> gear

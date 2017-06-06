@@ -1,6 +1,6 @@
 (ns nodp.jdpe.bridge
-  (:require [com.rpl.specter :as s]
-            [aid.core :as help]
+  (:require [aid.core :as aid]
+            [com.rpl.specter :as s]
             [nodp.helpers :as helpers]))
 
 (def verb
@@ -12,9 +12,9 @@
         verb))
 
 (def make-change-running
-  (help/build comp
-              ((help/curry s/setval*) :running)
-              (comp ((help/curry s/setval*) [:actions s/END])
+  (aid/build comp
+             ((aid/curry s/setval*) :running)
+             (comp ((aid/curry s/setval*) [:actions s/END])
                     vector
                     get-sentence)))
 
@@ -50,10 +50,10 @@
 (defn- make-change-power
   [conditional change]
   (fn [engine]
-    (help/casep engine
-                conditional (unconditionally-change-power {:change change
+    (aid/casep engine
+               conditional (unconditionally-change-power {:change change
                                                            :engine engine})
-                engine)))
+               engine)))
 
 (def max-speed?
   (comp (partial > 10)

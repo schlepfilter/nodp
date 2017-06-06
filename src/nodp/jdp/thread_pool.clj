@@ -1,9 +1,9 @@
 (ns nodp.jdp.thread-pool
-  (:require [aid.core :as help]
+  (:require [aid.core :as aid]
             [nodp.helpers :as helpers]))
 
 (def make-postfix
-  (help/flip (help/curry str)))
+  (aid/flip (aid/curry str)))
 
 (helpers/defmultis-identity get-short-name get-time-per)
 
@@ -20,9 +20,9 @@
         get-short-name))
 
 (def get-time
-  (help/build *
-              (comp get-time-per :kind)
-              :quantity))
+  (aid/build *
+             (comp get-time-per :kind)
+             :quantity))
 
 (defn- instantiate
   [f]
@@ -37,7 +37,7 @@
                     get-time))))
 
 (def handle
-  (juxt (comp (help/functionize Thread/sleep)
+  (juxt (comp (aid/functionize Thread/sleep)
               get-time)
         (comp println
               describe)))
